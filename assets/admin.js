@@ -43,10 +43,12 @@ jQuery(function($){
   // ── Variables Management ───────────────────────────────────────
   var varsLoaded = false;
 
+  var i18n = ecfAdmin.i18n;
+
   function typeLabel(type) {
-    if (type === 'global-color-variable') return 'Color';
-    if (type === 'global-size-variable')  return 'Size';
-    if (type === 'global-string-variable') return 'String';
+    if (type === 'global-color-variable')  return i18n.type_color;
+    if (type === 'global-size-variable')   return i18n.type_size;
+    if (type === 'global-string-variable') return i18n.type_string;
     return type;
   }
 
@@ -54,7 +56,7 @@ jQuery(function($){
     var $list = $('#ecf-varlist-' + group);
     $('#ecf-badge-' + group).text(items.length);
     if (!items.length) {
-      $list.html('<p style="color:#9ca3af;font-size:13px;">Keine Variablen vorhanden.</p>');
+      $list.html('<p style="color:#9ca3af;font-size:13px;">'+i18n.none+'</p>');
       return;
     }
     var html = '<div class="ecf-var-table">';
@@ -97,7 +99,7 @@ jQuery(function($){
     var $checks = $('#ecf-varlist-' + group).find('.ecf-var-check');
     var allChecked = $checks.length === $checks.filter(':checked').length;
     $checks.prop('checked', !allChecked);
-    $(this).text(allChecked ? 'Alle wählen' : 'Auswahl aufheben');
+    $(this).text(allChecked ? i18n.select_all : i18n.deselect_all);
   });
 
   // Delete selected
@@ -107,17 +109,17 @@ jQuery(function($){
     $('#ecf-varlist-' + group).find('.ecf-var-check:checked').each(function(){
       ids.push($(this).val());
     });
-    if (!ids.length) { alert('Keine Variablen ausgewählt.'); return; }
-    if (!confirm(ids.length + ' Variable(n) löschen?')) return;
+    if (!ids.length) { alert(i18n.none_selected); return; }
+    if (!confirm(ids.length + i18n.confirm_delete)) return;
 
-    var $btn = $(this).prop('disabled', true).text('Lösche…');
+    var $btn = $(this).prop('disabled', true).text(i18n.deleting);
     $.post(ecfAdmin.ajaxurl, {
       action: 'ecf_delete_variables',
       nonce:  ecfAdmin.nonce,
       ids:    ids
     }, function(res) {
-      $btn.prop('disabled', false).text('Auswahl löschen');
-      if (!res.success) { alert('Fehler: ' + res.data); return; }
+      $btn.prop('disabled', false).text(i18n.delete_sel);
+      if (!res.success) { alert(i18n.error + res.data); return; }
       varsLoaded = false;
       loadVariables();
     });
