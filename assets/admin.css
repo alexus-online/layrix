@@ -21,3 +21,20 @@
 .ecf-check{display:block;margin:0 0 12px}
 .ecf-row .wp-picker-container{display:block}
 .ecf-row .wp-picker-holder{position:absolute;z-index:10}
+
+/* Variables Management */
+.ecf-vargroup-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px}
+.ecf-vargroup-header h2{margin:0}
+.ecf-vargroup-actions{display:flex;gap:8px}
+.ecf-badge{display:inline-block;background:#e5e7eb;color:#374151;font-size:11px;font-weight:600;padding:2px 8px;border-radius:999px;margin-left:6px}
+.ecf-varlist{min-height:40px}
+.ecf-loading{color:#9ca3af;font-size:13px}
+.ecf-var-table{display:flex;flex-direction:column;gap:0}
+.ecf-var-head{display:grid;grid-template-columns:28px 1fr 80px 1fr;gap:10px;padding:6px 10px;font-size:11px;font-weight:600;color:#6b7280;text-transform:uppercase;letter-spacing:.04em;border-bottom:1px solid #e5e7eb}
+.ecf-var-row{display:grid;grid-template-columns:28px 1fr 80px 1fr;gap:10px;padding:8px 10px;align-items:center;border-bottom:1px solid #f3f4f6;cursor:pointer;transition:background .1s}
+.ecf-var-row:hover{background:#f9fafb}
+.ecf-var-row:last-child{border-bottom:none}
+.ecf-var-label{font-size:13px;font-weight:500;color:#111827;word-break:break-all}
+.ecf-var-type{font-size:11px;color:#6b7280;background:#f3f4f6;padding:2px 6px;border-radius:4px;text-align:center}
+.ecf-var-value{font-size:12px;color:#374151;display:flex;align-items:center;gap:6px;word-break:break-all}
+.ecf-color-dot{display:inline-block;width:14px;height:14px;border-radius:50%;border:1px solid rgba(0,0,0,.1);flex-shrink:0}
