@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.10 (2026-04-04)
+
+### Changed
+- Prepared a minimal release to test GitHub-based plugin update detection in the WordPress plugin overview.
+- Minimalen Release vorbereitet, um die GitHub-basierte Plugin-Update-Erkennung in der WordPress-Pluginübersicht zu testen.
+
 ## 0.1.7 (2026-04-04)
 
 ### Added
