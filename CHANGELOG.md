@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.15 (2026-04-05)
+
+### Fixed
+- Normalized the GitHub update install path so the plugin keeps the folder name `elementor-core-framework` after updates instead of falling back to `elementor-core-framework-master`.
+- Den Installationspfad fuer GitHub-Updates normalisiert, damit das Plugin nach Updates den Ordnernamen `elementor-core-framework` behaelt und nicht auf `elementor-core-framework-master` springt.
+
 ## 0.1.14 (2026-04-05)
 
 ### Changed
