@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.12 (2026-04-04)
+
+### Fixed
+- Remember the active plugin state before a GitHub update and reactivate the plugin automatically after the update completes.
+- Merkt sich vor einem GitHub-Update den aktiven Plugin-Status und aktiviert das Plugin nach dem Update automatisch wieder.
+
 ## 0.1.11 (2026-04-04)
 
 ### Changed
