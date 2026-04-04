@@ -915,17 +915,18 @@
   min-width: 0;
   display: flex;
   justify-content: flex-start;
-  align-items: flex-end;
+  align-items: center;
+  background: #e8eaf0;
+  border-radius: 16px;
+  padding: 24px;
 }
 .ecf-shadow-focus__surface {
-  width: min(100%, 168px);
-  min-width: 120px;
-  min-height: 84px;
-  border-radius: 20px;
-  background:
-    radial-gradient(circle at top left, rgba(129,140,248,.18), transparent 36%),
-    linear-gradient(180deg, #ffffff, #f3f5fb);
-  border: 1px solid rgba(15, 23, 42, .08);
+  width: min(100%, 200px);
+  min-width: 140px;
+  min-height: 100px;
+  border-radius: 16px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, .06);
   padding: 14px;
   display: flex;
   flex-direction: column;
@@ -997,18 +998,20 @@
   word-break: break-word;
 }
 .ecf-shadow-row__sample {
+  background: #e8eaf0;
+  border-radius: 10px;
+  padding: 14px;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+  align-items: center;
 }
 .ecf-shadow-row__mini {
-  width: min(100%, 168px);
-  min-width: 120px;
-  height: 84px;
-  border-radius: 20px;
-  background:
-    radial-gradient(circle at top left, rgba(129,140,248,.18), transparent 36%),
-    linear-gradient(180deg, #ffffff, #f5f7fc);
-  border: 1px solid rgba(15, 23, 42, .08);
+  width: 60px;
+  min-width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid rgba(15, 23, 42, .06);
 }
 
 /* ── Local font files ─────────────────────────────────────────── */
