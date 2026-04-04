@@ -535,21 +535,33 @@
 }
 .ecf-typography-focus__sample {
   min-width: 0;
+  display: grid;
+  grid-template-areas:
+    "word word"
+    "stats code";
+  grid-template-columns: auto 1fr;
+  gap: 0 20px;
+  align-items: start;
 }
 .ecf-typography-focus__word {
+  grid-area: word;
   font-family: var(--ecf-preview-font);
   font-size: 30px;
   line-height: .98;
   letter-spacing: -.04em;
   color: #fff;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
   word-break: break-word;
 }
 .ecf-typography-focus__stats {
-  display: flex;
-  gap: 18px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
+  grid-area: stats;
+  display: grid;
+  gap: 10px;
+  margin-bottom: 0;
+}
+.ecf-typography-focus__sample > code {
+  grid-area: code;
+  align-self: center;
 }
 .ecf-typography-focus__stats div {
   display: grid;
