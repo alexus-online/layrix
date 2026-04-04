@@ -1548,18 +1548,25 @@ input[type="file"].ecf-file { color: var(--ecf-muted-2); font-size: 12px; }
 }
 
 /* ── WP notices inside ecf-main ────────────────────────────────── */
-.ecf-main .notice {
-  background: var(--ecf-card);
-  border: 1px solid var(--ecf-border-2);
-  border-left: 4px solid var(--ecf-success);
-  color: var(--ecf-text);
+.ecf-main .notice,
+.ecf-main .notice.notice-success,
+.ecf-main .notice.notice-error {
+  background: var(--ecf-card) !important;
+  border: 1px solid var(--ecf-border-2) !important;
+  border-left: 4px solid var(--ecf-success) !important;
+  color: var(--ecf-text) !important;
   padding: 10px 14px;
   margin: 0 0 20px;
   border-radius: 0 var(--ecf-radius) var(--ecf-radius) 0;
-  box-shadow: none;
+  box-shadow: none !important;
 }
-.ecf-main .notice-error { border-left-color: var(--ecf-danger); }
-.ecf-main .notice p { color: var(--ecf-muted-2); margin: 0; font-size: 13px; }
+.ecf-main .notice.notice-error { border-left-color: var(--ecf-danger) !important; }
+.ecf-main .notice p {
+  color: var(--ecf-text) !important;
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.6;
+}
 
 /* ── card code inline ──────────────────────────────────────────── */
 .ecf-card code {
