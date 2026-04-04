@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.14 (2026-04-04)
+
+### Changed
+- Raised the GitHub plugin version again to test update detection against the live site version 0.1.13.
+- GitHub-Plugin-Version erneut erhöht, um die Update-Erkennung gegen die Live-Version 0.1.13 zu testen.
+
 ## 0.1.13 (2026-04-04)
 
 ### Changed
