@@ -362,7 +362,9 @@ jQuery(function($){
   // ── Variables Management ───────────────────────────────────────
   var varsLoaded = false;
 
-  var i18n = ecfAdmin.i18n;
+  var i18n = (typeof ecfAdmin !== 'undefined' && ecfAdmin.i18n) ? ecfAdmin.i18n : {};
+  i18n.copy    = i18n.copy    || 'Copy';
+  i18n.copied  = i18n.copied  || 'Copied!';
 
   function typeLabel(type) {
     if (type === 'global-color-variable')  return i18n.type_color;
@@ -469,7 +471,9 @@ jQuery(function($){
   }
 
   function applySteps(steps) {
+    if (!Array.isArray(steps) || steps.length < 2) return;
     var $preview = $('[data-ecf-type-scale-preview]');
+    if (!$preview.length) { console.warn('ECF: preview element not found'); return; }
     $preview.data('steps', steps);
     $preview.attr('data-steps', JSON.stringify(steps));
     // Rebuild hidden inputs
@@ -478,36 +482,35 @@ jQuery(function($){
     $.each(steps, function(_, step) {
       $container.append('<input type="hidden" class="ecf-scale-step-input" name="ecf_framework_v50[typography][scale][steps][]" value="' + step + '">');
     });
-    renderTypePreview();
+    try { renderTypePreview(); } catch(err) { console.error('ECF renderTypePreview error:', err); }
   }
 
-  $(document).on('click', '.ecf-step-btn', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-
-    var dir = $(this).data('ecf-add-step') || $(this).attr('data-ecf-add-step');
-    var rem = $(this).data('ecf-remove-step') || $(this).attr('data-ecf-remove-step');
-    var steps = getScaleSteps();
-
-    if (dir === 'smaller') {
+  // bind step buttons directly (they are static HTML, not dynamic)
+  function bindStepButtons() {
+    $('[data-ecf-add-step="smaller"]').off('click.ecfstep').on('click.ecfstep', function(e) {
+      e.preventDefault();
+      var steps = getScaleSteps();
       var idx = ALL_STEPS.indexOf(steps[0]);
-      if (idx > 0) steps = [ALL_STEPS[idx - 1]].concat(steps);
-    } else if (rem === 'smaller') {
-      if (steps.length > 2) steps = steps.slice(1);
-    } else if (dir === 'larger') {
-      var idx2 = ALL_STEPS.indexOf(steps[steps.length - 1]);
-      if (idx2 < ALL_STEPS.length - 1) steps = steps.concat([ALL_STEPS[idx2 + 1]]);
-    } else if (rem === 'larger') {
-      if (steps.length > 2) steps = steps.slice(0, -1);
-    }
-
-    applySteps(steps);
-
-    // Visual feedback
-    var $btn = $(this);
-    $btn.css({'background': 'var(--ecf-primary)', 'color': '#fff'});
-    setTimeout(function() { $btn.css({'background': '', 'color': ''}); }, 300);
-  });
+      if (idx > 0) applySteps([ALL_STEPS[idx - 1]].concat(steps));
+    });
+    $('[data-ecf-remove-step="smaller"]').off('click.ecfstep').on('click.ecfstep', function(e) {
+      e.preventDefault();
+      var steps = getScaleSteps();
+      if (steps.length > 2) applySteps(steps.slice(1));
+    });
+    $('[data-ecf-add-step="larger"]').off('click.ecfstep').on('click.ecfstep', function(e) {
+      e.preventDefault();
+      var steps = getScaleSteps();
+      var idx = ALL_STEPS.indexOf(steps[steps.length - 1]);
+      if (idx < ALL_STEPS.length - 1) applySteps(steps.concat([ALL_STEPS[idx + 1]]));
+    });
+    $('[data-ecf-remove-step="larger"]').off('click.ecfstep').on('click.ecfstep', function(e) {
+      e.preventDefault();
+      var steps = getScaleSteps();
+      if (steps.length > 2) applySteps(steps.slice(0, -1));
+    });
+  }
+  bindStepButtons();
 
   // ── Copy token to clipboard ────────────────────────────────────
   $(document).on('click', '.ecf-copy-pill', function(e) {
