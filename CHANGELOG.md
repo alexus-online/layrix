@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.13 (2026-04-04)
+
+### Changed
+- Raised the GitHub plugin version again to continue testing update detection from the WordPress plugin overview.
+- GitHub-Plugin-Version erneut erhöht, um die Update-Erkennung in der WordPress-Pluginübersicht weiter zu testen.
+
 ## 0.1.12 (2026-04-04)
 
 ### Changed
