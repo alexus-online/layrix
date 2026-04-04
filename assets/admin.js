@@ -44,6 +44,18 @@ jQuery(function($){
     renderShadowPreview();
   });
 
+  $(document).on('click', '.ecf-remove-last-row', function(){
+    var group = $(this).data('group');
+    var $table = $('.ecf-table[data-group="' + group + '"]');
+    var $rows = $table.find('.ecf-row');
+    if ($rows.length <= 1) return;
+    var $last = $rows.last();
+    if ($last.find('.ecf-color-field').length) $last.find('.wp-picker-container').remove();
+    $last.remove();
+    renderTypePreview();
+    renderShadowPreview();
+  });
+
   $(document).on('click', '.ecf-add-local-font', function(){
     var $table = $('[data-local-font-table]');
     var key = $table.data('input-key');
