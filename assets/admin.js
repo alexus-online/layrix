@@ -820,16 +820,25 @@ jQuery(function($){
     $.each(items, function(_, it) { if (parseFloat(it.max) > maxVal) maxVal = parseFloat(it.max); });
     var html = '';
     $.each(items, function(_, item) {
-      var barPct = maxVal > 0 ? Math.round((parseFloat(item.max) / maxVal) * 100 * 10) / 10 : 0;
-      var barH = Math.min(40, Math.max(4, Math.round(parseFloat(item.max))));
+      var minValue = parseFloat(item.min);
+      var maxValue = parseFloat(item.max);
+      var minBarPct = maxVal > 0 ? Math.round((minValue / maxVal) * 100 * 10) / 10 : 0;
+      var maxBarPct = maxVal > 0 ? Math.round((maxValue / maxVal) * 100 * 10) / 10 : 0;
+      var minBarH = Math.min(40, Math.max(4, Math.round(minValue)));
+      var maxBarH = Math.min(40, Math.max(4, Math.round(maxValue)));
       html += '<div class="ecf-space-row' + (item.isBase ? ' is-base' : '') + '" data-ecf-space-step="' + item.step + '">'
         + '<div class="ecf-space-row__token">' + item.token
         + '<span class="ecf-copy-pill" data-copy="' + item.token + '">' + i18n.copy + '</span></div>'
         + '<div class="ecf-space-row__meta">'
-        + '<div><span><i class="dashicons dashicons-smartphone"></i>' + labelMin + '</span><strong>' + item.min + 'px</strong></div>'
-        + '<div><span><i class="dashicons dashicons-desktop"></i>' + labelMax + '</span><strong>' + item.max + 'px</strong></div>'
+        + '<div class="ecf-space-row__metric">'
+        + '<div class="ecf-space-row__metric-meta"><span><i class="dashicons dashicons-smartphone"></i>' + labelMin + '</span><strong>' + item.min + 'px</strong></div>'
+        + '<div class="ecf-space-row__bar"><div class="ecf-space-row__bar-fill" style="width:' + minBarPct + '%;height:' + minBarH + 'px;"></div></div>'
         + '</div>'
-        + '<div class="ecf-space-row__bar"><div class="ecf-space-row__bar-fill" style="width:' + barPct + '%;height:' + barH + 'px;"></div></div>'
+        + '<div class="ecf-space-row__metric">'
+        + '<div class="ecf-space-row__metric-meta"><span><i class="dashicons dashicons-desktop"></i>' + labelMax + '</span><strong>' + item.max + 'px</strong></div>'
+        + '<div class="ecf-space-row__bar"><div class="ecf-space-row__bar-fill" style="width:' + maxBarPct + '%;height:' + maxBarH + 'px;"></div></div>'
+        + '</div>'
+        + '</div>'
         + '</div>';
     });
     $preview.find('[data-ecf-spacing-preview-list]').html(html);
