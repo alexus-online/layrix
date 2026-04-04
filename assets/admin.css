@@ -734,6 +734,16 @@
   color: #fca5a5;
 }
 
+/* ── Typography layout ────────────────────────────────────────── */
+.ecf-typography-layout {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+  margin-bottom: 16px;
+}
+.ecf-typography-sidebar { display: flex; flex-direction: column; gap: 14px; }
+
 /* ── Spacing live preview ─────────────────────────────────────── */
 .ecf-spacing-layout {
   display: grid;
