@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.16 (2026-04-04)
+
+### Changed
+- Raised the plugin version again and removed the duplicate custom update row so only the native WordPress update notice remains.
+- Plugin-Version erneut erhöht und die doppelte eigene Update-Zeile entfernt, sodass nur noch der native WordPress-Update-Hinweis bleibt.
+
 ## 0.1.15 (2026-04-04)
 
 ### Changed
