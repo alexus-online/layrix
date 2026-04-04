@@ -734,6 +734,93 @@
   color: #fca5a5;
 }
 
+/* ── Spacing live preview ─────────────────────────────────────── */
+.ecf-spacing-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 300px) minmax(0, 1fr);
+  gap: 16px;
+  align-items: start;
+}
+.ecf-spacing-sidebar { display: flex; flex-direction: column; }
+.ecf-spacing-preview-card { min-width: 0; }
+.ecf-spacing-preview-header { margin-bottom: 8px; }
+.ecf-spacing-preview-header h2 { border-bottom: none; padding-bottom: 0; margin-bottom: 4px; }
+.ecf-spacing-preview-header p { color: var(--ecf-muted); font-size: 13px; margin: 0 0 4px; }
+.ecf-spacing-preview-list { display: flex; flex-direction: column; }
+
+.ecf-space-row {
+  display: grid;
+  grid-template-columns: minmax(130px,180px) 140px 1fr;
+  gap: 14px;
+  padding: 10px 14px;
+  border-top: 1px solid var(--ecf-border);
+  align-items: center;
+  cursor: default;
+  transition: background .1s;
+}
+.ecf-space-row:first-child { border-top: none; }
+.ecf-space-row:hover { background: rgba(99,102,241,.06); }
+.ecf-space-row.is-base {
+  background: rgba(99,102,241,.10);
+  box-shadow: inset 3px 0 0 var(--ecf-primary);
+}
+.ecf-space-row__token {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ecf-muted-2);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.ecf-space-row:hover .ecf-copy-pill { opacity: 1; pointer-events: auto; }
+.ecf-space-row__meta {
+  display: grid;
+  gap: 6px;
+}
+.ecf-space-row__meta div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.ecf-space-row__meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--ecf-muted);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  min-width: 60px;
+}
+.ecf-space-row__meta span .dashicons {
+  width: 12px; height: 12px; font-size: 12px; color: #7f8aa3;
+}
+.ecf-space-row__meta strong {
+  color: var(--ecf-text);
+  font-size: 13px;
+  font-weight: 600;
+}
+.ecf-space-row__bar {
+  display: flex;
+  align-items: center;
+}
+.ecf-space-row__bar-fill {
+  background: linear-gradient(90deg, #6366f1, #818cf8);
+  border-radius: 3px;
+  min-width: 3px;
+  transition: width .3s, height .3s;
+}
+
+.ecf-form-grid--single { grid-template-columns: 1fr; }
+.ecf-form-grid__checkbox {
+  flex-direction: row !important;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px !important;
+  color: var(--ecf-muted-2) !important;
+}
+.ecf-form-grid__checkbox input { width: auto !important; accent-color: var(--ecf-primary); }
+
 /* ── Shadow live preview ──────────────────────────────────────── */
 .ecf-shadow-layout {
   display: grid;

@@ -452,6 +452,128 @@ jQuery(function($){
     $(this).find('.ecf-var-check').trigger('click');
   });
 
+  // ── Spacing Preview ────────────────────────────────────────────
+  var ALL_SPACE_STEPS = ['6xs','5xs','4xs','3xs','2xs','xs','s','m','l','xl','2xl','3xl','4xl','5xl','6xl'];
+
+  function getSpacingConfig() {
+    return {
+      minBase:   parseFloat($('[name="ecf_framework_v50[spacing][min_base]"]').val()) || 14,
+      maxBase:   parseFloat($('[name="ecf_framework_v50[spacing][max_base]"]').val()) || 16,
+      minRatio:  parseFloat($('[name="ecf_framework_v50[spacing][min_ratio]"]').val()) || 1.2,
+      maxRatio:  parseFloat($('[name="ecf_framework_v50[spacing][max_ratio]"]').val()) || 1.25,
+      baseIndex: $('[name="ecf_framework_v50[spacing][base_index]"]').val() || 'm',
+      fluid:     $('[name="ecf_framework_v50[spacing][fluid]"]').is(':checked'),
+      minVw:     parseFloat($('[name="ecf_framework_v50[spacing][min_vw]"]').val()) || 375,
+      maxVw:     parseFloat($('[name="ecf_framework_v50[spacing][max_vw]"]').val()) || 1280,
+      prefix:    $('[name="ecf_framework_v50[spacing][prefix]"]').val() || 'space'
+    };
+  }
+
+  function getSpacingSteps() {
+    var steps = [];
+    $('#ecf-spacing-steps-container .ecf-spacing-step-input').each(function() {
+      var v = $(this).val();
+      if (v) steps.push(v);
+    });
+    if (steps.length >= 2) return steps;
+    var $preview = $('[data-ecf-spacing-preview]');
+    try { steps = JSON.parse($preview.attr('data-steps')); } catch(e) {}
+    return Array.isArray(steps) && steps.length >= 2 ? steps : ['3xs','2xs','xs','s','m','l','xl','2xl','3xl','4xl'];
+  }
+
+  function buildSpacingItems(steps, cfg) {
+    var baseIdx = steps.indexOf(cfg.baseIndex);
+    if (baseIdx === -1) baseIdx = Math.floor(steps.length / 2);
+    return $.map(steps, function(step, i) {
+      var exp = i - baseIdx;
+      var maxSize, minSize;
+      if (exp === 0) { maxSize = cfg.maxBase; minSize = cfg.minBase; }
+      else if (exp > 0) { maxSize = cfg.maxBase * Math.pow(cfg.maxRatio, exp); minSize = cfg.minBase * Math.pow(cfg.minRatio, exp); }
+      else { maxSize = cfg.maxBase / Math.pow(cfg.maxRatio, Math.abs(exp)); minSize = cfg.minBase / Math.pow(cfg.minRatio, Math.abs(exp)); }
+      maxSize = Math.round(maxSize * 1000) / 1000;
+      minSize = Math.round(minSize * 1000) / 1000;
+      var cssValue;
+      if (cfg.fluid && cfg.maxVw > cfg.minVw) {
+        var slope = (maxSize - minSize) / (cfg.maxVw - cfg.minVw);
+        var intercept = Math.round((minSize - slope * cfg.minVw) * 10000) / 10000;
+        var slopeVw = Math.round(slope * 100 * 10000) / 10000;
+        cssValue = 'clamp(' + minSize + 'px,' + slopeVw + 'vw' + (intercept >= 0 ? '+' : '') + intercept + 'px,' + maxSize + 'px)';
+      } else {
+        cssValue = maxSize + 'px';
+        minSize = maxSize;
+      }
+      return { step: step, token: '--cf-' + cfg.prefix + '-' + step, min: formatPreviewNumber(minSize), max: formatPreviewNumber(maxSize), cssValue: cssValue, isBase: (i === baseIdx) };
+    });
+  }
+
+  function renderSpacingPreview() {
+    var $preview = $('[data-ecf-spacing-preview]');
+    if (!$preview.length) return;
+    var steps = getSpacingSteps();
+    var cfg = getSpacingConfig();
+    var items = buildSpacingItems(steps, cfg);
+    var labelMin = $preview.data('preview-label-min') || 'Minimum';
+    var labelMax = $preview.data('preview-label-max') || 'Maximum';
+    var maxVal = 0;
+    $.each(items, function(_, it) { if (parseFloat(it.max) > maxVal) maxVal = parseFloat(it.max); });
+    var html = '';
+    $.each(items, function(_, item) {
+      var barPct = maxVal > 0 ? Math.round((parseFloat(item.max) / maxVal) * 100 * 10) / 10 : 0;
+      var barH = Math.min(40, Math.max(4, Math.round(parseFloat(item.max))));
+      html += '<div class="ecf-space-row' + (item.isBase ? ' is-base' : '') + '" data-ecf-space-step="' + item.step + '">'
+        + '<div class="ecf-space-row__token">' + item.token
+        + '<span class="ecf-copy-pill" data-copy="' + item.token + '">' + i18n.copy + '</span></div>'
+        + '<div class="ecf-space-row__meta">'
+        + '<div><span><i class="dashicons dashicons-smartphone"></i>' + labelMin + '</span><strong>' + item.min + 'px</strong></div>'
+        + '<div><span><i class="dashicons dashicons-desktop"></i>' + labelMax + '</span><strong>' + item.max + 'px</strong></div>'
+        + '</div>'
+        + '<div class="ecf-space-row__bar"><div class="ecf-space-row__bar-fill" style="width:' + barPct + '%;height:' + barH + 'px;"></div></div>'
+        + '</div>';
+    });
+    $preview.find('[data-ecf-spacing-preview-list]').html(html);
+  }
+
+  $(document).on('input change', '[name^="ecf_framework_v50[spacing]"]', function(){
+    renderSpacingPreview();
+  });
+
+  renderSpacingPreview();
+
+  function applySpacingSteps(steps) {
+    if (!Array.isArray(steps) || steps.length < 2) return;
+    var $preview = $('[data-ecf-spacing-preview]');
+    $preview.attr('data-steps', JSON.stringify(steps));
+    var $container = $('#ecf-spacing-steps-container');
+    $container.empty();
+    $.each(steps, function(_, step) {
+      $container.append('<input type="hidden" class="ecf-spacing-step-input" name="ecf_framework_v50[spacing][steps][]" value="' + step + '">');
+    });
+    renderSpacingPreview();
+  }
+
+  $('[data-ecf-spacing-add="smaller"]').on('click', function(e) {
+    e.preventDefault();
+    var steps = getSpacingSteps();
+    var idx = ALL_SPACE_STEPS.indexOf(steps[0]);
+    if (idx > 0) applySpacingSteps([ALL_SPACE_STEPS[idx - 1]].concat(steps));
+  });
+  $('[data-ecf-spacing-remove="smaller"]').on('click', function(e) {
+    e.preventDefault();
+    var steps = getSpacingSteps();
+    if (steps.length > 2) applySpacingSteps(steps.slice(1));
+  });
+  $('[data-ecf-spacing-add="larger"]').on('click', function(e) {
+    e.preventDefault();
+    var steps = getSpacingSteps();
+    var idx = ALL_SPACE_STEPS.indexOf(steps[steps.length - 1]);
+    if (idx < ALL_SPACE_STEPS.length - 1) applySpacingSteps(steps.concat([ALL_SPACE_STEPS[idx + 1]]));
+  });
+  $('[data-ecf-spacing-remove="larger"]').on('click', function(e) {
+    e.preventDefault();
+    var steps = getSpacingSteps();
+    if (steps.length > 2) applySpacingSteps(steps.slice(0, -1));
+  });
+
   // ── Type Scale step management ─────────────────────────────────
   var ALL_STEPS = ['6xs','5xs','4xs','3xs','2xs','xs','s','m','l','xl','2xl','3xl','4xl','5xl','6xl','7xl','8xl','9xl'];
 
