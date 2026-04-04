@@ -454,13 +454,24 @@ jQuery(function($){
   var ALL_STEPS = ['6xs','5xs','4xs','3xs','2xs','xs','s','m','l','xl','2xl','3xl','4xl','5xl','6xl','7xl','8xl','9xl'];
 
   function getScaleSteps() {
+    // Read from hidden inputs (always up-to-date)
+    var steps = [];
+    $('#ecf-scale-steps-container .ecf-scale-step-input').each(function() {
+      var v = $(this).val();
+      if (v) steps.push(v);
+    });
+    if (steps.length >= 2) return steps;
+    // Fallback: read from data attribute
     var $preview = $('[data-ecf-type-scale-preview]');
-    return ($preview.data('steps') || ['xs','s','m','l','xl','2xl','3xl','4xl']).slice();
+    var raw = $preview.attr('data-steps');
+    try { steps = JSON.parse(raw); } catch(e) {}
+    return Array.isArray(steps) && steps.length >= 2 ? steps : ['xs','s','m','l','xl','2xl','3xl','4xl'];
   }
 
   function applySteps(steps) {
     var $preview = $('[data-ecf-type-scale-preview]');
     $preview.data('steps', steps);
+    $preview.attr('data-steps', JSON.stringify(steps));
     // Rebuild hidden inputs
     var $container = $('#ecf-scale-steps-container');
     $container.empty();
