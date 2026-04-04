@@ -3,15 +3,280 @@ jQuery(function($){
   i18n.copy    = i18n.copy    || 'Copy';
   i18n.copied  = i18n.copied  || 'Copied!';
 
+  function clamp(value, min, max) {
+    return Math.min(Math.max(value, min), max);
+  }
+
+  function round(value, precision) {
+    var factor = Math.pow(10, precision || 0);
+    return Math.round(value * factor) / factor;
+  }
+
+  function formatNumber(value, precision) {
+    var rounded = round(value, precision || 0);
+    return String(rounded).replace(/\.0+$|(\.\d*[1-9])0+$/, '$1');
+  }
+
+  function hexToRgb(hex) {
+    var value = String(hex || '').trim().replace(/^#/, '');
+    if (value.length === 3) {
+      value = value.replace(/(.)/g, '$1$1');
+    }
+    if (value.length === 4) {
+      value = value.replace(/(.)/g, '$1$1');
+    }
+    if (value.length === 8) {
+      value = value.slice(0, 6);
+    }
+    if (!/^[0-9a-f]{6}$/i.test(value)) return null;
+    return {
+      r: parseInt(value.slice(0, 2), 16),
+      g: parseInt(value.slice(2, 4), 16),
+      b: parseInt(value.slice(4, 6), 16)
+    };
+  }
+
+  function parseAlphaFromHex(value) {
+    var hex = String(value || '').trim().replace(/^#/, '');
+    if (hex.length === 4) {
+      return parseInt(hex.charAt(3) + hex.charAt(3), 16) / 255;
+    }
+    if (hex.length === 8) {
+      return parseInt(hex.slice(6, 8), 16) / 255;
+    }
+    return 1;
+  }
+
+  function componentToHex(value) {
+    return clamp(Math.round(value), 0, 255).toString(16).padStart(2, '0');
+  }
+
+  function rgbToHex(rgb) {
+    if (!rgb) return '';
+    return '#' + componentToHex(rgb.r) + componentToHex(rgb.g) + componentToHex(rgb.b);
+  }
+
+  function alphaToHex(alpha) {
+    return componentToHex(clamp((alpha == null ? 1 : alpha) * 255, 0, 255));
+  }
+
+  function rgbToHsl(rgb) {
+    if (!rgb) return null;
+    var r = clamp(rgb.r, 0, 255) / 255;
+    var g = clamp(rgb.g, 0, 255) / 255;
+    var b = clamp(rgb.b, 0, 255) / 255;
+    var max = Math.max(r, g, b);
+    var min = Math.min(r, g, b);
+    var h, s;
+    var l = (max + min) / 2;
+    var d = max - min;
+
+    if (d === 0) {
+      h = 0;
+      s = 0;
+    } else {
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      switch (max) {
+        case r:
+          h = ((g - b) / d) + (g < b ? 6 : 0);
+          break;
+        case g:
+          h = ((b - r) / d) + 2;
+          break;
+        default:
+          h = ((r - g) / d) + 4;
+          break;
+      }
+      h = h * 60;
+    }
+
+    return {
+      h: round(h, 1),
+      s: round(s * 100, 1),
+      l: round(l * 100, 1)
+    };
+  }
+
+  function hueToRgb(p, q, t) {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  }
+
+  function hslToRgb(hsl) {
+    if (!hsl) return null;
+    var h = ((((hsl.h % 360) + 360) % 360) / 360);
+    var s = clamp(hsl.s, 0, 100) / 100;
+    var l = clamp(hsl.l, 0, 100) / 100;
+    var r, g, b;
+
+    if (s === 0) {
+      r = g = b = l;
+    } else {
+      var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+      var p = 2 * l - q;
+      r = hueToRgb(p, q, h + 1 / 3);
+      g = hueToRgb(p, q, h);
+      b = hueToRgb(p, q, h - 1 / 3);
+    }
+
+    return {
+      r: Math.round(r * 255),
+      g: Math.round(g * 255),
+      b: Math.round(b * 255)
+    };
+  }
+
+  function parseRgbValue(value) {
+    var match = String(value || '').trim().match(/^rgba?\s*\(\s*([+-]?\d+(?:\.\d+)?)\s*,\s*([+-]?\d+(?:\.\d+)?)\s*,\s*([+-]?\d+(?:\.\d+)?)(?:\s*,\s*([+-]?\d*(?:\.\d+)?))?\s*\)$/i);
+    if (!match) return null;
+    return {
+      r: clamp(parseFloat(match[1]), 0, 255),
+      g: clamp(parseFloat(match[2]), 0, 255),
+      b: clamp(parseFloat(match[3]), 0, 255),
+      a: match[4] === undefined || match[4] === '' ? 1 : clamp(parseFloat(match[4]), 0, 1)
+    };
+  }
+
+  function parseHslValue(value) {
+    var match = String(value || '').trim().match(/^hsla?\s*\(\s*([+-]?\d+(?:\.\d+)?)\s*,\s*([+-]?\d+(?:\.\d+)?)%\s*,\s*([+-]?\d+(?:\.\d+)?)%(?:\s*,\s*([+-]?\d*(?:\.\d+)?))?\s*\)$/i);
+    if (!match) return null;
+    return {
+      h: parseFloat(match[1]),
+      s: clamp(parseFloat(match[2]), 0, 100),
+      l: clamp(parseFloat(match[3]), 0, 100),
+      a: match[4] === undefined || match[4] === '' ? 1 : clamp(parseFloat(match[4]), 0, 1)
+    };
+  }
+
+  function parseHexValue(value) {
+    var match = String(value || '').trim().match(/^#?([0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})$/i);
+    if (!match) return null;
+    var rgb = hexToRgb(match[1]);
+    if (!rgb) return null;
+    rgb.a = parseAlphaFromHex(match[1]);
+    return rgb;
+  }
+
+  function parseDisplayColor(value, format) {
+    if (format === 'rgb' || format === 'rgba') return parseRgbValue(value);
+    if (format === 'hsl' || format === 'hsla') {
+      var hsl = parseHslValue(value);
+      if (!hsl) return null;
+      var rgb = hslToRgb(hsl);
+      rgb.a = hsl.a == null ? 1 : hsl.a;
+      return rgb;
+    }
+    return parseHexValue(value);
+  }
+
+  function detectStoredFormat(value) {
+    var normalized = String(value || '').trim().toLowerCase();
+    if (/^#[0-9a-f]{8}$/.test(normalized)) return 'hexa';
+    if (/^#[0-9a-f]{6}$/.test(normalized)) return 'hex';
+    if (/^rgba\(/.test(normalized)) return 'rgba';
+    if (/^rgb\(/.test(normalized)) return 'rgb';
+    if (/^hsla\(/.test(normalized)) return 'hsla';
+    if (/^hsl\(/.test(normalized)) return 'hsl';
+    return 'hex';
+  }
+
+  function formatColorValue(hex, format) {
+    var parsed = null;
+    if (hex && typeof hex === 'object') {
+      parsed = {
+        r: hex.r,
+        g: hex.g,
+        b: hex.b,
+        a: hex.a == null ? 1 : hex.a
+      };
+    } else {
+      parsed = parseHexValue(hex) || parseRgbValue(hex);
+      if (!parsed && (/^hsl/i).test(String(hex || '').trim())) {
+        parsed = parseDisplayColor(hex, 'hsla');
+      }
+    }
+    var rgb = parsed;
+    if (!rgb) return '';
+    var alpha = rgb.a == null ? 1 : clamp(rgb.a, 0, 1);
+    if (format === 'rgb') {
+      return 'rgb(' + formatNumber(rgb.r, 0) + ', ' + formatNumber(rgb.g, 0) + ', ' + formatNumber(rgb.b, 0) + ')';
+    }
+    if (format === 'rgba') {
+      return 'rgba(' + formatNumber(rgb.r, 0) + ', ' + formatNumber(rgb.g, 0) + ', ' + formatNumber(rgb.b, 0) + ', ' + formatNumber(alpha, 3) + ')';
+    }
+    if (format === 'hsl') {
+      var hsl = rgbToHsl(rgb);
+      return 'hsl(' + formatNumber(hsl.h, 1) + ', ' + formatNumber(hsl.s, 1) + '%, ' + formatNumber(hsl.l, 1) + '%)';
+    }
+    if (format === 'hsla') {
+      var hsla = rgbToHsl(rgb);
+      return 'hsla(' + formatNumber(hsla.h, 1) + ', ' + formatNumber(hsla.s, 1) + '%, ' + formatNumber(hsla.l, 1) + '%, ' + formatNumber(alpha, 3) + ')';
+    }
+    if (format === 'hexa') {
+      return rgbToHex(rgb).toUpperCase() + alphaToHex(alpha).toUpperCase();
+    }
+    return rgbToHex(rgb).toUpperCase();
+  }
+
+  function updateColorRowDisplay($row) {
+    var hex = $row.find('.ecf-color-value-input').val() || $row.find('.ecf-color-field').val();
+    var format = $row.find('.ecf-color-format-select').val() || 'hex';
+    $row.find('.ecf-color-value-display').val(formatColorValue(hex, format));
+  }
+
+  function applyDisplayValueToRow($row) {
+    var $display = $row.find('.ecf-color-value-display');
+    var format = $row.find('.ecf-color-format-select').val() || 'hex';
+    var rgb = parseDisplayColor($display.val(), format);
+    if (!rgb) {
+      $display.toggleClass('ecf-input-invalid', $.trim($display.val()) !== '');
+      return false;
+    }
+    var hex = rgbToHex(rgb).toUpperCase();
+    var stored = formatColorValue({
+      r: rgb.r,
+      g: rgb.g,
+      b: rgb.b,
+      a: rgb.a == null ? 1 : rgb.a
+    }, format);
+    $display.removeClass('ecf-input-invalid');
+    $row.find('.ecf-color-value-input').val(stored);
+    $row.find('.ecf-color-field').val(hex).wpColorPicker('color', hex);
+    updateColorRowDisplay($row);
+    return true;
+  }
+
   function initColorPickers(scope){
     scope.find('.ecf-color-field').wpColorPicker({
       change: function(event, ui) {
+        var $row = $(this).closest('.ecf-row--color');
         var hex = ui.color.toString();
-        $(this).closest('.ecf-row--color').find('.ecf-color-hex-display').val(hex);
+        var currentStored = $row.find('.ecf-color-value-input').val();
+        var currentParsed = parseHexValue(currentStored) || parseRgbValue(currentStored) || parseDisplayColor(currentStored, 'hsla') || {};
+        var alpha = currentParsed.a == null ? 1 : currentParsed.a;
+        var storedFormat = detectStoredFormat(currentStored);
+        $(this).val(hex);
+        $row.find('.ecf-color-value-input').val(formatColorValue({
+          r: parseInt(hex.slice(1, 3), 16),
+          g: parseInt(hex.slice(3, 5), 16),
+          b: parseInt(hex.slice(5, 7), 16),
+          a: alpha
+        }, storedFormat));
+        updateColorRowDisplay($row);
       },
       clear: function() {
-        $(this).closest('.ecf-row--color').find('.ecf-color-hex-display').val('');
+        var $row = $(this).closest('.ecf-row--color');
+        $(this).val('');
+        $row.find('.ecf-color-value-input').val('');
+        $row.find('.ecf-color-value-display').val('');
       }
+    });
+    scope.find('.ecf-row--color').each(function(){
+      updateColorRowDisplay($(this));
     });
   }
   function nextIndex(group){
@@ -35,6 +300,7 @@ jQuery(function($){
     var html = $(templateId).html()
       .replace(/__NAME__/g,  key+'['+index+'][name]')
       .replace(/__VALUE__/g, key+'['+index+'][value]')
+      .replace(/__FORMAT__/g, key+'['+index+'][format]')
       .replace(/__MIN__/g,   key+'['+index+'][min]')
       .replace(/__MAX__/g,   key+'['+index+'][max]');
     var $row = $(html);
@@ -62,6 +328,22 @@ jQuery(function($){
     $last.remove();
     renderTypePreview();
     renderShadowPreview();
+  });
+
+  $(document).on('change', '.ecf-color-format-select', function(){
+    updateColorRowDisplay($(this).closest('.ecf-row--color'));
+  });
+
+  $(document).on('input change', '.ecf-color-value-display', function(){
+    applyDisplayValueToRow($(this).closest('.ecf-row--color'));
+  });
+
+  $(document).on('blur', '.ecf-color-value-display', function(){
+    var $row = $(this).closest('.ecf-row--color');
+    if (!applyDisplayValueToRow($row)) {
+      updateColorRowDisplay($row);
+      $(this).removeClass('ecf-input-invalid');
+    }
   });
 
   $(document).on('click', '.ecf-add-local-font', function(){
