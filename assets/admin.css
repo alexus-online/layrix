@@ -576,10 +576,6 @@
   gap: 10px;
   margin-bottom: 0;
 }
-.ecf-typography-focus__sample > code {
-  grid-area: code;
-  align-self: center;
-}
 .ecf-typography-focus__stats div {
   display: grid;
   gap: 3px;
@@ -603,6 +599,44 @@
 .ecf-typography-focus__stats strong {
   color: #fff;
   font-size: 15px;
+}
+.ecf-typography-focus__sizes {
+  grid-area: code;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: flex-start;
+  align-self: center;
+}
+.ecf-typography-focus__size-line {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.ecf-typography-focus__size-line strong {
+  font-family: var(--ecf-preview-font);
+  line-height: .95;
+  letter-spacing: -.04em;
+  color: #fff;
+  font-weight: 600;
+}
+.ecf-typography-focus__size-line--max strong {
+  font-weight: 700;
+}
+.ecf-typography-focus__size-line span {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ecf-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .1em;
+}
+.ecf-typography-focus__size-line .dashicons {
+  width: 14px;
+  height: 14px;
+  font-size: 14px;
+  color: #7f8aa3;
 }
 .ecf-typography-preview-list {
   display: flex;
@@ -663,21 +697,39 @@
 }
 .ecf-type-row__sample {
   min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
-.ecf-type-row__word {
+.ecf-type-row__sample-line {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.ecf-type-row__sample-line strong {
   font-family: var(--ecf-preview-font);
-  font-size: var(--ecf-preview-size);
-  line-height: 1;
-  letter-spacing: -.03em;
+  line-height: .95;
+  letter-spacing: -.04em;
   color: #fff;
-  margin-bottom: 8px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-weight: 600;
 }
-.ecf-type-row__sample code {
-  display: inline-block;
-  word-break: break-word;
+.ecf-type-row__sample-line--max strong {
+  font-weight: 700;
+}
+.ecf-type-row__sample-line span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ecf-muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+.ecf-type-row__sample-line .dashicons {
+  width: 14px;
+  height: 14px;
+  font-size: 14px;
+  color: #7f8aa3;
 }
 
 /* ── Copy pill ─────────────────────────────────────────────────── */

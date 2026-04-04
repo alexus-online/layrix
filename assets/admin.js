@@ -499,8 +499,14 @@ jQuery(function($){
         + '<div><span><i class="dashicons dashicons-desktop"></i>' + labelMax + '</span><strong>' + item.max + 'px</strong></div>'
         + '</div>'
         + '<div class="ecf-type-row__sample">'
-        + '<div class="ecf-type-row__word">' + previewWord + '</div>'
-        + '<code>' + item.cssValue + '</code>'
+        + '<div class="ecf-type-row__sample-line">'
+        + '<strong style="font-size:' + item.min + 'px;">' + item.min + 'px</strong>'
+        + '<span><i class="dashicons dashicons-smartphone"></i>' + labelMin + '</span>'
+        + '</div>'
+        + '<div class="ecf-type-row__sample-line ecf-type-row__sample-line--max">'
+        + '<strong style="font-size:' + item.max + 'px;">' + item.max + 'px</strong>'
+        + '<span><i class="dashicons dashicons-desktop"></i>' + labelMax + '</span>'
+        + '</div>'
         + '</div>'
         + '</button>';
     });
@@ -517,7 +523,8 @@ jQuery(function($){
     $preview.find('[data-ecf-focus-word]').text(previewWord).css('font-size', activeItem ? sizeForView(activeItem) : '');
     $preview.find('[data-ecf-focus-min]').text(activeItem ? activeItem.min + 'px' : '');
     $preview.find('[data-ecf-focus-max]').text(activeItem ? activeItem.max + 'px' : '');
-    $preview.find('[data-ecf-focus-css]').text(activeItem ? activeItem.cssValue : '');
+    $preview.find('[data-ecf-focus-min-line]').css('font-size', activeItem ? activeItem.min + 'px' : '').text(activeItem ? activeItem.min + 'px' : '');
+    $preview.find('[data-ecf-focus-max-line]').css('font-size', activeItem ? activeItem.max + 'px' : '').text(activeItem ? activeItem.max + 'px' : '');
     $preview.find('[data-ecf-preview-view]').removeClass('is-active');
     $preview.find('[data-ecf-preview-view="' + viewMode + '"]').addClass('is-active');
   }
