@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.13 (2026-04-04)
+
+### Fixed
+- Guarded the plugin bootstrap so the main class is only declared and instantiated once, preventing fatal activation errors after updates.
+- Den Plugin-Bootstrap abgesichert, damit die Hauptklasse nur einmal deklariert und instanziiert wird und keine fatalen Aktivierungsfehler nach Updates mehr entstehen.
+
 ## 0.1.12 (2026-04-04)
 
 ### Fixed
