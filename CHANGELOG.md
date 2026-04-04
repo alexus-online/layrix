@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.10 (2026-04-04)
+
+### Changed
+- Unified the plugin output around `--ecf-*` variables and `.ecf-*` utility classes while keeping legacy `.cf-*` aliases for compatibility.
+- Die Plugin-Ausgabe auf `--ecf-*`-Variablen und `.ecf-*`-Hilfsklassen vereinheitlicht und die alten `.cf-*`-Aliase fuer Kompatibilitaet beibehalten.
+- Switched token generation for typography, spacing, and radius to rem-based output with a configurable root font size and px-only preview readouts.
+- Die Token-Erzeugung fuer Typografie, Abstaende und Radius auf rem-basierte Ausgabe mit konfigurierbarer Root Font Size und px-Anzeige in der Vorschau umgestellt.
+
 ## 0.1.9 (2026-04-04)
 
 ### Changed
