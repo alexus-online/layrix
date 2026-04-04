@@ -1456,8 +1456,8 @@ input[type="file"].ecf-file { color: var(--ecf-muted-2); font-size: 12px; }
   content: attr(data-tip);
   position: absolute;
   bottom: calc(100% + 8px);
-  left: 50%;
-  transform: translateX(-50%);
+  left: 0;
+  transform: none;
   background: #1e2235;
   border: 1px solid var(--ecf-border-2);
   color: var(--ecf-muted-2);
@@ -1479,8 +1479,8 @@ input[type="file"].ecf-file { color: var(--ecf-muted-2); font-size: 12px; }
   content: '';
   position: absolute;
   bottom: calc(100% + 2px);
-  left: 50%;
-  transform: translateX(-50%);
+  left: 14px;
+  transform: none;
   border: 5px solid transparent;
   border-top-color: var(--ecf-border-2);
   pointer-events: none;
