@@ -8,6 +8,9 @@ jQuery(function($){
   function inputKey(group){
     return $('.ecf-table[data-group="'+group+'"]').data('input-key') || ('ecf_framework_v50['+group+']');
   }
+  function nextLocalFontIndex() {
+    return $('[data-local-font-table] .ecf-font-file-row').length;
+  }
   initColorPickers($(document));
 
   $(document).on('click', '.ecf-add-row', function(){
@@ -25,13 +28,255 @@ jQuery(function($){
     var $row = $(html);
     $('.ecf-table[data-group="'+group+'"]').append($row);
     if (isColor) initColorPickers($row);
+    renderTypePreview();
+    renderShadowPreview();
   });
 
   $(document).on('click', '.ecf-remove-row', function(){
-    var $row = $(this).closest('.ecf-row');
+    var $row = $(this).closest('.ecf-row, .ecf-font-file-row');
     if ($row.find('.ecf-color-field').length) $row.find('.wp-picker-container').remove();
     $row.remove();
+    renderTypePreview();
+    renderShadowPreview();
   });
+
+  $(document).on('click', '.ecf-add-local-font', function(){
+    var $table = $('[data-local-font-table]');
+    var key = $table.data('input-key');
+    var index = nextLocalFontIndex();
+    var html = '<div class="ecf-font-file-row">'
+      + '<input type="text" name="' + key + '[' + index + '][name]" value="" placeholder="primary-regular" />'
+      + '<input type="text" name="' + key + '[' + index + '][family]" value="" placeholder="Primary" />'
+      + '<div class="ecf-font-file-picker">'
+      + '<input type="text" class="ecf-font-file-url" name="' + key + '[' + index + '][src]" value="" placeholder="Local upload" readonly />'
+      + '<button type="button" class="button ecf-font-file-select">' + ecfAdmin.i18n.select_file + '</button>'
+      + '</div>'
+      + '<input type="text" name="' + key + '[' + index + '][weight]" value="400" placeholder="400" />'
+      + '<select name="' + key + '[' + index + '][style]"><option value="normal">normal</option><option value="italic">italic</option><option value="oblique">oblique</option></select>'
+      + '<select name="' + key + '[' + index + '][display]"><option value="swap">swap</option><option value="fallback">fallback</option><option value="optional">optional</option><option value="block">block</option><option value="auto">auto</option></select>'
+      + '<button type="button" class="button ecf-remove-row">×</button>'
+      + '</div>';
+    $table.append($(html));
+  });
+
+  $(document).on('click', '.ecf-font-file-select', function(e){
+    e.preventDefault();
+    var $button = $(this);
+    var frame = wp.media({
+      title: ecfAdmin.i18n.choose_font,
+      button: { text: ecfAdmin.i18n.use_font },
+      library: { type: ['application/font-woff', 'font/woff', 'font/woff2', 'font/ttf', 'font/otf', 'application/octet-stream'] },
+      multiple: false
+    });
+
+    frame.on('select', function() {
+      var attachment = frame.state().get('selection').first().toJSON();
+      $button.siblings('.ecf-font-file-url').val(attachment.url).trigger('input').trigger('change');
+    });
+
+    frame.open();
+  });
+
+  function formatPreviewNumber(value) {
+    var rounded = Math.round(value * 100) / 100;
+    return String(rounded).replace(/\.0+$|(\.\d*[1-9])0+$/, '$1');
+  }
+
+  function escapeHtml(value) {
+    return $('<div>').text(value == null ? '' : String(value)).html();
+  }
+
+  function getTypePreviewConfig($preview) {
+    var maxBase = parseFloat($('[name="ecf_framework_v50[typography][scale][max_base]"]').val());
+    if (!maxBase) {
+      maxBase = parseFloat($('[name="ecf_framework_v50[typography][scale][base]"]').val()) || 18;
+    }
+    var minBase = parseFloat($('[name="ecf_framework_v50[typography][scale][min_base]"]').val());
+    if (!minBase) {
+      var legacyBase = parseFloat($('[name="ecf_framework_v50[typography][scale][base]"]').val()) || 16;
+      var legacyScaleFactor = parseFloat($('[name="ecf_framework_v50[typography][scale][scale_factor]"]').val()) || 0.8;
+      minBase = legacyBase * legacyScaleFactor || 16;
+    }
+
+    return {
+      steps: $preview.data('steps') || [],
+      minBase: minBase,
+      maxBase: maxBase,
+      minRatio: parseFloat($('[name="ecf_framework_v50[typography][scale][min_ratio]"]').val()) || parseFloat($('[name="ecf_framework_v50[typography][scale][ratio]"]').val()) || 1.125,
+      maxRatio: parseFloat($('[name="ecf_framework_v50[typography][scale][max_ratio]"]').val()) || parseFloat($('[name="ecf_framework_v50[typography][scale][ratio]"]').val()) || 1.25,
+      baseIndex: $('[name="ecf_framework_v50[typography][scale][base_index]"]').val() || 'm',
+      fluid: $('[name="ecf_framework_v50[typography][scale][fluid]"]').is(':checked'),
+      minVw: parseFloat($('[name="ecf_framework_v50[typography][scale][min_vw]"]').val()) || 375,
+      maxVw: parseFloat($('[name="ecf_framework_v50[typography][scale][max_vw]"]').val()) || 1280
+    };
+  }
+
+  function buildTypePreviewItems(config) {
+    var baseIndex = config.steps.indexOf(config.baseIndex);
+    if (baseIndex === -1) baseIndex = 2;
+
+    return $.map(config.steps, function(step, i) {
+      var exp = i - baseIndex;
+      var maxSize = Math.round((config.maxBase * Math.pow(config.maxRatio, exp)) * 1000) / 1000;
+      var minSize = Math.round((config.minBase * Math.pow(config.minRatio, exp)) * 1000) / 1000;
+      var cssValue = maxSize + 'px';
+
+      if (config.fluid && config.maxVw > config.minVw) {
+        var slope = (maxSize - minSize) / (config.maxVw - config.minVw);
+        var intercept = Math.round((minSize - slope * config.minVw) * 10000) / 10000;
+        var slopeVw = Math.round((slope * 100) * 10000) / 10000;
+        cssValue = 'clamp(' + minSize + 'px,' + slopeVw + 'vw' + (intercept >= 0 ? '+' : '') + intercept + 'px,' + maxSize + 'px)';
+      } else {
+        minSize = maxSize;
+      }
+
+      return {
+        step: step,
+        token: '--cf-text-' + step,
+        min: formatPreviewNumber(minSize),
+        max: formatPreviewNumber(maxSize),
+        cssValue: cssValue,
+        previewSize: config.fluid ? cssValue : maxSize + 'px'
+      };
+    });
+  }
+
+  function getPreviewFont() {
+    var fontValue = $('[name^="ecf_framework_v50[typography][fonts]"][name$="[value]"]').first().val();
+    return fontValue || 'Inter, sans-serif';
+  }
+
+  function renderTypePreview() {
+    var $preview = $('[data-ecf-type-scale-preview]');
+    if (!$preview.length) return;
+
+    var config = getTypePreviewConfig($preview);
+    var items = buildTypePreviewItems(config);
+    var html = '';
+    var labelMin = $preview.data('preview-label-min') || 'Minimum';
+    var labelMax = $preview.data('preview-label-max') || 'Maximum';
+    var labelFixed = $preview.data('preview-label-fixed') || 'Static';
+    var labelFluid = $preview.data('preview-label-fluid') || 'Fluid';
+    var previewWord = $preview.data('preview-word') || 'Typography';
+    var helperText = $preview.data('preview-helper') || '';
+    var activeStep = $preview.attr('data-active-step') || config.baseIndex;
+    var viewMode = $preview.attr('data-preview-view') || 'fluid';
+
+    if ($.inArray(viewMode, ['min', 'fluid', 'max']) === -1) {
+      viewMode = 'fluid';
+    }
+
+    if (!items.some(function(item){ return item.step === activeStep; })) {
+      activeStep = config.baseIndex;
+    }
+
+    function sizeForView(item) {
+      if (viewMode === 'min') return item.min + 'px';
+      if (viewMode === 'max') return item.max + 'px';
+      return item.cssValue;
+    }
+
+    function modeLabel() {
+      if (viewMode === 'min') return '<i class="dashicons dashicons-smartphone"></i>' + labelMin;
+      if (viewMode === 'max') return '<i class="dashicons dashicons-desktop"></i>' + labelMax;
+      return config.fluid ? labelFluid : labelFixed;
+    }
+
+    $.each(items, function(_, item) {
+      var selectedClass = item.step === activeStep ? ' is-active' : '';
+      html += '<button type="button" class="ecf-type-row' + selectedClass + '" data-ecf-step="' + item.step + '" style="--ecf-preview-size:' + sizeForView(item) + ';">'
+        + '<div class="ecf-type-row__token">' + item.token + '</div>'
+        + '<div class="ecf-type-row__meta">'
+        + '<div><span><i class="dashicons dashicons-smartphone"></i>' + labelMin + '</span><strong>' + item.min + 'px</strong></div>'
+        + '<div><span><i class="dashicons dashicons-desktop"></i>' + labelMax + '</span><strong>' + item.max + 'px</strong></div>'
+        + '</div>'
+        + '<div class="ecf-type-row__sample">'
+        + '<div class="ecf-type-row__word">' + previewWord + '</div>'
+        + '<code>' + item.cssValue + '</code>'
+        + '</div>'
+        + '</button>';
+    });
+
+    var activeItem = items.find(function(item){ return item.step === activeStep; }) || items[0];
+
+    $preview.css('--ecf-preview-font', getPreviewFont());
+    $preview.attr('data-active-step', activeStep);
+    $preview.attr('data-preview-view', viewMode);
+    $preview.find('[data-ecf-type-scale-preview-list]').html(html);
+    $preview.find('[data-ecf-preview-mode]').html(modeLabel());
+    $preview.find('[data-ecf-focus-token]').text(activeItem ? activeItem.token : '');
+    $preview.find('[data-ecf-focus-helper]').text(helperText);
+    $preview.find('[data-ecf-focus-word]').text(previewWord).css('font-size', activeItem ? sizeForView(activeItem) : '');
+    $preview.find('[data-ecf-focus-min]').text(activeItem ? activeItem.min + 'px' : '');
+    $preview.find('[data-ecf-focus-max]').text(activeItem ? activeItem.max + 'px' : '');
+    $preview.find('[data-ecf-focus-css]').text(activeItem ? activeItem.cssValue : '');
+    $preview.find('[data-ecf-preview-view]').removeClass('is-active');
+    $preview.find('[data-ecf-preview-view="' + viewMode + '"]').addClass('is-active');
+  }
+
+  function buildShadowPreviewItems() {
+    return $('.ecf-table[data-group="shadows"] .ecf-row').map(function(index) {
+      var $row = $(this);
+      var name = $.trim($row.find('input').eq(0).val()) || ('shadow-' + index);
+      var value = $.trim($row.find('input').eq(1).val()) || '0 1px 2px rgba(0,0,0,0.05)';
+      var slug = name.toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-+|-+$/g, '') || ('shadow-' + index);
+
+      return {
+        name: name,
+        slug: slug,
+        token: 'cf-shadow-' + slug,
+        value: value
+      };
+    }).get();
+  }
+
+  function renderShadowPreview() {
+    var $preview = $('[data-ecf-shadow-preview]');
+    if (!$preview.length) return;
+
+    var items = buildShadowPreviewItems();
+    var helperText = $preview.data('preview-helper') || '';
+    var previewWord = $preview.data('preview-word') || 'Shadow';
+    var activeShadow = $preview.attr('data-active-shadow') || (items[0] ? items[0].slug : '');
+    var html = '';
+
+    if (!items.length) {
+      $preview.find('[data-ecf-shadow-preview-list]').html('');
+      $preview.find('[data-ecf-shadow-token]').text('');
+      $preview.find('[data-ecf-shadow-name]').text('');
+      $preview.find('[data-ecf-shadow-css]').text('');
+      $preview.find('[data-ecf-shadow-label]').text(previewWord);
+      $preview.find('[data-ecf-shadow-helper]').text(helperText);
+      $preview.find('[data-ecf-shadow-surface]').css('box-shadow', 'none');
+      return;
+    }
+
+    if (!items.some(function(item){ return item.slug === activeShadow; })) {
+      activeShadow = items[0].slug;
+    }
+
+    $.each(items, function(_, item) {
+      var selectedClass = item.slug === activeShadow ? ' is-active' : '';
+      html += '<button type="button" class="ecf-shadow-row' + selectedClass + '" data-ecf-shadow-step="' + item.slug + '">'
+        + '<div class="ecf-shadow-row__token">' + escapeHtml(item.token) + '</div>'
+        + '<div class="ecf-shadow-row__value"><code>' + escapeHtml(item.value) + '</code></div>'
+        + '<div class="ecf-shadow-row__sample"><div class="ecf-shadow-row__mini" style="box-shadow:' + escapeHtml(item.value) + ';"></div></div>'
+        + '</button>';
+    });
+
+    var activeItem = items.find(function(item){ return item.slug === activeShadow; }) || items[0];
+
+    $preview.attr('data-active-shadow', activeShadow);
+    $preview.find('[data-ecf-shadow-preview-list]').html(html);
+    $preview.find('[data-ecf-shadow-token]').text(activeItem.token);
+    $preview.find('[data-ecf-shadow-name]').text(activeItem.name);
+    $preview.find('[data-ecf-shadow-css]').text(activeItem.value);
+    $preview.find('[data-ecf-shadow-label]').text(activeItem.token);
+    $preview.find('[data-ecf-shadow-helper]').text(helperText);
+    $preview.find('[data-ecf-shadow-surface]').css('box-shadow', activeItem.value);
+  }
 
   // ── Sidebar navigation ─────────────────────────────────────────
   var $noSavePanel = ['variables', 'sync']; // panels that don't need the save button
@@ -57,8 +302,60 @@ jQuery(function($){
     switchPanel(panel);
   });
 
+  function openChangelogModal() {
+    $('[data-ecf-changelog-modal]').prop('hidden', false).addClass('is-open');
+    $('body').addClass('ecf-modal-open');
+  }
+
+  function closeChangelogModal() {
+    $('[data-ecf-changelog-modal]').removeClass('is-open').prop('hidden', true);
+    $('body').removeClass('ecf-modal-open');
+  }
+
+  $(document).on('click', '[data-ecf-open-changelog-modal]', function(){
+    openChangelogModal();
+  });
+
+  $(document).on('click', '[data-ecf-close-changelog-modal]', function(){
+    closeChangelogModal();
+  });
+
+  $(document).on('keydown', function(e){
+    if (e.key === 'Escape') {
+      closeChangelogModal();
+    }
+  });
+
   // Activate first panel on load
   switchPanel('tokens');
+  renderTypePreview();
+  renderShadowPreview();
+
+  $(document).on('input change', '[name^="ecf_framework_v50[typography][scale]"], [name^="ecf_framework_v50[typography][fonts]"]', function(){
+    renderTypePreview();
+  });
+
+  $(document).on('input change', '[name^="ecf_framework_v50[shadows]"]', function(){
+    renderShadowPreview();
+  });
+
+  $(document).on('click', '[data-ecf-step]', function(){
+    var $preview = $('[data-ecf-type-scale-preview]');
+    $preview.attr('data-active-step', $(this).data('ecf-step'));
+    renderTypePreview();
+  });
+
+  $(document).on('click', '[data-ecf-shadow-step]', function(){
+    var $preview = $('[data-ecf-shadow-preview]');
+    $preview.attr('data-active-shadow', $(this).data('ecf-shadow-step'));
+    renderShadowPreview();
+  });
+
+  $(document).on('click', '[data-ecf-preview-view]', function(){
+    var $preview = $('[data-ecf-type-scale-preview]');
+    $preview.attr('data-preview-view', $(this).data('ecf-preview-view'));
+    renderTypePreview();
+  });
 
   // ── Variables Management ───────────────────────────────────────
   var varsLoaded = false;
