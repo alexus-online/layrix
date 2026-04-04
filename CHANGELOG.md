@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.16 (2026-04-05)
+
+### Fixed
+- Added a canonical plugin-folder fallback for GitHub updates so the installer should keep using `elementor-core-framework` instead of drifting to `elementor-core-framework-master`.
+- Einen kanonischen Fallback fuer den Plugin-Ordner bei GitHub-Updates ergaenzt, damit der Installer bei `elementor-core-framework` bleibt und nicht wieder auf `elementor-core-framework-master` springt.
+
 ## 0.1.15 (2026-04-05)
 
 ### Fixed
