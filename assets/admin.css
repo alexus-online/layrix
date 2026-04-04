@@ -1267,6 +1267,11 @@
   gap: 12px;
   justify-content: flex-start;
 }
+.ecf-utility-row__value-content {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
 .ecf-utility-row__value-icon {
   color: #586078;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -1277,6 +1282,13 @@
   font-size: 20px;
   font-weight: 500;
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+.ecf-utility-row__value small {
+  color: var(--ecf-muted);
+  font-size: 12px;
+  line-height: 1.45;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  word-break: break-word;
 }
 
 /* ── Save button ───────────────────────────────────────────────── */
