@@ -1,4 +1,8 @@
 jQuery(function($){
+  var i18n = (typeof ecfAdmin !== 'undefined' && ecfAdmin.i18n) ? ecfAdmin.i18n : {};
+  i18n.copy    = i18n.copy    || 'Copy';
+  i18n.copied  = i18n.copied  || 'Copied!';
+
   function initColorPickers(scope){
     scope.find('.ecf-color-field').wpColorPicker();
   }
@@ -361,10 +365,6 @@ jQuery(function($){
 
   // ── Variables Management ───────────────────────────────────────
   var varsLoaded = false;
-
-  var i18n = (typeof ecfAdmin !== 'undefined' && ecfAdmin.i18n) ? ecfAdmin.i18n : {};
-  i18n.copy    = i18n.copy    || 'Copy';
-  i18n.copied  = i18n.copied  || 'Copied!';
 
   function typeLabel(type) {
     if (type === 'global-color-variable')  return i18n.type_color;
