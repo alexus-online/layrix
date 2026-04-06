@@ -1,10 +1,5 @@
-.ecf-editor-palette{padding:6px 0}
-.ecf-editor-block{margin:0 0 12px}
-.ecf-chip-wrap{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
-.ecf-chip{border:1px solid #d5d8dc;background:#fff;border-radius:999px;padding:4px 8px;font-size:11px;line-height:1.2;cursor:pointer}
-.ecf-chip:hover{background:#f3f5f7}
-.ecf-chip-label{font-size:10px;color:#6b7280;margin:6px 0 2px;text-transform:uppercase;letter-spacing:.05em}
-.ecf-chip-wrap--shades{margin-top:2px;margin-bottom:6px}
-.ecf-chip--shade{width:28px;height:28px;padding:0;border-radius:6px;border:1px solid rgba(0,0,0,.12);font-size:9px;color:transparent;position:relative}
-.ecf-chip--shade:hover{color:#fff;text-shadow:0 1px 2px rgba(0,0,0,.5)}
-.ecf-editor-help{font-size:11px;color:#6b7280;margin:8px 0 0}
+.ecf-editor-help {
+  font-size: 11px;
+  color: #6b7280;
+  margin: 8px 0 0;
+}

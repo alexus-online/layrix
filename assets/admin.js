@@ -1,5 +1,6 @@
 jQuery(function($){
   var i18n = (typeof ecfAdmin !== 'undefined' && ecfAdmin.i18n) ? ecfAdmin.i18n : {};
+  var spacingPreviewMap = (typeof ecfAdmin !== 'undefined' && ecfAdmin.spacingPreview) ? ecfAdmin.spacingPreview : {};
   i18n.copy    = i18n.copy    || 'Copy';
   i18n.copied  = i18n.copied  || 'Copied!';
 
@@ -407,7 +408,11 @@ jQuery(function($){
   function resetFormatTooltip($picker) {
     var $current = $picker.find('.ecf-format-picker__option.is-active').first();
     var tip = $current.data('tip') || '';
-    $picker.find('[data-ecf-format-tooltip]').text(tip);
+    $picker.closest('.ecf-card').find('[data-ecf-format-tooltip]').first().text(tip);
+  }
+
+  function setFormatTooltipVisibility($picker, visible) {
+    $picker.closest('.ecf-card').find('[data-ecf-format-tooltip]').first().prop('hidden', !visible);
   }
 
   function escapeHtml(value) {
@@ -524,7 +529,7 @@ jQuery(function($){
 
     $.each(items, function(_, item) {
       var selectedClass = item.step === activeStep ? ' is-active' : '';
-      html += '<button type="button" class="ecf-type-row' + selectedClass + '" data-ecf-step="' + item.step + '" style="--ecf-preview-size:' + sizeForView(item) + ';">'
+      html += '<div class="ecf-type-row' + selectedClass + '" data-ecf-step="' + item.step + '" data-ecf-step-row tabindex="0" role="button" aria-pressed="' + (item.step === activeStep ? 'true' : 'false') + '" style="--ecf-preview-size:' + sizeForView(item) + ';">'
         + '<div class="ecf-type-row__token">' + item.token
         + '<span class="ecf-copy-pill" data-copy="' + item.token + '">' + i18n.copy + '</span>'
         + '</div>'
@@ -542,7 +547,7 @@ jQuery(function($){
         + '<span><i class="dashicons dashicons-desktop"></i>' + labelMax + '</span>'
         + '</div>'
         + '</div>'
-        + '</button>';
+        + '</div>';
     });
 
     var activeItem = items.find(function(item){ return item.step === activeStep; }) || items[0];
@@ -673,7 +678,7 @@ jQuery(function($){
       return {
         name: name,
         slug: slug,
-      token: 'ecf-shadow-' + slug,
+      token: '--ecf-shadow-' + slug,
         value: value
       };
     }).get();
@@ -727,12 +732,17 @@ jQuery(function($){
 
   // ── Sidebar navigation ─────────────────────────────────────────
   var $noSavePanel = ['variables', 'sync']; // panels that don't need the save button
+  var panelStorageKey = 'ecfActivePanel';
 
   function switchPanel(panel) {
     $('.ecf-nav-item').removeClass('is-active');
     $('.ecf-nav-item[data-panel="'+panel+'"]').addClass('is-active');
     $('.ecf-panel').removeClass('is-active');
     $('.ecf-panel[data-panel="'+panel+'"]').addClass('is-active');
+
+    try {
+      window.sessionStorage.setItem(panelStorageKey, panel);
+    } catch (err) {}
 
     // show/hide save footer
     if ($noSavePanel.indexOf(panel) !== -1) {
@@ -743,7 +753,6 @@ jQuery(function($){
 
     if (panel === 'variables') {
       loadVariables();
-      loadClasses();
     }
   }
 
@@ -773,11 +782,27 @@ jQuery(function($){
   $(document).on('keydown', function(e){
     if (e.key === 'Escape') {
       closeChangelogModal();
+      closeSearchEditModal();
     }
   });
 
-  // Activate first panel on load
-  switchPanel('tokens');
+  // Keep the active panel after saving or reloading
+  var initialPanel = 'tokens';
+  try {
+    var storedPanel = window.sessionStorage.getItem(panelStorageKey);
+    if (storedPanel && $('.ecf-nav-item[data-panel="'+storedPanel+'"]').length) {
+      initialPanel = storedPanel;
+    }
+  } catch (err) {}
+  switchPanel(initialPanel);
+
+  $(document).on('submit', 'form[action="options.php"]', function() {
+    var activePanel = $('.ecf-nav-item.is-active').data('panel') || 'tokens';
+    try {
+      window.sessionStorage.setItem(panelStorageKey, activePanel);
+    } catch (err) {}
+  });
+
   updateRootFontSizeLabels($('[data-ecf-root-font-source]').first().val() || $('[data-ecf-root-font-mirror]').first().val());
   $('[data-ecf-format-picker]').each(function() {
     resetFormatTooltip($(this));
@@ -813,10 +838,12 @@ jQuery(function($){
     var willOpen = $menu.prop('hidden');
     $('[data-ecf-format-menu]').prop('hidden', true);
     $('[data-ecf-format-trigger]').attr('aria-expanded', 'false');
+    $('[data-ecf-format-tooltip]').prop('hidden', true);
     if (willOpen) {
       $menu.prop('hidden', false);
       $(this).attr('aria-expanded', 'true');
       resetFormatTooltip($picker);
+      setFormatTooltipVisibility($picker, true);
     }
   });
 
@@ -841,11 +868,13 @@ jQuery(function($){
     resetFormatTooltip($picker);
     $picker.find('[data-ecf-format-menu]').prop('hidden', true);
     $picker.find('[data-ecf-format-trigger]').attr('aria-expanded', 'false');
+    setFormatTooltipVisibility($picker, false);
   });
 
   $(document).on('click', function() {
     $('[data-ecf-format-menu]').prop('hidden', true);
     $('[data-ecf-format-trigger]').attr('aria-expanded', 'false');
+    $('[data-ecf-format-tooltip]').prop('hidden', true);
   });
 
   $(document).on('input change', '[name^="ecf_framework_v50[shadows]"]', function(){
@@ -856,6 +885,12 @@ jQuery(function($){
     var $preview = $('[data-ecf-type-scale-preview]');
     $preview.attr('data-active-step', $(this).data('ecf-step'));
     renderTypePreview();
+  });
+
+  $(document).on('keydown', '[data-ecf-step-row]', function(e){
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    e.preventDefault();
+    $(this).trigger('click');
   });
 
   $(document).on('click', '[data-ecf-shadow-step]', function(){
@@ -879,6 +914,18 @@ jQuery(function($){
     'ecf-classes': 'all',
     'foreign-classes': 'all'
   };
+  var varStore = {
+    ecf: [],
+    foreign: [],
+    'ecf-classes': [],
+    'foreign-classes': []
+  };
+  var varSearch = {
+    ecf: '',
+    foreign: '',
+    'ecf-classes': '',
+    'foreign-classes': ''
+  };
 
   function typeLabel(type) {
     if (type === 'global-color-variable')  return i18n.type_color;
@@ -889,7 +936,7 @@ jQuery(function($){
     if (type === 'layout') return i18n.type_layout || 'Layout';
     if (type === 'radius') return i18n.type_radius || 'Radius';
     if (type === 'shadow') return i18n.type_shadow || 'Schatten';
-    if (type === 'class') return i18n.type_class || 'Global Class';
+    if (type === 'class') return i18n.type_class || 'Globale Klasse';
     return type;
   }
 
@@ -915,35 +962,147 @@ jQuery(function($){
     if (tabKey === 'layout') return i18n.type_layout || 'Layout';
     if (tabKey === 'radius') return i18n.type_radius || 'Radius';
     if (tabKey === 'shadow') return i18n.type_shadow || 'Schatten';
-    if (tabKey === 'class') return i18n.type_class || 'Global Class';
+    if (tabKey === 'class') return i18n.type_class || 'Globale Klasse';
     if (tabKey === 'other') return i18n.type_other || 'Sonstige';
     return i18n.type_all || 'Alle';
+  }
+
+  function getVariablePreviewKind(item) {
+    var label = String(item.label || '').toLowerCase();
+    var tabKey = typeTabKey(item.type);
+    if (tabKey === 'spacing') return 'spacing';
+    if (tabKey === 'color') return 'color';
+    if (label.indexOf('space') !== -1 || label.indexOf('gap') !== -1 || label.indexOf('padding') !== -1 || label.indexOf('margin') !== -1) return 'spacing';
+    return 'value';
+  }
+
+  function renderVariableValue(item) {
+    var kind = getVariablePreviewKind(item);
+    var value = String(item.value || '');
+    var preview = '';
+
+    if (kind === 'color') {
+      preview = '<span class="ecf-color-dot" style="background:' + escapeHtml(value) + '"></span>';
+      return '<span class="ecf-var-value">' + preview + escapeHtml(value) + '</span>';
+    }
+
+    if (kind === 'spacing') {
+      var tokenKey = String(item.label || '').toLowerCase();
+      var spacingData = spacingPreviewMap[tokenKey] || null;
+      var minPx = null;
+      var maxPx = null;
+
+      if (spacingData) {
+        minPx = parseFloat(spacingData.minPx);
+        maxPx = parseFloat(spacingData.maxPx);
+      } else {
+        var clampData = parseClampSizeValue(value);
+        if (clampData) {
+          minPx = clampData.minPx;
+          maxPx = clampData.maxPx;
+        }
+      }
+
+      if (minPx != null && maxPx != null) {
+        var maxRef = Math.max(minPx, maxPx, 1);
+        var minWidth = clamp((minPx / maxRef) * 100, 10, 100);
+        var maxWidth = clamp((maxPx / maxRef) * 100, 10, 100);
+
+        return '<span class="ecf-var-value ecf-var-value--spacing">'
+          + '<span class="ecf-var-space-metric"><small>Min</small><strong>' + escapeHtml(formatNumber(minPx, 2)) + 'px</strong></span>'
+          + '<span class="ecf-var-space-visual" aria-hidden="true">'
+          + '<span class="ecf-var-space-bar"><span class="ecf-var-space-fill" style="width:' + minWidth + '%;height:6px;"></span></span>'
+          + '<span class="ecf-var-space-bar"><span class="ecf-var-space-fill" style="width:' + maxWidth + '%;height:10px;"></span></span>'
+          + '</span>'
+          + '<span class="ecf-var-space-metric"><small>Max</small><strong>' + escapeHtml(formatNumber(maxPx, 2)) + 'px</strong></span>'
+          + '</span>';
+      } 
+    }
+
+    return '<span class="ecf-var-value">' + escapeHtml(value) + '</span>';
   }
 
   function buildVarTable(group, items) {
     var html = '<div class="ecf-var-table">';
     html += '<div class="ecf-var-head"><span></span><span>'+i18n.col_name+'</span><span>'+i18n.col_type+'</span><span>'+i18n.col_value+'</span></div>';
     $.each(items, function(i, v) {
-      var preview = '';
-      if (v.type === 'global-color-variable') {
-        preview = '<span class="ecf-color-dot" style="background:'+v.value+'"></span>';
-      }
       html += '<div class="ecf-var-row" data-id="'+v.id+'" data-group="'+group+'">'
         + '<input type="checkbox" class="ecf-var-check" value="'+v.id+'">'
-        + '<span class="ecf-var-label">'+v.label+'</span>'
+        + '<span class="ecf-var-label">'+originBadge(group)+'<span>'+v.label+'</span></span>'
         + '<span class="ecf-var-type">'+typeLabel(v.type)+'</span>'
-        + '<span class="ecf-var-value">'+preview+v.value+'</span>'
+        + renderVariableValue(v)
         + '</div>';
     });
     html += '</div>';
     return html;
   }
 
+  function groupLabel(group) {
+    if (group === 'ecf') return 'ECF Variablen';
+    if (group === 'foreign') return 'Fremde Variablen';
+    if (group === 'ecf-classes') return 'ECF Klassen';
+    if (group === 'foreign-classes') return 'Fremde Klassen';
+    return group;
+  }
+
+  function originBadge(group) {
+    if (group === 'ecf' || group === 'ecf-classes') {
+      return '<span class="ecf-origin-badge ecf-origin-badge--ecf">ECF</span>';
+    }
+    return '<span class="ecf-origin-badge ecf-origin-badge--ext">EXT</span>';
+  }
+
+  function isClassGroup(group) {
+    return String(group).indexOf('classes') !== -1;
+  }
+
+  function canEditSearchItem(item) {
+    return item.group === 'foreign' && !isClassGroup(item.group);
+  }
+
+  function getSearchPreviewKind(item) {
+    var label = String(item.label || '').toLowerCase();
+    if (item.type === 'global-color-variable') return 'color';
+    if (label.indexOf('text') !== -1) return 'typography';
+    if (label.indexOf('space') !== -1 || label.indexOf('gap') !== -1 || label.indexOf('padding') !== -1 || label.indexOf('margin') !== -1) return 'spacing';
+    if (label.indexOf('radius') !== -1 || label.indexOf('round') !== -1) return 'radius';
+    if (label.indexOf('shadow') !== -1) return 'shadow';
+    if (isClassGroup(item.group)) return 'class';
+    return 'value';
+  }
+
+  function renderSearchPreview(item) {
+    var kind = getSearchPreviewKind(item);
+    if (kind === 'color') {
+      return '<span class="ecf-global-search__preview ecf-global-search__preview--color"><span class="ecf-color-dot" style="background:' + escapeHtml(item.value) + '"></span><span>' + escapeHtml(String(item.value || '')) + '</span></span>';
+    }
+    if (kind === 'typography') {
+      return '<span class="ecf-global-search__preview ecf-global-search__preview--type">Text</span>';
+    }
+    if (kind === 'spacing') {
+      return '<span class="ecf-global-search__preview ecf-global-search__preview--spacing"><span></span></span>';
+    }
+    if (kind === 'radius') {
+      return '<span class="ecf-global-search__preview ecf-global-search__preview--radius"></span>';
+    }
+    if (kind === 'shadow') {
+      return '<span class="ecf-global-search__preview ecf-global-search__preview--shadow"></span>';
+    }
+    if (kind === 'class') {
+      return '<span class="ecf-global-search__preview ecf-global-search__preview--class">Klasse</span>';
+    }
+    return '<span class="ecf-global-search__preview ecf-global-search__preview--value">' + escapeHtml(String(item.value || '')) + '</span>';
+  }
+
   function renderVarList(group, items) {
+    varStore[group] = items.slice();
     var $list = $('#ecf-varlist-' + group);
+    var $card = $list.closest('.ecf-card');
+    var $actions = $card.find('.ecf-vargroup-actions').first();
     $('#ecf-badge-' + group).text(items.length);
     if (!items.length) {
       $list.html('<p style="color:#9ca3af;font-size:13px;">'+i18n.none+'</p>');
+      updateSelectAllState(group);
       return;
     }
 
@@ -972,20 +1131,560 @@ jQuery(function($){
     });
     tabs += '</div>';
 
-    $list.html(tabs + buildVarTable(group, buckets[varTabs[group]] || items));
+    $list.html(tabs + '<div class="ecf-var-toolbar"></div>' + buildVarTable(group, buckets[varTabs[group]] || items));
+    if ($actions.length) {
+      $list.find('.ecf-var-toolbar').append($actions);
+    }
+    applyVarSearch(group);
+  }
+
+  function applyVarSearch(group) {
+    var query = String(varSearch[group] || '').trim().toLowerCase();
+    var $list = $('#ecf-varlist-' + group);
+    var $rows = $list.find('.ecf-var-row');
+
+    if (!$rows.length) {
+      updateSelectAllState(group);
+      return;
+    }
+
+    var visibleCount = 0;
+    $rows.each(function() {
+      var $row = $(this);
+      var matches = !query || $row.text().toLowerCase().indexOf(query) !== -1;
+      $row.toggle(matches);
+      if (matches) visibleCount += 1;
+    });
+
+    $list.find('.ecf-var-empty-search').remove();
+    if (!visibleCount) {
+      $list.append('<p class="ecf-var-empty-search">'+(i18n.none || 'Keine Einträge gefunden.')+'</p>');
+    }
+
+    updateSelectAllState(group);
+  }
+
+  function getVisibleChecks(group) {
+    return $('#ecf-varlist-' + group).find('.ecf-var-row:visible .ecf-var-check');
+  }
+
+  function updateSelectAllState(group) {
+    var $btn = $('.ecf-select-all[data-group="' + group + '"]');
+    var $deleteBtn = $('.ecf-delete-selected[data-group="' + group + '"]');
+    if (!$btn.length) return;
+
+    var $checks = getVisibleChecks(group);
+    if (!$checks.length) {
+      $btn.prop('disabled', true).removeClass('is-active').find('span:last-child').text(i18n.select_all);
+      $deleteBtn.prop('disabled', true).removeClass('is-active');
+      return;
+    }
+
+    var checkedCount = $checks.filter(':checked').length;
+    var allChecked = $checks.length === $checks.filter(':checked').length;
+    $btn
+      .prop('disabled', false)
+      .toggleClass('is-active', allChecked)
+      .find('span:last-child')
+      .text(allChecked ? i18n.deselect_all : i18n.select_all);
+
+    $deleteBtn
+      .prop('disabled', checkedCount === 0)
+      .toggleClass('is-active', checkedCount > 0);
   }
 
   function updateVariableSummary(ecfItems, foreignItems) {
     var ecfCount = (ecfItems || []).length;
     var foreignCount = (foreignItems || []).length;
+    var total = ecfCount + foreignCount;
     $('#ecf-total-ecf-variables').text(ecfCount);
     $('#ecf-total-foreign-variables').text(foreignCount);
-    $('#ecf-total-variables').text(ecfCount + foreignCount);
+    $('#ecf-total-variables, #ecf-total-variables-inline').text(total);
   }
 
   function updateClassSummary(ecfItems, foreignItems) {
     var total = (ecfItems || []).length + (foreignItems || []).length;
     $('#ecf-total-global-classes').text(total);
+    $('.ecf-total-global-classes-compact').text(total);
+    $('[data-ecf-starter-classes]').attr('data-ecf-class-current', total);
+    $('[data-ecf-starter-current]').text(total);
+    var labels = []
+      .concat((ecfItems || []).map(function(item) { return String(item.label || '').toLowerCase(); }))
+      .concat((foreignItems || []).map(function(item) { return String(item.label || '').toLowerCase(); }));
+    $('[data-ecf-starter-classes]').attr('data-ecf-existing-labels', JSON.stringify(Array.from(new Set(labels))));
+    applyClassUsageStatus(total);
+    updateStarterClassesState();
+  }
+
+  function getClassUsageStatus(total, limit) {
+    if (!limit || limit <= 0) return 'neutral';
+    if (total >= 90) return 'danger';
+    if (total >= 70) return 'warning';
+    return 'success';
+  }
+
+  function applyClassUsageStatus(total) {
+    $('[data-ecf-class-usage-card]').each(function() {
+      var $card = $(this);
+      var limit = parseInt($card.data('ecf-class-limit'), 10) || parseInt($('#ecf-limit-global-classes').first().text(), 10) || 100;
+      var status = getClassUsageStatus(total, limit);
+      $card
+        .removeClass('ecf-class-limit-card--neutral ecf-class-limit-card--success ecf-class-limit-card--warning ecf-class-limit-card--danger')
+        .addClass('ecf-class-limit-card--' + status);
+    });
+  }
+
+  function getStarterExistingLabels() {
+    var raw = $('[data-ecf-starter-classes]').attr('data-ecf-existing-labels') || '[]';
+    try {
+      return JSON.parse(raw).map(function(label) { return String(label || '').toLowerCase(); });
+    } catch (err) {
+      return [];
+    }
+  }
+
+  function getSelectedStarterNames() {
+    var names = [];
+    $('.ecf-starter-class-toggle:checked').each(function() {
+      var name = String($(this).closest('[data-class-name]').data('class-name') || '').toLowerCase();
+      if (name) names.push(name);
+    });
+    $('.ecf-starter-custom-row').each(function() {
+      var $row = $(this);
+      if (!$row.find('.ecf-custom-starter-enabled').is(':checked')) return;
+      var name = String($row.find('.ecf-custom-starter-name').val() || '').trim().toLowerCase();
+      if (!name) return;
+      if (name.indexOf('ecf-') !== 0) {
+        name = 'ecf-' + name.replace(/^-+/, '');
+      }
+      names.push(name);
+    });
+    return Array.from(new Set(names));
+  }
+
+  function getSelectedUtilityNames() {
+    var names = [];
+    $('.ecf-utility-class-toggle:checked').each(function() {
+      var name = String($(this).closest('[data-class-name]').data('class-name') || '').toLowerCase();
+      if (name) names.push(name);
+    });
+    return Array.from(new Set(names));
+  }
+
+  function updateStarterClassesState() {
+    var $root = $('[data-ecf-starter-classes]');
+    if (!$root.length) return;
+
+    var currentTotal = parseInt($root.data('ecf-class-current'), 10) || 0;
+    var limit = parseInt($root.data('ecf-class-limit'), 10) || 100;
+    var existing = getStarterExistingLabels();
+    var starterNames = getSelectedStarterNames();
+    var utilityNames = getSelectedUtilityNames();
+    var selectedNames = Array.from(new Set(starterNames.concat(utilityNames)));
+    var pendingNew = selectedNames.filter(function(name) { return existing.indexOf(name) === -1; }).length;
+    var projected = currentTotal + pendingNew;
+    var basicCount = $('.ecf-starter-class-item[data-tier="basic"] .ecf-starter-class-toggle:checked').length;
+    var advancedCount = $('.ecf-starter-class-item[data-tier="advanced"] .ecf-starter-class-toggle:checked').length;
+    var customCount = $('.ecf-starter-custom-row .ecf-custom-starter-enabled:checked').length;
+    var utilityCount = $('.ecf-utility-class-toggle:checked').length;
+    var status = getClassUsageStatus(projected, limit);
+    var percent = limit > 0 ? Math.round((projected / limit) * 100) : 0;
+    percent = Math.max(0, Math.min(100, percent));
+
+    $('[data-ecf-starter-selected]').text(selectedNames.length);
+    $('[data-ecf-starter-projected]').text(projected);
+    $('[data-ecf-starter-projected-inline]').text(projected);
+    $('[data-ecf-starter-basic-count]').text(basicCount);
+    $('[data-ecf-starter-extras-count]').text(advancedCount + utilityCount);
+    $('[data-ecf-starter-custom-count]').text(customCount);
+    $('[data-ecf-starter-percent]').text(percent);
+    $('[data-ecf-starter-progress]').css('width', percent + '%');
+    $('[data-ecf-starter-status]')
+      .removeClass('ecf-class-limit-card--neutral ecf-class-limit-card--success ecf-class-limit-card--warning ecf-class-limit-card--danger')
+      .addClass('ecf-class-limit-card--' + status);
+
+    updateClassLibrarySelectAllState();
+  }
+
+  function applyClassTierFilter(tier) {
+    var activeTier = tier || 'all';
+    $('[data-ecf-class-tier]').removeClass('is-active')
+      .filter('[data-ecf-class-tier="' + activeTier + '"]').addClass('is-active');
+
+    $('[data-ecf-starter-classes]').attr('data-ecf-active-class-tier', activeTier);
+
+    if (activeTier === 'extras') {
+      switchClassLibrary('starter');
+      applyStarterClassFilter('all');
+      updateClassLibraryContext();
+      updateClassLibrarySelectAllState();
+      return;
+    }
+
+    switchClassLibrary('starter');
+
+    if (activeTier === 'custom') {
+      applyStarterClassFilter('custom');
+      updateClassLibraryContext();
+      updateClassLibrarySelectAllState();
+      return;
+    }
+    refreshStarterClassVisibility();
+    updateClassLibraryContext();
+    updateClassLibrarySelectAllState();
+  }
+
+  function getVisibleClassLibraryChecks() {
+    var activeLibrary = $('[data-ecf-library-tab].is-active').data('ecf-library-tab') || 'starter';
+    var $section = $('[data-ecf-library-section="' + activeLibrary + '"]');
+    if (!$section.length) return $();
+
+    if (activeLibrary === 'utility') {
+      return $section.find('.ecf-utility-class-item:visible .ecf-utility-class-toggle');
+    }
+
+    var $starterChecks = $section.find('.ecf-starter-class-item:visible .ecf-starter-class-toggle');
+    var activeStarterCategory = $('[data-ecf-starter-select]').val() || 'all';
+    var $customChecks = $();
+
+    if (activeStarterCategory === 'all' || activeStarterCategory === 'custom') {
+      $customChecks = $section.find('.ecf-custom-starter-enabled');
+    }
+
+    return $starterChecks.add($customChecks);
+  }
+
+  function updateClassLibrarySelectAllState() {
+    var $button = $('[data-ecf-class-select-all]');
+    if (!$button.length) return;
+
+    var $checks = getVisibleClassLibraryChecks();
+    var allChecked = $checks.length > 0 && $checks.filter(':checked').length === $checks.length;
+    var hasSelection = $checks.filter(':checked').length > 0;
+
+    $button
+      .prop('disabled', !$checks.length)
+      .toggleClass('is-active', allChecked)
+      .find('[data-ecf-class-select-all-label]')
+      .text(allChecked ? (i18n.deselect_all || 'Auswahl aufheben') : (i18n.select_all || 'Alle wählen'));
+
+    $('[data-ecf-class-select-all-icon]').toggleClass('is-active', allChecked || hasSelection);
+  }
+
+  function normalizeBemSegment(value) {
+    return String(value || '')
+      .toLowerCase()
+      .trim()
+      .replace(/^ecf-/, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '')
+      .replace(/-{2,}/g, '-');
+  }
+
+  function parseBemCsv(value) {
+    return String(value || '')
+      .split(',')
+      .map(function(part) { return normalizeBemSegment(part); })
+      .filter(Boolean);
+  }
+
+  function getBemGeneratorRoot() {
+    return $('[data-ecf-bem-generator]').first();
+  }
+
+  function getBemGeneratorPresets() {
+    var $root = getBemGeneratorRoot();
+    if (!$root.length) return {};
+    var raw = $root.attr('data-ecf-bem-presets') || '{}';
+    try {
+      return JSON.parse(raw);
+    } catch (err) {
+      return {};
+    }
+  }
+
+  function getBemGeneratorPresetKey() {
+    return String(getBemGeneratorRoot().find('[data-ecf-bem-preset]').val() || 'header');
+  }
+
+  function getBemGeneratorPreset() {
+    var presets = getBemGeneratorPresets();
+    return presets[getBemGeneratorPresetKey()] || null;
+  }
+
+  function isBemCustomPreset() {
+    return getBemGeneratorPresetKey() === 'custom';
+  }
+
+  function updateBemBlockFieldState() {
+    var $root = getBemGeneratorRoot();
+    if (!$root.length) return;
+
+    var $field = $root.find('[data-ecf-bem-block-field]');
+    var $input = $root.find('[data-ecf-bem-block]');
+    var customMode = isBemCustomPreset();
+
+    $field.prop('hidden', !customMode);
+    $field.toggleClass('is-hidden', !customMode);
+    $input.prop('disabled', !customMode);
+
+    if (!customMode) {
+      $input.val('');
+    }
+  }
+
+  function renderBemGeneratorOptions(type, values) {
+    return (values || []).map(function(value) {
+      var label = String(value || '');
+      return '<label class="ecf-bem-generator__option">'
+        + '<input type="checkbox" data-ecf-bem-' + type + '-check value="' + escapeHtml(label) + '">'
+        + '<span>' + escapeHtml(label) + '</span>'
+        + '</label>';
+    }).join('');
+  }
+
+  function refreshBemGeneratorOptions() {
+    var $root = getBemGeneratorRoot();
+    var preset = getBemGeneratorPreset();
+    if (!$root.length || !preset) return;
+    $root.find('[data-ecf-bem-elements]').html(renderBemGeneratorOptions('element', preset.elements));
+    $root.find('[data-ecf-bem-modifiers]').html(renderBemGeneratorOptions('modifier', preset.modifiers));
+    $root.find('[data-ecf-bem-help]').text(String(preset.help || ''));
+    updateBemBlockFieldState();
+  }
+
+  function getBemGeneratedClasses() {
+    var $root = getBemGeneratorRoot();
+    var presetKey = getBemGeneratorPresetKey();
+    var preset = getBemGeneratorPreset();
+    if (!$root.length || !preset) return [];
+
+    var baseName = normalizeBemSegment($root.find('[data-ecf-bem-block]').val());
+    if (!baseName) {
+      baseName = presetKey === 'custom' ? '' : normalizeBemSegment(presetKey);
+    }
+    if (!baseName) return [];
+
+    var block = 'ecf-' + baseName;
+    var generated = [block];
+    var elements = []
+      .concat($root.find('[data-ecf-bem-element-check]:checked').map(function() { return $(this).val(); }).get())
+      .concat(parseBemCsv($root.find('[data-ecf-bem-extra-elements]').val()));
+    var modifiers = []
+      .concat($root.find('[data-ecf-bem-modifier-check]:checked').map(function() { return $(this).val(); }).get())
+      .concat(parseBemCsv($root.find('[data-ecf-bem-extra-modifiers]').val()));
+
+    $.each(Array.from(new Set(elements.map(normalizeBemSegment).filter(Boolean))), function(_, element) {
+      generated.push(block + '__' + element);
+    });
+    $.each(Array.from(new Set(modifiers.map(normalizeBemSegment).filter(Boolean))), function(_, modifier) {
+      generated.push(block + '--' + modifier);
+    });
+
+    return Array.from(new Set(generated));
+  }
+
+  function renderBemGeneratorPreview() {
+    var $root = getBemGeneratorRoot();
+    if (!$root.length) return;
+    var classes = getBemGeneratedClasses();
+    var emptyText = isBemCustomPreset()
+      ? 'Eigenen Blocknamen eingeben, dann entsteht hier die Vorschau.'
+      : 'Bereich wählen, dann entsteht hier die Vorschau.';
+    var html = classes.length
+      ? classes.map(function(className) { return '<code>' + escapeHtml(className) + '</code>'; }).join('')
+      : '<span class="ecf-muted-copy">' + escapeHtml(emptyText) + '</span>';
+    $root.find('[data-ecf-bem-preview]').html(html);
+  }
+
+  function appendCustomStarterRow(config) {
+    var $rows = $('[data-ecf-starter-custom-rows]');
+    var template = $('#ecf-starter-custom-row-template').html();
+    if (!$rows.length || !template) return null;
+    var index = $rows.find('.ecf-starter-custom-row').length;
+    template = template
+      .replace('__ENABLED__', 'ecf_framework_v50[starter_classes][custom][' + index + '][enabled]')
+      .replace('__NAME__', 'ecf_framework_v50[starter_classes][custom][' + index + '][name]')
+      .replace('__CATEGORY__', 'ecf_framework_v50[starter_classes][custom][' + index + '][category]');
+    var $row = $(template);
+    $row.find('.ecf-custom-starter-enabled').prop('checked', config.enabled !== false);
+    $row.find('.ecf-custom-starter-name').val(config.name || '');
+    $row.find('.ecf-custom-starter-category').val(config.category || 'custom');
+    $rows.append($row);
+    return $row;
+  }
+
+  function pulseCustomStarterRow($row) {
+    if (!$row || !$row.length) return;
+    $row.addClass('is-new');
+    window.setTimeout(function() {
+      $row.removeClass('is-new');
+    }, 1800);
+  }
+
+  function addBemGeneratedClasses() {
+    var $root = getBemGeneratorRoot();
+    var preset = getBemGeneratorPreset();
+    if (!$root.length || !preset) return;
+
+    var existing = {};
+    $('[data-class-name]').each(function() {
+      var name = String($(this).data('class-name') || '').toLowerCase();
+      if (name) existing[name] = true;
+    });
+    $('.ecf-custom-starter-name').each(function() {
+      var name = String($(this).val() || '').trim().toLowerCase();
+      if (!name) return;
+      if (name.indexOf('ecf-') !== 0) name = 'ecf-' + name.replace(/^-+/, '');
+      existing[name] = true;
+    });
+
+    var category = String((preset.category || 'custom'));
+    var classes = getBemGeneratedClasses();
+    var added = 0;
+    var addedRows = [];
+
+    $.each(classes, function(_, className) {
+      var normalized = String(className || '').toLowerCase();
+      if (!normalized || existing[normalized]) return;
+      var $row = appendCustomStarterRow({ name: normalized, category: category, enabled: true });
+      if ($row && $row.length) {
+        $row.addClass('is-new');
+        addedRows.push($row);
+      }
+      existing[normalized] = true;
+      added += 1;
+    });
+
+    $root.find('[data-ecf-bem-feedback]').text(
+      added
+        ? added + ' ' + (added === 1 ? 'Klasse hinzugefügt.' : 'Klassen hinzugefügt.')
+        : 'Alle erzeugten Klassen existieren bereits.'
+    );
+
+    updateStarterClassesState();
+
+    if (!added) {
+      refreshStarterClassVisibility();
+      return;
+    }
+
+    $('[data-ecf-library-section="starter"] [data-ecf-class-search]').val('');
+    applyClassTierFilter('custom');
+    applyStarterClassFilter('custom');
+    updateClassLibraryContext();
+    updateClassLibrarySelectAllState();
+
+    if (addedRows[0] && addedRows[0].length && addedRows[0].get(0).scrollIntoView) {
+      addedRows[0].get(0).scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    window.setTimeout(function() {
+      $.each(addedRows, function(_, $row) {
+        $row.removeClass('is-new');
+      });
+    }, 2200);
+  }
+
+  function updateClassLibraryContext() {
+    var activeTier = $('[data-ecf-class-tier].is-active').data('ecf-class-tier') || 'all';
+    var activeLibrary = $('[data-ecf-library-tab].is-active').data('ecf-library-tab') || 'starter';
+    var showExtrasControls = activeTier === 'extras';
+    var showStarterFilter = activeLibrary === 'starter' && activeTier !== 'custom';
+    var showBemGenerator = activeLibrary === 'starter' && activeTier === 'custom';
+
+    $('[data-ecf-library-tabs]').prop('hidden', !showExtrasControls);
+    $('[data-ecf-library-help], [data-ecf-category-help="utility"]').prop('hidden', !showExtrasControls);
+    $('[data-ecf-starter-filterbar]').prop('hidden', !showStarterFilter);
+    $('[data-ecf-bem-generator]').prop('hidden', !showBemGenerator);
+  }
+
+  function getActiveClassSearchQuery() {
+    var activeLibrary = $('[data-ecf-library-tab].is-active').data('ecf-library-tab') || 'starter';
+    return $.trim($('[data-ecf-library-section="' + activeLibrary + '"] [data-ecf-class-search]').val() || '').toLowerCase();
+  }
+
+  function matchesClassSearch(parts, query) {
+    if (!query) return true;
+    return (parts || []).some(function(part) {
+      return String(part || '').toLowerCase().indexOf(query) !== -1;
+    });
+  }
+
+  function refreshStarterClassVisibility() {
+    var activeCategory = $('[data-ecf-starter-select]').val() || 'all';
+    var activeTier = $('[data-ecf-class-tier].is-active').data('ecf-class-tier') || 'all';
+    var query = getActiveClassSearchQuery();
+
+    $('[data-ecf-starter-item]').each(function() {
+      var $item = $(this);
+      var itemGroup = String($item.data('tabgroup') || 'all');
+      var itemTier = String($item.data('tier') || '');
+      var itemCategory = String($item.data('category') || '');
+      var className = String($item.data('class-name') || '');
+      var matchesGroup = activeCategory === 'all' || activeCategory === itemGroup;
+      var matchesTier = activeTier === 'all' || activeTier === 'basic' || activeTier === 'extras'
+        ? (activeTier === 'all' ? true : (activeTier === 'extras' ? itemTier === 'advanced' : itemTier === activeTier))
+        : activeTier === 'custom'
+          ? false
+          : true;
+      var matchesQuery = matchesClassSearch([className, itemCategory, itemGroup, itemTier], query);
+      $item.toggle(matchesGroup && matchesTier && matchesQuery);
+    });
+
+    var showCustomSection = (activeCategory === 'all' || activeCategory === 'custom') && (activeTier === 'all' || activeTier === 'custom');
+    $('[data-ecf-starter-custom-section]').toggle(showCustomSection);
+
+    if (showCustomSection) {
+      $('[data-ecf-starter-custom-rows] .ecf-starter-custom-row').each(function() {
+        var $row = $(this);
+        var name = $row.find('.ecf-custom-starter-name').val() || '';
+        var category = $row.find('.ecf-custom-starter-category').val() || '';
+        $row.toggle(matchesClassSearch([name, category, 'custom'], query));
+      });
+    }
+  }
+
+  function refreshUtilityClassVisibility() {
+    var activeCategory = $('[data-ecf-utility-tab].is-active').data('ecf-utility-tab') || 'all';
+    var query = getActiveClassSearchQuery();
+
+    $('[data-ecf-utility-item]').each(function() {
+      var $item = $(this);
+      var itemCategory = String($item.data('category') || 'all');
+      var className = String($item.data('class-name') || '');
+      var matchesCategory = activeCategory === 'all' || activeCategory === itemCategory;
+      var matchesQuery = matchesClassSearch([className, itemCategory, 'utility'], query);
+      $item.toggle(matchesCategory && matchesQuery);
+    });
+  }
+
+  function applyStarterClassFilter(category) {
+    var activeCategory = category || 'all';
+    $('[data-ecf-starter-select]').val(activeCategory);
+    $('[data-ecf-starter-classes]').attr('data-ecf-active-starter-category', activeCategory);
+    refreshStarterClassVisibility();
+  }
+
+  function applyUtilityClassFilter(category) {
+    var activeCategory = category || 'all';
+    var $activeTab = $('[data-ecf-utility-tab]').removeClass('is-active')
+      .filter('[data-ecf-utility-tab="' + activeCategory + '"]').addClass('is-active');
+
+    $('[data-ecf-starter-classes]').attr('data-ecf-active-utility-category', activeCategory);
+    $('[data-ecf-category-help="utility"]').text($activeTab.attr('data-ecf-help') || '');
+    refreshUtilityClassVisibility();
+  }
+
+  function switchClassLibrary(tab) {
+    var activeTab = tab || 'starter';
+    var $activeTab = $('[data-ecf-library-tab]').removeClass('is-active')
+      .filter('[data-ecf-library-tab="' + activeTab + '"]').addClass('is-active');
+
+    $('[data-ecf-library-help]').text($activeTab.attr('data-ecf-help') || '');
+    $('[data-ecf-library-section]').attr('hidden', true)
+      .filter('[data-ecf-library-section="' + activeTab + '"]').removeAttr('hidden');
+    updateClassLibraryContext();
   }
 
   function loadVariables() {
@@ -998,9 +1697,12 @@ jQuery(function($){
         $('#ecf-varlist-ecf, #ecf-varlist-foreign').html('<p style="color:#ef4444;">'+res.data+'</p>');
         return;
       }
+      varStore.ecf = res.data.ecf || [];
+      varStore.foreign = res.data.foreign || [];
       renderVarList('ecf',     res.data.ecf);
       renderVarList('foreign', res.data.foreign);
       updateVariableSummary(res.data.ecf, res.data.foreign);
+      renderGlobalSearchResults($('#ecf-global-search-input').val() || '');
       varsLoaded = true;
     });
   }
@@ -1015,20 +1717,459 @@ jQuery(function($){
         $('#ecf-varlist-ecf-classes, #ecf-varlist-foreign-classes').html('<p style="color:#ef4444;">'+res.data+'</p>');
         return;
       }
+      varStore['ecf-classes'] = res.data.ecf || [];
+      varStore['foreign-classes'] = res.data.foreign || [];
       renderVarList('ecf-classes', res.data.ecf);
       renderVarList('foreign-classes', res.data.foreign);
       updateClassSummary(res.data.ecf, res.data.foreign);
+      renderGlobalSearchResults($('#ecf-global-search-input').val() || '');
       classesLoaded = true;
+    });
+  }
+
+  $(document).on('change', '[data-ecf-starter-select]', function() {
+    applyStarterClassFilter($(this).val());
+    updateClassLibrarySelectAllState();
+  });
+
+  $(document).on('click', '[data-ecf-utility-tab]', function() {
+    applyUtilityClassFilter($(this).data('ecf-utility-tab'));
+    updateClassLibrarySelectAllState();
+  });
+
+  $(document).on('click', '[data-ecf-library-tab]', function() {
+    switchClassLibrary($(this).data('ecf-library-tab'));
+    if ($(this).data('ecf-library-tab') === 'utility') {
+      refreshUtilityClassVisibility();
+    } else {
+      refreshStarterClassVisibility();
+    }
+    updateClassLibrarySelectAllState();
+  });
+
+  $(document).on('click', '[data-ecf-class-tier]', function() {
+    applyClassTierFilter($(this).data('ecf-class-tier'));
+  });
+
+  $(document).on('change input', '.ecf-starter-class-toggle, .ecf-custom-starter-enabled, .ecf-custom-starter-name, .ecf-custom-starter-category, .ecf-utility-class-toggle', function() {
+    updateStarterClassesState();
+  });
+
+  $(document).on('click', '[data-ecf-class-select-all]', function() {
+    var $checks = getVisibleClassLibraryChecks();
+    if (!$checks.length) return;
+
+    var allChecked = $checks.filter(':checked').length === $checks.length;
+    $checks.prop('checked', !allChecked).trigger('change');
+    updateClassLibrarySelectAllState();
+  });
+
+  $(document).on('submit', 'form[action="options.php"]', function(e) {
+    var submitter = e.originalEvent && e.originalEvent.submitter ? e.originalEvent.submitter : null;
+    if (submitter && $(submitter).is('[data-ecf-class-sync-button]')) {
+      try {
+        window.sessionStorage.setItem(panelStorageKey, 'utilities');
+      } catch (err) {}
+    }
+  });
+
+  $(document).on('click', '[data-ecf-starter-custom-add]', function() {
+    appendCustomStarterRow({ enabled: true, category: 'custom' });
+    updateStarterClassesState();
+  });
+
+  $(document).on('click', '[data-ecf-starter-custom-remove]', function() {
+    var $rows = $('[data-ecf-starter-custom-rows]');
+    $rows.find('.ecf-starter-custom-row').last().remove();
+    updateStarterClassesState();
+  });
+
+  $(document).on('click', '[data-ecf-custom-suggestion]', function() {
+    var suggestion = String($(this).data('ecf-custom-suggestion') || '').trim();
+    var $rows = $('[data-ecf-starter-custom-rows]');
+    if (!suggestion || !$rows.length) return;
+
+    var normalized = suggestion.toLowerCase();
+    var $existing = $rows.find('.ecf-starter-custom-row').filter(function() {
+      return String($(this).find('.ecf-custom-starter-name').val() || '').trim().toLowerCase() === normalized;
+    }).first();
+
+    if ($existing.length) {
+      $existing.find('.ecf-custom-starter-enabled').prop('checked', true);
+      pulseCustomStarterRow($existing);
+      $existing.find('.ecf-custom-starter-name').focus();
+      updateStarterClassesState();
+      return;
+    }
+
+    var $target = $rows.find('.ecf-starter-custom-row').filter(function() {
+      return !$.trim($(this).find('.ecf-custom-starter-name').val() || '');
+    }).first();
+
+    if (!$target.length) {
+      $target = appendCustomStarterRow({ enabled: true, category: 'custom' });
+    }
+
+    if (!$target || !$target.length) return;
+
+    $target.find('.ecf-custom-starter-enabled').prop('checked', true);
+    $target.find('.ecf-custom-starter-name').val(suggestion).trigger('input');
+    $target.find('.ecf-custom-starter-category').val('custom').trigger('change');
+    pulseCustomStarterRow($target);
+    $target.find('.ecf-custom-starter-name').focus();
+    updateStarterClassesState();
+  });
+
+  $(document).on('input', '[data-ecf-class-search]', function() {
+    if ($(this).closest('[data-ecf-library-section]').data('ecf-library-section') === 'utility') {
+      refreshUtilityClassVisibility();
+    } else {
+      refreshStarterClassVisibility();
+    }
+    updateClassLibrarySelectAllState();
+  });
+
+  $(document).on('change', '[data-ecf-bem-preset]', function() {
+    refreshBemGeneratorOptions();
+    renderBemGeneratorPreview();
+    getBemGeneratorRoot().find('[data-ecf-bem-feedback]').text('');
+  });
+
+  $(document).on('input change', '[data-ecf-bem-generator] input', function() {
+    renderBemGeneratorPreview();
+  });
+
+  $(document).on('click', '[data-ecf-bem-reset]', function() {
+    var $root = getBemGeneratorRoot();
+    if (!$root.length) return;
+    $root.find('[data-ecf-bem-block], [data-ecf-bem-extra-elements], [data-ecf-bem-extra-modifiers]').val('');
+    refreshBemGeneratorOptions();
+    renderBemGeneratorPreview();
+    $root.find('[data-ecf-bem-feedback]').text('');
+  });
+
+  $(document).on('click', '[data-ecf-bem-add]', function() {
+    addBemGeneratedClasses();
+  });
+
+  function buildGlobalSearchMatches(query) {
+    var normalized = String(query || '').trim().toLowerCase();
+    var matches = [];
+    if (!normalized) return matches;
+
+    $.each(varStore, function(group, items) {
+      if (isClassGroup(group)) return;
+      $.each(items || [], function(_, item) {
+        var label = String(item.label || '').toLowerCase();
+        var value = String(item.value || '').toLowerCase();
+        var starts = label.indexOf(normalized) === 0;
+        var contains = starts || label.indexOf(normalized) !== -1 || value.indexOf(normalized) !== -1;
+        if (!contains) return;
+
+        matches.push({
+          group: group,
+          id: item.id,
+          label: item.label,
+          value: item.value,
+          type: item.type,
+          tabKey: typeTabKey(item.type),
+          rank: starts ? 0 : 1
+        });
+      });
+    });
+
+    matches.sort(function(a, b) {
+      if (a.rank !== b.rank) return a.rank - b.rank;
+      return String(a.label || '').localeCompare(String(b.label || ''), 'de', { sensitivity: 'base' });
+    });
+
+    return matches;
+  }
+
+  function renderGlobalSearchResults(query) {
+    var $results = $('#ecf-global-search-results');
+    if (!$results.length) return;
+
+    var normalized = String(query || '').trim();
+    if (!normalized) {
+      $results.prop('hidden', true).empty();
+      return;
+    }
+
+    var matches = buildGlobalSearchMatches(normalized);
+    if (!matches.length) {
+      $results.html('<div class="ecf-global-search__empty">'+(i18n.none || 'Keine Einträge gefunden.')+'</div>').prop('hidden', false);
+      return;
+    }
+
+    var html = '<div class="ecf-global-search__list">';
+    $.each(matches.slice(0, 24), function(_, item) {
+      html += '<div class="ecf-global-search__item">'
+        + '<button type="button" class="ecf-global-search__main" data-ecf-search-result data-group="' + item.group + '" data-id="' + item.id + '" data-tab-key="' + item.tabKey + '">'
+        + '<div class="ecf-global-search__identity">'
+        + '<span class="ecf-global-search__meta">' + escapeHtml(groupLabel(item.group)) + '</span>'
+        + '<strong class="ecf-global-search__label">' + originBadge(item.group) + '<span>' + escapeHtml(item.label) + '</span></strong>'
+        + '</div>'
+        + '<span class="ecf-global-search__type">' + escapeHtml(typeLabel(item.type)) + '</span>'
+        + renderSearchPreview(item)
+        + '</button>'
+        + '<div class="ecf-global-search__actions">'
+        + '<button type="button" class="ecf-icon-btn ecf-icon-btn--danger ecf-search-delete" data-ecf-search-delete data-group="' + item.group + '" data-id="' + item.id + '" data-label="' + escapeHtml(item.label) + '" title="' + escapeHtml(i18n.delete) + '"><span class="dashicons dashicons-trash"></span></button>'
+        + '</div>'
+        + '</div>';
+    });
+    html += '</div>';
+    $results.html(html).prop('hidden', false);
+  }
+
+  function focusSearchResult(group, id, tabKey) {
+    if (!varStore[group] || !varStore[group].length) return;
+    varTabs[group] = tabKey || 'all';
+    renderVarList(group, varStore[group]);
+
+    var $card = $('#ecf-varlist-' + group).closest('.ecf-card');
+    var $row = $('#ecf-varlist-' + group).find('.ecf-var-row[data-id="' + id + '"]');
+
+    if ($card.length) {
+      $card.get(0).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+    if ($row.length) {
+      $row.addClass('is-flash');
+      setTimeout(function(){ $row.removeClass('is-flash'); }, 1600);
+    }
+  }
+
+  function findSearchItem(group, id) {
+    var items = varStore[group] || [];
+    return items.find(function(item) { return String(item.id) === String(id); }) || null;
+  }
+
+  function closeSearchEditModal() {
+    $('[data-ecf-search-edit-modal]').prop('hidden', true).removeClass('is-open');
+    $('body').removeClass('ecf-modal-open');
+  }
+
+  function parseSearchEditSizeValue(rawValue) {
+    var value = String(rawValue || '').trim();
+    var match = value.match(/^(-?\d+(?:\.\d+)?)(px|rem|em|ch|%|vw|vh)$/i);
+    if (match) {
+      return {
+        value: match[1],
+        format: String(match[2]).toLowerCase()
+      };
+    }
+
+    return {
+      value: value,
+      format: 'fx'
+    };
+  }
+
+  function getRootBasePx() {
+    return ($('[name="ecf_framework_v50[root_font_size]"]').val() === '62.5') ? 10 : 16;
+  }
+
+  function splitTopLevelArgs(value) {
+    var parts = [];
+    var current = '';
+    var depth = 0;
+    String(value || '').split('').forEach(function(char) {
+      if (char === '(') depth += 1;
+      if (char === ')') depth = Math.max(0, depth - 1);
+      if (char === ',' && depth === 0) {
+        parts.push(current.trim());
+        current = '';
+        return;
+      }
+      current += char;
+    });
+    if (current.trim() !== '') {
+      parts.push(current.trim());
+    }
+    return parts;
+  }
+
+  function parseSizeToken(value) {
+    var match = String(value || '').trim().match(/^(-?\d+(?:\.\d+)?)(px|rem|em|ch|%|vw|vh)$/i);
+    if (!match) return null;
+    return {
+      amount: parseFloat(match[1]),
+      unit: String(match[2]).toLowerCase()
+    };
+  }
+
+  function sizeTokenToPx(token, rootBasePx) {
+    if (!token) return null;
+    if (token.unit === 'px') return token.amount;
+    if (token.unit === 'rem' || token.unit === 'em') return token.amount * rootBasePx;
+    return null;
+  }
+
+  function pxToSizeToken(px, unit, rootBasePx) {
+    var amount = parseFloat(px);
+    if (!isFinite(amount)) return '';
+    if (unit === 'rem' || unit === 'em') {
+      return formatNumber(amount / rootBasePx, 4) + unit;
+    }
+    return formatNumber(amount, 4) + 'px';
+  }
+
+  function parseClampSizeValue(rawValue) {
+    var value = String(rawValue || '').trim();
+    if (!/^clamp\(/i.test(value)) return null;
+
+    var inner = value.replace(/^clamp\(/i, '').replace(/\)$/, '');
+    var parts = splitTopLevelArgs(inner);
+    if (parts.length !== 3) return null;
+
+    var minToken = parseSizeToken(parts[0]);
+    var maxToken = parseSizeToken(parts[2]);
+    if (!minToken || !maxToken) return null;
+
+    var rootBasePx = getRootBasePx();
+    var minPx = sizeTokenToPx(minToken, rootBasePx);
+    var maxPx = sizeTokenToPx(maxToken, rootBasePx);
+    if (minPx == null || maxPx == null) return null;
+
+    return {
+      raw: value,
+      middle: parts[1],
+      minToken: minToken,
+      maxToken: maxToken,
+      minPx: round(minPx, 2),
+      maxPx: round(maxPx, 2)
+    };
+  }
+
+  function updateSearchEditClampInfo(clampData) {
+    var $tech = $('[data-ecf-search-edit-tech]');
+    var $valueFields = $('.ecf-search-edit-value-fields');
+    var $clampFields = $('[data-ecf-search-edit-clamp-fields]');
+    var type = $('[data-ecf-search-edit-type]').val();
+
+    if (type === 'global-size-variable' && clampData) {
+      $tech
+        .html('<strong>Clamp</strong><br><code>' + escapeHtml(clampData.raw) + '</code>')
+        .prop('hidden', false);
+      $('[data-ecf-search-edit-clamp-min]').val(formatNumber(clampData.minPx, 2));
+      $('[data-ecf-search-edit-clamp-max]').val(formatNumber(clampData.maxPx, 2));
+      $clampFields.prop('hidden', false);
+      $valueFields.prop('hidden', true);
+      return;
+    }
+
+    $tech.prop('hidden', true).empty();
+    $clampFields.prop('hidden', true);
+    $valueFields.prop('hidden', false);
+  }
+
+  function inferSearchEditType(item) {
+    var explicitType = String(item.type || '');
+    if (explicitType === 'global-color-variable' || explicitType === 'global-size-variable') {
+      return explicitType;
+    }
+
+    var label = String(item.label || '').toLowerCase();
+    var value = String(item.value || '').trim().toLowerCase();
+    var looksLikeSize =
+      /^-?\d+(?:\.\d+)?(?:px|rem|em|ch|%|vw|vh)$/i.test(value) ||
+      /^(?:clamp|min|max|calc)\(/i.test(value);
+    var isTypographyLike =
+      label.indexOf('text-') === 0 ||
+      label.indexOf('font-') === 0 ||
+      label.indexOf('size') !== -1 ||
+      label.indexOf('typography') !== -1;
+
+    if (looksLikeSize || isTypographyLike) {
+      return 'global-size-variable';
+    }
+
+    return explicitType || 'global-string-variable';
+  }
+
+  function syncSearchEditFieldVisibility() {
+    var type = $('[data-ecf-search-edit-type]').val();
+    $('[data-ecf-search-edit-color-row]').prop('hidden', type !== 'global-color-variable');
+    $('[data-ecf-search-edit-format]').prop('hidden', type !== 'global-size-variable');
+    if (type !== 'global-size-variable') {
+      updateSearchEditClampInfo(null);
+    }
+    updateSearchEditTypeHelp();
+  }
+
+  function updateSearchEditTypeHelp() {
+    var type = $('[data-ecf-search-edit-type]').val();
+    var text = '';
+    if (type === 'global-color-variable') {
+      text = 'Farbe ist für Werte wie #3b82f6, rgb(...) oder hsl(...).';
+    } else if (type === 'global-size-variable') {
+      text = 'Größe ist für Werte wie 24px, 1.5rem oder clamp(...). Auch text-2xl gehört hierhin.';
+    } else {
+      text = 'Text ist nur für echte Strings gedacht, nicht für Textgrößen wie text-2xl.';
+    }
+    $('[data-ecf-search-edit-type-help]').text(text);
+  }
+
+  function openSearchEditModal(item) {
+    var inferredType = inferSearchEditType(item);
+    var clampData = inferredType === 'global-size-variable' ? parseClampSizeValue(item.value) : null;
+    $('[data-ecf-search-edit-id]').val(item.id);
+    $('[data-ecf-search-edit-label]').val(item.label || '');
+    $('[data-ecf-search-edit-type]').val(inferredType);
+    $('[data-ecf-search-edit-note]').prop('hidden', true).text('');
+
+    if (inferredType === 'global-size-variable') {
+      var sizeParts = clampData ? { value: '', format: 'fx' } : parseSearchEditSizeValue(item.value);
+      $('[data-ecf-search-edit-value]').val(sizeParts.value || '');
+      $('[data-ecf-search-edit-format]').val(sizeParts.format || 'fx');
+    } else {
+      $('[data-ecf-search-edit-value]').val(item.value || '');
+      $('[data-ecf-search-edit-format]').val('px');
+    }
+
+    if (inferredType === 'global-color-variable') {
+      var parsed = parseDisplayColor(item.value, 'hexa') || parseDisplayColor(item.value, 'rgba') || parseDisplayColor(item.value, 'hsla');
+      $('[data-ecf-search-edit-color]').val(parsed ? rgbToHex(parsed) : '#3b82f6');
+    }
+
+    syncSearchEditFieldVisibility();
+    updateSearchEditClampInfo(clampData);
+    $('[data-ecf-search-edit-modal]').data('ecfClampData', clampData || null);
+    $('[data-ecf-search-edit-modal]').prop('hidden', false).addClass('is-open');
+    $('body').addClass('ecf-modal-open');
+  }
+
+  function deleteSearchItem(group, id, label) {
+    var isClass = isClassGroup(group);
+    if (!confirm((i18n.search_delete_confirm || 'Löschen?').replace('%s', label))) return;
+
+    $.post(ecfAdmin.ajaxurl, {
+      action: isClass ? 'ecf_delete_classes' : 'ecf_delete_variables',
+      nonce: ecfAdmin.nonce,
+      ids: [id]
+    }, function(res) {
+      if (!res.success) {
+        alert((i18n.error || 'Fehler: ') + res.data);
+        return;
+      }
+
+      if (isClass) {
+        classesLoaded = false;
+        loadClasses();
+      } else {
+        varsLoaded = false;
+        loadVariables();
+      }
     });
   }
 
   // Select all toggle
   $(document).on('click', '.ecf-select-all', function(){
     var group = $(this).data('group');
-    var $checks = $('#ecf-varlist-' + group).find('.ecf-var-check');
+    var $checks = getVisibleChecks(group);
     var allChecked = $checks.length === $checks.filter(':checked').length;
     $checks.prop('checked', !allChecked);
-    $(this).text(allChecked ? i18n.select_all : i18n.deselect_all);
+    updateSelectAllState(group);
   });
 
   // Delete selected
@@ -1036,19 +2177,19 @@ jQuery(function($){
     var group = $(this).data('group');
     var isClassGroup = String(group).indexOf('classes') !== -1;
     var ids = [];
-    $('#ecf-varlist-' + group).find('.ecf-var-check:checked').each(function(){
+    getVisibleChecks(group).filter(':checked').each(function(){
       ids.push($(this).val());
     });
     if (!ids.length) { alert(i18n.none_selected); return; }
     if (!confirm(ids.length + i18n.confirm_delete)) return;
 
-    var $btn = $(this).prop('disabled', true).text(i18n.deleting);
+    var $btn = $(this).prop('disabled', true).addClass('is-busy');
     $.post(ecfAdmin.ajaxurl, {
       action: isClassGroup ? 'ecf_delete_classes' : 'ecf_delete_variables',
       nonce:  ecfAdmin.nonce,
       ids:    ids
     }, function(res) {
-      $btn.prop('disabled', false).text(i18n.delete_sel);
+      $btn.prop('disabled', false).removeClass('is-busy');
       if (!res.success) { alert(i18n.error + res.data); return; }
       if (isClassGroup) {
         classesLoaded = false;
@@ -1066,6 +2207,10 @@ jQuery(function($){
     $(this).find('.ecf-var-check').trigger('click');
   });
 
+  $(document).on('change', '.ecf-var-check', function(){
+    updateSelectAllState($(this).closest('.ecf-var-row').data('group'));
+  });
+
   $(document).on('click', '.ecf-var-tab', function(){
     var group = $(this).data('group') || 'foreign';
     varTabs[group] = $(this).data('var-tab') || 'all';
@@ -1076,6 +2221,121 @@ jQuery(function($){
     }
     varsLoaded = false;
     loadVariables();
+  });
+
+  $(document).on('input', '#ecf-global-search-input', function(){
+    renderGlobalSearchResults($(this).val() || '');
+  });
+
+  $(document).on('click', '[data-ecf-search-result]', function(){
+    var $item = $(this);
+    focusSearchResult($item.data('group'), String($item.data('id')), $item.data('tab-key'));
+  });
+
+  $(document).on('click', '[data-ecf-search-edit]', function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    var $button = $(this);
+    var group = $button.data('group');
+    var id = String($button.data('id'));
+    var item = findSearchItem(group, id);
+    if (!item) return;
+
+    if (!canEditSearchItem($.extend({}, item, { group: group }))) {
+      alert(isClassGroup(group) ? i18n.search_edit_class : i18n.search_edit_generated);
+      return;
+    }
+
+    openSearchEditModal($.extend({}, item, { group: group }));
+  });
+
+  $(document).on('click', '[data-ecf-search-delete]', function(e){
+    e.preventDefault();
+    e.stopPropagation();
+    var $button = $(this);
+    deleteSearchItem($button.data('group'), String($button.data('id')), String($button.data('label') || ''));
+  });
+
+  $(document).on('click', '[data-ecf-search-edit-close]', function(){
+    closeSearchEditModal();
+  });
+
+  $(document).on('change', '[data-ecf-search-edit-type]', function(){
+    if ($(this).val() === 'global-size-variable') {
+      var sizeParts = parseSearchEditSizeValue($('[data-ecf-search-edit-value]').val());
+      $('[data-ecf-search-edit-value]').val(sizeParts.value || '');
+      $('[data-ecf-search-edit-format]').val(sizeParts.format || 'fx');
+    }
+    $('[data-ecf-search-edit-modal]').data('ecfClampData', null);
+    syncSearchEditFieldVisibility();
+  });
+
+  $(document).on('input', '[data-ecf-search-edit-color]', function(){
+    if ($('[data-ecf-search-edit-type]').val() === 'global-color-variable') {
+      $('[data-ecf-search-edit-value]').val($(this).val());
+    }
+  });
+
+  $(document).on('input', '[data-ecf-search-edit-value]', function(){
+    if ($('[data-ecf-search-edit-type]').val() === 'global-color-variable') {
+      var parsed = parseDisplayColor($(this).val(), 'hexa') || parseDisplayColor($(this).val(), 'rgba') || parseDisplayColor($(this).val(), 'hsla');
+      if (parsed) {
+        $('[data-ecf-search-edit-color]').val(rgbToHex(parsed));
+      }
+    }
+  });
+
+  $(document).on('click', '[data-ecf-search-edit-save]', function(){
+    var id = $('[data-ecf-search-edit-id]').val();
+    var label = $('[data-ecf-search-edit-label]').val();
+    var type = $('[data-ecf-search-edit-type]').val();
+    var value = $('[data-ecf-search-edit-value]').val();
+    var format = $('[data-ecf-search-edit-format]').val();
+    var clampData = $('[data-ecf-search-edit-modal]').data('ecfClampData');
+
+    if (type === 'global-color-variable' && $('[data-ecf-search-edit-color]').val()) {
+      value = $('[data-ecf-search-edit-color]').val();
+    } else if (type === 'global-size-variable') {
+      if (clampData) {
+        var minPx = parseFloat($('[data-ecf-search-edit-clamp-min]').val());
+        var maxPx = parseFloat($('[data-ecf-search-edit-clamp-max]').val());
+        var rootBasePx = getRootBasePx();
+        if (!isFinite(minPx) || !isFinite(maxPx)) {
+          $('[data-ecf-search-edit-note]').prop('hidden', false).text(i18n.error + 'Bitte Minimum und Maximum als Zahlen eingeben.');
+          return;
+        }
+        value = 'clamp('
+          + pxToSizeToken(minPx, clampData.minToken.unit, rootBasePx)
+          + ', '
+          + clampData.middle
+          + ', '
+          + pxToSizeToken(maxPx, clampData.maxToken.unit, rootBasePx)
+          + ')';
+      } else {
+        value = String(value || '').trim();
+        if (format && format !== 'fx' && value !== '') {
+          value = value + format;
+        }
+      }
+    }
+
+    $.post(ecfAdmin.ajaxurl, {
+      action: 'ecf_update_variable',
+      nonce: ecfAdmin.nonce,
+      id: id,
+      label: label,
+      type: type,
+      value: value
+    }, function(res) {
+      if (!res.success) {
+        $('[data-ecf-search-edit-note]').prop('hidden', false).text((i18n.error || 'Fehler: ') + res.data);
+        return;
+      }
+
+      closeSearchEditModal();
+      varsLoaded = false;
+      loadVariables();
+    });
   });
 
   // ── Spacing Preview ────────────────────────────────────────────
@@ -1352,4 +2612,13 @@ jQuery(function($){
     if ($(e.target).closest('.ecf-root-font-impact__token-row, .ecf-root-font-impact__copy-pop').length) return;
     $('.ecf-root-font-impact__copy-pop').removeClass('is-open');
   });
+
+  applyStarterClassFilter('all');
+  applyUtilityClassFilter('all');
+  switchClassLibrary('starter');
+  applyClassTierFilter('all');
+  refreshBemGeneratorOptions();
+  renderBemGeneratorPreview();
+  updateClassLibraryContext();
+  updateStarterClassesState();
 });
