@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.19 (2026-04-06)
+
+### Fixed
+- Prevented class sync from overwriting values on existing Elementor global classes with the same name; existing class styles now stay intact while missing classes are still added.
+- Verhindert, dass der Klassen-Sync Werte bereits vorhandener globaler Elementor-Klassen mit gleichem Namen überschreibt; bestehende Klassenstile bleiben erhalten, fehlende Klassen werden weiter ergänzt.
+
 ## 0.1.18 (2026-04-06)
 
 ### Fixed
