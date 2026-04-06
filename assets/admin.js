@@ -736,6 +736,81 @@ jQuery(function($){
   var $noSavePanel = ['variables', 'sync']; // panels that don't need the save button
   var panelStorageKey = 'ecfActivePanel';
   var generalTabStorageKey = 'ecfGeneralTab';
+  var whatsNewStorageKey = 'ecfWhatsNewState';
+  var whatsNewMaxImpressions = 5;
+
+  function getWhatsNewState() {
+    try {
+      var raw = window.localStorage.getItem(whatsNewStorageKey);
+      return raw ? JSON.parse(raw) : {};
+    } catch (err) {
+      return {};
+    }
+  }
+
+  function saveWhatsNewState(state) {
+    try {
+      window.localStorage.setItem(whatsNewStorageKey, JSON.stringify(state || {}));
+    } catch (err) {}
+  }
+
+  function ensureWhatsNewEntry(state, key) {
+    if (!key) return null;
+    if (!state[key]) {
+      state[key] = {
+        seen: false,
+        impressions: 0
+      };
+    }
+    return state[key];
+  }
+
+  function shouldShowWhatsNewBadge(state, key) {
+    var entry = ensureWhatsNewEntry(state, key);
+    return !!(entry && !entry.seen && entry.impressions < whatsNewMaxImpressions);
+  }
+
+  function refreshWhatsNewBadges() {
+    var state = getWhatsNewState();
+    $('[data-ecf-new-key]').each(function() {
+      var key = $(this).data('ecf-new-key');
+      var show = shouldShowWhatsNewBadge(state, key);
+      $(this).find('[data-ecf-new-badge]').prop('hidden', !show);
+    });
+  }
+
+  function markWhatsNewSeen(key) {
+    if (!key) return;
+    var state = getWhatsNewState();
+    var entry = ensureWhatsNewEntry(state, key);
+    entry.seen = true;
+    saveWhatsNewState(state);
+    refreshWhatsNewBadges();
+  }
+
+  function registerWhatsNewImpressions() {
+    var state = getWhatsNewState();
+    var changed = false;
+    var keys = {};
+    $('[data-ecf-new-key]').each(function() {
+      var key = $(this).data('ecf-new-key');
+      if (key) {
+        keys[key] = true;
+      }
+    });
+
+    Object.keys(keys).forEach(function(key) {
+      var entry = ensureWhatsNewEntry(state, key);
+      if (!entry.seen && entry.impressions < whatsNewMaxImpressions) {
+        entry.impressions += 1;
+        changed = true;
+      }
+    });
+
+    if (changed) {
+      saveWhatsNewState(state);
+    }
+  }
 
   function switchPanel(panel) {
     $('.ecf-nav-item').removeClass('is-active');
@@ -761,6 +836,7 @@ jQuery(function($){
 
   $(document).on('click', '.ecf-nav-item', function(){
     var panel = $(this).data('panel');
+    markWhatsNewSeen($(this).data('ecf-new-key'));
     switchPanel(panel);
   });
 
@@ -777,7 +853,216 @@ jQuery(function($){
   }
 
   $(document).on('click', '[data-ecf-general-tab]', function() {
+    markWhatsNewSeen($(this).data('ecf-new-key'));
     switchGeneralTab($(this).data('ecf-general-tab'));
+  });
+
+  $(document).on('toggle', '.ecf-system-debug-card', function() {
+    if (this.open) {
+      markWhatsNewSeen($(this).data('ecf-new-key'));
+    }
+  });
+
+  function refreshGeneralFavoritesState() {
+    var visibleCards = 0;
+    $('[data-ecf-favorite-card]').each(function() {
+      var key = $(this).data('ecf-favorite-card');
+      var enabled = $('[data-ecf-general-favorite-toggle][data-ecf-favorite-key="' + key + '"]').first().is(':checked');
+      $(this).prop('hidden', !enabled);
+      if (enabled) visibleCards += 1;
+    });
+
+    $('[data-ecf-general-favorites-group]').each(function() {
+      var hasVisible = $(this).find('[data-ecf-favorite-card]:not([hidden])').length > 0;
+      $(this).prop('hidden', !hasVisible);
+    });
+
+    $('[data-ecf-general-favorites-empty]').prop('hidden', visibleCards > 0);
+  }
+
+  $(document).on('change', '[data-ecf-general-favorite-toggle]', function() {
+    refreshGeneralFavoritesState();
+  });
+
+  $(document).on('click', '[data-ecf-favorite-remove]', function(e) {
+    e.stopPropagation();
+    var key = $(this).data('ecf-favorite-remove');
+    $('[data-ecf-general-favorite-toggle][data-ecf-favorite-key="' + key + '"]').prop('checked', false).trigger('change');
+  });
+
+  var $floatingNewTooltip = null;
+  var activeNewTooltipEl = null;
+
+  function ensureFloatingNewTooltip() {
+    if ($floatingNewTooltip && $floatingNewTooltip.length) {
+      return $floatingNewTooltip;
+    }
+
+    $floatingNewTooltip = $('<div class="ecf-floating-tooltip" aria-hidden="true"></div>').appendTo(document.body);
+    return $floatingNewTooltip;
+  }
+
+  function positionFloatingNewTooltip($anchor) {
+    if (!$anchor || !$anchor.length || !$floatingNewTooltip || !$floatingNewTooltip.length) {
+      return;
+    }
+
+    var rect = $anchor[0].getBoundingClientRect();
+    var tooltipWidth = $floatingNewTooltip.outerWidth();
+    var tooltipHeight = $floatingNewTooltip.outerHeight();
+    var spacing = 12;
+    var left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
+    var top = rect.top - tooltipHeight - spacing;
+
+    left = Math.max(16, Math.min(left, window.innerWidth - tooltipWidth - 16));
+
+    if (top < 16) {
+      top = rect.bottom + spacing;
+    }
+
+    $floatingNewTooltip.css({
+      left: Math.round(left) + 'px',
+      top: Math.round(top) + 'px'
+    });
+  }
+
+  function hideFloatingNewTooltip() {
+    if (activeNewTooltipEl) {
+      $(activeNewTooltipEl).removeClass('ecf-new-dot--floating-active');
+      activeNewTooltipEl = null;
+    }
+
+    if ($floatingNewTooltip && $floatingNewTooltip.length) {
+      $floatingNewTooltip.removeClass('is-visible').text('');
+    }
+  }
+
+  function showFloatingNewTooltip(el) {
+    var $el = $(el);
+    var tip = $.trim($el.attr('data-tip') || '');
+    if (!tip) {
+      return;
+    }
+
+    activeNewTooltipEl = el;
+    $el.addClass('ecf-new-dot--floating-active');
+    ensureFloatingNewTooltip().text(tip);
+    positionFloatingNewTooltip($el);
+    requestAnimationFrame(function() {
+      if ($floatingNewTooltip && $floatingNewTooltip.length) {
+        $floatingNewTooltip.addClass('is-visible');
+      }
+    });
+  }
+
+  $(document).on('mouseenter focus', '.ecf-new-dot[data-tip]', function() {
+    showFloatingNewTooltip(this);
+  });
+
+  $(document).on('mouseleave blur', '.ecf-new-dot[data-tip]', function() {
+    hideFloatingNewTooltip();
+  });
+
+  $(window).on('resize scroll', function() {
+    if (activeNewTooltipEl) {
+      positionFloatingNewTooltip($(activeNewTooltipEl));
+    }
+  });
+
+  var isSyncingGeneralFields = false;
+
+  function syncNamedField($source) {
+    if (isSyncingGeneralFields) return;
+    var name = $source.attr('name');
+    if (!name) return;
+    var selector = '[name="' + name.replace(/"/g, '\\"') + '"]';
+    var $targets = $(selector).not($source);
+    if (!$targets.length) return;
+
+    isSyncingGeneralFields = true;
+
+    if ($source.is(':checkbox')) {
+      var checked = $source.is(':checked');
+      $targets.each(function() {
+        $(this).prop('checked', checked);
+      });
+      isSyncingGeneralFields = false;
+      return;
+    }
+
+    var value = $source.val();
+    $targets.each(function() {
+      var $target = $(this);
+      if ($target.val() !== value) {
+        $target.val(value);
+      }
+    });
+
+    isSyncingGeneralFields = false;
+  }
+
+  $(document).on('input change', '.ecf-general-favorite-card [name], [data-ecf-general-section] [name]', function() {
+    syncNamedField($(this));
+  });
+
+  $(document).on('change', '[data-ecf-base-font-preset]', function() {
+    var $custom = $('[data-ecf-base-font-custom]');
+    var showCustom = $(this).val() === '__custom__';
+    $custom.prop('hidden', !showCustom);
+    if (showCustom) {
+      $custom.trigger('focus');
+    }
+  });
+
+  function openLocalFontsSection(callback) {
+    switchPanel('typography');
+    window.setTimeout(function() {
+      var $section = $('[data-ecf-local-fonts-section]').first();
+      if ($section.length) {
+        var node = $section.get(0);
+        if (node && typeof node.scrollIntoView === 'function') {
+          node.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+      }
+      if (typeof callback === 'function') {
+        callback($section);
+      }
+    }, 150);
+  }
+
+  $(document).on('click', '[data-ecf-local-font-add]', function(e) {
+    e.preventDefault();
+    openLocalFontsSection(function($section) {
+      var $addButton = $section.find('.ecf-add-local-font').first();
+      if ($addButton.length) {
+        $addButton.trigger('click');
+        window.setTimeout(function() {
+          $section.find('.ecf-font-file-row:last input[name$="[family]"]').trigger('focus');
+        }, 40);
+      }
+    });
+  });
+
+  $(document).on('click', '[data-ecf-local-font-remove]', function(e) {
+    e.preventDefault();
+    var family = $.trim($(this).data('ecf-local-font-remove') || '');
+    if (!family) return;
+    openLocalFontsSection(function($section) {
+      var removed = false;
+      $section.find('.ecf-font-file-row').each(function() {
+        var $row = $(this);
+        var rowFamily = $.trim($row.find('input[name$="[family]"]').val() || '');
+        if (rowFamily === family) {
+          $row.find('.ecf-remove-row').trigger('click');
+          removed = true;
+          return false;
+        }
+      });
+      if (removed) {
+        $('[data-ecf-base-font-preset]').val('var(--ecf-font-primary)').trigger('change');
+        $('[data-ecf-base-font-custom]').val('');
+      }
+    });
   });
 
   function openChangelogModal() {
@@ -822,6 +1107,15 @@ jQuery(function($){
     }
   } catch (err) {}
   switchGeneralTab(initialGeneralTab);
+  $('[data-ecf-base-font-preset]').trigger('change');
+  refreshGeneralFavoritesState();
+  markWhatsNewSeen($('.ecf-nav-item.is-active').data('ecf-new-key'));
+  markWhatsNewSeen($('[data-ecf-general-tab].is-active').data('ecf-new-key'));
+  if ($('.ecf-system-debug-card').prop('open')) {
+    markWhatsNewSeen($('.ecf-system-debug-card').data('ecf-new-key'));
+  }
+  registerWhatsNewImpressions();
+  refreshWhatsNewBadges();
 
   $(document).on('submit', 'form[action="options.php"]', function() {
     var activePanel = $('.ecf-nav-item.is-active').data('panel') || 'tokens';
@@ -844,19 +1138,29 @@ jQuery(function($){
     renderRootFontImpact();
   });
 
+  var isSyncingRootFontControls = false;
+
   $(document).on('change', '[data-ecf-root-font-source], [data-ecf-root-font-mirror]', function() {
+    if (isSyncingRootFontControls) return;
     var value = $(this).val();
+    isSyncingRootFontControls = true;
     syncRootFontSizeControls(value, this);
 
     var $canonical = $('[data-ecf-root-font-source]').first();
     if (!$canonical.is(this)) {
-      $canonical.val(value).trigger('change');
+      $canonical.val(value);
+      syncRootFontSizeControls(value, $canonical.get(0));
+      renderTypePreview();
+      renderSpacingPreview();
+      renderRootFontImpact();
+      isSyncingRootFontControls = false;
       return;
     }
 
     renderTypePreview();
     renderSpacingPreview();
     renderRootFontImpact();
+    isSyncingRootFontControls = false;
   });
 
   $(document).on('click', '[data-ecf-format-trigger]', function(e) {
@@ -1372,10 +1676,12 @@ jQuery(function($){
     var selectedNames = Array.from(new Set(starterNames.concat(utilityNames)));
     var pendingNew = selectedNames.filter(function(name) { return existing.indexOf(name) === -1; }).length;
     var projected = currentTotal + pendingNew;
-    var basicCount = $('.ecf-starter-class-item[data-tier="basic"] .ecf-starter-class-toggle:checked').length;
-    var advancedCount = $('.ecf-starter-class-item[data-tier="advanced"] .ecf-starter-class-toggle:checked').length;
-    var customCount = $('.ecf-starter-custom-row .ecf-custom-starter-enabled:checked').length;
-    var utilityCount = $('.ecf-utility-class-toggle:checked').length;
+    var basicCount = $('.ecf-starter-class-item[data-tier="basic"]').length;
+    var advancedCount = $('.ecf-starter-class-item[data-tier="advanced"]').length;
+    var customCount = $('.ecf-starter-custom-row').filter(function() {
+      return $.trim($(this).find('.ecf-custom-starter-name').val() || '') !== '';
+    }).length;
+    var utilityCount = $('.ecf-utility-class-item').length;
     var status = getClassUsageStatus(projected, limit);
     var percent = limit > 0 ? Math.round((projected / limit) * 100) : 0;
     percent = Math.max(0, Math.min(100, percent));
@@ -2731,6 +3037,11 @@ jQuery(function($){
         $pop.removeClass('is-copied').text(text);
       }, 1200);
     });
+  });
+
+  $(document).on('click', '[data-ecf-reload-page]', function(e) {
+    e.preventDefault();
+    window.location.reload();
   });
 
   $(document).on('click', function(e) {

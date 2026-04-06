@@ -2,109 +2,147 @@
 
 ## 0.1.20 (2026-04-06)
 
-### Changed
-- Reorganized General Settings into clearer sub-tabs for System, Layout, and Behavior, and synced the Elementor boxed width as both token and helper class.
-- Allgemeine Einstellungen in klarere Untertabs für System, Layout und Verhalten gegliedert und die Elementor-Boxed-Width als Token und Helferklasse in den Sync aufgenommen.
+### UX
+- Split General Settings into System, Layout, and Behavior tabs.
+- Allgemeine Einstellungen in System-, Layout- und Verhalten-Tabs aufgeteilt.
+- Synced Elementor Boxed Width as token and helper class.
+- Elementor Boxed Width als Token und Helferklasse in den Sync aufgenommen.
 
 ## 0.1.19 (2026-04-06)
 
-### Fixed
-- Prevented class sync from overwriting values on existing Elementor global classes with the same name; existing class styles now stay intact while missing classes are still added.
-- Verhindert, dass der Klassen-Sync Werte bereits vorhandener globaler Elementor-Klassen mit gleichem Namen überschreibt; bestehende Klassenstile bleiben erhalten, fehlende Klassen werden weiter ergänzt.
+### Fix
+- Stopped class sync from overwriting existing Elementor global class values.
+- Klassen-Sync überschreibt keine bestehenden Werte globaler Elementor-Klassen mehr.
+- Existing class styles stay intact while missing classes are still added.
+- Bestehende Klassenstile bleiben erhalten, fehlende Klassen werden weiter ergänzt.
 
 ## 0.1.18 (2026-04-06)
 
-### Fixed
-- Hardened the Elementor sync flow, improved admin-post handling, and stabilized variable previews for spacing, typography, and radius values.
-- Den Elementor-Sync robuster gemacht, das admin-post-Handling verbessert und die Variablen-Vorschau für Abstände, Typografie und Radius stabilisiert.
+### Fix
+- Hardened the Elementor sync flow.
+- Elementor-Sync robuster gemacht.
+- Improved admin-post handling.
+- admin-post-Handling verbessert.
+- Stabilized previews for spacing, typography, and radius variables.
+- Vorschau für Abstands-, Typografie- und Radius-Variablen stabilisiert.
 
 ## 0.1.17 (2026-04-06)
 
-### Changed
-- Refined the class library and overall admin UX with cleaner class flows, a guided BEM generator, improved filters, and compact helper states.
-- Die Klassenbibliothek und die gesamte Admin-UX mit klareren Klassen-Flows, geführtem BEM-Generator, verbesserten Filtern und kompakteren Hilfszuständen verfeinert.
+### UX
+- Refined the class library flow.
+- Klassenbibliothek klarer strukturiert.
+- Added a guided BEM generator.
+- Geführten BEM-Generator ergänzt.
+- Improved filters and compact helper states.
+- Filter und kompakte Hilfszustände verbessert.
 
 ## 0.1.16 (2026-04-05)
 
-### Fixed
-- Added a canonical plugin-folder fallback for GitHub updates so the installer should keep using `elementor-core-framework` instead of drifting to `elementor-core-framework-master`.
-- Einen kanonischen Fallback fuer den Plugin-Ordner bei GitHub-Updates ergaenzt, damit der Installer bei `elementor-core-framework` bleibt und nicht wieder auf `elementor-core-framework-master` springt.
+### Fix
+- Added a canonical plugin-folder fallback for GitHub updates.
+- Kanonischen Fallback für den Plugin-Ordner bei GitHub-Updates ergänzt.
+- Keeps the installer on `elementor-core-framework`.
+- Hält den Installer bei `elementor-core-framework`.
 
 ## 0.1.15 (2026-04-05)
 
-### Fixed
-- Normalized the GitHub update install path so the plugin keeps the folder name `elementor-core-framework` after updates instead of falling back to `elementor-core-framework-master`.
-- Den Installationspfad fuer GitHub-Updates normalisiert, damit das Plugin nach Updates den Ordnernamen `elementor-core-framework` behaelt und nicht auf `elementor-core-framework-master` springt.
+### Fix
+- Normalized the GitHub update install path.
+- Installationspfad für GitHub-Updates normalisiert.
+- Keeps the plugin folder as `elementor-core-framework` after updates.
+- Behält nach Updates den Plugin-Ordner `elementor-core-framework`.
 
 ## 0.1.14 (2026-04-05)
 
-### Changed
-- Added dedicated Elementor class overviews in the variables area for ECF and foreign classes, including live counters for variables and classes.
-- Eigene Elementor-Klassenansichten im Variablen-Bereich fuer ECF- und fremde Klassen hinzugefuegt, inklusive Live-Zaehlern fuer Variablen und Klassen.
-- Renamed the utilities navigation label to classes and removed the generated example class block from that view.
-- Den Navigationspunkt Hilfsklassen in Klassen umbenannt und den generierten Beispielblock aus dieser Ansicht entfernt.
+### Feature
+- Added separate Elementor class overviews for ECF and foreign classes.
+- Eigene Klassenansichten für ECF- und fremde Elementor-Klassen ergänzt.
+- Added live counters for variables and classes.
+- Live-Zähler für Variablen und Klassen ergänzt.
+
+### UX
+- Renamed the utilities navigation label to classes.
+- Navigationspunkt Hilfsklassen in Klassen umbenannt.
+- Removed the generated example class block.
+- Generierten Beispielblock entfernt.
 
 ## 0.1.13 (2026-04-04)
 
-### Fixed
-- Guarded the plugin bootstrap so the main class is only declared and instantiated once, preventing fatal activation errors after updates.
-- Den Plugin-Bootstrap abgesichert, damit die Hauptklasse nur einmal deklariert und instanziiert wird und keine fatalen Aktivierungsfehler nach Updates mehr entstehen.
+### Fix
+- Guarded the plugin bootstrap against duplicate class loading.
+- Plugin-Bootstrap gegen doppelte Klassendeklaration abgesichert.
+- Prevents fatal activation errors after updates.
+- Verhindert fatale Aktivierungsfehler nach Updates.
 
 ## 0.1.12 (2026-04-04)
 
-### Fixed
-- Remember the active plugin state before a GitHub update and reactivate the plugin automatically after the update completes.
-- Merkt sich vor einem GitHub-Update den aktiven Plugin-Status und aktiviert das Plugin nach dem Update automatisch wieder.
+### Fix
+- Remembers the active plugin state before GitHub updates.
+- Merkt sich vor GitHub-Updates den aktiven Plugin-Status.
+- Reactivates the plugin automatically after the update.
+- Aktiviert das Plugin nach dem Update automatisch wieder.
 
 ## 0.1.11 (2026-04-04)
 
-### Changed
-- Moved the root font size control out of the typography panel into a more general settings area because it affects typography, spacing, and radius together.
-- Die Einstellung fuer die Root Font Size aus der Typografie in einen allgemeineren Einstellungsbereich verschoben, weil sie Typografie, Abstaende und Radius gemeinsam beeinflusst.
+### Change
+- Moved Root Font Size out of the Typography panel.
+- Root Font Size aus der Typografie herausgezogen.
+- Placed it in a more general settings area.
+- In einen allgemeineren Einstellungsbereich verschoben.
 
 ## 0.1.10 (2026-04-04)
 
-### Changed
-- Unified the plugin output around `--ecf-*` variables and `.ecf-*` utility classes while keeping legacy `.cf-*` aliases for compatibility.
-- Die Plugin-Ausgabe auf `--ecf-*`-Variablen und `.ecf-*`-Hilfsklassen vereinheitlicht und die alten `.cf-*`-Aliase fuer Kompatibilitaet beibehalten.
-- Switched token generation for typography, spacing, and radius to rem-based output with a configurable root font size and px-only preview readouts.
-- Die Token-Erzeugung fuer Typografie, Abstaende und Radius auf rem-basierte Ausgabe mit konfigurierbarer Root Font Size und px-Anzeige in der Vorschau umgestellt.
+### Change
+- Unified output around `--ecf-*` variables and `.ecf-*` classes.
+- Ausgabe auf `--ecf-*`-Variablen und `.ecf-*`-Klassen vereinheitlicht.
+- Kept legacy `.cf-*` aliases for compatibility.
+- Alte `.cf-*`-Aliase für Kompatibilität beibehalten.
+- Switched typography, spacing, and radius tokens to rem-based output.
+- Typografie-, Abstands- und Radius-Tokens auf rem-basierte Ausgabe umgestellt.
 
 ## 0.1.9 (2026-04-04)
 
-### Changed
-- Updated the typography preview so the right side shows the real minimum and maximum font sizes instead of the raw clamp value.
-- Die Typografie-Vorschau so angepasst, dass rechts die echten minimalen und maximalen Schriftgroessen statt des rohen Clamp-Werts angezeigt werden.
+### UX
+- Typography preview now shows real min/max font sizes.
+- Typografie-Vorschau zeigt jetzt echte Min-/Max-Schriftgrößen.
+- Replaced the raw clamp readout on the right side.
+- Rohe Clamp-Anzeige auf der rechten Seite ersetzt.
 
 ## 0.1.8 (2026-04-04)
 
-### Changed
-- Improved the Elementor sync and cleanup workflow with clearer notices, automatic cache clearing, and more resilient cleanup handling.
-- Den Elementor-Sync- und Cleanup-Ablauf mit klareren Meldungen, automatischer Cache-Leerung und robusterem Cleanup verbessert.
-- Added type tabs for ECF and foreign Elementor variables to make large variable lists easier to scan.
-- Typ-Tabs fuer ECF- und fremde Elementor-Variablen hinzugefuegt, damit grosse Variablenlisten leichter zu ueberblicken sind.
+### Fix
+- Improved Elementor sync and cleanup handling.
+- Elementor-Sync und Cleanup robuster gemacht.
+- Added clearer notices and automatic cache clearing.
+- Klarere Meldungen und automatische Cache-Leerung ergänzt.
+
+### Feature
+- Added type tabs for ECF and foreign Elementor variables.
+- Typ-Tabs für ECF- und fremde Elementor-Variablen ergänzt.
+- Makes large variable lists easier to scan.
+- Macht große Variablenlisten leichter scanbar.
 
 ## 0.1.7 (2026-04-04)
 
-### Added
-- Added selectable color value formats for HEX, HEXA, RGB, RGBA, HSL, and HSLA in the color token table.
-- Wählbare Farbwert-Formate für HEX, HEXA, RGB, RGBA, HSL und HSLA in der Farbtoken-Tabelle hinzugefügt.
-- Added automatic GitHub-based plugin update checks with native WordPress update support.
-- Automatische GitHub-basierte Plugin-Update-Prüfung mit nativer WordPress-Update-Unterstützung hinzugefügt.
+### Feature
+- Added selectable color formats for HEX, HEXA, RGB, RGBA, HSL, and HSLA.
+- Wählbare Farbformate für HEX, HEXA, RGB, RGBA, HSL und HSLA ergänzt.
+- Added GitHub-based plugin update checks with native WordPress support.
+- GitHub-basierte Plugin-Update-Prüfung mit nativer WordPress-Unterstützung ergänzt.
 
-### Changed
-- Updated the color value field so editing the displayed color format updates the actual color live.
-- Das Farbwert-Feld so erweitert, dass Eingaben im gewählten Farbformat die echte Farbe live aktualisieren.
-- Replaced question-mark helper badges with direct hover tooltips on labels and table headers across colors, typography, spacing, and related token tables.
-- Fragezeichen-Hinweise durch direkte Hover-Tooltips auf Labels und Tabellenköpfen in Farben, Typografie, Abständen und verwandten Token-Tabellen ersetzt.
-- Improved the admin layout alignment so the plugin header sits cleaner and the unwanted white strip on the left is removed.
-- Das Admin-Layout so angepasst, dass der Plugin-Kopf sauberer sitzt und die unerwünschte weiße Leiste links verschwindet.
-- Expanded the version changelog view so entries are shown as versioned history with version number and date.
-- Die Versions-Changelog-Ansicht erweitert, sodass Einträge als Versionshistorie mit Versionsnummer und Datum erscheinen.
+### UX
+- Color value field now updates the real color live.
+- Farbwert-Feld aktualisiert die echte Farbe jetzt live.
+- Replaced helper badges with direct hover tooltips.
+- Helper-Badges durch direkte Hover-Tooltips ersetzt.
+- Cleaned up the admin header alignment.
+- Ausrichtung des Admin-Headers bereinigt.
+- Expanded the changelog view with version and date history.
+- Changelog-Ansicht um Versions- und Datumsverlauf erweitert.
 
 ## 0.1.6 (2026-04-03)
 
-### Added
+### Feature
 - Added REST endpoints for live ECF settings access and Elementor sync.
 - REST-Endpunkte für den Live-Zugriff auf ECF-Einstellungen und den Elementor-Sync hinzugefügt.
 - Added live typography preview inside the Typography tab.
@@ -115,10 +153,8 @@
 - Verwaltung lokaler Schriftdateien über die WordPress-Mediathek hinzugefügt.
 - Added automatic `@font-face` output for locally stored font files.
 - Automatische `@font-face`-Ausgabe für lokal gespeicherte Schriftdateien hinzugefügt.
-- Added stricter security checks for framework management actions and REST access.
-- Strengere Sicherheitsprüfungen für Framework-Aktionen und REST-Zugriffe hinzugefügt.
 
-### Changed
+### UX
 - Reworked the Typography tab layout to include a large visual preview panel.
 - Das Layout des Typography-Tabs für ein großes visuelles Vorschau-Panel überarbeitet.
 - Reworked the Shadows tab to mirror the Typography UI with a focused live preview and selectable shadow rows.
@@ -157,6 +193,8 @@
 - Die Sanitization für CSS-relevante Einstellungen wie Font-Stacks, Größen, Schatten, Gewichte und Tracking-Werte gehärtet.
 
 ### Security
+- Added stricter security checks for framework management actions and REST access.
+- Strengere Sicherheitsprüfungen für Framework-Aktionen und REST-Zugriffe hinzugefügt.
 - Limited sensitive plugin actions to users with both `manage_options` and `activate_plugins`.
 - Sensible Plugin-Aktionen auf Nutzer mit `manage_options` und `activate_plugins` beschränkt.
 - Scoped font MIME allowances to authorized admin usage.

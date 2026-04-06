@@ -1,7 +1,6 @@
 jQuery(window).on('elementor:init', function() {
   var $doc = jQuery(document);
   var activeVariableContext = null;
-  var observerStarted = false;
 
   function inferVariableTypes(settingName) {
     var key = String(settingName || '').toLowerCase();
@@ -14,31 +13,17 @@ jQuery(window).on('elementor:init', function() {
     var genericSizeHints = ['size', 'width', 'height', 'top', 'right', 'bottom', 'left'];
     var stringHints = ['shadow', 'font_family', 'font-family', 'font_weight', 'font-weight'];
 
-    if (colorHints.some(function(hint) { return key.indexOf(hint) !== -1; })) {
-      return ['color'];
-    }
-
-    if (textSizeHints.some(function(hint) { return key.indexOf(hint) !== -1; })) {
-      return ['text'];
-    }
-
-    if (spacingHints.some(function(hint) { return key.indexOf(hint) !== -1; })) {
-      return ['space'];
-    }
-
-    if (radiusHints.some(function(hint) { return key.indexOf(hint) !== -1; })) {
-      return ['radius'];
-    }
+    if (colorHints.some(function(hint) { return key.indexOf(hint) !== -1; })) return ['color'];
+    if (textSizeHints.some(function(hint) { return key.indexOf(hint) !== -1; })) return ['text'];
+    if (spacingHints.some(function(hint) { return key.indexOf(hint) !== -1; })) return ['space'];
+    if (radiusHints.some(function(hint) { return key.indexOf(hint) !== -1; })) return ['radius'];
 
     if (genericSizeHints.some(function(hint) { return key.indexOf(hint) !== -1; })) {
       return ['space', 'radius', 'text', 'size'];
     }
 
     if (stringHints.some(function(hint) { return key.indexOf(hint) !== -1; })) {
-      if (key.indexOf('shadow') !== -1) {
-        return ['shadow', 'string'];
-      }
-      return ['string', 'text'];
+      return key.indexOf('shadow') !== -1 ? ['shadow', 'string'] : ['string', 'text'];
     }
 
     return null;
@@ -70,83 +55,16 @@ jQuery(window).on('elementor:init', function() {
 
   function classifyVariableText(text) {
     var value = String(text || '').toLowerCase();
-
     if (!value) return null;
 
-    if (
-      value.indexOf('ecf-text-') !== -1 ||
-      value.indexOf('--ecf-text-') !== -1 ||
-      value.indexOf('cf-text-') !== -1
-    ) {
-      return 'text';
-    }
-
-    if (
-      value.indexOf('ecf-space-') !== -1 ||
-      value.indexOf('--ecf-space-') !== -1 ||
-      value.indexOf('cf-space-') !== -1
-    ) {
-      return 'space';
-    }
-
-    if (
-      value.indexOf('ecf-radius-') !== -1 ||
-      value.indexOf('--ecf-radius-') !== -1 ||
-      value.indexOf('cf-radius-') !== -1
-    ) {
-      return 'radius';
-    }
-
-    if (
-      value.indexOf('ecf-color-') !== -1 ||
-      value.indexOf('--ecf-color-') !== -1 ||
-      value.indexOf('cf-color-') !== -1 ||
-      value.indexOf('global-color-variable') !== -1 ||
-      value.indexOf(' farbe') !== -1 ||
-      value.indexOf('color') !== -1
-    ) {
-      return 'color';
-    }
-
-    if (
-      value.indexOf('global-size-variable') !== -1 ||
-      value.indexOf('größe') !== -1 ||
-      value.indexOf('groesse') !== -1 ||
-      value.indexOf('size') !== -1
-    ) {
-      return 'size';
-    }
-
-    if (
-      value.indexOf('ecf-shadow-') !== -1 ||
-      value.indexOf('--ecf-shadow-') !== -1 ||
-      value.indexOf('cf-shadow-') !== -1 ||
-      value.indexOf('global-string-variable') !== -1 ||
-      value.indexOf('shadow') !== -1 ||
-      value.indexOf('string') !== -1
-    ) {
-      return 'string';
-    }
+    if (value.indexOf('ecf-text-') !== -1 || value.indexOf('--ecf-text-') !== -1 || value.indexOf('cf-text-') !== -1) return 'text';
+    if (value.indexOf('ecf-space-') !== -1 || value.indexOf('--ecf-space-') !== -1 || value.indexOf('cf-space-') !== -1) return 'space';
+    if (value.indexOf('ecf-radius-') !== -1 || value.indexOf('--ecf-radius-') !== -1 || value.indexOf('cf-radius-') !== -1) return 'radius';
+    if (value.indexOf('ecf-color-') !== -1 || value.indexOf('--ecf-color-') !== -1 || value.indexOf('cf-color-') !== -1 || value.indexOf('global-color-variable') !== -1 || value.indexOf(' farbe') !== -1 || value.indexOf('color') !== -1) return 'color';
+    if (value.indexOf('global-size-variable') !== -1 || value.indexOf('größe') !== -1 || value.indexOf('groesse') !== -1 || value.indexOf('size') !== -1) return 'size';
+    if (value.indexOf('ecf-shadow-') !== -1 || value.indexOf('--ecf-shadow-') !== -1 || value.indexOf('cf-shadow-') !== -1 || value.indexOf('global-string-variable') !== -1 || value.indexOf('shadow') !== -1 || value.indexOf('string') !== -1) return 'string';
 
     return null;
-  }
-
-  function isVariableCandidate($item) {
-    var text = $item.text().trim().toLowerCase();
-    if (!text || text.length > 260) return false;
-
-    return (
-      text.indexOf('ecf-') !== -1 ||
-      text.indexOf('--ecf-') !== -1 ||
-      text.indexOf('cf-') !== -1 ||
-      text.indexOf('global-color-variable') !== -1 ||
-      text.indexOf('global-size-variable') !== -1 ||
-      text.indexOf('global-string-variable') !== -1 ||
-      text.indexOf('farbe') !== -1 ||
-      text.indexOf('größe') !== -1 ||
-      text.indexOf('groesse') !== -1 ||
-      text.indexOf('shadow') !== -1
-    );
   }
 
   function filterVisibleVariablePickers() {
@@ -159,54 +77,39 @@ jQuery(window).on('elementor:init', function() {
       return scopes[type] !== false;
     });
 
-    if (!enabledTypes.length) {
-      return;
-    }
+    if (!enabledTypes.length) return;
 
     var selector = [
-      '.dialog-widget:visible',
-      '.ui-dialog:visible',
-      '.MuiPopover-root:visible',
-      '.MuiModal-root:visible',
       '[class*="variable"][class*="picker"]:visible',
-      '[class*="Variable"][class*="Picker"]:visible'
+      '[class*="Variable"][class*="Picker"]:visible',
+      '.dialog-widget:visible:has([data-variable-id], [data-variable-name])',
+      '.ui-dialog:visible:has([data-variable-id], [data-variable-name])',
+      '.MuiPopover-root:visible:has([data-variable-id], [data-variable-name])',
+      '.MuiModal-root:visible:has([data-variable-id], [data-variable-name])'
     ].join(', ');
 
     jQuery(selector).each(function() {
       var $picker = jQuery(this);
-      var $items = $picker.find('[data-variable-id], [data-variable-name], [role="option"], [role="menuitem"], li, button');
+      var $items = $picker.find('[data-variable-id], [data-variable-name]');
 
       $items.each(function() {
         var $item = jQuery(this);
-        if (!isVariableCandidate($item)) return;
-
         var detectedType = classifyVariableText($item.text());
         if (!detectedType) return;
 
-        var allowed = enabledTypes.indexOf(detectedType) !== -1;
-        $item.toggle(allowed);
+        $item.toggle(enabledTypes.indexOf(detectedType) !== -1);
       });
     });
   }
 
-  function startVariablePickerObserver() {
-    if (observerStarted || !window.MutationObserver) return;
-    observerStarted = true;
-
-    var observer = new MutationObserver(function() {
-      filterVisibleVariablePickers();
-    });
-
-    observer.observe(document.body, {
-      childList: true,
-      subtree: true
-    });
+  function scheduleVariablePickerFilter() {
+    window.setTimeout(filterVisibleVariablePickers, 0);
+    window.setTimeout(filterVisibleVariablePickers, 120);
+    window.setTimeout(filterVisibleVariablePickers, 320);
   }
 
   $doc.on('focusin click mousedown', '.elementor-control [data-setting], .elementor-control input, .elementor-control textarea, .elementor-control select, .elementor-control button', function() {
     updateActiveVariableContext(this);
-    filterVisibleVariablePickers();
+    scheduleVariablePickerFilter();
   });
-
-  startVariablePickerObserver();
 });
