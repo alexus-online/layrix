@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.18 (2026-04-06)
+
+### Fixed
+- Hardened the Elementor sync flow, improved admin-post handling, and stabilized variable previews for spacing, typography, and radius values.
+- Den Elementor-Sync robuster gemacht, das admin-post-Handling verbessert und die Variablen-Vorschau für Abstände, Typografie und Radius stabilisiert.
+
 ## 0.1.17 (2026-04-06)
 
 ### Changed
