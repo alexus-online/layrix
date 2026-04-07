@@ -275,12 +275,14 @@ jQuery(function($){
           a: alpha
         }, storedFormat));
         updateColorRowDisplay($row);
+        scheduleSettingsAutosave({ delay: 250 });
       },
       clear: function() {
         var $row = $(this).closest('.ecf-row--color');
         $(this).val('');
         $row.find('.ecf-color-value-input').val('');
         $row.find('.ecf-color-value-display').val('');
+        scheduleSettingsAutosave({ delay: 250 });
       }
     });
     scope.find('.ecf-row--color').each(function(){
@@ -316,6 +318,7 @@ jQuery(function($){
     if (isColor) initColorPickers($row);
     renderTypePreview();
     renderShadowPreview();
+    scheduleSettingsAutosave({ delay: 250 });
   });
 
   $(document).on('click', '.ecf-remove-row', function(){
@@ -324,6 +327,7 @@ jQuery(function($){
     $row.remove();
     renderTypePreview();
     renderShadowPreview();
+    scheduleSettingsAutosave({ delay: 250 });
   });
 
   $(document).on('click', '.ecf-remove-last-row', function(){
@@ -336,6 +340,7 @@ jQuery(function($){
     $last.remove();
     renderTypePreview();
     renderShadowPreview();
+    scheduleSettingsAutosave({ delay: 250 });
   });
 
   $(document).on('change', '.ecf-color-format-select', function(){
@@ -375,6 +380,7 @@ jQuery(function($){
       + '<button type="button" class="button ecf-remove-row">×</button>'
       + '</div>';
     $table.append($(html));
+    scheduleSettingsAutosave({ delay: 250 });
   });
 
   $(document).on('click', '.ecf-font-file-select', function(e){
@@ -390,6 +396,7 @@ jQuery(function($){
     frame.on('select', function() {
       var attachment = frame.state().get('selection').first().toJSON();
       $button.siblings('.ecf-font-file-url').val(attachment.url).trigger('input').trigger('change');
+      scheduleSettingsAutosave({ delay: 250 });
     });
 
     frame.open();
@@ -2936,12 +2943,14 @@ jQuery(function($){
   $(document).on('click', '[data-ecf-starter-custom-add]', function() {
     appendCustomStarterRow({ enabled: true, category: 'custom' });
     updateStarterClassesState();
+    scheduleSettingsAutosave({ delay: 250 });
   });
 
   $(document).on('click', '[data-ecf-starter-custom-remove]', function() {
     var $rows = $('[data-ecf-starter-custom-rows]');
     $rows.find('.ecf-starter-custom-row').last().remove();
     updateStarterClassesState();
+    scheduleSettingsAutosave({ delay: 250 });
   });
 
   $(document).on('click', '[data-ecf-custom-suggestion]', function() {
@@ -2959,6 +2968,7 @@ jQuery(function($){
       pulseCustomStarterRow($existing);
       $existing.find('.ecf-custom-starter-name').focus();
       updateStarterClassesState();
+      scheduleSettingsAutosave({ delay: 250 });
       return;
     }
 
@@ -2978,6 +2988,7 @@ jQuery(function($){
     pulseCustomStarterRow($target);
     $target.find('.ecf-custom-starter-name').focus();
     updateStarterClassesState();
+    scheduleSettingsAutosave({ delay: 250 });
   });
 
   $(document).on('input', '[data-ecf-class-search]', function() {
@@ -3622,6 +3633,7 @@ jQuery(function($){
       $container.append('<input type="hidden" class="ecf-spacing-step-input" name="ecf_framework_v50[spacing][steps][]" value="' + step + '">');
     });
     renderSpacingPreview();
+    scheduleSettingsAutosave({ delay: 250 });
   }
 
   $('[data-ecf-spacing-add="smaller"]').on('click', function(e) {
@@ -3678,6 +3690,7 @@ jQuery(function($){
       $container.append('<input type="hidden" class="ecf-scale-step-input" name="ecf_framework_v50[typography][scale][steps][]" value="' + step + '">');
     });
     try { renderTypePreview(); } catch(err) { console.error('ECF renderTypePreview error:', err); }
+    scheduleSettingsAutosave({ delay: 250 });
   }
 
   // bind step buttons directly (they are static HTML, not dynamic)

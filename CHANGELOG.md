@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.2.3 (2026-04-07)
+
+### Fix
+- Extended autosave to more dynamic UI actions like custom starter rows and type/spacing step buttons.
+- Autosave auf weitere dynamische UI-Aktionen wie Custom-Starter-Reihen und Typo-/Spacing-Step-Buttons erweitert.
+- Added a direct token hint below the base body text size field.
+- Direkten Token-Hinweis unter dem Feld für die Basis-Schriftgröße von Fließtext ergänzt.
+
 ## 0.2.2 (2026-04-07)
 
 ### Fix

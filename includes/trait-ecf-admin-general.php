@@ -684,6 +684,7 @@ trait ECF_Framework_Admin_General_Trait {
                 __('Default body text size for regular paragraphs and flowing content.', 'ecf-framework')
             );
             ?>
+            <p class="ecf-muted-copy"><?php echo wp_kses(sprintf(__('Sets the token <code>%s</code> for regular body text.', 'ecf-framework'), '--ecf-base-body-text-size'), ['code' => []]); ?></p>
         </label>
         <?php
     }
