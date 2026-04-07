@@ -826,6 +826,48 @@ jQuery(function($){
     return payload;
   }
 
+  function updateSystemInfoCards(meta, settings) {
+    var snapshot = meta && meta.elementor_limit_snapshot ? meta.elementor_limit_snapshot : null;
+    var debug = meta && meta.elementor_debug_snapshot ? meta.elementor_debug_snapshot : null;
+    var currentSettings = settings || {};
+
+    if (snapshot) {
+      $('[data-ecf-classes-total]').text(snapshot.classes_total == null ? '0' : String(snapshot.classes_total));
+      $('[data-ecf-classes-limit]').text(snapshot.classes_limit == null ? '0' : String(snapshot.classes_limit));
+      $('[data-ecf-variables-total]').text(snapshot.variables_total == null ? '0' : String(snapshot.variables_total));
+      $('[data-ecf-variables-limit]').text(snapshot.variables_limit == null ? '0' : String(snapshot.variables_limit));
+    }
+
+    if (typeof currentSettings.github_update_checks_enabled !== 'undefined') {
+      $('[data-ecf-github-status]').text(currentSettings.github_update_checks_enabled ? (i18n.enabled || 'Enabled') : (i18n.disabled || 'Disabled'));
+    }
+
+    if (debug) {
+      $('[data-ecf-debug-core-state]').text(debug.core_recognized ? (i18n.yes || 'Yes') : (i18n.no || 'No'));
+      $('[data-ecf-debug-pro-state]').text(debug.pro_recognized ? (i18n.yes || 'Yes') : (i18n.no || 'No'));
+      $('[data-ecf-debug-variables-state]').text(debug.variables_active ? (i18n.yes || 'Yes') : (i18n.no || 'No'));
+      $('[data-ecf-debug-classes-state]').text(debug.global_classes_active ? (i18n.yes || 'Yes') : (i18n.no || 'No'));
+      $('[data-ecf-debug-sync-state]').text(debug.design_system_sync_active ? (i18n.yes || 'Yes') : (i18n.no || 'No'));
+      $('[data-ecf-debug-limits]').text(
+        String(i18n.limit_summary || '%1$s classes / %2$s variables')
+          .replace('%1$s', String(debug.classes_limit))
+          .replace('%2$s', String(debug.variables_limit))
+      );
+      $('[data-ecf-debug-limit-sources]').text(
+        String(i18n.source_limits || 'Source: classes via %1$s, variables via %2$s')
+          .replace('%1$s', debug.classes_limit_source || '')
+          .replace('%2$s', debug.variables_limit_source || '')
+      );
+
+      if ($('[data-ecf-debug-core-version]').length) {
+        $('[data-ecf-debug-core-version]').text(debug.core_version ? formatTemplate(i18n.version || 'Version %s', debug.core_version) : '');
+      }
+      if ($('[data-ecf-debug-pro-version]').length) {
+        $('[data-ecf-debug-pro-version]').text(debug.pro_version ? formatTemplate(i18n.version || 'Version %s', debug.pro_version) : '');
+      }
+    }
+  }
+
   function submitSettingsAutosave() {
     if (!$settingsForm.length || !restUrl || !restNonce) return;
 
@@ -853,8 +895,9 @@ jQuery(function($){
         throw new Error('rest_save_failed');
       }
       return response.json();
-    }).then(function() {
+    }).then(function(responseData) {
       autosaveInFlight = false;
+      updateSystemInfoCards(responseData && responseData.meta ? responseData.meta : null, responseData && responseData.settings ? responseData.settings : payload);
 
       if (autosaveQueued) {
         autosaveQueued = false;
@@ -3448,6 +3491,35 @@ jQuery(function($){
     e.preventDefault();
     persistAdminPageState($(this));
     window.location.reload();
+  });
+
+  $(document).on('click', '[data-ecf-refresh-system-info]', function(e) {
+    e.preventDefault();
+    if (!restUrl || !restNonce) return;
+
+    var $button = $(this);
+    if ($button.prop('disabled')) return;
+    $button.prop('disabled', true).addClass('is-loading');
+
+    window.fetch(restUrl, {
+      method: 'GET',
+      credentials: 'same-origin',
+      headers: {
+        'X-WP-Nonce': restNonce
+      }
+    }).then(function(response) {
+      if (!response.ok) {
+        throw new Error('rest_refresh_failed');
+      }
+      return response.json();
+    }).then(function(responseData) {
+      updateSystemInfoCards(responseData && responseData.meta ? responseData.meta : null, responseData && responseData.settings ? responseData.settings : null);
+      showAutosaveNotice(i18n.system_refreshed || 'Elementor status refreshed.', 'success');
+    }).catch(function() {
+      showAutosaveNotice(i18n.autosave_failed || 'Could not save settings automatically.', 'error');
+    }).finally(function() {
+      $button.prop('disabled', false).removeClass('is-loading');
+    });
   });
 
   $(document).on('click', function(e) {

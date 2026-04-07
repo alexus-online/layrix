@@ -29,6 +29,7 @@ required_files=(
 extra_required_files=(
   "scripts/generate-pot.php"
   "scripts/generate-de-language-files.php"
+  "scripts/e2e-rest-check.sh"
   "scripts/regression-check.sh"
   "languages/ecf-framework.pot"
 )
@@ -94,9 +95,14 @@ node --check assets/editor.js
 bash -n deploy.sh
 php -l scripts/generate-pot.php
 php -l scripts/generate-de-language-files.php
+bash -n scripts/e2e-rest-check.sh
 php scripts/generate-pot.php >/dev/null
 php scripts/generate-de-language-files.php >/dev/null
 bash scripts/regression-check.sh
+
+if [[ -n "${ECF_WP_URL:-}" && -n "${ECF_WP_USER:-}" && -n "${ECF_WP_APP_PASSWORD:-}" ]]; then
+  bash scripts/e2e-rest-check.sh
+fi
 
 duplicate_methods="$(
   rg -o 'function[[:space:]]+[A-Za-z0-9_]+' elementor-core-framework.php includes/*.php \

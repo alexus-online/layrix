@@ -667,7 +667,7 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                 </span>
                             </label>
                         </div>
-                        <div class="ecf-system-limit-card" id="ecf-elementor-limits">
+                        <div class="ecf-system-limit-card" id="ecf-elementor-limits" data-ecf-elementor-limits-card>
                             <div class="ecf-system-limit-card__header">
           <strong><?php echo esc_html__('Updater & privacy', 'ecf-framework'); ?></strong>
                             </div>
@@ -678,15 +678,15 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                 </div>
                                 <div class="ecf-system-limit-card__item">
             <span class="ecf-system-limit-card__label"><?php echo esc_html__('Current status', 'ecf-framework'); ?></span>
-            <strong><?php echo esc_html(!empty($settings['github_update_checks_enabled']) ? __('Enabled', 'ecf-framework') : __('Disabled', 'ecf-framework')); ?></strong>
+            <strong data-ecf-github-status><?php echo esc_html(!empty($settings['github_update_checks_enabled']) ? __('Enabled', 'ecf-framework') : __('Disabled', 'ecf-framework')); ?></strong>
                                 </div>
                             </div>
           <p class="ecf-system-limit-card__hint"><?php echo esc_html__('When enabled, ECF can contact api.github.com and codeload.github.com from your server to check update metadata and download plugin updates. If an ECF_GITHUB_TOKEN is configured, it is sent only to GitHub for authenticated update requests.', 'ecf-framework'); ?></p>
                         </div>
-                        <div class="ecf-system-limit-card">
+                        <div class="ecf-system-limit-card" data-ecf-elementor-limits-card>
                             <div class="ecf-system-limit-card__header">
           <strong><?php echo esc_html__('Elementor limits', 'ecf-framework'); ?></strong>
-                                <button type="button" class="ecf-btn ecf-btn--secondary ecf-btn--compact" data-ecf-reload-page>
+                                <button type="button" class="ecf-btn ecf-btn--secondary ecf-btn--compact" data-ecf-refresh-system-info>
                                     <span class="dashicons dashicons-update" aria-hidden="true"></span>
             <span><?php echo esc_html__('Reload', 'ecf-framework'); ?></span>
                                 </button>
@@ -694,11 +694,11 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                             <div class="ecf-system-limit-card__grid">
                                 <div class="ecf-system-limit-card__item">
             <span class="ecf-system-limit-card__label"><?php echo esc_html__('Global Classes', 'ecf-framework'); ?></span>
-                                    <strong><?php echo esc_html((string) $elementor_limit_snapshot['classes_total']); ?> / <?php echo esc_html((string) $elementor_limit_snapshot['classes_limit']); ?></strong>
+                                    <strong><span data-ecf-classes-total><?php echo esc_html((string) $elementor_limit_snapshot['classes_total']); ?></span> / <span data-ecf-classes-limit><?php echo esc_html((string) $elementor_limit_snapshot['classes_limit']); ?></span></strong>
                                 </div>
                                 <div class="ecf-system-limit-card__item">
             <span class="ecf-system-limit-card__label"><?php echo esc_html__('Variables', 'ecf-framework'); ?></span>
-                                    <strong><?php echo esc_html((string) $elementor_limit_snapshot['variables_total']); ?> / <?php echo esc_html((string) $elementor_limit_snapshot['variables_limit']); ?></strong>
+                                    <strong><span data-ecf-variables-total><?php echo esc_html((string) $elementor_limit_snapshot['variables_total']); ?></span> / <span data-ecf-variables-limit><?php echo esc_html((string) $elementor_limit_snapshot['variables_limit']); ?></span></strong>
                                 </div>
                             </div>
           <p class="ecf-system-limit-card__hint"><?php echo esc_html__('Detected from the installed Elementor version on this website. Use Reload to fetch the current values again.', 'ecf-framework'); ?></p>
@@ -713,34 +713,34 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                             <div class="ecf-system-debug-card__grid">
                                 <div class="ecf-system-debug-card__item">
                                     <span class="ecf-system-debug-card__label"><?php echo $this->tip_hover_label(__('Elementor Core recognized', 'ecf-framework'), __('Checks whether the Elementor core plugin is loaded and available to ECF on this website.', 'ecf-framework'), ''); ?></span>
-                                    <strong><?php echo esc_html($elementor_debug_snapshot['core_recognized'] ? __('Yes', 'ecf-framework') : __('No', 'ecf-framework')); ?></strong>
+                                    <strong data-ecf-debug-core-state><?php echo esc_html($elementor_debug_snapshot['core_recognized'] ? __('Yes', 'ecf-framework') : __('No', 'ecf-framework')); ?></strong>
                                     <?php if ($elementor_debug_snapshot['core_version'] !== ''): ?>
-                                        <small><?php echo esc_html(sprintf(__('Version %s', 'ecf-framework'), $elementor_debug_snapshot['core_version'])); ?></small>
+                                        <small data-ecf-debug-core-version><?php echo esc_html(sprintf(__('Version %s', 'ecf-framework'), $elementor_debug_snapshot['core_version'])); ?></small>
                                     <?php endif; ?>
                                 </div>
                                 <div class="ecf-system-debug-card__item">
                                     <span class="ecf-system-debug-card__label"><?php echo $this->tip_hover_label(__('Elementor Pro recognized', 'ecf-framework'), __('Checks whether Elementor Pro is loaded. Some variables, sync and editor features can depend on it.', 'ecf-framework'), ''); ?></span>
-                                    <strong><?php echo esc_html($elementor_debug_snapshot['pro_recognized'] ? __('Yes', 'ecf-framework') : __('No', 'ecf-framework')); ?></strong>
+                                    <strong data-ecf-debug-pro-state><?php echo esc_html($elementor_debug_snapshot['pro_recognized'] ? __('Yes', 'ecf-framework') : __('No', 'ecf-framework')); ?></strong>
                                     <?php if ($elementor_debug_snapshot['pro_version'] !== ''): ?>
-                                        <small><?php echo esc_html(sprintf(__('Version %s', 'ecf-framework'), $elementor_debug_snapshot['pro_version'])); ?></small>
+                                        <small data-ecf-debug-pro-version><?php echo esc_html(sprintf(__('Version %s', 'ecf-framework'), $elementor_debug_snapshot['pro_version'])); ?></small>
                                     <?php endif; ?>
                                 </div>
                                 <div class="ecf-system-debug-card__item">
                                     <span class="ecf-system-debug-card__label"><?php echo $this->tip_hover_label(__('Variables module active', 'ecf-framework'), __('Checks whether Elementor\'s Variables module is available, which is required for ECF variable sync and picker integration.', 'ecf-framework'), ''); ?></span>
-                                    <strong><?php echo esc_html($elementor_debug_snapshot['variables_active'] ? __('Yes', 'ecf-framework') : __('No', 'ecf-framework')); ?></strong>
+                                    <strong data-ecf-debug-variables-state><?php echo esc_html($elementor_debug_snapshot['variables_active'] ? __('Yes', 'ecf-framework') : __('No', 'ecf-framework')); ?></strong>
                                 </div>
                                 <div class="ecf-system-debug-card__item">
                                     <span class="ecf-system-debug-card__label"><?php echo $this->tip_hover_label(__('Global Classes active', 'ecf-framework'), __('Checks whether Elementor\'s Global Classes module is available for ECF class sync.', 'ecf-framework'), ''); ?></span>
-                                    <strong><?php echo esc_html($elementor_debug_snapshot['global_classes_active'] ? __('Yes', 'ecf-framework') : __('No', 'ecf-framework')); ?></strong>
+                                    <strong data-ecf-debug-classes-state><?php echo esc_html($elementor_debug_snapshot['global_classes_active'] ? __('Yes', 'ecf-framework') : __('No', 'ecf-framework')); ?></strong>
                                 </div>
                                 <div class="ecf-system-debug-card__item">
                                     <span class="ecf-system-debug-card__label"><?php echo $this->tip_hover_label(__('Design System Sync active', 'ecf-framework'), __('Checks whether Elementor\'s Design System Sync module is available. This can affect caches and synchronization behavior.', 'ecf-framework'), ''); ?></span>
-                                    <strong><?php echo esc_html($elementor_debug_snapshot['design_system_sync_active'] ? __('Yes', 'ecf-framework') : __('No', 'ecf-framework')); ?></strong>
+                                    <strong data-ecf-debug-sync-state><?php echo esc_html($elementor_debug_snapshot['design_system_sync_active'] ? __('Yes', 'ecf-framework') : __('No', 'ecf-framework')); ?></strong>
                                 </div>
                                 <div class="ecf-system-debug-card__item">
                                     <span class="ecf-system-debug-card__label"><?php echo $this->tip_hover_label(__('Detected limits', 'ecf-framework'), __('Shows the class and variable limits ECF currently assumes from the installed Elementor setup.', 'ecf-framework'), ''); ?></span>
-                                    <strong><?php echo esc_html(sprintf(__('%1$s classes / %2$s variables', 'ecf-framework'), (string) $elementor_debug_snapshot['classes_limit'], (string) $elementor_debug_snapshot['variables_limit'])); ?></strong>
-                                    <small><?php echo esc_html(sprintf(__('Source: classes via %1$s, variables via %2$s', 'ecf-framework'), $elementor_debug_snapshot['classes_limit_source'], $elementor_debug_snapshot['variables_limit_source'])); ?></small>
+                                    <strong data-ecf-debug-limits><?php echo esc_html(sprintf(__('%1$s classes / %2$s variables', 'ecf-framework'), (string) $elementor_debug_snapshot['classes_limit'], (string) $elementor_debug_snapshot['variables_limit'])); ?></strong>
+                                    <small data-ecf-debug-limit-sources><?php echo esc_html(sprintf(__('Source: classes via %1$s, variables via %2$s', 'ecf-framework'), $elementor_debug_snapshot['classes_limit_source'], $elementor_debug_snapshot['variables_limit_source'])); ?></small>
                                 </div>
                             </div>
                             <p class="ecf-system-debug-card__hint"><?php echo esc_html__('Useful for checking whether Elementor and its design-system modules are available before debugging sync or editor issues.', 'ecf-framework'); ?></p>

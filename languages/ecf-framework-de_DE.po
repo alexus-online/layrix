@@ -373,6 +373,9 @@ msgstr "Das Elementor-Repository für globale Klassen ist nicht verfügbar."
 msgid "Elementor limits"
 msgstr "Elementor-Limits"
 
+msgid "Elementor status refreshed."
+msgstr "Elementor-Status aktualisiert."
+
 msgid "Elementor variable classes are not available."
 msgstr "Die Elementor-Variablenklassen sind nicht verfügbar."
 
@@ -1038,6 +1041,9 @@ msgstr "Variablen"
 
 msgid "Variables module active"
 msgstr "Variables-Modul aktiv"
+
+msgid "Version %s"
+msgstr "Version %s"
 
 msgid "Version Changelog"
 msgstr "Versions-Changelog"

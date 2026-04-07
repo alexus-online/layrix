@@ -5,15 +5,20 @@ if (!defined('ABSPATH')) {
 }
 
 trait ECF_Framework_Core_Admin_Trait {
+    private $runtime_gettext_fallback_enabled = false;
+
     public function load_textdomain() {
         unload_textdomain('ecf-framework');
         add_filter('plugin_locale', [$this, 'filter_plugin_locale'], 10, 2);
-        load_plugin_textdomain(
+        $loaded = load_plugin_textdomain(
             'ecf-framework',
             false,
             dirname(plugin_basename(ECF_FRAMEWORK_FILE)) . '/languages'
         );
         remove_filter('plugin_locale', [$this, 'filter_plugin_locale'], 10);
+
+        $this->runtime_gettext_fallback_enabled =
+            $this->selected_interface_language() === 'de' && !$loaded;
     }
 
     public function filter_plugin_locale($locale, $domain) {
@@ -29,7 +34,7 @@ trait ECF_Framework_Core_Admin_Trait {
             return $translation;
         }
 
-        if ($this->selected_interface_language() !== 'de') {
+        if (!$this->runtime_gettext_fallback_enabled) {
             return $translation;
         }
 

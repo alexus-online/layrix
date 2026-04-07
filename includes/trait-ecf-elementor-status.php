@@ -70,6 +70,18 @@ trait ECF_Framework_Elementor_Status_Trait {
         ];
     }
 
+    private function get_elementor_limit_snapshot() {
+        $limits = $this->get_detected_elementor_limits();
+        $variable_counts = $this->get_native_variable_counts();
+
+        return [
+            'classes_total' => (int) $this->get_native_global_class_total_count(),
+            'classes_limit' => (int) ($limits['classes'] ?? 100),
+            'variables_total' => (int) ($variable_counts['total'] ?? 0),
+            'variables_limit' => (int) ($limits['variables'] ?? 1000),
+        ];
+    }
+
     private function global_class_limit_status($count, $limit = 100) {
         $limit = max(1, (int) $limit);
         $count = max(0, (int) $count);

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ECF Elementor v4 Core Framework\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-07 08:42+0000\n"
+"POT-Creation-Date: 2026-04-07 08:58+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -42,6 +42,7 @@ msgid "%1$d variables and %2$d global classes were removed. The Elementor cache 
 msgstr ""
 
 #: includes/trait-ecf-admin-page-sections.php:742
+#: includes/trait-ecf-asset-loading.php:124
 msgid "%1$s classes / %2$s variables"
 msgstr ""
 
@@ -561,7 +562,7 @@ msgstr ""
 msgid "Debug"
 msgstr ""
 
-#: includes/trait-ecf-core-admin.php:205
+#: includes/trait-ecf-core-admin.php:210
 msgid "Debug history cleared."
 msgstr ""
 
@@ -603,7 +604,7 @@ msgstr ""
 msgid "Detected limits"
 msgstr ""
 
-#: includes/trait-ecf-asset-loading.php:124
+#: includes/trait-ecf-asset-loading.php:132
 msgid "Detected settings groups: %s"
 msgstr ""
 
@@ -625,6 +626,7 @@ msgstr ""
 #: includes/trait-ecf-admin-general.php:386
 #: includes/trait-ecf-admin-general.php:86
 #: includes/trait-ecf-admin-page-sections.php:681
+#: includes/trait-ecf-asset-loading.php:126
 msgid "Disabled"
 msgstr ""
 
@@ -636,7 +638,7 @@ msgstr ""
 msgid "Displays children inline with flexible spacing."
 msgstr ""
 
-#: includes/trait-ecf-asset-loading.php:128
+#: includes/trait-ecf-asset-loading.php:136
 msgid "Do you really want to delete \"%s\"?"
 msgstr ""
 
@@ -739,6 +741,10 @@ msgstr ""
 msgid "Elementor limits"
 msgstr ""
 
+#: includes/trait-ecf-asset-loading.php:119
+msgid "Elementor status refreshed."
+msgstr ""
+
 #: includes/trait-ecf-native-elementor-handlers.php:206
 #: includes/trait-ecf-native-elementor-handlers.php:304
 #: includes/trait-ecf-native-elementor-handlers.php:348
@@ -763,6 +769,7 @@ msgstr ""
 #: includes/trait-ecf-admin-general.php:386
 #: includes/trait-ecf-admin-general.php:86
 #: includes/trait-ecf-admin-page-sections.php:681
+#: includes/trait-ecf-asset-loading.php:125
 msgid "Enabled"
 msgstr ""
 
@@ -783,7 +790,7 @@ msgstr ""
 msgid "Enter either a simple value like 72 or, with f(x), a full CSS expression such as min(72ch, 100% - 2rem)."
 msgstr ""
 
-#: includes/trait-ecf-asset-loading.php:132
+#: includes/trait-ecf-asset-loading.php:140
 msgid "Entry deleted."
 msgstr ""
 
@@ -803,11 +810,11 @@ msgstr ""
 msgid "Export settings as JSON or import from another installation."
 msgstr ""
 
-#: includes/trait-ecf-asset-loading.php:122
+#: includes/trait-ecf-asset-loading.php:130
 msgid "Exported at: %s"
 msgstr ""
 
-#: includes/trait-ecf-asset-loading.php:121
+#: includes/trait-ecf-asset-loading.php:129
 msgid "Exported from plugin version: %s"
 msgstr ""
 
@@ -835,7 +842,7 @@ msgstr ""
 msgid "File upload failed."
 msgstr ""
 
-#: includes/trait-ecf-asset-loading.php:120
+#: includes/trait-ecf-asset-loading.php:128
 msgid "File: %s"
 msgstr ""
 
@@ -1005,7 +1012,7 @@ msgstr ""
 msgid "Global Classes count against Elementor’s class limit. Synced ECF variables count against Elementor’s variable limit. Keep utility classes intentionally compact."
 msgstr ""
 
-#: includes/trait-ecf-asset-loading.php:130
+#: includes/trait-ecf-asset-loading.php:138
 msgid "Global Classes should be managed in Elementor or through the ECF sync, not directly in the search results."
 msgstr ""
 
@@ -1079,7 +1086,7 @@ msgid "Import"
 msgstr ""
 
 #: includes/trait-ecf-admin-page-sections.php:1388
-#: includes/trait-ecf-asset-loading.php:119
+#: includes/trait-ecf-asset-loading.php:127
 msgid "Import preview"
 msgstr ""
 
@@ -1123,7 +1130,7 @@ msgstr ""
 msgid "Invalid JSON file."
 msgstr ""
 
-#: includes/trait-ecf-rest-api.php:46
+#: includes/trait-ecf-rest-api.php:54
 msgid "Invalid JSON payload."
 msgstr ""
 
@@ -1170,7 +1177,7 @@ msgstr ""
 msgid "Layout helper for simple spacing or positioning patterns."
 msgstr ""
 
-#: includes/trait-ecf-asset-loading.php:125
+#: includes/trait-ecf-asset-loading.php:133
 msgid "Legacy export without metadata. Import is still possible."
 msgstr ""
 
@@ -1389,6 +1396,7 @@ msgstr ""
 #: includes/trait-ecf-admin-page-sections.php:730
 #: includes/trait-ecf-admin-page-sections.php:734
 #: includes/trait-ecf-admin-page-sections.php:738
+#: includes/trait-ecf-asset-loading.php:121
 msgid "No"
 msgstr ""
 
@@ -1636,7 +1644,7 @@ msgstr ""
 msgid "Saving…"
 msgstr ""
 
-#: includes/trait-ecf-asset-loading.php:123
+#: includes/trait-ecf-asset-loading.php:131
 msgid "Schema version: %s"
 msgstr ""
 
@@ -1715,7 +1723,7 @@ msgstr ""
 msgid "Settings saved."
 msgstr ""
 
-#: includes/trait-ecf-rest-api.php:57
+#: includes/trait-ecf-rest-api.php:65
 msgid "Settings updated."
 msgstr ""
 
@@ -1794,6 +1802,7 @@ msgid "Smallest size of the clamp value, shown here in px for easier editing."
 msgstr ""
 
 #: includes/trait-ecf-admin-page-sections.php:743
+#: includes/trait-ecf-asset-loading.php:123
 msgid "Source: classes via %1$s, variables via %2$s"
 msgstr ""
 
@@ -1926,7 +1935,7 @@ msgstr ""
 msgid "The preview updates live while you edit the scale settings."
 msgstr ""
 
-#: includes/trait-ecf-asset-loading.php:127
+#: includes/trait-ecf-asset-loading.php:135
 msgid "The selected file is not a valid ECF JSON export."
 msgstr ""
 
@@ -1934,11 +1943,11 @@ msgstr ""
 msgid "These colors affect the site basis directly and are also exposed as global ECF tokens."
 msgstr ""
 
-#: includes/trait-ecf-asset-loading.php:129
+#: includes/trait-ecf-asset-loading.php:137
 msgid "This ECF variable is generated from the framework settings. Please change it in the matching ECF section instead."
 msgstr ""
 
-#: includes/trait-ecf-asset-loading.php:126
+#: includes/trait-ecf-asset-loading.php:134
 msgid "This file was exported from another plugin version. Please review General Settings, Sync, and editor-related options after import."
 msgstr ""
 
@@ -2091,7 +2100,7 @@ msgstr ""
 msgid "Variable not found."
 msgstr ""
 
-#: includes/trait-ecf-asset-loading.php:131
+#: includes/trait-ecf-asset-loading.php:139
 msgid "Variable updated."
 msgstr ""
 
@@ -2111,6 +2120,7 @@ msgstr ""
 
 #: includes/trait-ecf-admin-page-sections.php:718
 #: includes/trait-ecf-admin-page-sections.php:725
+#: includes/trait-ecf-asset-loading.php:122
 msgid "Version %s"
 msgstr ""
 
@@ -2195,10 +2205,11 @@ msgstr ""
 #: includes/trait-ecf-admin-page-sections.php:730
 #: includes/trait-ecf-admin-page-sections.php:734
 #: includes/trait-ecf-admin-page-sections.php:738
+#: includes/trait-ecf-asset-loading.php:120
 msgid "Yes"
 msgstr ""
 
-#: includes/trait-ecf-core-admin.php:210
+#: includes/trait-ecf-core-admin.php:215
 #: includes/trait-ecf-native-elementor-handlers.php:202
 #: includes/trait-ecf-native-elementor-handlers.php:242
 #: includes/trait-ecf-native-elementor-handlers.php:295
