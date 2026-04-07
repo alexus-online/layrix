@@ -5,10 +5,13 @@ trait ECF_Framework_Config_Trait {
         return [
             'root_font_size' => '62.5',
             'interface_language' => $this->wordpress_default_interface_language(),
+            'admin_design_preset' => 'current',
+            'admin_design_mode' => 'dark',
             'github_update_checks_enabled' => '1',
             'elementor_boxed_width' => '1140px',
             'content_max_width' => '72ch',
             'base_font_family' => 'var(--ecf-font-primary)',
+            'base_body_text_size' => '16px',
             'base_text_color' => '#111827',
             'base_background_color' => '#ffffff',
             'link_color' => '#3b82f6',
@@ -271,6 +274,16 @@ trait ECF_Framework_Config_Trait {
         $settings['interface_language'] = in_array(($settings['interface_language'] ?? ''), ['de', 'en'], true)
             ? $settings['interface_language']
             : $this->wordpress_default_interface_language();
+        $default_general_favorites = $this->default_general_setting_favorites();
+        $saved_general_favorites = is_array($settings['general_setting_favorites'] ?? null)
+            ? $settings['general_setting_favorites']
+            : [];
+        $merged_general_favorites = array_merge($default_general_favorites, $saved_general_favorites);
+        if (($settings['general_setting_favorites'] ?? []) !== $merged_general_favorites) {
+            $settings['general_setting_favorites'] = $merged_general_favorites;
+            $saved['general_setting_favorites'] = $merged_general_favorites;
+            update_option($this->option_name, $saved);
+        }
         if (empty($settings['starter_classes']) || !is_array($settings['starter_classes'])) {
             $settings['starter_classes'] = $this->defaults()['starter_classes'];
         }

@@ -4,7 +4,10 @@ jQuery(function($){
   var typePreviewMap = (typeof ecfAdmin !== 'undefined' && ecfAdmin.typePreview) ? ecfAdmin.typePreview : {};
   var radiusPreviewMap = (typeof ecfAdmin !== 'undefined' && ecfAdmin.radiusPreview) ? ecfAdmin.radiusPreview : {};
   var restUrl = (typeof ecfAdmin !== 'undefined' && ecfAdmin.restUrl) ? ecfAdmin.restUrl : '';
+  var layoutRestUrl = (typeof ecfAdmin !== 'undefined' && ecfAdmin.layoutRestUrl) ? ecfAdmin.layoutRestUrl : '';
   var restNonce = (typeof ecfAdmin !== 'undefined' && ecfAdmin.restNonce) ? ecfAdmin.restNonce : '';
+  var adminDesign = (typeof ecfAdmin !== 'undefined' && ecfAdmin.adminDesign) ? ecfAdmin.adminDesign : {};
+  var layoutOrders = (typeof ecfAdmin !== 'undefined' && ecfAdmin.layoutOrders) ? ecfAdmin.layoutOrders : {};
   i18n.copy    = i18n.copy    || 'Copy';
   i18n.copied  = i18n.copied  || 'Copied!';
 
@@ -735,7 +738,7 @@ jQuery(function($){
   }
 
   // ── Sidebar navigation ─────────────────────────────────────────
-  var $noSavePanel = ['variables', 'sync', 'changelog']; // panels that don't need the save button
+  var $noSavePanel = ['variables', 'sync', 'help', 'changelog']; // panels that don't need the save button
   var panelStorageKey = 'ecfActivePanel';
   var generalTabStorageKey = 'ecfGeneralTab';
   var pageScrollStorageKey = 'ecfPageScrollTop';
@@ -868,6 +871,242 @@ jQuery(function($){
     }
   }
 
+  function applyAdminDesignSettings(preset, mode) {
+    var $wrap = $('.ecf-wrap');
+    if (!$wrap.length) return;
+    $wrap.attr('data-ecf-admin-design', preset || 'current');
+    $wrap.attr('data-ecf-admin-mode', mode || 'dark');
+  }
+
+  function getSelectedAdminDesignPreset() {
+    return $('[data-ecf-admin-design-preset]').first().val() || adminDesign.preset || 'current';
+  }
+
+  function getSelectedAdminDesignMode() {
+    return $('[data-ecf-admin-design-mode]').first().val() || adminDesign.mode || 'dark';
+  }
+
+  function refreshAdminDesignChooser() {
+    var preset = getSelectedAdminDesignPreset();
+    var mode = getSelectedAdminDesignMode();
+
+    $('[data-ecf-admin-design-option]').each(function() {
+      $(this).toggleClass('is-active', $(this).data('value') === preset);
+    });
+
+    $('[data-ecf-admin-design-mode-option]').each(function() {
+      $(this).toggleClass('is-active', $(this).data('value') === mode);
+    });
+
+    applyAdminDesignSettings(preset, mode);
+  }
+
+  function normalizeLayoutOrders(orders) {
+    var normalized = {};
+
+    $.each(orders || {}, function(group, items) {
+      if (!Array.isArray(items)) return;
+      var cleanItems = [];
+      var seen = {};
+
+      $.each(items, function(_, itemId) {
+        var itemKey = String(itemId || '').trim().replace(/[^A-Za-z0-9\-_]/g, '');
+        if (!itemKey || seen[itemKey]) return;
+        seen[itemKey] = true;
+        cleanItems.push(itemKey);
+      });
+
+      if (cleanItems.length) {
+        normalized[String(group)] = cleanItems;
+      }
+    });
+
+    return normalized;
+  }
+
+  function getLayoutItemIds($group) {
+    return $group.children('[data-ecf-layout-item]').map(function() {
+      return $(this).data('ecf-layout-item');
+    }).get();
+  }
+
+  function mergedLayoutItemIds(groupKey, domIds) {
+    var savedIds = (layoutOrders && layoutOrders[groupKey]) ? layoutOrders[groupKey] : [];
+    var domMap = {};
+    var merged = [];
+
+    $.each(domIds, function(_, id) {
+      domMap[id] = true;
+    });
+
+    $.each(savedIds, function(_, id) {
+      if (domMap[id]) {
+        merged.push(id);
+        delete domMap[id];
+      }
+    });
+
+    $.each(domIds, function(_, id) {
+      if (domMap[id]) {
+        merged.push(id);
+      }
+    });
+
+    return merged;
+  }
+
+  function applySavedLayoutToGroup($group) {
+    var groupKey = $group.data('ecf-layout-group');
+    var domIds = getLayoutItemIds($group);
+    var orderedIds = mergedLayoutItemIds(groupKey, domIds);
+
+    $.each(orderedIds, function(_, itemId) {
+      var $item = $group.children('[data-ecf-layout-item="' + itemId + '"]').first();
+      if ($item.length) {
+        $group.append($item);
+      }
+    });
+
+    if (!layoutOrders[groupKey] || layoutOrders[groupKey].join('|') !== orderedIds.join('|')) {
+      layoutOrders[groupKey] = orderedIds;
+    }
+  }
+
+  function collectAllLayoutOrders() {
+    var orders = {};
+
+    $('[data-ecf-layout-group]').each(function() {
+      var $group = $(this);
+      var groupKey = $group.data('ecf-layout-group');
+      var itemIds = getLayoutItemIds($group);
+      if (groupKey && itemIds.length) {
+        orders[groupKey] = itemIds;
+      }
+    });
+
+    return normalizeLayoutOrders(orders);
+  }
+
+  function saveLayoutOrders() {
+    if (!layoutRestUrl || !restNonce) return;
+
+    var orders = collectAllLayoutOrders();
+    layoutOrders = orders;
+
+    window.fetch(layoutRestUrl, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-WP-Nonce': restNonce
+      },
+      body: JSON.stringify({ orders: orders })
+    }).then(function(response) {
+      if (!response.ok) {
+        throw new Error('layout_save_failed');
+      }
+      return response.json();
+    }).then(function(responseData) {
+      if (responseData && responseData.orders) {
+        layoutOrders = normalizeLayoutOrders(responseData.orders);
+      }
+      showAutosaveNotice(i18n.layout_saved || 'Card layout saved.', 'success');
+    }).catch(function() {
+      showAutosaveNotice(i18n.layout_failed || 'Could not save card layout.', 'error');
+    });
+  }
+
+  function ensureLayoutHandle($item) {
+    var $handle = $item.find('[data-ecf-layout-handle]').first();
+    if ($handle.length) {
+      return $handle;
+    }
+
+    var selectors = [
+      '.ecf-vargroup-header:first',
+      '.ecf-settings-group__header:first',
+      '.ecf-settings-group__summary:first',
+      '.ecf-system-limit-card__header:first',
+      '.ecf-system-debug-card__summary:first',
+      '.ecf-typography-preview-header:first',
+      '.ecf-spacing-preview-header:first',
+      '.ecf-shadow-preview-header:first',
+      '.ecf-changelog-header:first',
+      '> h2:first',
+      '> h3:first'
+    ];
+    var $target = $();
+
+    $.each(selectors, function(_, selector) {
+      var $candidate = $item.find(selector).first();
+      if (!$candidate.length && selector.indexOf('> ') === 0) {
+        $candidate = $item.children(selector.replace(/^>\s*/, '')).first();
+      }
+      if ($candidate.length) {
+        $target = $candidate;
+        return false;
+      }
+    });
+
+    if (!$target.length) {
+      $target = $item;
+    }
+
+    $target.attr('data-ecf-layout-handle', '1').addClass('ecf-layout-handle-zone');
+
+    if (!$target.find('.ecf-layout-handle').length && !$target.is('.ecf-settings-group__summary, .ecf-system-debug-card__summary')) {
+      $target.prepend('<span class="ecf-layout-handle" aria-hidden="true"><span class="dashicons dashicons-move"></span></span>');
+    }
+
+    return $target;
+  }
+
+  function initSortableLayoutGroups() {
+    if (typeof $.fn.sortable !== 'function') return;
+
+    $('[data-ecf-layout-group]').each(function() {
+      var $group = $(this);
+      applySavedLayoutToGroup($group);
+
+      var $items = $group.children('[data-ecf-layout-item]');
+      if ($items.length < 2) return;
+
+      $items.each(function() {
+        ensureLayoutHandle($(this));
+      });
+
+      if ($group.data('ui-sortable')) {
+        $group.sortable('destroy');
+      }
+
+      $group.sortable({
+        items: '> [data-ecf-layout-item]',
+        handle: '[data-ecf-layout-handle]',
+        tolerance: 'pointer',
+        placeholder: 'ecf-sortable-placeholder',
+        forcePlaceholderSize: true,
+        start: function(event, ui) {
+          ui.placeholder.height(ui.item.outerHeight());
+          ui.placeholder.width(ui.item.outerWidth());
+          ui.item.addClass('ecf-sortable-item--dragging');
+        },
+        stop: function(event, ui) {
+          ui.item.removeClass('ecf-sortable-item--dragging');
+          saveLayoutOrders();
+        }
+      });
+    });
+  }
+
+  function refreshSortableLayoutGroups() {
+    $('[data-ecf-layout-group]').each(function() {
+      var $group = $(this);
+      if ($group.data('ui-sortable')) {
+        $group.sortable('refresh');
+      }
+    });
+  }
+
   function submitSettingsAutosave() {
     if (!$settingsForm.length || !restUrl || !restNonce) return;
 
@@ -897,7 +1136,17 @@ jQuery(function($){
       return response.json();
     }).then(function(responseData) {
       autosaveInFlight = false;
-      updateSystemInfoCards(responseData && responseData.meta ? responseData.meta : null, responseData && responseData.settings ? responseData.settings : payload);
+      var responseSettings = responseData && responseData.settings ? responseData.settings : payload;
+      updateSystemInfoCards(responseData && responseData.meta ? responseData.meta : null, responseSettings);
+      if (responseSettings.admin_design_preset) {
+        $('[data-ecf-admin-design-preset]').val(responseSettings.admin_design_preset);
+        adminDesign.preset = responseSettings.admin_design_preset;
+      }
+      if (responseSettings.admin_design_mode) {
+        $('[data-ecf-admin-design-mode]').val(responseSettings.admin_design_mode);
+        adminDesign.mode = responseSettings.admin_design_mode;
+      }
+      refreshAdminDesignChooser();
 
       if (autosaveQueued) {
         autosaveQueued = false;
@@ -1247,6 +1496,8 @@ jQuery(function($){
     if (panel === 'variables') {
       loadVariables();
     }
+
+    refreshSortableLayoutGroups();
   }
 
   $(document).on('click', '.ecf-nav-item', function(){
@@ -1255,8 +1506,21 @@ jQuery(function($){
     switchPanel(panel);
   });
 
+  function normalizeGeneralTab(tab) {
+    if (tab === 'layout' || tab === 'colors' || tab === 'typography') {
+      return 'website';
+    }
+    if (tab === 'behavior') {
+      return 'editor';
+    }
+    if (tab === 'favorites' || tab === 'website' || tab === 'editor' || tab === 'ui' || tab === 'system') {
+      return tab;
+    }
+    return 'website';
+  }
+
   function switchGeneralTab(tab) {
-    var activeTab = tab || 'system';
+    var activeTab = normalizeGeneralTab(tab);
     $('[data-ecf-general-tab]').removeClass('is-active')
       .filter('[data-ecf-general-tab="' + activeTab + '"]').addClass('is-active');
     $('[data-ecf-general-section]').removeClass('is-active').prop('hidden', true)
@@ -1265,6 +1529,8 @@ jQuery(function($){
     try {
       window.sessionStorage.setItem(generalTabStorageKey, activeTab);
     } catch (err) {}
+
+    refreshSortableLayoutGroups();
   }
 
   $(document).on('click', '[data-ecf-general-tab]', function() {
@@ -1295,7 +1561,27 @@ jQuery(function($){
     $('[data-ecf-general-favorites-empty]').prop('hidden', visibleCards > 0);
   }
 
+  function syncFavoriteToggleState($toggle) {
+    if (!$toggle || !$toggle.length) return;
+    var $input = $toggle.find('[data-ecf-general-favorite-toggle]');
+    var $icon = $toggle.find('.ecf-favorite-toggle__icon');
+    var enabled = $input.is(':checked');
+    var tip = enabled ? ($toggle.attr('data-tip-on') || '') : ($toggle.attr('data-tip-off') || '');
+    $toggle.attr('data-tip', tip);
+    $toggle.attr('aria-label', tip);
+    if ($icon.length) {
+      $icon.text(enabled ? '♥' : '♡');
+    }
+  }
+
+  function syncAllFavoriteToggleStates() {
+    $('.ecf-favorite-toggle').each(function() {
+      syncFavoriteToggleState($(this));
+    });
+  }
+
   $(document).on('change', '[data-ecf-general-favorite-toggle]', function() {
+    syncFavoriteToggleState($(this).closest('.ecf-favorite-toggle'));
     refreshGeneralFavoritesState();
   });
 
@@ -1304,6 +1590,8 @@ jQuery(function($){
     var key = $(this).data('ecf-favorite-remove');
     $('[data-ecf-general-favorite-toggle][data-ecf-favorite-key="' + key + '"]').prop('checked', false).trigger('change');
   });
+
+  syncAllFavoriteToggleStates();
 
   var $floatingNewTooltip = null;
   var activeNewTooltipEl = null;
@@ -1524,12 +1812,13 @@ jQuery(function($){
       initialPanel = storedPanel;
     }
   } catch (err) {}
+  layoutOrders = normalizeLayoutOrders(layoutOrders);
   switchPanel(initialPanel);
-  var initialGeneralTab = 'system';
+  var initialGeneralTab = 'website';
   try {
     var storedGeneralTab = window.sessionStorage.getItem(generalTabStorageKey);
-    if (storedGeneralTab && $('[data-ecf-general-tab="' + storedGeneralTab + '"]').length) {
-      initialGeneralTab = storedGeneralTab;
+    if (storedGeneralTab) {
+      initialGeneralTab = normalizeGeneralTab(storedGeneralTab);
     }
   } catch (err) {}
   switchGeneralTab(initialGeneralTab);
@@ -1543,6 +1832,8 @@ jQuery(function($){
   registerWhatsNewImpressions();
   refreshWhatsNewBadges();
   restorePageScrollPosition();
+  refreshAdminDesignChooser();
+  initSortableLayoutGroups();
   autosaveReady = true;
 
   $(document).on('submit', '.ecf-wrap form', function() {
@@ -3520,6 +3811,26 @@ jQuery(function($){
     }).finally(function() {
       $button.prop('disabled', false).removeClass('is-loading');
     });
+  });
+
+  $(document).on('change', '[data-ecf-admin-design-preset], [data-ecf-admin-design-mode]', function() {
+    refreshAdminDesignChooser();
+  });
+
+  $(document).on('click', '[data-ecf-admin-design-option]', function() {
+    var value = $(this).data('value') || 'current';
+    $('[data-ecf-admin-design-preset]').val(value);
+    adminDesign.preset = value;
+    refreshAdminDesignChooser();
+    $('[data-ecf-admin-design-preset]').first().trigger('change');
+  });
+
+  $(document).on('click', '[data-ecf-admin-design-mode-option]', function() {
+    var value = $(this).data('value') || 'dark';
+    $('[data-ecf-admin-design-mode]').val(value);
+    adminDesign.mode = value;
+    refreshAdminDesignChooser();
+    $('[data-ecf-admin-design-mode]').first().trigger('change');
   });
 
   $(document).on('click', function(e) {

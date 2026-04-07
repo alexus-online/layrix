@@ -74,11 +74,13 @@ trait ECF_Framework_Asset_Loading_Trait {
 
         wp_enqueue_style('wp-color-picker');
         wp_enqueue_style('ecf-admin', plugins_url('assets/admin.css', ECF_FRAMEWORK_FILE), [], $admin_css_ver);
-        wp_enqueue_script('ecf-admin', plugins_url('assets/admin.js', ECF_FRAMEWORK_FILE), ['jquery', 'wp-color-picker'], $admin_js_ver, true);
+        wp_enqueue_script('jquery-ui-sortable');
+        wp_enqueue_script('ecf-admin', plugins_url('assets/admin.js', ECF_FRAMEWORK_FILE), ['jquery', 'jquery-ui-sortable', 'wp-color-picker'], $admin_js_ver, true);
         wp_localize_script('ecf-admin', 'ecfAdmin', [
             'ajaxurl' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('ecf_variables'),
             'restUrl' => esc_url_raw(rest_url('ecf-framework/v1/settings')),
+            'layoutRestUrl' => esc_url_raw(rest_url('ecf-framework/v1/layout')),
             'restNonce' => wp_create_nonce('wp_rest'),
             'i18n' => [
                 'loading'        => __('Loading…', 'ecf-framework'),
@@ -117,6 +119,8 @@ trait ECF_Framework_Asset_Loading_Trait {
                 'autosave_saved' => __('Settings saved automatically.', 'ecf-framework'),
                 'autosave_failed'=> __('Could not save settings automatically.', 'ecf-framework'),
                 'system_refreshed' => __('Elementor status refreshed.', 'ecf-framework'),
+                'layout_saved' => __('Card layout saved.', 'ecf-framework'),
+                'layout_failed' => __('Could not save card layout.', 'ecf-framework'),
                 'yes' => __('Yes', 'ecf-framework'),
                 'no' => __('No', 'ecf-framework'),
                 'version' => __('Version %s', 'ecf-framework'),
@@ -143,6 +147,11 @@ trait ECF_Framework_Asset_Loading_Trait {
             'spacingPreview' => $preview_maps['spacingPreview'],
             'typePreview' => $preview_maps['typePreview'],
             'radiusPreview' => $preview_maps['radiusPreview'],
+            'layoutOrders' => $this->get_user_layout_orders(),
+            'adminDesign' => [
+                'preset' => $this->selected_admin_design_preset($settings),
+                'mode' => $this->selected_admin_design_mode($settings),
+            ],
         ]);
     }
 

@@ -22,6 +22,9 @@ msgstr "%1$d entfernt."
 msgid "%1$d updated"
 msgstr "%1$d aktualisiert"
 
+msgid "%1$s / %2$s"
+msgstr "%1$s / %2$s"
+
 msgid "%1$s classes / %2$s variables"
 msgstr "%1$s Klassen / %2$s Variablen"
 
@@ -61,6 +64,9 @@ msgstr "Lokale Schriftdatei hinzufügen"
 msgid "Add smaller step"
 msgstr "Kleinere Stufe hinzufügen"
 
+msgid "Add to Favorites"
+msgstr "Zu Favoriten hinzufügen"
+
 msgid "Additional elements"
 msgstr "Weitere Elemente"
 
@@ -69,6 +75,9 @@ msgstr "Weitere Modifier"
 
 msgid "Adjust foreign Elementor variables directly from the search results."
 msgstr "Passe fremde Elementor-Variablen direkt aus der Suche an."
+
+msgid "Adjust the ECF backend language and interface appearance here. This changes only the plugin UI, not your website design."
+msgstr "Passe hier Sprache und Erscheinungsbild des ECF-Backends an. Das ändert nur die Plugin-Oberfläche, nicht das Design deiner Website."
 
 msgid "Advanced classes"
 msgstr "Advanced-Klassen"
@@ -97,6 +106,9 @@ msgstr "Alle relevanten Plugin-Änderungen werden hier in der aktuellen Backend-
 msgid "All utilities"
 msgstr "Alle Utilities"
 
+msgid "Already in Favorites"
+msgstr "Bereits in Favoriten"
+
 msgid "Applies a compact heading style for subsections."
 msgstr "Wendet einen kompakten Heading-Stil für Unterabschnitte an."
 
@@ -115,6 +127,9 @@ msgstr "Wendet den stärksten Heading-Stil für große Haupttitel an."
 msgid "Area"
 msgstr "Bereich"
 
+msgid "Aurora"
+msgstr "Aurora"
+
 msgid "BEM class generator"
 msgstr "BEM-Klassengenerator"
 
@@ -123,6 +138,9 @@ msgstr "Balanciert den Zeilenumbruch für gleichmäßigere Überschriften."
 
 msgid "Base Background Color"
 msgstr "Basis-Hintergrundfarbe"
+
+msgid "Base Body Text Size"
+msgstr "Basis-Schriftgröße für Fließtext"
 
 msgid "Base Font Family"
 msgstr "Basis-Schriftfamilie"
@@ -144,6 +162,9 @@ msgstr "Basisstufe"
 
 msgid "Behavior"
 msgstr "Verhalten"
+
+msgid "Bold purple product UI inspired by modern component systems."
+msgstr "Kräftige violette Produktoberfläche, inspiriert von modernen Components-Systemen."
 
 msgid "Brand or logo area inside the header."
 msgstr "Brand- oder Logo-Bereich im Header."
@@ -181,6 +202,9 @@ msgstr "Wähle einen Bereich, ergänze Elemente oder Modifier und erzeuge sauber
 msgid "Choose font file"
 msgstr "Schriftdatei wählen"
 
+msgid "Choose the admin look of ECF. Current design keeps the existing appearance; other presets restyle the interface."
+msgstr "Wähle das Admin-Design von ECF. Aktuelles Design behält das bisherige Erscheinungsbild, andere Presets gestalten die Oberfläche neu."
+
 msgid "Choose the unit for simple values. Use f(x) for complete CSS expressions like min(...), calc(...) or clamp(...)."
 msgstr "Wähle die Einheit für einfache Werte. Nutze f(x) für komplette CSS-Ausdrücke wie min(...), calc(...) oder clamp(...)."
 
@@ -198,6 +222,9 @@ msgstr "Klassen-Übersicht"
 
 msgid "Classes"
 msgstr "Klassen"
+
+msgid "Clean slate interface with crisp contrast and restrained accents."
+msgstr "Klare Slate-Oberfläche mit prägnantem Kontrast und zurückhaltenden Akzenten."
 
 msgid "Cleanup ECF Classes"
 msgstr "ECF-Klassen bereinigen"
@@ -256,6 +283,9 @@ msgstr "Kuratiertes Set an Helfer-Stilen für Heading-, Text- und einige sichere
 msgid "Curated utility set"
 msgstr "Kuratiertes Utility-Set"
 
+msgid "Current design"
+msgstr "Aktuelles Design"
+
 msgid "Current rem base"
 msgstr "Aktuelle rem-Basis"
 
@@ -274,8 +304,14 @@ msgstr "Eigener Abschnitt"
 msgid "Custom stack"
 msgstr "Eigener Stack"
 
+msgid "Dark mode"
+msgstr "Dark Mode"
+
 msgid "Dark variant for sections with a darker surface."
 msgstr "Dunkle Variante für Bereiche mit dunkler Oberfläche."
+
+msgid "Default body text size for regular paragraphs and flowing content."
+msgstr "Standard-Schriftgröße für normale Absätze und Fließtext."
 
 msgid "Default body text style for regular paragraphs."
 msgstr "Standard-Fließtext-Stil für normale Absätze."
@@ -291,6 +327,12 @@ msgstr "Lösche…"
 
 msgid "Deselect all"
 msgstr "Auswahl aufheben"
+
+msgid "Design"
+msgstr "Design"
+
+msgid "Design Mode"
+msgstr "Design-Modus"
 
 msgid "Design System Sync active"
 msgstr "Design System Sync aktiv"
@@ -346,14 +388,23 @@ msgstr "Bearbeiten"
 msgid "Edit variable"
 msgstr "Variable bearbeiten"
 
+msgid "Editor"
+msgstr "Editor"
+
 msgid "Editor helpers and variable-filter behavior inside Elementor."
 msgstr "Editor-Helfer und das Filterverhalten der Variablen in Elementor."
 
 msgid "Element-based unit. Example: 72 becomes 72em."
 msgstr "Element-basierte Einheit. Beispiel: 72 wird zu 72em."
 
+msgid "Element-based unit. Rarely needed for body text, but available if you want it."
+msgstr "Element-basierte Einheit. Für Fließtext selten nötig, aber verfügbar, wenn du sie bewusst einsetzen willst."
+
 msgid "Element-based unit. Rarely needed, but possible for content wrappers."
 msgstr "Element-basierte Einheit. Selten nötig, aber für Content-Wrapper möglich."
+
+msgid "Elementor"
+msgstr "Elementor"
 
 msgid "Elementor Core recognized"
 msgstr "Elementor Core erkannt"
@@ -366,6 +417,9 @@ msgstr "Elementor Pro erkannt"
 
 msgid "Elementor Variables"
 msgstr "Elementor Variablen"
+
+msgid "Elementor editor helpers and variable filtering behavior."
+msgstr "Elementor-Editor-Helfer und das Filterverhalten der Variablen."
 
 msgid "Elementor global classes repository is not available."
 msgstr "Das Elementor-Repository für globale Klassen ist nicht verfügbar."
@@ -487,6 +541,9 @@ msgstr "Form-Klasse für Formularlayout, Gruppen oder Aktionen."
 msgid "Forms"
 msgstr "Formulare"
 
+msgid "Full CSS expression. Use values like clamp(1rem, 0.95rem + 0.2vw, 1.125rem)."
+msgstr "Voller CSS-Ausdruck. Nutze Werte wie clamp(1rem, 0.95rem + 0.2vw, 1.125rem)."
+
 msgid "Full CSS expression. Use values like min(100% - 2rem, 1140px), calc(...) or clamp(...)."
 msgstr "Voller CSS-Ausdruck. Nutze Werte wie min(100% - 2rem, 1140px), calc(...) oder clamp(...)."
 
@@ -529,11 +586,20 @@ msgstr "Globale Body-Schriftfamilie und grundlegende Typografie-Auswahl."
 msgid "Global layout widths for readable content and boxed containers."
 msgstr "Globale Layout-Breiten für lesbaren Content und zentrierte Container."
 
+msgid "Graphite"
+msgstr "Graphit"
+
 msgid "Groups items in a horizontal cluster with wrapping."
 msgstr "Gruppiert Elemente als horizontale, umbrechende Cluster-Reihe."
 
 msgid "Groups related fields or controls together."
 msgstr "Gruppiert zusammengehörige Felder oder Steuerelemente."
+
+msgid "Help"
+msgstr "Hilfe"
+
+msgid "Hero"
+msgstr "Hero"
 
 msgid "Hero section class for the main entry area of a page."
 msgstr "Hero-Klasse für den zentralen Einstiegsbereich einer Seite."
@@ -573,6 +639,9 @@ msgstr "Lässt Inhalte für Screenreader zugänglich, blendet sie aber visuell a
 
 msgid "Keeps naming and Elementor sync manageable while staying below the 100-class limit."
 msgstr "Hält Benennung und Elementor-Sync überschaubar und berücksichtigt das 100er-Klassenlimit."
+
+msgid "Keeps the existing ECF look exactly as it is right now."
+msgstr "Behält das bestehende ECF-Erscheinungsbild exakt so bei, wie es gerade ist."
 
 msgid "Large body text style for intros or highlighted copy."
 msgstr "Großer Fließtext-Stil für Einleitungen oder hervorgehobene Texte."
@@ -661,6 +730,12 @@ msgstr "Min. Viewport (px)"
 msgid "Min viewport (px)"
 msgstr "Min. Viewport (px)"
 
+msgid "Minimal"
+msgstr "Minimal"
+
+msgid "Mode"
+msgstr "Modus"
+
 msgid "Modifiers"
 msgstr "Modifier"
 
@@ -681,6 +756,9 @@ msgstr "Neu: Allgemeine Einstellungen enthalten jetzt Favoriten, einen Debug-Ber
 
 msgid "New: Pin important settings here and edit them directly without leaving this tab."
 msgstr "Neu: Wichtige Einstellungen können jetzt hier angeheftet und direkt bearbeitet werden."
+
+msgid "Next"
+msgstr "Next"
 
 msgid "No"
 msgstr "Nein"
@@ -709,6 +787,9 @@ msgstr "Keine Einträge ausgewählt."
 msgid "No favorites selected yet. Mark important settings with the heart icon."
 msgstr "Noch keine Favoriten ausgewählt. Markiere wichtige Einstellungen mit dem Herz-Symbol."
 
+msgid "Ocean"
+msgstr "Ozean"
+
 msgid "Open Elementor tabs should be reloaded once."
 msgstr "Offene Elementor-Tabs bitte einmal neu laden."
 
@@ -724,6 +805,9 @@ msgstr "Eigener Blockname"
 msgid "Percentage value if the content width should stay fluid."
 msgstr "Prozentwert, wenn die Inhaltsbreite fluid bleiben soll."
 
+msgid "Percentage value relative to the inherited font size."
+msgstr "Prozentwert relativ zur geerbten Schriftgröße."
+
 msgid "Percentage value. Example: 90 becomes 90%."
 msgstr "Prozentwert. Beispiel: 90 wird zu 90%."
 
@@ -735,6 +819,9 @@ msgstr "Plugin-Changelog"
 
 msgid "Plugin Language"
 msgstr "Plugin-Sprache"
+
+msgid "Plugin interface language and the ECF backend appearance."
+msgstr "Plugin-Sprache und das Erscheinungsbild des ECF-Backends."
 
 msgid "Preview"
 msgstr "Vorschau"
@@ -759,6 +846,9 @@ msgstr "Radius-Token"
 
 msgid "Readable width for text/content areas."
 msgstr "Lesbare Breite für Text-/Content-Bereiche."
+
+msgid "Reduced monochrome admin look with subtle borders and quiet emphasis."
+msgstr "Reduzierter monochromer Admin-Look mit subtilen Rahmen und ruhiger Betonung."
 
 msgid "Reload"
 msgstr "Neu einlesen"
@@ -795,6 +885,9 @@ msgstr "Wiederverwendbare Utility-Klasse für häufige Styling-Helfer."
 
 msgid "Root Font Size"
 msgstr "Root-Schriftgröße"
+
+msgid "Root-based unit. Best default for body text like 1rem or 1.125rem."
+msgstr "Root-basierte Einheit. Beste Standardwahl für Fließtext wie 1rem oder 1.125rem."
 
 msgid "Root-based unit. Example: 72 becomes 72rem."
 msgstr "Root-basierte Einheit. Beispiel: 72 wird zu 72rem."
@@ -880,6 +973,9 @@ msgstr "Kleiner Overline-Stil für Labels über Überschriften."
 msgid "Smaller body text style for secondary information."
 msgstr "Kleinerer Fließtext-Stil für sekundäre Informationen."
 
+msgid "Soft editorial workspace with calm surfaces and gentle blue structure."
+msgstr "Sanfter editorialer Workspace mit ruhigen Flächen und sanfter blauer Struktur."
+
 msgid "Source: classes via %1$s, variables via %2$s"
 msgstr "Quelle: Klassen über %1$s, Variablen über %2$s"
 
@@ -931,6 +1027,12 @@ msgstr "Synchronisiert:"
 msgid "System"
 msgstr "System"
 
+msgid "System status, update checks, limits and integrated help."
+msgstr "Systemstatus, Update-Prüfungen, Limits und integrierte Hilfe."
+
+msgid "System status, updater behavior, Elementor limits and the built-in help live here."
+msgstr "Hier befinden sich Systemstatus, Updater-Verhalten, Elementor-Limits und die integrierte Hilfe."
+
 msgid "System-wide base settings like the root rem size."
 msgstr "Systemweite Grundeinstellungen wie die globale rem-Basis."
 
@@ -942,6 +1044,9 @@ msgstr "Die Vorschau aktualisiert sich live, während du die Skala bearbeitest."
 
 msgid "These colors affect the site basis directly and are also exposed as global ECF tokens."
 msgstr "Diese Farben wirken direkt auf die Website-Basis und werden zusätzlich als globale ECF-Tokens ausgegeben."
+
+msgid "These options only affect the Elementor editor experience, not the frontend design itself."
+msgstr "Diese Optionen betreffen nur das Erlebnis im Elementor-Editor, nicht das Frontend-Design der Website."
 
 msgid "This ECF variable is generated from the framework settings. Please change it in the matching ECF section instead."
 msgstr "Diese ECF-Variable wird aus den Framework-Einstellungen generiert. Bitte ändere sie im passenden ECF-Bereich."
@@ -976,8 +1081,14 @@ msgstr "Typografie-Helferklasse für wiederverwendbare Textstile."
 msgid "Typography token"
 msgstr "Typografie-Token"
 
+msgid "UI"
+msgstr "UI"
+
 msgid "Unsupported variable type."
 msgstr "Nicht unterstützter Variablentyp."
+
+msgid "Untitled"
+msgstr "Untitled"
 
 msgid "Updater & privacy"
 msgstr "Updater & Datenschutz"
@@ -997,8 +1108,8 @@ msgstr "Nutze Content Max Width für lesbare Text-Wrapper und Elementor Boxed Wi
 msgid "Use starter classes for semantic naming and utility classes for a compact curated helper set. Both count toward Elementor’s 100-class limit."
 msgstr "Nutze Starter-Klassen für semantische Benennung und Utility-Klassen für ein kompaktes kuratiertes Helfer-Set. Beides zählt in Elementors 100er-Klassenlimit."
 
-msgid "Use the heart to pin this setting to Favorites or remove it from Favorites again."
-msgstr "Mit dem Herz kannst du diese Einstellung zu den Favoriten anheften oder wieder daraus entfernen."
+msgid "Use the star to pin this setting to Favorites or remove it from Favorites again."
+msgstr "Mit dem Stern kannst du diese Einstellung zu den Favoriten anheften oder wieder daraus entfernen."
 
 msgid "Use this as the global body font. Upload local fonts in Typography > Local Fonts and then select them here by name."
 msgstr "Nutze das als globale Body-Schrift. Lade lokale Schriften unter Typografie > Lokale Schriften hoch und wähle sie danach hier namentlich aus."
@@ -1063,8 +1174,17 @@ msgstr "Viewport-Breiten-Einheit. Nützlich für fluide Lesebreiten."
 msgid "Visible effect of the root font size"
 msgstr "Sichtbare Auswirkung der Root Font Size"
 
+msgid "Website"
+msgstr "Website"
+
+msgid "Website basics live here: root size, readable widths, body font and the default base colors for your site."
+msgstr "Hier liegen die Website-Grundlagen: Root-Größe, lesbare Breiten, Fließtext-Schrift und die Standard-Basisfarben deiner Website."
+
 msgid "Website sections"
 msgstr "Website-Abschnitte"
+
+msgid "Website-wide basics like root size, widths, body font and base colors."
+msgstr "Website-weite Grundlagen wie Root-Größe, Breiten, Fließtext-Schrift und Basisfarben."
 
 msgid "Weight"
 msgstr "Stärke"
@@ -1074,6 +1194,9 @@ msgstr "Wenn aktiv, kann ECF von deinem Server aus api.github.com und codeload.g
 
 msgid "When enabled, the Elementor editor should later be able to show only matching variables for colors, sizes, and other fitting field types."
 msgstr "Wenn aktiv, soll der Elementor-Editor später nur passende Variablen für Farben, Größen und andere geeignete Feldtypen anzeigen können."
+
+msgid "White mode"
+msgstr "White Mode"
 
 msgid "Width of centered boxed layout containers."
 msgstr "Breite zentrierter Boxed-Layout-Container."

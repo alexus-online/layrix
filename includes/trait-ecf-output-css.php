@@ -39,6 +39,7 @@ trait ECF_Framework_Output_CSS_Trait {
         echo "--ecf-link-color:" . esc_attr($this->sanitize_css_color_value($settings['link_color'] ?? '#3b82f6')) . ";";
         echo "--ecf-focus-color:" . esc_attr($this->sanitize_css_color_value($settings['focus_color'] ?? '#6366f1')) . ";";
         echo "--ecf-base-font-family:" . esc_attr($settings['base_font_family'] ?? 'var(--ecf-font-primary)') . ";";
+        echo "--ecf-base-body-text-size:" . esc_attr($settings['base_body_text_size'] ?? '16px') . ";";
         foreach ($settings['typography']['fonts'] as $row) {
             $name = sanitize_key($row['name']);
             $value = esc_attr($row['value']);
@@ -72,7 +73,7 @@ trait ECF_Framework_Output_CSS_Trait {
         if ($settings['enabled_components']['layout'] === '1') {
             echo ".ecf-container-boxed,.cf-container-boxed{width:min(100% - 2rem, var(--ecf-container-boxed));margin-inline:auto;}";
         }
-        echo "body{font-family:var(--ecf-base-font-family);color:var(--ecf-base-text-color);background-color:var(--ecf-base-background-color);}";
+        echo "body{font-family:var(--ecf-base-font-family);font-size:var(--ecf-base-body-text-size);color:var(--ecf-base-text-color);background-color:var(--ecf-base-background-color);}";
         echo "a{color:var(--ecf-link-color);}";
         echo ":focus-visible{outline:2px solid var(--ecf-focus-color);outline-offset:2px;}";
         echo ".ecf-content-width,.cf-content-width{width:min(100%,var(--ecf-content-max-width));margin-inline:auto;}";

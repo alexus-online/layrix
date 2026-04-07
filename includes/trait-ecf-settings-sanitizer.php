@@ -14,6 +14,12 @@ trait ECF_Framework_Settings_Sanitizer_Trait {
         $output['interface_language'] = in_array($interface_language, ['de', 'en'], true)
             ? $interface_language
             : $this->wordpress_default_interface_language();
+        $admin_design_preset = sanitize_key($input['admin_design_preset'] ?? $defaults['admin_design_preset']);
+        $output['admin_design_preset'] = $this->normalize_admin_design_preset($admin_design_preset ?: $defaults['admin_design_preset']);
+        $admin_design_mode = sanitize_key($input['admin_design_mode'] ?? $defaults['admin_design_mode']);
+        $output['admin_design_mode'] = in_array($admin_design_mode, ['dark', 'light'], true)
+            ? $admin_design_mode
+            : $defaults['admin_design_mode'];
         $output['github_update_checks_enabled'] = !empty($input['github_update_checks_enabled']) ? '1' : '0';
         $content_width_value  = trim((string) ($input['content_max_width_value'] ?? $input['content_max_width'] ?? ''));
         $content_width_format = sanitize_key($input['content_max_width_format'] ?? '');
@@ -41,6 +47,14 @@ trait ECF_Framework_Settings_Sanitizer_Trait {
             $base_font_family = sanitize_text_field($input['base_font_family'] ?? $defaults['base_font_family']);
         }
         $output['base_font_family'] = $base_font_family !== '' ? $base_font_family : $defaults['base_font_family'];
+        $base_body_text_size_value = trim((string) ($input['base_body_text_size_value'] ?? $input['base_body_text_size'] ?? ''));
+        $base_body_text_size_format = sanitize_key($input['base_body_text_size_format'] ?? '');
+        if (in_array($base_body_text_size_format, ['px', 'rem', 'em', 'ch', '%', 'vw', 'vh'], true)) {
+            $base_body_text_size = $this->sanitize_css_size_value($base_body_text_size_value . $base_body_text_size_format);
+        } else {
+            $base_body_text_size = $this->sanitize_css_size_value($base_body_text_size_value);
+        }
+        $output['base_body_text_size'] = $base_body_text_size !== '' ? $base_body_text_size : $defaults['base_body_text_size'];
         $base_text_color = $this->sanitize_css_color_value($input['base_text_color'] ?? $defaults['base_text_color']);
         $base_background_color = $this->sanitize_css_color_value($input['base_background_color'] ?? $defaults['base_background_color']);
         $link_color = $this->sanitize_css_color_value($input['link_color'] ?? $defaults['link_color']);

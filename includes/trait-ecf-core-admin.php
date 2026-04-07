@@ -17,8 +17,7 @@ trait ECF_Framework_Core_Admin_Trait {
         );
         remove_filter('plugin_locale', [$this, 'filter_plugin_locale'], 10);
 
-        $this->runtime_gettext_fallback_enabled =
-            $this->selected_interface_language() === 'de' && !$loaded;
+        $this->runtime_gettext_fallback_enabled = $this->selected_interface_language() === 'de';
     }
 
     public function filter_plugin_locale($locale, $domain) {
@@ -65,6 +64,10 @@ trait ECF_Framework_Core_Admin_Trait {
 
     private function debug_history_option_name() {
         return $this->option_name . '_debug_history';
+    }
+
+    private function layout_order_meta_key() {
+        return $this->option_name . '_layout_order';
     }
 
     private function wordpress_default_interface_language() {
@@ -122,13 +125,23 @@ trait ECF_Framework_Core_Admin_Trait {
         return $translations;
     }
 
+    private function translate_ecf_text($english, $fallback_german = '') {
+        $translated = __($english, 'ecf-framework');
+
+        if ($translated === $english && $fallback_german !== '') {
+            return $fallback_german;
+        }
+
+        return $translated;
+    }
+
     private function tip($en, $de) {
-        $text = esc_attr(__($en, 'ecf-framework'));
+        $text = esc_attr($this->translate_ecf_text($en, $de));
         return '<span class="ecf-tip" data-tip="'.$text.'">?</span>';
     }
 
     private function tip_hover_label($label, $tip_en, $tip_de) {
-        $tip_text = __($tip_en, 'ecf-framework');
+        $tip_text = $this->translate_ecf_text($tip_en, $tip_de);
         return '<span class="ecf-tip-hover" data-tip="'.esc_attr($tip_text).'">'.esc_html($label).'</span>';
     }
 
@@ -195,6 +208,63 @@ trait ECF_Framework_Core_Admin_Trait {
     private function debug_history_entries() {
         $entries = get_option($this->debug_history_option_name(), []);
         return is_array($entries) ? array_reverse($entries) : [];
+    }
+
+    private function sanitize_layout_orders($orders) {
+        if (!is_array($orders)) {
+            return [];
+        }
+
+        $sanitized = [];
+
+        foreach ($orders as $group => $items) {
+            $group_key = sanitize_key($group);
+            if ($group_key === '' || !is_array($items)) {
+                continue;
+            }
+
+            $seen = [];
+            $sanitized[$group_key] = [];
+
+            foreach ($items as $item) {
+                $item_key = sanitize_key($item);
+                if ($item_key === '' || isset($seen[$item_key])) {
+                    continue;
+                }
+
+                $seen[$item_key] = true;
+                $sanitized[$group_key][] = $item_key;
+            }
+
+            if (empty($sanitized[$group_key])) {
+                unset($sanitized[$group_key]);
+            }
+        }
+
+        return $sanitized;
+    }
+
+    private function get_user_layout_orders($user_id = 0) {
+        $user_id = $user_id ? (int) $user_id : (int) get_current_user_id();
+        if ($user_id <= 0) {
+            return [];
+        }
+
+        $saved = get_user_meta($user_id, $this->layout_order_meta_key(), true);
+
+        return $this->sanitize_layout_orders(is_array($saved) ? $saved : []);
+    }
+
+    private function save_user_layout_orders($orders, $user_id = 0) {
+        $user_id = $user_id ? (int) $user_id : (int) get_current_user_id();
+        if ($user_id <= 0) {
+            return [];
+        }
+
+        $sanitized = $this->sanitize_layout_orders($orders);
+        update_user_meta($user_id, $this->layout_order_meta_key(), $sanitized);
+
+        return $sanitized;
     }
 
     public function handle_clear_debug_history() {

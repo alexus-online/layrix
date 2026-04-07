@@ -9,10 +9,12 @@ trait ECF_Framework_Admin_General_Trait {
         return [
             'root_font_size',
             'interface_language',
+            'admin_design_preset',
             'github_update_checks_enabled',
             'content_max_width',
             'elementor_boxed_width',
             'base_font_family',
+            'base_body_text_size',
             'base_text_color',
             'base_background_color',
             'link_color',
@@ -26,9 +28,11 @@ trait ECF_Framework_Admin_General_Trait {
         return [
             'root_font_size' => '1',
             'interface_language' => '1',
+            'admin_design_preset' => '1',
             'content_max_width' => '1',
             'elementor_boxed_width' => '1',
             'base_font_family' => '1',
+            'base_body_text_size' => '1',
             'base_text_color' => '1',
             'github_update_checks_enabled' => '1',
             'show_elementor_status_cards' => '1',
@@ -41,17 +45,22 @@ trait ECF_Framework_Admin_General_Trait {
     }
 
     private function render_general_setting_favorite_toggle($settings, $key) {
+        $is_favorite = $this->is_general_setting_favorite($settings, $key);
+        $tip_add = __('Add to Favorites', 'ecf-framework');
+        $tip_added = __('Already in Favorites', 'ecf-framework');
         ?>
         <label class="ecf-favorite-toggle"
-               data-tip="<?php echo esc_attr__('Use the heart to pin this setting to Favorites or remove it from Favorites again.', 'ecf-framework'); ?>"
-               aria-label="<?php echo esc_attr__('Use the heart to pin this setting to Favorites or remove it from Favorites again.', 'ecf-framework'); ?>">
+               data-tip="<?php echo esc_attr($is_favorite ? $tip_added : $tip_add); ?>"
+               data-tip-off="<?php echo esc_attr($tip_add); ?>"
+               data-tip-on="<?php echo esc_attr($tip_added); ?>"
+               aria-label="<?php echo esc_attr($is_favorite ? $tip_added : $tip_add); ?>">
             <input type="checkbox"
                    name="<?php echo esc_attr($this->option_name); ?>[general_setting_favorites][<?php echo esc_attr($key); ?>]"
                    value="1"
                    data-ecf-general-favorite-toggle
                    data-ecf-favorite-key="<?php echo esc_attr($key); ?>"
-                   <?php checked($this->is_general_setting_favorite($settings, $key)); ?>>
-            <span class="dashicons dashicons-heart" aria-hidden="true"></span>
+                   <?php checked($is_favorite); ?>>
+            <span class="ecf-favorite-toggle__icon" aria-hidden="true"><?php echo $is_favorite ? '♥' : '♡'; ?></span>
             <span class="screen-reader-text"><?php echo esc_html__('Favorite', 'ecf-framework'); ?></span>
         </label>
         <?php
@@ -93,6 +102,18 @@ trait ECF_Framework_Admin_General_Trait {
                     ? __('German', 'ecf-framework')
                     : __('English', 'ecf-framework'),
             ],
+            'admin_design_preset' => [
+                'group' => 'plugin',
+                'tab' => 'system',
+                'title' => __('Design', 'ecf-framework'),
+                'value' => sprintf(
+                    __('%1$s / %2$s', 'ecf-framework'),
+                    $this->admin_design_preset_options()[$this->selected_admin_design_preset($settings)] ?? __('Current design', 'ecf-framework'),
+                    $this->selected_admin_design_mode($settings) === 'light'
+                        ? __('White mode', 'ecf-framework')
+                        : __('Dark mode', 'ecf-framework')
+                ),
+            ],
             'content_max_width' => [
                 'group' => 'website',
                 'tab' => 'layout',
@@ -110,6 +131,12 @@ trait ECF_Framework_Admin_General_Trait {
                 'tab' => 'typography',
                 'title' => __('Base Font Family', 'ecf-framework'),
                 'value' => $base_font_label,
+            ],
+            'base_body_text_size' => [
+                'group' => 'website',
+                'tab' => 'typography',
+                'title' => __('Base Body Text Size', 'ecf-framework'),
+                'value' => (string) ($settings['base_body_text_size'] ?? '16px'),
             ],
             'base_text_color' => [
                 'group' => 'website',
@@ -150,8 +177,51 @@ trait ECF_Framework_Admin_General_Trait {
         ];
     }
 
+    private function general_setting_favorite_sort_order() {
+        return [
+            'root_font_size' => 10,
+            'base_body_text_size' => 20,
+            'base_font_family' => 30,
+            'base_text_color' => 40,
+            'base_background_color' => 50,
+            'link_color' => 60,
+            'focus_color' => 70,
+            'content_max_width' => 80,
+            'elementor_boxed_width' => 90,
+            'interface_language' => 110,
+            'admin_design_preset' => 120,
+            'github_update_checks_enabled' => 130,
+            'show_elementor_status_cards' => 140,
+            'elementor_variable_type_filter' => 150,
+        ];
+    }
+
+    private function sort_general_setting_favorite_definitions($definitions) {
+        $order = $this->general_setting_favorite_sort_order();
+
+        uasort($definitions, function ($left, $right) use ($order) {
+            $left_key = $left['_favorite_key'] ?? '';
+            $right_key = $right['_favorite_key'] ?? '';
+            $left_order = $order[$left_key] ?? 999;
+            $right_order = $order[$right_key] ?? 999;
+
+            if ($left_order === $right_order) {
+                return strcmp($left_key, $right_key);
+            }
+
+            return $left_order <=> $right_order;
+        });
+
+        return $definitions;
+    }
+
     private function render_general_favorites_section($settings) {
-        $definitions = $this->general_setting_favorite_definitions($settings);
+        $definitions = [];
+        foreach ($this->general_setting_favorite_definitions($settings) as $favorite_key => $definition) {
+            $definition['_favorite_key'] = $favorite_key;
+            $definitions[$favorite_key] = $definition;
+        }
+        $definitions = $this->sort_general_setting_favorite_definitions($definitions);
         $group_labels = [
             'website' => __('Website', 'ecf-framework'),
             'plugin'  => __('Plugin', 'ecf-framework'),
@@ -238,6 +308,134 @@ trait ECF_Framework_Admin_General_Trait {
         <?php
     }
 
+    private function admin_design_preset_definitions() {
+        return [
+            'current' => [
+                'label' => __('Current design', 'ecf-framework'),
+                'description' => __('Keeps the existing ECF look exactly as it is right now.', 'ecf-framework'),
+                'preview' => 'current',
+            ],
+            'hero' => [
+                'label' => __('Hero', 'ecf-framework'),
+                'description' => __('Bold purple product UI inspired by modern component systems.', 'ecf-framework'),
+                'preview' => 'hero',
+            ],
+            'next' => [
+                'label' => __('Next', 'ecf-framework'),
+                'description' => __('Clean slate interface with crisp contrast and restrained accents.', 'ecf-framework'),
+                'preview' => 'next',
+            ],
+            'untitled' => [
+                'label' => __('Untitled', 'ecf-framework'),
+                'description' => __('Soft editorial workspace with calm surfaces and gentle blue structure.', 'ecf-framework'),
+                'preview' => 'untitled',
+            ],
+            'minimal' => [
+                'label' => __('Minimal', 'ecf-framework'),
+                'description' => __('Reduced monochrome admin look with subtle borders and quiet emphasis.', 'ecf-framework'),
+                'preview' => 'minimal',
+            ],
+        ];
+    }
+
+    private function normalize_admin_design_preset($preset) {
+        $preset = sanitize_key((string) $preset);
+        $aliases = [
+            'graphite' => 'next',
+            'ocean' => 'untitled',
+            'aurora' => 'hero',
+        ];
+
+        if (isset($aliases[$preset])) {
+            $preset = $aliases[$preset];
+        }
+
+        return array_key_exists($preset, $this->admin_design_preset_definitions()) ? $preset : 'current';
+    }
+
+    private function admin_design_preset_options() {
+        $options = [];
+        foreach ($this->admin_design_preset_definitions() as $key => $definition) {
+            $options[$key] = $definition['label'];
+        }
+
+        return $options;
+    }
+
+    private function selected_admin_design_preset($settings = null) {
+        $defaults = $this->defaults();
+        $current = is_array($settings)
+            ? sanitize_key($settings['admin_design_preset'] ?? $defaults['admin_design_preset'])
+            : sanitize_key((string) ($this->get_settings()['admin_design_preset'] ?? $defaults['admin_design_preset']));
+
+        return $this->normalize_admin_design_preset($current ?: $defaults['admin_design_preset']);
+    }
+
+    private function selected_admin_design_mode($settings = null) {
+        $defaults = $this->defaults();
+        $current = is_array($settings)
+            ? sanitize_key($settings['admin_design_mode'] ?? $defaults['admin_design_mode'])
+            : sanitize_key((string) ($this->get_settings()['admin_design_mode'] ?? $defaults['admin_design_mode']));
+
+        return in_array($current, ['dark', 'light'], true) ? $current : $defaults['admin_design_mode'];
+    }
+
+    private function render_admin_design_field($settings) {
+        $current_preset = $this->selected_admin_design_preset($settings);
+        $current_mode = $this->selected_admin_design_mode($settings);
+        $preset_definitions = $this->admin_design_preset_definitions();
+        ?>
+        <div class="ecf-admin-design-field" data-ecf-general-field="admin_design_preset">
+            <span class="ecf-general-label-with-favorite">
+                <?php echo $this->general_setting_label(__('Design', 'ecf-framework'), 'Choose the admin look of ECF. Current design keeps the existing appearance; other presets restyle the interface.', 'art'); ?>
+                <?php $this->render_general_setting_favorite_toggle($settings, 'admin_design_preset'); ?>
+            </span>
+            <input type="hidden" name="<?php echo esc_attr($this->option_name); ?>[admin_design_preset]" value="<?php echo esc_attr($current_preset); ?>" data-ecf-admin-design-preset>
+            <input type="hidden" name="<?php echo esc_attr($this->option_name); ?>[admin_design_mode]" value="<?php echo esc_attr($current_mode); ?>" data-ecf-admin-design-mode>
+            <div class="ecf-admin-design-grid" data-ecf-admin-design-grid>
+                <?php foreach ($preset_definitions as $value => $definition): ?>
+                    <button type="button"
+                            class="ecf-admin-design-card<?php echo $current_preset === $value ? ' is-active' : ''; ?>"
+                            data-ecf-admin-design-option
+                            data-value="<?php echo esc_attr($value); ?>"
+                            data-preview="<?php echo esc_attr($definition['preview']); ?>">
+                        <span class="ecf-admin-design-card__preview" aria-hidden="true">
+                            <span class="ecf-admin-design-card__preview-window">
+                                <span class="ecf-admin-design-card__preview-topbar"></span>
+                                <span class="ecf-admin-design-card__preview-sidebar"></span>
+                                <span class="ecf-admin-design-card__preview-panel"></span>
+                                <span class="ecf-admin-design-card__preview-accent"></span>
+                                <span class="ecf-admin-design-card__preview-chip"></span>
+                            </span>
+                        </span>
+                        <span class="ecf-admin-design-card__body">
+                            <strong><?php echo esc_html($definition['label']); ?></strong>
+                            <span><?php echo esc_html($definition['description']); ?></span>
+                        </span>
+                    </button>
+                <?php endforeach; ?>
+            </div>
+            <div class="ecf-admin-design-mode" data-ecf-admin-design-mode-group>
+                <span class="ecf-admin-design-mode__label"><?php echo esc_html__('Mode', 'ecf-framework'); ?></span>
+                <div class="ecf-admin-design-mode__options">
+                    <button type="button"
+                            class="ecf-admin-design-mode__option<?php echo $current_mode === 'dark' ? ' is-active' : ''; ?>"
+                            data-ecf-admin-design-mode-option
+                            data-value="dark">
+                        <?php echo esc_html__('Dark mode', 'ecf-framework'); ?>
+                    </button>
+                    <button type="button"
+                            class="ecf-admin-design-mode__option<?php echo $current_mode === 'light' ? ' is-active' : ''; ?>"
+                            data-ecf-admin-design-mode-option
+                            data-value="light">
+                        <?php echo esc_html__('White mode', 'ecf-framework'); ?>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <?php
+    }
+
     private function render_general_color_field($settings, $key, $label_en, $label_de, $tip_en, $tip_de, $icon = 'admin-appearance') {
         $value = (string) ($settings[$key] ?? '');
         ?>
@@ -273,6 +471,16 @@ trait ECF_Framework_Admin_General_Trait {
             'vw'     => ['label' => 'vw',  'tip' => __('Viewport width unit. Useful for fluid readable widths.', 'ecf-framework')],
             'vh'     => ['label' => 'vh',  'tip' => __('Viewport height unit. Usually uncommon here, but available if needed.', 'ecf-framework')],
             'custom' => ['label' => 'f(x)', 'tip' => __('Full CSS expression. Use values like min(72ch, 100% - 2rem), calc(...) or clamp(...).', 'ecf-framework')],
+        ];
+    }
+
+    private function body_text_size_format_options() {
+        return [
+            'rem'    => ['label' => 'rem', 'tip' => __('Root-based unit. Best default for body text like 1rem or 1.125rem.', 'ecf-framework')],
+            'px'     => ['label' => 'px',  'tip' => __('Fixed pixel value. Useful if you need a strict size like 16px or 18px.', 'ecf-framework')],
+            'em'     => ['label' => 'em',  'tip' => __('Element-based unit. Rarely needed for body text, but available if you want it.', 'ecf-framework')],
+            '%'      => ['label' => '%',   'tip' => __('Percentage value relative to the inherited font size.', 'ecf-framework')],
+            'custom' => ['label' => 'f(x)', 'tip' => __('Full CSS expression. Use values like clamp(1rem, 0.95rem + 0.2vw, 1.125rem).', 'ecf-framework')],
         ];
     }
 
@@ -327,6 +535,9 @@ trait ECF_Framework_Admin_General_Trait {
             case 'interface_language':
                 $this->render_interface_language_field($settings);
                 break;
+            case 'admin_design_preset':
+                $this->render_admin_design_field($settings);
+                break;
             case 'github_update_checks_enabled':
                 ?>
                 <label class="ecf-form-grid__checkbox ecf-form-grid__checkbox--favorite">
@@ -362,6 +573,9 @@ trait ECF_Framework_Admin_General_Trait {
                 break;
             case 'base_font_family':
                 $this->render_base_font_family_field($settings);
+                break;
+            case 'base_body_text_size':
+                $this->render_base_body_text_size_field($settings);
                 break;
             case 'base_text_color':
             case 'base_background_color':
@@ -447,6 +661,29 @@ trait ECF_Framework_Admin_General_Trait {
                     </button>
                 <?php endif; ?>
             </div>
+        </label>
+        <?php
+    }
+
+    private function render_base_body_text_size_field($settings) {
+        $stored_value = (string) ($settings['base_body_text_size'] ?? '16px');
+        ?>
+        <label data-ecf-general-field="base_body_text_size" class="ecf-general-field ecf-general-field--body-size">
+            <span class="ecf-general-label-with-favorite">
+                <?php echo $this->general_setting_label(__('Base Body Text Size', 'ecf-framework'), 'Default font size for normal paragraph text across the site. This sets the body text baseline independently from your token scale.', 'editor-paragraph'); ?>
+                <?php $this->render_general_setting_favorite_toggle($settings, 'base_body_text_size'); ?>
+            </span>
+            <?php
+            $this->render_general_size_field_inline(
+                $settings,
+                'base_body_text_size',
+                $stored_value,
+                $this->body_text_size_format_options(),
+                'px',
+                '16 oder clamp(16px, 15px + 0.2vw, 18px)',
+                __('Default body text size for regular paragraphs and flowing content.', 'ecf-framework')
+            );
+            ?>
         </label>
         <?php
     }

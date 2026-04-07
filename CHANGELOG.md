@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.1 (2026-04-07)
+
+### UX
+- Reworked favorites markers to a calmer single-heart state with clearer status feedback.
+- Favoriten-Markierung auf eine ruhigere Ein-Herz-Lösung mit klarerem Status umgestellt.
+- Made the Favorites tab icon consistent with the rest of the favorites flow.
+- Favoriten-Tab-Icon wieder konsistent zur restlichen Favoritenlogik gemacht.
+- Switched the default base body text size to 16px for easier understanding.
+- Standardwert der Basis-Schriftgröße für Fließtext auf 16px umgestellt.
+
 ## 0.2.0 (2026-04-06)
 
 ### Change
