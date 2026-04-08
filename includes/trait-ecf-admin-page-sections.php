@@ -1426,38 +1426,17 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                         </div>
                     </div>
                 </div>
-                <div class="ecf-card" data-ecf-layout-item="help-recent-changes">
+                <div class="ecf-card" data-ecf-layout-item="help-changelog-link">
                     <div class="ecf-changelog-header">
                         <div>
-                            <h2><?php echo esc_html__('Recent changes', 'ecf-framework'); ?></h2>
-                            <p><?php echo esc_html__('Quick overview of the latest plugin improvements in your current backend language.', 'ecf-framework'); ?></p>
+                            <h2><?php echo esc_html__('Version Changelog', 'ecf-framework'); ?></h2>
+                            <p><?php echo esc_html__('Open the changelog modal for the full release history instead of repeating the same entries inside Help.', 'ecf-framework'); ?></p>
                         </div>
                         <button type="button" class="ecf-btn ecf-btn--secondary" data-ecf-open-changelog-modal>
                             <span class="dashicons dashicons-backup" aria-hidden="true"></span>
                             <span><?php echo esc_html__('Open changelog', 'ecf-framework'); ?></span>
                         </button>
                     </div>
-                    <?php if (empty($changelog_entries)): ?>
-                        <p class="ecf-muted-copy"><?php echo esc_html__('No changelog entries found.', 'ecf-framework'); ?></p>
-                    <?php else: ?>
-                        <div class="ecf-changelog-list">
-                            <?php foreach (array_slice($changelog_entries, 0, 3) as $entry): ?>
-                                <section class="ecf-changelog-entry">
-                                    <h3><?php echo esc_html($entry['heading']); ?></h3>
-                                    <?php foreach (($entry['sections'] ?? []) as $section_title => $items): ?>
-                                        <div class="ecf-changelog-section">
-                                            <strong class="ecf-changelog-badge ecf-changelog-badge--<?php echo esc_attr($this->changelog_section_badge_type($section_title)); ?>"><?php echo esc_html($section_title); ?></strong>
-                                            <ul>
-                                                <?php foreach ($items as $item): ?>
-                                                    <li><?php echo esc_html($item); ?></li>
-                                                <?php endforeach; ?>
-                                            </ul>
-                                        </div>
-                                    <?php endforeach; ?>
-                                </section>
-                            <?php endforeach; ?>
-                        </div>
-                    <?php endif; ?>
                 </div>
                 <div class="ecf-card" data-ecf-layout-item="help-diagnostics">
                     <h2><?php echo esc_html__('Diagnostics', 'ecf-framework'); ?></h2>

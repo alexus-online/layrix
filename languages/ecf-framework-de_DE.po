@@ -811,6 +811,12 @@ msgstr "Ozean"
 msgid "Open Elementor tabs should be reloaded once."
 msgstr "Offene Elementor-Tabs bitte einmal neu laden."
 
+msgid "Open changelog"
+msgstr "Changelog öffnen"
+
+msgid "Open the changelog modal for the full release history instead of repeating the same entries inside Help."
+msgstr "Öffne das Changelog-Modal für die vollständige Versionshistorie, statt dieselben Einträge zusätzlich im Hilfe-Bereich zu wiederholen."
+
 msgid "Other"
 msgstr "Sonstige"
 

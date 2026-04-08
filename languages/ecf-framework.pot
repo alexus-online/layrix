@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ECF Elementor v4 Core Framework\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-08 10:15+0000\n"
+"POT-Creation-Date: 2026-04-08 10:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -90,7 +90,7 @@ msgstr ""
 msgid "Action area for buttons or controls."
 msgstr ""
 
-#: includes/trait-ecf-admin-page-sections.php:1577
+#: includes/trait-ecf-admin-page-sections.php:1556
 #: includes/trait-ecf-admin-page-sections.php:531
 msgid "Active"
 msgstr ""
@@ -465,7 +465,7 @@ msgstr ""
 msgid "Click a shadow token to inspect it in detail."
 msgstr ""
 
-#: includes/trait-ecf-admin-page-sections.php:1507
+#: includes/trait-ecf-admin-page-sections.php:1486
 #: includes/trait-ecf-admin-page-sections.php:58
 msgid "Close"
 msgstr ""
@@ -668,7 +668,7 @@ msgstr ""
 msgid "Detected settings groups: %s"
 msgstr ""
 
-#: includes/trait-ecf-admin-page-sections.php:1463
+#: includes/trait-ecf-admin-page-sections.php:1442
 msgid "Diagnostics"
 msgstr ""
 
@@ -1176,7 +1176,7 @@ msgstr ""
 msgid "Import preview"
 msgstr ""
 
-#: includes/trait-ecf-admin-page-sections.php:1472
+#: includes/trait-ecf-admin-page-sections.php:1451
 #: includes/trait-ecf-admin-page-sections.php:994
 msgid "Import/Export"
 msgstr ""
@@ -1547,13 +1547,12 @@ msgstr ""
 msgid "No changelog available."
 msgstr ""
 
-#: includes/trait-ecf-admin-page-sections.php:1441
-#: includes/trait-ecf-admin-page-sections.php:1511
+#: includes/trait-ecf-admin-page-sections.php:1490
 msgid "No changelog entries found."
 msgstr ""
 
 #: includes/trait-ecf-admin-page-sections.php:1021
-#: includes/trait-ecf-admin-page-sections.php:1489
+#: includes/trait-ecf-admin-page-sections.php:1468
 msgid "No debug history recorded yet. Entries appear here when WP_DEBUG is enabled and ECF logs an internal event."
 msgstr ""
 
@@ -1583,6 +1582,10 @@ msgstr ""
 
 #: includes/trait-ecf-admin-page-sections.php:1437
 msgid "Open changelog"
+msgstr ""
+
+#: includes/trait-ecf-admin-page-sections.php:1433
+msgid "Open the changelog modal for the full release history instead of repeating the same entries inside Help."
 msgstr ""
 
 #: includes/trait-ecf-asset-loading.php:99
@@ -1688,11 +1691,7 @@ msgstr ""
 msgid "Quick help"
 msgstr ""
 
-#: includes/trait-ecf-admin-page-sections.php:1433
-msgid "Quick overview of the latest plugin improvements in your current backend language."
-msgstr ""
-
-#: includes/trait-ecf-admin-page-sections.php:1505
+#: includes/trait-ecf-admin-page-sections.php:1484
 msgid "Quick view of the latest documented plugin changes."
 msgstr ""
 
@@ -1709,10 +1708,6 @@ msgstr ""
 
 #: includes/trait-ecf-admin-general.php:563
 msgid "Readable width for text/content areas."
-msgstr ""
-
-#: includes/trait-ecf-admin-page-sections.php:1432
-msgid "Recent changes"
 msgstr ""
 
 #: includes/trait-ecf-admin-page-sections.php:984
@@ -1884,7 +1879,7 @@ msgid "Sets the token <code>%1$s</code>. Default source: max value from <code>%2
 msgstr ""
 
 #: elementor-core-framework.php:250
-#: includes/trait-ecf-admin-page-sections.php:1474
+#: includes/trait-ecf-admin-page-sections.php:1453
 #: includes/trait-ecf-admin-page-sections.php:996
 msgid "Settings"
 msgstr ""
@@ -2045,7 +2040,7 @@ msgstr ""
 msgid "Suggestions for quick, clean custom names. Click a chip to insert it into a free row."
 msgstr ""
 
-#: includes/trait-ecf-admin-page-sections.php:1471
+#: includes/trait-ecf-admin-page-sections.php:1450
 #: includes/trait-ecf-admin-page-sections.php:993
 msgid "Sync"
 msgstr ""
@@ -2071,7 +2066,7 @@ msgstr ""
 msgid "Synced:"
 msgstr ""
 
-#: includes/trait-ecf-admin-page-sections.php:1475
+#: includes/trait-ecf-admin-page-sections.php:1454
 #: includes/trait-ecf-admin-page-sections.php:653
 #: includes/trait-ecf-admin-page-sections.php:997
 msgid "System"
@@ -2085,7 +2080,7 @@ msgstr ""
 msgid "System status, updater behavior and Elementor limits live here. Guidance and changelog details are grouped in the Help area."
 msgstr ""
 
-#: includes/trait-ecf-admin-page-sections.php:1464
+#: includes/trait-ecf-admin-page-sections.php:1443
 msgid "Technical status, updater controls and live Elementor limits are available under Settings > System. The latest debug entries are mirrored here for quick support review."
 msgstr ""
 
@@ -2250,7 +2245,7 @@ msgstr ""
 msgid "Updater & privacy"
 msgstr ""
 
-#: includes/trait-ecf-admin-page-sections.php:1473
+#: includes/trait-ecf-admin-page-sections.php:1452
 #: includes/trait-ecf-admin-page-sections.php:995
 msgid "Updates"
 msgstr ""
@@ -2346,7 +2341,8 @@ msgstr ""
 msgid "Version %s"
 msgstr ""
 
-#: includes/trait-ecf-admin-page-sections.php:1504
+#: includes/trait-ecf-admin-page-sections.php:1432
+#: includes/trait-ecf-admin-page-sections.php:1483
 msgid "Version Changelog"
 msgstr ""
 
@@ -2472,9 +2468,9 @@ msgstr ""
 msgid "by"
 msgstr ""
 
-#: includes/trait-ecf-admin-page-sections.php:1543
-#: includes/trait-ecf-admin-page-sections.php:1559
-#: includes/trait-ecf-admin-page-sections.php:1568
+#: includes/trait-ecf-admin-page-sections.php:1522
+#: includes/trait-ecf-admin-page-sections.php:1538
+#: includes/trait-ecf-admin-page-sections.php:1547
 #: includes/trait-ecf-render-helpers.php:52
 #: includes/trait-ecf-render-helpers.php:61
 msgid "class name"

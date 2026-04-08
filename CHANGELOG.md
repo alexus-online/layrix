@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.7 (2026-04-08)
+
+### Fix
+- Removed the duplicated changelog content from the Help panel and kept Help as a clean entry point with a single changelog action.
+- Doppelten Changelog-Inhalt aus dem Hilfe-Bereich entfernt und Hilfe als sauberen Einstieg mit nur einer Changelog-Aktion belassen.
+- Added the missing German translation for the changelog action button.
+- Fehlende deutsche Übersetzung für den Changelog-Aktionsbutton ergänzt.
+
+### Test
+- Added and verified a UI flow that ensures Help keeps changelog access without rendering a second visible changelog feed.
+- UI-Flow ergänzt und verifiziert, der sicherstellt, dass Hilfe den Changelog weiter öffnet, aber keine zweite sichtbare Changelog-Liste rendert.
+
 ## 0.2.6 (2026-04-08)
 
 ### Fix
@@ -13,8 +25,8 @@
 - Global-Search-Delete-Flow nach dem Sync stabilisiert, indem vor dem Löschen der Plugin-Zustand sauber neu geöffnet wird.
 
 ### Test
-- Verified the full live UI suite against `high-escort.de` with `33 passed`, `1 skipped`, `0 failed`.
-- Komplette Live-UI-Suite gegen `high-escort.de` mit `33 bestanden`, `1 übersprungen`, `0 fehlgeschlagen` verifiziert.
+- Verified the full live UI suite against the production site with `33 passed`, `1 skipped`, `0 failed`.
+- Komplette Live-UI-Suite gegen die Produktivseite mit `33 bestanden`, `1 übersprungen`, `0 fehlgeschlagen` verifiziert.
 
 ## 0.2.5 (2026-04-08)
 

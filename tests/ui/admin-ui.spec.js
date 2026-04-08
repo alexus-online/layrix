@@ -50,6 +50,25 @@ test.describe('ECF admin UI', () => {
     await expect(page.locator('[data-ecf-changelog-modal]')).toBeHidden();
   });
 
+  test('help panel keeps changelog access without duplicating visible changelog entries', async ({ page }) => {
+    await loginToWordPress(page);
+    await openPluginPage(page);
+    await openPanel(page, 'help');
+
+    const helpPanel = page.locator('.ecf-panel[data-panel="help"]');
+    const changelogCard = helpPanel.locator('[data-ecf-layout-item="help-changelog-link"]').first();
+
+    await expect(changelogCard).toBeVisible();
+    await expect(helpPanel.locator('.ecf-changelog-entry:visible')).toHaveCount(0);
+
+    await changelogCard.locator('[data-ecf-open-changelog-modal]').click();
+    await expect(page.locator('[data-ecf-changelog-modal]')).toBeVisible();
+    await expect(page.locator('[data-ecf-changelog-modal] .ecf-changelog-entry')).not.toHaveCount(0);
+
+    await page.locator('button[data-ecf-close-changelog-modal]').first().click();
+    await expect(page.locator('[data-ecf-changelog-modal]')).toBeHidden();
+  });
+
   test('persists an autosaved body text size change after reload', async ({ page }) => {
     await loginToWordPress(page);
     await openPluginPage(page);
