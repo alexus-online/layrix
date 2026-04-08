@@ -16,15 +16,18 @@ function mutationNotAllowed() {
 }
 
 async function loginToWordPress(page) {
+  const adminUrl = `${wpUrl}/wp-admin/`;
   const loginUrl = /^https?:\/\//i.test(loginPath)
     ? loginPath
     : `${wpUrl}/${String(loginPath).replace(/^\/+/, '')}`;
 
-  await page.goto(loginUrl);
+  await page.goto(adminUrl, { waitUntil: 'domcontentloaded' });
 
   if (page.url().includes('/wp-admin/')) {
     return;
   }
+
+  await page.goto(loginUrl, { waitUntil: 'domcontentloaded' });
 
   const usernameField = page
     .locator('#user_login, input[name=\"log\"], input[name=\"username\"]')
@@ -232,10 +235,11 @@ async function switchInterfaceLanguage(page, language) {
   await select.selectOption(language);
   await page.waitForLoadState('networkidle');
   await expect(page.locator('.ecf-wrap')).toBeVisible();
+  await expect(getGeneralField(page, 'interface_language').locator('select').first()).toHaveValue(language, { timeout: 15000 });
 }
 
 async function addLocalFontRow(page) {
-  await page.locator('[data-ecf-local-font-add]').first().click();
+  await page.locator('.ecf-panel[data-panel="typography"] .ecf-add-local-font:visible').first().click();
 }
 
 async function getLocalFontRows(page) {
@@ -250,7 +254,11 @@ async function fillLocalFontRow(row, values) {
     await row.locator('input').nth(1).fill(values.family);
   }
   if (values.url !== undefined) {
-    await row.locator('.ecf-font-file-url').fill(values.url);
+    await row.locator('.ecf-font-file-url').evaluate((element, nextValue) => {
+      element.value = nextValue;
+      element.dispatchEvent(new Event('input', { bubbles: true }));
+      element.dispatchEvent(new Event('change', { bubbles: true }));
+    }, values.url);
   }
   if (values.weight !== undefined) {
     await row.locator('input').nth(3).fill(values.weight);
@@ -421,7 +429,12 @@ async function getSearchEditModal(page) {
 async function saveSearchEditModal(page) {
   const modal = await getSearchEditModal(page);
   await modal.save.click();
-  await expect(modal.modal).toBeHidden();
+  try {
+    await expect(modal.modal).toBeHidden({ timeout: 10000 });
+  } catch (error) {
+    const noteText = await modal.note.textContent().catch(() => '');
+    throw new Error((noteText || 'Search edit modal did not close after save.').trim());
+  }
 }
 
 async function selectAllVisibleClasses(page) {
@@ -475,15 +488,28 @@ async function triggerNativeCleanup(page) {
 
 async function openSystemDebugCard(page) {
   const debugCard = page.locator('[data-ecf-layout-item="system-debug"]').first();
-  await debugCard.locator('summary').click();
+  await expect(debugCard).toBeVisible();
+  if (!(await debugCard.getAttribute('open'))) {
+    await debugCard.evaluate((element) => {
+      element.open = true;
+      element.dispatchEvent(new Event('toggle'));
+    });
+  }
+  await expect(debugCard).toHaveAttribute('open', '');
+  await expect(debugCard.getByRole('button', { name: /Clear|Leeren/i }).first()).toBeVisible();
   return debugCard;
 }
 
 async function clearDebugHistory(page) {
+  page.once('dialog', (dialog) => dialog.accept());
+  const debugCard = await openSystemDebugCard(page);
+  const clearButton = debugCard.getByRole('button', { name: /Clear|Leeren/i }).first();
+  await expect(clearButton).toBeVisible();
   await Promise.all([
-    page.waitForURL(/page=ecf-framework/i),
-    page.locator('form:has(input[name="action"][value="ecf_clear_debug_history"]) button[type="submit"]').first().click(),
+    page.waitForURL(/page=ecf-framework.*ecf_sync=ok.*ecf_message=/i),
+    clearButton.click(),
   ]);
+  await expect(page.locator('.notice-success, .updated, .notice').filter({ hasText: /Debug history cleared/i }).first()).toBeVisible();
 }
 
 async function triggerClassSync(page) {

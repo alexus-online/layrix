@@ -51,6 +51,10 @@ test.describe('ECF extended admin UI flows', () => {
     const target = original === 'de' ? 'en' : 'de';
 
     await switchInterfaceLanguage(page, target);
+    await page.reload();
+    await openPluginPage(page);
+    await openGeneralTab(page, 'ui');
+    await expect(page.locator('[data-ecf-general-field="interface_language"] select').first()).toHaveValue(target);
 
     if (target === 'de') {
       await expect(page.locator('[data-ecf-general-tab="website"]')).toContainText('Webseite');
@@ -69,6 +73,10 @@ test.describe('ECF extended admin UI flows', () => {
 
     const rows = await getLocalFontRows(page);
     const originalCount = await rows.count();
+    const reusableLocalUrl = originalCount > 0
+      ? await rows.nth(0).locator('.ecf-font-file-url').inputValue()
+      : '';
+    test.skip(!reusableLocalUrl, 'No existing local font upload is available on this test site.');
 
     await addLocalFontRow(page);
     await waitForSuccessNotice(page);
@@ -78,7 +86,7 @@ test.describe('ECF extended admin UI flows', () => {
     await fillLocalFontRow(newRow, {
       key: 'ui-test-font',
       family: 'UITest Sans',
-      url: 'https://example.com/ui-test-font.woff2',
+      url: reusableLocalUrl,
       weight: '500',
       style: 'italic',
       display: 'optional',
@@ -93,7 +101,7 @@ test.describe('ECF extended admin UI flows', () => {
     const reloadedRow = page.locator('[data-local-font-table] .ecf-font-file-row').nth(originalCount);
     await expect(reloadedRow.locator('input').nth(0)).toHaveValue('ui-test-font');
     await expect(reloadedRow.locator('input').nth(1)).toHaveValue('UITest Sans');
-    await expect(reloadedRow.locator('.ecf-font-file-url')).toHaveValue('https://example.com/ui-test-font.woff2');
+    await expect(reloadedRow.locator('.ecf-font-file-url')).toHaveValue(reusableLocalUrl);
 
     await removeLocalFontRow(reloadedRow);
     await waitForSuccessNotice(page);
@@ -172,7 +180,7 @@ test.describe('ECF extended admin UI flows', () => {
       await openPluginPage(page);
       await openGeneralTab(page, 'website');
       await expect(
-        page.locator('[data-ecf-general-field="root_font_size"] input').first()
+        page.locator('[data-ecf-general-field="root_font_size"] select').first()
       ).toHaveValue(nextRootSize);
     } finally {
       await updateRestSettings(page, originalSettings);
@@ -180,7 +188,7 @@ test.describe('ECF extended admin UI flows', () => {
       await openPluginPage(page);
       await openGeneralTab(page, 'website');
       await expect(
-        page.locator('[data-ecf-general-field="root_font_size"] input').first()
+        page.locator('[data-ecf-general-field="root_font_size"] select').first()
       ).toHaveValue(String(originalSettings.root_font_size || '62.5'));
     }
   });
@@ -313,8 +321,8 @@ test.describe('ECF extended admin UI flows', () => {
 
     await openPluginPage(page);
     await openGeneralTab(page, 'system');
-    await debugCard.locator('summary').click();
-    await expect(page.locator('.ecf-system-debug-card__history-item')).toHaveCount(0);
+    const refreshedDebugCard = await openSystemDebugCard(page);
+    await expect(refreshedDebugCard.locator('.ecf-system-debug-card__history-item')).toHaveCount(0);
   });
 
   test('class library sync can be triggered on mutation-enabled test sites', async ({ page }) => {

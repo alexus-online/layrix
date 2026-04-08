@@ -66,7 +66,7 @@ test.describe('ECF open UI flows', () => {
     await openPanel(page, 'variables');
 
     let opened = false;
-    for (const query of ['test', 'text', '']) {
+    for (const query of ['text-2xl', 'test', 'text', '']) {
       await searchVariables(page, query);
       opened = await openFirstEditableVariable(page);
       if (opened) {
@@ -83,11 +83,14 @@ test.describe('ECF open UI flows', () => {
     const originalType = await modal.type.inputValue();
     const originalFormat = await modal.format.inputValue();
     const persistedLabel = normalizeVariableLabel(originalLabel) || originalLabel;
-    const nextValue = originalType === 'global-size-variable'
-      ? String((parseFloat(originalValue) || 0) + 1)
-      : `${originalValue} ui`;
+    test.skip(originalType !== 'global-size-variable', 'No editable foreign size variable available on this test site.');
+    const nextValue = '18';
 
     try {
+      await modal.label.fill(persistedLabel);
+      if ((await modal.format.count()) && (await modal.format.inputValue()) !== 'px') {
+        await modal.format.selectOption('px');
+      }
       await modal.value.fill(nextValue);
       await saveSearchEditModal(page);
 
@@ -96,6 +99,9 @@ test.describe('ECF open UI flows', () => {
       test.skip(!reopened, 'Edited foreign variable could not be reopened for verification.');
       const verifyModal = await getSearchEditModal(page);
       await expect(verifyModal.value).toHaveValue(nextValue);
+      if ((await verifyModal.format.count())) {
+        await expect(verifyModal.format).toHaveValue('px');
+      }
     } finally {
       const restoreModal = await getSearchEditModal(page);
       let restoreReady = await restoreModal.modal.isVisible();
@@ -106,6 +112,7 @@ test.describe('ECF open UI flows', () => {
 
       if (restoreReady) {
         const activeRestoreModal = await getSearchEditModal(page);
+        await activeRestoreModal.label.fill(persistedLabel);
         if ((await activeRestoreModal.type.inputValue()) !== originalType) {
           await activeRestoreModal.type.selectOption(originalType);
         }

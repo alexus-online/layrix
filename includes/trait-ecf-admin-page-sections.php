@@ -982,11 +982,7 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                             <div class="ecf-system-debug-card__history">
                                 <div class="ecf-system-debug-card__history-header">
                                     <strong><?php echo esc_html__('Recent debug history', 'ecf-framework'); ?></strong>
-                                    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
-                                        <?php wp_nonce_field('ecf_clear_debug_history'); ?>
-                                        <input type="hidden" name="action" value="ecf_clear_debug_history">
-                                        <button type="submit" class="ecf-btn ecf-btn--secondary ecf-btn--tiny"><?php echo esc_html__('Clear', 'ecf-framework'); ?></button>
-                                    </form>
+                                    <button type="submit" form="ecf-clear-debug-history-form" class="ecf-btn ecf-btn--secondary ecf-btn--tiny"><?php echo esc_html__('Clear', 'ecf-framework'); ?></button>
                                 </div>
                                 <?php if (!empty($debug_history)): ?>
                                     <div class="ecf-system-debug-card__history-list">

@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.6 (2026-04-08)
+
+### Fix
+- Made the ECF admin UI default to dark mode for installs without a saved mode and switched the current live setup back to dark mode.
+- ECF-Admin-UI für Installationen ohne gespeicherten Modus standardmäßig auf Dunkelmodus gesetzt und die aktuelle Live-Installation wieder auf Dunkelmodus umgestellt.
+- Fixed the debug history clear action by replacing the invalid nested form with a dedicated external submit target.
+- Debug-Verlauf-Leeren korrigiert, indem das ungültig verschachtelte Formular durch ein eigenes externes Submit-Ziel ersetzt wurde.
+- Hardened plugin textdomain loading so language switching is applied more deterministically.
+- Laden der Plugin-Textdomain robuster gemacht, damit die Sprachumschaltung deterministischer greift.
+- Stabilized the global-search delete flow after sync by reopening the plugin state before search deletion.
+- Global-Search-Delete-Flow nach dem Sync stabilisiert, indem vor dem Löschen der Plugin-Zustand sauber neu geöffnet wird.
+
+### Test
+- Verified the full live UI suite against `high-escort.de` with `33 passed`, `1 skipped`, `0 failed`.
+- Komplette Live-UI-Suite gegen `high-escort.de` mit `33 bestanden`, `1 übersprungen`, `0 fehlgeschlagen` verifiziert.
+
 ## 0.2.5 (2026-04-08)
 
 ### Fix

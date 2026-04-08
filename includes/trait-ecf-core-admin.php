@@ -9,13 +9,22 @@ trait ECF_Framework_Core_Admin_Trait {
 
     public function load_textdomain() {
         unload_textdomain('ecf-framework');
-        add_filter('plugin_locale', [$this, 'filter_plugin_locale'], 10, 2);
-        $loaded = load_plugin_textdomain(
-            'ecf-framework',
-            false,
-            dirname(plugin_basename(ECF_FRAMEWORK_FILE)) . '/languages'
-        );
-        remove_filter('plugin_locale', [$this, 'filter_plugin_locale'], 10);
+        $locale = $this->selected_interface_locale();
+        $domain_path = dirname(plugin_basename(ECF_FRAMEWORK_FILE)) . '/languages/';
+        $custom_mofile = trailingslashit(dirname(ECF_FRAMEWORK_FILE)) . 'languages/ecf-framework-' . $locale . '.mo';
+        $global_mofile = trailingslashit(WP_LANG_DIR) . 'plugins/ecf-framework-' . $locale . '.mo';
+
+        if (file_exists($global_mofile)) {
+            load_textdomain('ecf-framework', $global_mofile);
+        } elseif (file_exists($custom_mofile)) {
+            load_textdomain('ecf-framework', $custom_mofile);
+        } else {
+            load_plugin_textdomain(
+                'ecf-framework',
+                false,
+                $domain_path
+            );
+        }
 
         $this->runtime_gettext_fallback_enabled = $this->selected_interface_language() === 'de';
     }

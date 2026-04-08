@@ -125,6 +125,7 @@ test.describe('ECF mutation and roundtrip UI flows', () => {
       await triggerNativeSync(page);
       await expect(page.locator('.notice, .updated, .notice-success').first()).toBeVisible();
 
+      await openPluginPage(page);
       await openPanel(page, 'variables');
       await searchVariables(page, uniqueName);
       await expect(page.locator('#ecf-global-search-results')).toContainText(uniqueName);

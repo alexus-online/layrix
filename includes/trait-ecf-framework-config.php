@@ -276,6 +276,11 @@ trait ECF_Framework_Config_Trait {
         $settings['interface_language'] = in_array(($settings['interface_language'] ?? ''), ['de', 'en'], true)
             ? $settings['interface_language']
             : $this->wordpress_default_interface_language();
+        if (!array_key_exists('admin_design_mode', $saved)) {
+            $settings['admin_design_mode'] = 'dark';
+            $saved['admin_design_mode'] = 'dark';
+            update_option($this->option_name, $saved);
+        }
         $default_general_favorites = $this->default_general_setting_favorites();
         $has_saved_general_favorites = array_key_exists('general_setting_favorites', $saved);
         $saved_general_favorites = is_array($saved['general_setting_favorites'] ?? null)

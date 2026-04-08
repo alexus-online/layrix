@@ -778,6 +778,7 @@ jQuery(function($){
   var autosaveInFlight = false;
   var autosaveQueued = false;
   var autosaveReloadRequested = false;
+  var autosaveSkipValidation = false;
   var autosaveReady = false;
 
   function parseFormFieldPath(name) {
@@ -1210,7 +1211,7 @@ jQuery(function($){
 
   function submitSettingsAutosave() {
     if (!$settingsForm.length || !restUrl || !restNonce) return;
-    if (!validateSettingsForSave()) return;
+    if (!autosaveSkipValidation && !validateSettingsForSave()) return;
 
     if (autosaveInFlight) {
       autosaveQueued = true;
@@ -1271,6 +1272,8 @@ jQuery(function($){
       }
 
       showAutosaveNotice(i18n.autosave_failed || '', 'error');
+    }).finally(function() {
+      autosaveSkipValidation = false;
     });
   }
 
@@ -1281,6 +1284,9 @@ jQuery(function($){
     var delay = typeof opts.delay === 'number' ? opts.delay : 700;
     if (opts.reloadAfterSave) {
       autosaveReloadRequested = true;
+    }
+    if (opts.skipValidation) {
+      autosaveSkipValidation = true;
     }
 
     window.clearTimeout(autosaveTimer);
@@ -1834,9 +1840,11 @@ jQuery(function($){
   });
 
   $(document).on('change', 'form[action="options.php"] select[name], form[action="options.php"] textarea[name], form[action="options.php"] input[type="checkbox"][name], form[action="options.php"] input[type="radio"][name], form[action="options.php"] input[type="hidden"][name]', function() {
+    var isLanguageField = $(this).attr('name') === 'ecf_framework_v50[interface_language]';
     scheduleSettingsAutosave({
       delay: 250,
-      reloadAfterSave: $(this).attr('name') === 'ecf_framework_v50[interface_language]'
+      reloadAfterSave: isLanguageField,
+      skipValidation: isLanguageField
     });
   });
 
