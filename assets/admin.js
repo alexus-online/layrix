@@ -962,7 +962,6 @@ jQuery(function($){
     var $select = $field.find('[data-ecf-font-family-preset]').first();
     var baseGroups = $field.data('ecfFontBaseGroups') || [];
     var localGroups = buildFilteredLocalFontGroups(baseGroups, query);
-    openFontPicker($field);
 
     if (!query) {
       renderFontFamilyGroupsIntoSelect($select, localGroups, current);
@@ -1124,6 +1123,7 @@ jQuery(function($){
       var exp = i - baseIndex;
       var maxSize = Math.round((config.maxBase * Math.pow(config.maxRatio, exp)) * 1000) / 1000;
       var minSize = Math.round((config.minBase * Math.pow(config.minRatio, exp)) * 1000) / 1000;
+      if (minSize > maxSize) { var _s = minSize; minSize = maxSize; maxSize = _s; }
       var cssValue = formatPreviewNumber(pxToRem(maxSize)) + 'rem';
 
       if (config.fluid && config.maxVw > config.minVw) {

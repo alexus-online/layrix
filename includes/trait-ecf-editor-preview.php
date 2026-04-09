@@ -25,6 +25,7 @@ trait ECF_Framework_Editor_Preview_Trait {
             $exp = $i - $base_index;
             $max_size = round($max_base * pow($max_ratio, $exp), 3);
             $min_size = round($min_base * pow($min_ratio, $exp), 3);
+            if ($min_size > $max_size) { [$min_size, $max_size] = [$max_size, $min_size]; }
 
             if ($fluid && $max_vw > $min_vw) {
                 $css_value = $this->build_fluid_rem_clamp($min_size, $max_size, $min_vw, $max_vw, $root_base_px);
