@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.2.8 (2026-04-09)
+
+### Fix
+- Refined the admin UI layout, typography/font pickers, sidebar/topbar behavior, and website settings cards for a calmer and denser workflow.
+- Admin-UI-Layout, Typografie-/Schrift-Picker, Sidebar-/Topbar-Verhalten und Website-Einstellungskarten für einen ruhigeren und dichteren Workflow verfeinert.
+- Fixed spacing preview min/max ordering, typography sample rendering, secondary class-sync styling, and token truncation in the spacing panel.
+- Reihenfolge von Minimum/Maximum in der Abstände-Vorschau, Typografie-Beispielrendering, sekundäres Styling des Klassen-Sync-Buttons und Token-Kürzung im Abstände-Panel korrigiert.
+- Expanded German interface coverage for tooltips, help texts, and admin copy.
+- Deutsche Oberfläche für Tooltips, Hilfetexte und Admin-Texte weiter vervollständigt.
+
+### Test
+- Added and verified UI flows for spacing preview values, typography preview samples, closed font pickers, masonry card layout, and secondary class-sync styling.
+- UI-Flows für Abstände-Vorschauwerte, Typografie-Beispieltexte, geschlossene Schrift-Picker, Masonry-Kartenlayout und sekundäres Klassen-Sync-Styling ergänzt und verifiziert.
+
 ## 0.2.7 (2026-04-08)
 
 ### Fix
