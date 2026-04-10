@@ -13,6 +13,7 @@ trait ECF_Framework_Hook_Registration_Trait {
         add_action('wp_head', [$this, 'output_css'], 99);
         add_action('admin_post_ecf_clear_debug_history', [$this, 'handle_clear_debug_history']);
 
+        add_filter('plugin_locale', [$this, 'filter_plugin_locale'], 10, 2);
         add_filter('gettext', [$this, 'filter_runtime_gettext'], 20, 3);
         add_filter('upload_mimes', [$this, 'allow_font_upload_mimes']);
     }

@@ -86,6 +86,9 @@ trait ECF_Framework_REST_API_Trait {
         $settings = isset($data['settings']) && is_array($data['settings']) ? $data['settings'] : $data;
         $sanitized = $this->sanitize_settings($settings);
         update_option($this->option_name, $sanitized);
+        if (method_exists($this, 'clear_elementor_sync_caches')) {
+            $this->clear_elementor_sync_caches();
+        }
 
         return rest_ensure_response([
             'success'  => true,

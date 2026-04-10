@@ -10,6 +10,11 @@ trait ECF_Framework_Core_Admin_Trait {
     public function load_textdomain() {
         unload_textdomain('ecf-framework');
         $locale = $this->selected_interface_locale();
+        if ($locale === 'en_US') {
+            $this->runtime_gettext_fallback_enabled = false;
+            return;
+        }
+
         $domain_path = dirname(plugin_basename(ECF_FRAMEWORK_FILE)) . '/languages/';
         $custom_mofile = trailingslashit(dirname(ECF_FRAMEWORK_FILE)) . 'languages/ecf-framework-' . $locale . '.mo';
         $global_mofile = trailingslashit(WP_LANG_DIR) . 'plugins/ecf-framework-' . $locale . '.mo';

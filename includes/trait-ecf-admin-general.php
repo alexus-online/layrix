@@ -863,6 +863,13 @@ trait ECF_Framework_Admin_General_Trait {
                 <input type="text" name="<?php echo esc_attr($this->option_name); ?>[<?php echo esc_attr($field_key); ?>_custom]" value="<?php echo esc_attr($is_custom ? $current : ''); ?>" placeholder="<?php echo esc_attr($default_custom_placeholder); ?>" data-ecf-font-family-custom data-ecf-font-family-field="<?php echo esc_attr($field_key); ?>"<?php echo $field_key === 'base_font_family' ? ' data-ecf-base-font-custom' : ''; ?> <?php echo $is_custom ? '' : 'hidden'; ?>>
             </div>
             <div class="ecf-inline-actions ecf-inline-actions--fonts ecf-inline-actions--font-family-status">
+                <button type="button"
+                        class="ecf-btn ecf-btn--secondary ecf-btn--tiny"
+                        data-ecf-local-font-add
+                        data-ecf-font-family-field="<?php echo esc_attr($field_key); ?>">
+                    <span class="dashicons dashicons-plus-alt2" aria-hidden="true"></span>
+                    <span><?php echo esc_html__('Import local font', 'ecf-framework'); ?></span>
+                </button>
                 <?php if ($current_local_family !== ''): ?>
                     <button type="button" class="ecf-btn ecf-btn--ghost ecf-btn--tiny ecf-font-family-remove" data-ecf-local-font-remove="<?php echo esc_attr($current_local_family); ?>" data-ecf-font-family-field="<?php echo esc_attr($field_key); ?>">
                         <span class="dashicons dashicons-no-alt" aria-hidden="true"></span>

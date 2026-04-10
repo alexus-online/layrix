@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: ECF Elementor v4 Core Framework\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-09 19:38+0000\n"
+"POT-Creation-Date: 2026-04-10 02:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -323,7 +323,7 @@ msgstr ""
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-admin-general.php:148
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-admin-general.php:928
 #: includes/trait-ecf-admin-general.php:148
-#: includes/trait-ecf-admin-general.php:928
+#: includes/trait-ecf-admin-general.php:935
 msgid "Base Body Text Size"
 msgstr ""
 
@@ -335,7 +335,7 @@ msgstr ""
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-admin-general.php:136
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-admin-general.php:886
 #: includes/trait-ecf-admin-general.php:136
-#: includes/trait-ecf-admin-general.php:886
+#: includes/trait-ecf-admin-general.php:893
 msgid "Base Font Family"
 msgstr ""
 
@@ -761,7 +761,7 @@ msgstr ""
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-rest-api.php:309
 #: includes/trait-ecf-admin-general.php:668
 #: includes/trait-ecf-asset-loading.php:187
-#: includes/trait-ecf-rest-api.php:309
+#: includes/trait-ecf-rest-api.php:312
 msgid "Core font tokens"
 msgstr ""
 
@@ -876,12 +876,12 @@ msgid "Debug"
 msgstr ""
 
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-core-admin.php:343
-#: includes/trait-ecf-core-admin.php:343
+#: includes/trait-ecf-core-admin.php:348
 msgid "Debug history cleared."
 msgstr ""
 
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-admin-general.php:939
-#: includes/trait-ecf-admin-general.php:939
+#: includes/trait-ecf-admin-general.php:946
 msgid "Default body text size for regular paragraphs and flowing content."
 msgstr ""
 
@@ -1352,7 +1352,7 @@ msgid "Font imported locally and activated."
 msgstr ""
 
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-rest-api.php:410
-#: includes/trait-ecf-rest-api.php:410
+#: includes/trait-ecf-rest-api.php:413
 msgid "Font imported locally."
 msgstr ""
 
@@ -1561,7 +1561,7 @@ msgstr ""
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-rest-api.php:331
 #: includes/trait-ecf-admin-general.php:702
 #: includes/trait-ecf-asset-loading.php:188
-#: includes/trait-ecf-rest-api.php:331
+#: includes/trait-ecf-rest-api.php:334
 msgid "Google Fonts library"
 msgstr ""
 
@@ -1613,7 +1613,7 @@ msgstr ""
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-admin-general.php:142
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-admin-general.php:900
 #: includes/trait-ecf-admin-general.php:142
-#: includes/trait-ecf-admin-general.php:900
+#: includes/trait-ecf-admin-general.php:907
 msgid "Heading Font Family"
 msgstr ""
 
@@ -1661,6 +1661,10 @@ msgstr ""
 msgid "Import"
 msgstr ""
 
+#: includes/trait-ecf-admin-general.php:871
+msgid "Import local font"
+msgstr ""
+
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-admin-page-sections.php:1535
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-asset-loading.php:159
 #: includes/trait-ecf-admin-page-sections.php:1535
@@ -1681,7 +1685,7 @@ msgid "Imported Local Fonts"
 msgstr ""
 
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-rest-api.php:167
-#: includes/trait-ecf-rest-api.php:167
+#: includes/trait-ecf-rest-api.php:170
 msgid "Imported font could not be resolved from the media library."
 msgstr ""
 
@@ -1741,12 +1745,12 @@ msgid "Invalid JSON payload."
 msgstr ""
 
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-rest-api.php:379
-#: includes/trait-ecf-rest-api.php:379
+#: includes/trait-ecf-rest-api.php:382
 msgid "Invalid font target."
 msgstr ""
 
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-rest-api.php:114
-#: includes/trait-ecf-rest-api.php:114
+#: includes/trait-ecf-rest-api.php:117
 msgid "Invalid layout payload."
 msgstr ""
 
@@ -1817,7 +1821,7 @@ msgid "Layout helper for simple spacing or positioning patterns."
 msgstr ""
 
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-rest-api.php:123
-#: includes/trait-ecf-rest-api.php:123
+#: includes/trait-ecf-rest-api.php:126
 msgid "Layout order updated."
 msgstr ""
 
@@ -1832,7 +1836,7 @@ msgid "Letter Spacing"
 msgstr ""
 
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-admin-general.php:875
-#: includes/trait-ecf-admin-general.php:875
+#: includes/trait-ecf-admin-general.php:882
 msgid "Library fonts are downloaded into your own media library on the server and then served locally, so the frontend does not need live requests to external font providers."
 msgstr ""
 
@@ -1890,7 +1894,7 @@ msgstr ""
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-rest-api.php:291
 #: includes/trait-ecf-admin-general.php:662
 #: includes/trait-ecf-asset-loading.php:186
-#: includes/trait-ecf-rest-api.php:291
+#: includes/trait-ecf-rest-api.php:294
 msgid "Local fonts"
 msgstr ""
 
@@ -2214,7 +2218,7 @@ msgid "No debug history recorded yet. Entries appear here when WP_DEBUG is enabl
 msgstr ""
 
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-rest-api.php:202
-#: includes/trait-ecf-rest-api.php:202
+#: includes/trait-ecf-rest-api.php:205
 msgid "No downloadable font file could be found for this font."
 msgstr ""
 
@@ -2239,7 +2243,7 @@ msgid "No file uploaded."
 msgstr ""
 
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-rest-api.php:342
-#: includes/trait-ecf-rest-api.php:342
+#: includes/trait-ecf-rest-api.php:345
 msgid "No font family was selected."
 msgstr ""
 
@@ -2484,7 +2488,7 @@ msgid "Remove last"
 msgstr ""
 
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-admin-general.php:869
-#: includes/trait-ecf-admin-general.php:869
+#: includes/trait-ecf-admin-general.php:876
 msgid "Remove selected local font"
 msgstr ""
 
@@ -2698,12 +2702,12 @@ msgid "Set the site basics"
 msgstr ""
 
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-admin-general.php:946
-#: includes/trait-ecf-admin-general.php:946
+#: includes/trait-ecf-admin-general.php:953
 msgid "Sets the token <code>%1$s</code>. By default it follows the max value from <code>%2$s</code> (%3$s %4$s)."
 msgstr ""
 
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-admin-general.php:953
-#: includes/trait-ecf-admin-general.php:953
+#: includes/trait-ecf-admin-general.php:960
 msgid "Sets the token <code>%1$s</code>. This value is currently set manually to %2$s %3$s and no longer follows <code>%4$s</code> automatically (%5$s %6$s)."
 msgstr ""
 
@@ -2732,7 +2736,7 @@ msgid "Settings saved."
 msgstr ""
 
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-rest-api.php:92
-#: includes/trait-ecf-rest-api.php:92
+#: includes/trait-ecf-rest-api.php:95
 msgid "Settings updated."
 msgstr ""
 
@@ -3076,7 +3080,7 @@ msgid "The font could not be imported locally."
 msgstr ""
 
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-rest-api.php:191
-#: includes/trait-ecf-rest-api.php:191
+#: includes/trait-ecf-rest-api.php:194
 msgid "The font library returned an empty stylesheet."
 msgstr ""
 
@@ -3528,7 +3532,7 @@ msgstr ""
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-native-elementor-handlers.php:313
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-native-elementor-handlers.php:349
 #: .claude/worktrees/tender-kirch/includes/trait-ecf-native-elementor-handlers.php:469
-#: includes/trait-ecf-core-admin.php:348
+#: includes/trait-ecf-core-admin.php:353
 #: includes/trait-ecf-native-elementor-handlers.php:220
 #: includes/trait-ecf-native-elementor-handlers.php:260
 #: includes/trait-ecf-native-elementor-handlers.php:313

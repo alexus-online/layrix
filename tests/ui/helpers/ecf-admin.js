@@ -129,6 +129,10 @@ async function getBodyTextSizeState(page) {
 
 async function selectBaseFontFamilyPreset(page, presetValue) {
   const field = getGeneralField(page, 'base_font_family');
+  const search = field.locator('[data-ecf-font-family-search]').first();
+  const panel = field.locator('[data-ecf-font-picker-panel]').first();
+  await search.click();
+  await expect(panel).toBeVisible();
   const select = field.locator('[data-ecf-base-font-preset]').first();
   await expect(select).toBeVisible();
   await select.selectOption(presetValue);
@@ -137,6 +141,10 @@ async function selectBaseFontFamilyPreset(page, presetValue) {
 
 async function selectHeadingFontFamilyPreset(page, presetValue) {
   const field = getGeneralField(page, 'heading_font_family');
+  const search = field.locator('[data-ecf-font-family-search]').first();
+  const panel = field.locator('[data-ecf-font-picker-panel]').first();
+  await search.click();
+  await expect(panel).toBeVisible();
   const select = field.locator('[data-ecf-font-family-preset]').first();
   await expect(select).toBeVisible();
   await select.selectOption(presetValue);
@@ -150,6 +158,34 @@ async function getBaseFontFamilyState(page) {
     preset: await field.locator('[data-ecf-base-font-preset]').first().inputValue(),
     custom: await field.locator('[data-ecf-base-font-custom]').first().inputValue().catch(() => ''),
   };
+}
+
+async function getFontFamilySavedState(page, fieldName) {
+  const field = getGeneralField(page, fieldName);
+  return {
+    field,
+    preset: await field.locator('[data-ecf-font-family-preset-input]').first().inputValue(),
+    custom: await field.locator('[data-ecf-font-family-custom]').first().inputValue().catch(() => ''),
+  };
+}
+
+async function restoreFontFamilySavedState(page, fieldName, presetValue, customValue = '') {
+  const before = await getFontFamilySavedState(page, fieldName);
+
+  if (fieldName === 'base_font_family') {
+    await selectBaseFontFamilyPreset(page, presetValue);
+  } else {
+    await selectHeadingFontFamilyPreset(page, presetValue);
+  }
+
+  if (presetValue === '__custom__') {
+    const customField = getGeneralField(page, fieldName).locator('[data-ecf-font-family-custom]').first();
+    await customField.fill(customValue);
+    await customField.blur();
+  }
+
+  const after = await getFontFamilySavedState(page, fieldName);
+  return before.preset !== after.preset || before.custom !== after.custom;
 }
 
 async function clickRemoveSelectedLocalFont(page) {
@@ -380,6 +416,10 @@ async function getSpacingStepCount(page) {
 async function switchInterfaceLanguage(page, language) {
   const select = getGeneralField(page, 'interface_language').locator('select').first();
   await select.selectOption(language);
+  await expect.poll(async () => {
+    const settings = await fetchRestSettings(page).catch(() => null);
+    return settings ? settings.interface_language : '';
+  }, { timeout: 15000 }).toBe(language);
   await page.waitForLoadState('networkidle');
   await expect(page.locator('.ecf-wrap')).toBeVisible();
   await expect(getGeneralField(page, 'interface_language').locator('select').first()).toHaveValue(language, { timeout: 15000 });
@@ -692,7 +732,11 @@ async function clearDebugHistory(page) {
     clearButton.click(),
   ]);
   await expect(page).not.toHaveURL(/ecf_message=/i);
-  await expect(page.locator('.notice-success, .updated, .notice').filter({ hasText: /Debug history cleared/i }).first()).toBeVisible();
+  await expect(
+    page.locator('.notice-success, .updated, .notice')
+      .filter({ hasText: /Debug history cleared|Debug-Historie geleert/i })
+      .first()
+  ).toBeVisible();
 }
 
 async function openChangelogModal(page) {
@@ -854,6 +898,8 @@ module.exports = {
   selectBaseFontFamilyPreset,
   selectHeadingFontFamilyPreset,
   getBaseFontFamilyState,
+  getFontFamilySavedState,
+  restoreFontFamilySavedState,
   clickRemoveSelectedLocalFont,
   clickRemoveSelectedHeadingLocalFont,
   importLibraryFontForField,

@@ -789,7 +789,7 @@ jQuery(function($){
       return;
     }
 
-    getGeneralField('interface_language').find('select').val(String(settings.interface_language));
+    $('[data-ecf-general-field="interface_language"]').find('select').val(String(settings.interface_language));
   }
 
   function getDerivedBodySizeFromTypeScale() {
@@ -1413,6 +1413,7 @@ jQuery(function($){
   var autosaveReloadRequested = false;
   var autosaveSkipValidation = false;
   var autosaveReady = false;
+  var autosaveRecoveryNoticePending = false;
   var pendingFontAutolinkField = '';
   var lastSavedSettingsPayload = '';
   var inFlightSettingsPayload = '';
@@ -1515,6 +1516,24 @@ jQuery(function($){
         score -= 5;
       }
 
+      var path = parseFormFieldPath(name);
+      var acceptsMultiple = path.indexOf('') !== -1;
+
+      if (acceptsMultiple) {
+        if (!fieldMap[name]) {
+          fieldMap[name] = {
+            score: score,
+            entries: [],
+          };
+        }
+        fieldMap[name].entries.push({
+          score: score,
+          name: name,
+          value: $input.val(),
+        });
+        return;
+      }
+
       if (!fieldMap[name] || score >= fieldMap[name].score) {
         fieldMap[name] = {
           score: score,
@@ -1525,11 +1544,15 @@ jQuery(function($){
     });
 
     $.each(fieldMap, function(_, field) {
-      var path = parseFormFieldPath(field.name);
-      if (!path.length || path[0] !== 'ecf_framework_v50') {
-        return;
-      }
-      assignFormValue(payload, path.slice(1), field.value);
+      var fields = Array.isArray(field.entries) ? field.entries : [field];
+
+      $.each(fields, function(__, entry) {
+        var path = parseFormFieldPath(entry.name);
+        if (!path.length || path[0] !== 'ecf_framework_v50') {
+          return;
+        }
+        assignFormValue(payload, path.slice(1), entry.value);
+      });
     });
 
     var favoritePayload = {};
@@ -1692,6 +1715,7 @@ jQuery(function($){
       if (invalid[0] && invalid[0].length) {
         invalid[0].find('[data-ecf-size-value-input]').trigger('focus');
       }
+      autosaveRecoveryNoticePending = true;
       showAutosaveNotice(i18n.autosave_invalid || '', 'error');
       return false;
     }
@@ -2233,6 +2257,10 @@ jQuery(function($){
     var payloadHash = stableStringify(payload);
 
     if (lastSavedSettingsPayload && payloadHash === lastSavedSettingsPayload) {
+      if (autosaveRecoveryNoticePending) {
+        autosaveRecoveryNoticePending = false;
+        showAutosaveNotice(i18n.autosave_saved || '', 'success');
+      }
       autosaveQueued = false;
       queuedSettingsPayload = '';
       return;
@@ -2287,6 +2315,7 @@ jQuery(function($){
       }
       refreshAdminDesignChooser();
       markCurrentStateAsSaved();
+      autosaveRecoveryNoticePending = false;
 
       if (autosaveQueued) {
         if (queuedSettingsPayload && queuedSettingsPayload === lastSavedSettingsPayload) {
@@ -2392,6 +2421,16 @@ jQuery(function($){
     if (size < 1024) return size + ' B';
     if (size < 1024 * 1024) return formatNumber(size / 1024, 1) + ' KB';
     return formatNumber(size / (1024 * 1024), 1) + ' MB';
+  }
+
+  function safeInitStep(label, callback) {
+    try {
+      callback();
+    } catch (error) {
+      if (window.console && typeof window.console.error === 'function') {
+        window.console.error('ECF admin init failed:', label, error);
+      }
+    }
   }
 
   function updateImportPreview(data) {
@@ -2924,6 +2963,7 @@ jQuery(function($){
     var $presetInput = $field.find('[data-ecf-font-family-preset-input][data-ecf-font-family-field="' + fieldName + '"]').first();
     var $custom = $field.find('[data-ecf-font-family-custom][data-ecf-font-family-field="' + fieldName + '"]').first();
     var selectedValue = String($select.val() || '');
+    var previousPresetValue = String($presetInput.val() || '');
     var showCustom = selectedValue === '__custom__';
 
     if (selectedValue.indexOf('__library__|') === 0) {
@@ -2939,10 +2979,18 @@ jQuery(function($){
     }
 
     $select.data('ecf-prev-value', selectedValue);
-    $presetInput.val(selectedValue);
+    if (previousPresetValue !== selectedValue) {
+      $presetInput.val(selectedValue).trigger('input').trigger('change');
+    } else {
+      $presetInput.val(selectedValue);
+    }
     $custom.prop('hidden', !showCustom);
     syncFontFamilyCurrentLabel($field);
     closeFontPicker($field);
+    updateUnsavedBadge();
+    if (!showCustom && previousPresetValue !== selectedValue) {
+      scheduleSettingsAutosave({ delay: 250 });
+    }
     if (showCustom) {
       $custom.trigger('focus');
     }
@@ -3113,20 +3161,36 @@ jQuery(function($){
   switchGeneralTab(initialGeneralTab);
   $('[data-ecf-base-font-preset]').trigger('change');
   markCurrentStateAsSaved();
-  refreshGeneralFavoritesState();
-  markWhatsNewSeen($('.ecf-nav-item.is-active').data('ecf-new-key'));
-  markWhatsNewSeen($('[data-ecf-general-tab].is-active').data('ecf-new-key'));
-  if ($('.ecf-system-debug-card').prop('open')) {
-    markWhatsNewSeen($('.ecf-system-debug-card').data('ecf-new-key'));
-  }
-  registerWhatsNewImpressions();
-  refreshWhatsNewBadges();
-  restorePageScrollPosition();
-  refreshAdminDesignChooser();
-  applySavedLayoutColumns();
-  initSortableLayoutGroups();
-  scheduleMasonryLayouts();
   autosaveReady = true;
+  refreshGeneralFavoritesState();
+  safeInitStep('mark active whats-new items', function() {
+    markWhatsNewSeen($('.ecf-nav-item.is-active').data('ecf-new-key'));
+    markWhatsNewSeen($('[data-ecf-general-tab].is-active').data('ecf-new-key'));
+    if ($('.ecf-system-debug-card').prop('open')) {
+      markWhatsNewSeen($('.ecf-system-debug-card').data('ecf-new-key'));
+    }
+  });
+  safeInitStep('register whats-new impressions', function() {
+    registerWhatsNewImpressions();
+  });
+  safeInitStep('refresh whats-new badges', function() {
+    refreshWhatsNewBadges();
+  });
+  safeInitStep('restore scroll position', function() {
+    restorePageScrollPosition();
+  });
+  safeInitStep('refresh admin design chooser', function() {
+    refreshAdminDesignChooser();
+  });
+  safeInitStep('apply saved layout columns', function() {
+    applySavedLayoutColumns();
+  });
+  safeInitStep('init sortable layout groups', function() {
+    initSortableLayoutGroups();
+  });
+  safeInitStep('schedule masonry layouts', function() {
+    scheduleMasonryLayouts();
+  });
 
   $(window).on('resize', function() {
     scheduleMasonryLayouts();
@@ -3163,6 +3227,7 @@ jQuery(function($){
     syncBodySizeWithTypeScale(false);
     renderRootFontImpact();
     updateBaseBodyTextSizeWarning();
+    scheduleSettingsAutosave({ delay: 900 });
   });
 
   var isSyncingRootFontControls = false;
@@ -3221,9 +3286,10 @@ jQuery(function($){
     e.stopPropagation();
     var $option = $(this);
     var $picker = $option.closest('[data-ecf-format-picker]');
+    var $formatInput = $picker.find('[data-ecf-format-input]').first();
     $picker.find('[data-ecf-format-option]').removeClass('is-active');
     $option.addClass('is-active');
-    $picker.find('[data-ecf-format-input]').val($option.data('value'));
+    $formatInput.val($option.data('value')).trigger('change');
     $picker.find('[data-ecf-format-current]').text($option.data('label'));
     resetFormatTooltip($picker);
     $picker.find('[data-ecf-format-menu]').prop('hidden', true);

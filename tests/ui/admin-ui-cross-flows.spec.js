@@ -28,6 +28,8 @@ const {
   setSpacingMaxBase,
   getSpacingPreviewRow,
   switchInterfaceLanguage,
+  getLocalFontFamilies,
+  importLibraryFontForField,
   getLocalFontRows,
   fillLocalFontRow,
   openChangelogModal,
@@ -279,25 +281,33 @@ test.describe('ECF cross-panel UI flows', () => {
     await openPluginPage(page);
     await openGeneralTab(page, 'website');
 
-    const { originalChecked } = await toggleGeneralFavorite(page, 'base_font_family');
-    await waitForSuccessNotice(page);
+    const toggle = getGeneralField(page, 'base_font_family').locator('[data-ecf-general-favorite-toggle]').first();
+    const originalChecked = await toggle.isChecked();
 
-    await openGeneralTab(page, 'favorites');
-    const favoriteCard = getFavoriteCard(page, 'base_font_family');
-    await expect(favoriteCard).toBeVisible();
-    await expect(favoriteCard).toContainText(/Base Font Family|Basis-Schriftfamilie/i);
+    if (!originalChecked) {
+      await getGeneralField(page, 'base_font_family').locator('.ecf-favorite-toggle').first().evaluate((element) => element.click());
+      await waitForSuccessNotice(page);
+    }
 
-    if (originalChecked) {
+    try {
+      await openGeneralTab(page, 'favorites');
+      const favoriteCard = getFavoriteCard(page, 'base_font_family');
+      await expect(favoriteCard).toBeVisible();
+      await expect(favoriteCard).toContainText(/Base Font Family|Basis-Schriftfamilie/i);
+
       await favoriteCard.locator('[data-ecf-favorite-remove]').click();
       await waitForSuccessNotice(page);
       await expect(favoriteCard).toBeHidden();
-      await openGeneralTab(page, 'website');
-      await getGeneralField(page, 'base_font_family').locator('.ecf-favorite-toggle').first().evaluate((element) => element.click());
-      await waitForSuccessNotice(page);
-    } else {
-      await openGeneralTab(page, 'website');
-      await getGeneralField(page, 'base_font_family').locator('.ecf-favorite-toggle').first().evaluate((element) => element.click());
-      await waitForSuccessNotice(page);
+    } finally {
+      if (originalChecked) {
+        await openPluginPage(page);
+        await openGeneralTab(page, 'website');
+        const currentToggle = getGeneralField(page, 'base_font_family').locator('[data-ecf-general-favorite-toggle]').first();
+        if (!(await currentToggle.isChecked())) {
+          await getGeneralField(page, 'base_font_family').locator('.ecf-favorite-toggle').first().evaluate((element) => element.click());
+          await waitForSuccessNotice(page);
+        }
+      }
     }
   });
 
@@ -379,7 +389,7 @@ test.describe('ECF cross-panel UI flows', () => {
     const payload = {
       meta: {
         plugin: 'ECF Framework',
-        plugin_version: '0.2.7',
+        plugin_version: '0.2.10',
         schema_version: 1,
         exported_at: '2026-04-08T12:00:00Z',
       },
@@ -391,6 +401,7 @@ test.describe('ECF cross-panel UI flows', () => {
       await setImportFile(page, payload, 'ecf-ui-complete-import.json');
       await submitImport(page);
 
+      await openPluginPage(page);
       await openGeneralTab(page, 'website');
       await expect(getGeneralField(page, 'root_font_size').locator('select').first()).toHaveValue(importedSettings.root_font_size);
       await expect(getGeneralField(page, 'base_body_text_size').locator('[data-ecf-size-value-input]').first()).toHaveValue('21');
@@ -439,35 +450,19 @@ test.describe('ECF cross-panel UI flows', () => {
     await openPluginPage(page);
     await openPanel(page, 'typography');
 
-    const rows = await getLocalFontRows(page);
-    const originalCount = await rows.count();
-    const reusableLocalUrl = originalCount > 0
-      ? await rows.nth(0).locator('.ecf-font-file-url').inputValue()
-      : '';
-    test.skip(!reusableLocalUrl, 'No existing local font upload is available on this test site.');
+    const originalFamilies = await getLocalFontFamilies(page);
+    const targetFamily = ['Manrope', 'Poppins', 'Nunito', 'Merriweather'].find((family) => !originalFamilies.includes(family));
+    test.skip(!targetFamily, 'No unused library font is available on this test site.');
 
     await openGeneralTab(page, 'website');
     const originalBaseFont = await getBaseFontFamilyState(page);
-    await getGeneralField(page, 'base_font_family').locator('[data-ecf-local-font-add]').first().click();
-    await openPanel(page, 'typography');
-
-    await expect(rows).toHaveCount(originalCount + 1);
-    const familyName = `UITest Body Headings ${uniqueSuffix()}`;
-    const newRow = rows.nth(originalCount);
-    await fillLocalFontRow(newRow, {
-      key: `ui-body-heading-${uniqueSuffix()}`,
-      family: familyName,
-      url: reusableLocalUrl,
-      weight: '400',
-      style: 'normal',
-      display: 'swap',
-    });
+    await importLibraryFontForField(page, 'base_font_family', targetFamily);
     await waitForSuccessNotice(page);
 
     const snapshot = await getFrontendTypographySnapshot(page);
-    expect(snapshot.rootBodyFontFamily).toContain(familyName);
-    expect(snapshot.bodyFontFamily).toContain(familyName);
-    expect(snapshot.headingFontFamily).not.toContain(familyName);
+    expect(snapshot.rootBodyFontFamily).toContain(targetFamily);
+    expect(snapshot.bodyFontFamily).toContain(targetFamily);
+    expect(snapshot.headingFontFamily).not.toContain(targetFamily);
     expect(snapshot.rootPrimaryFontFamily.length).toBeGreaterThan(0);
 
     await openPluginPage(page);

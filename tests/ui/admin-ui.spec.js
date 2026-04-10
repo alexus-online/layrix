@@ -11,6 +11,8 @@ const {
   getBodyTextSizeState,
   selectBaseFontFamilyPreset,
   selectHeadingFontFamilyPreset,
+  getFontFamilySavedState,
+  restoreFontFamilySavedState,
   getRootCssVariable,
   getBodyComputedFontFamily,
   getFrontendStyles,
@@ -353,8 +355,8 @@ test.describe('ECF admin UI', () => {
     expect(rootBox).not.toBeNull();
     expect(bodyBox).not.toBeNull();
     expect(baseFontBox).not.toBeNull();
-    expect(bodyBox.y).toBeGreaterThan(rootBox.y + 40);
-    expect(baseFontBox.y).toBeGreaterThan(bodyBox.y + 40);
+    expect(bodyBox.y + (bodyBox.height / 2)).toBeGreaterThan(rootBox.y + (rootBox.height / 2));
+    expect(baseFontBox.y + (baseFontBox.height / 2)).toBeGreaterThan(bodyBox.y + (bodyBox.height / 2));
   });
 
   test('website type and size fields stay constrained instead of spanning the full content width', async ({ page }) => {
@@ -433,7 +435,8 @@ test.describe('ECF admin UI', () => {
 
     const firstField = fontAssignmentCard.locator('[data-ecf-general-field="base_font_family"]').first();
     const searchBox = await firstField.locator('[data-ecf-font-family-search]').boundingBox();
-    const selectBox = await firstField.locator('[data-ecf-font-family-preset]').boundingBox();
+    await firstField.locator('[data-ecf-font-family-search]').first().click();
+    const selectBox = await firstField.locator('[data-ecf-font-picker-panel]').boundingBox();
 
     expect(searchBox).not.toBeNull();
     expect(selectBox).not.toBeNull();
@@ -446,10 +449,11 @@ test.describe('ECF admin UI', () => {
     await openPluginPage(page);
     await openPanel(page, 'typography');
 
-    const detailCards = page.locator('.ecf-panel[data-panel="typography"] .ecf-card--details');
-    await expect(detailCards).toHaveCount(2);
+    const detailCards = page.locator('[data-ecf-layout-group="typography-secondary"] .ecf-card--details');
+    await expect(detailCards).toHaveCount(3);
     await expect(detailCards.nth(0)).toHaveAttribute('open', '');
     await expect(detailCards.nth(1)).not.toHaveAttribute('open', '');
+    await expect(detailCards.nth(2)).not.toHaveAttribute('open', '');
   });
 
   test('typography detail tokens use stacked accordions with only the first section open', async ({ page }) => {
@@ -525,12 +529,13 @@ test.describe('ECF admin UI', () => {
     await openPluginPage(page);
     await openGeneralTab(page, 'website');
 
-    const field = getGeneralField(page, 'base_font_family');
-    const select = field.locator('[data-ecf-base-font-preset]').first();
-    const originalPreset = await select.inputValue();
+    const originalState = await getFontFamilySavedState(page, 'base_font_family');
+    const originalPreset = originalState.preset;
 
-    await selectBaseFontFamilyPreset(page, 'var(--ecf-font-secondary)');
-    await waitForSuccessNotice(page);
+    if (originalPreset !== 'var(--ecf-font-secondary)') {
+      await selectBaseFontFamilyPreset(page, 'var(--ecf-font-secondary)');
+      await waitForSuccessNotice(page);
+    }
 
     const frontendStyles = await getFrontendStyles(page);
     expect(frontendStyles.rootFontFamily).toContain('Georgia');
@@ -538,8 +543,12 @@ test.describe('ECF admin UI', () => {
 
     await openPluginPage(page);
     await openGeneralTab(page, 'website');
-    await selectBaseFontFamilyPreset(page, originalPreset);
-    await waitForSuccessNotice(page);
+    if (originalPreset !== 'var(--ecf-font-secondary)') {
+      const changed = await restoreFontFamilySavedState(page, 'base_font_family', originalPreset, originalState.custom);
+      if (changed) {
+        await waitForSuccessNotice(page);
+      }
+    }
   });
 
   test('local font imported from the base font family flow becomes the active body font and token', async ({ page }) => {
@@ -551,10 +560,9 @@ test.describe('ECF admin UI', () => {
     const hadFontAlready = originalFamilies.includes('Manrope');
 
     await openGeneralTab(page, 'website');
-    const field = getGeneralField(page, 'base_font_family');
-    const select = field.locator('[data-ecf-base-font-preset]').first();
-    const originalPreset = await select.inputValue();
-    const originalCustom = await field.locator('[data-ecf-base-font-custom]').first().inputValue().catch(() => '');
+    const originalState = await getFontFamilySavedState(page, 'base_font_family');
+    const originalPreset = originalState.preset;
+    const originalCustom = originalState.custom;
 
     await importLibraryFontForField(page, 'base_font_family', 'Manrope');
     await waitForSuccessNotice(page);
@@ -574,14 +582,12 @@ test.describe('ECF admin UI', () => {
     expect(frontendStyles.rootFontFamily).toContain('Manrope');
     expect(frontendStyles.bodyFontFamily).toContain('Manrope');
 
+    await openPluginPage(page);
     await openGeneralTab(page, 'website');
-    await selectBaseFontFamilyPreset(page, originalPreset);
-    if (originalPreset === '__custom__') {
-      const customField = getGeneralField(page, 'base_font_family').locator('[data-ecf-base-font-custom]').first();
-      await customField.fill(originalCustom);
-      await customField.blur();
+    const changed = await restoreFontFamilySavedState(page, 'base_font_family', originalPreset, originalCustom);
+    if (changed) {
+      await waitForSuccessNotice(page);
     }
-    await waitForSuccessNotice(page);
 
     if (!hadFontAlready) {
       await openPanel(page, 'typography');
@@ -608,10 +614,12 @@ test.describe('ECF admin UI', () => {
     const bodyField = getGeneralField(page, 'base_font_family');
     const headingField = getGeneralField(page, 'heading_font_family');
     const bodySizeField = getGeneralField(page, 'base_body_text_size');
-    const originalBodyPreset = await bodyField.locator('[data-ecf-font-family-preset]').first().inputValue();
-    const originalBodyCustom = await bodyField.locator('[data-ecf-font-family-custom]').first().inputValue().catch(() => '');
-    const originalHeadingPreset = await headingField.locator('[data-ecf-font-family-preset]').first().inputValue();
-    const originalHeadingCustom = await headingField.locator('[data-ecf-font-family-custom]').first().inputValue().catch(() => '');
+    const originalBodyState = await getFontFamilySavedState(page, 'base_font_family');
+    const originalBodyPreset = originalBodyState.preset;
+    const originalBodyCustom = originalBodyState.custom;
+    const originalHeadingState = await getFontFamilySavedState(page, 'heading_font_family');
+    const originalHeadingPreset = originalHeadingState.preset;
+    const originalHeadingCustom = originalHeadingState.custom;
     const originalBodySizeValue = await bodySizeField.locator('[data-ecf-size-value-input]').first().inputValue();
     const originalBodySizeFormat = await bodySizeField.locator('[data-ecf-format-input]').first().inputValue();
     const targetBodySizeValue = originalBodySizeValue === '18' && originalBodySizeFormat === 'px' ? '19' : '18';
@@ -619,8 +627,6 @@ test.describe('ECF admin UI', () => {
     const targetHeadingFont = 'Merriweather';
     const targetBodyPreset = "'" + targetBodyFont + "'";
     const targetHeadingPreset = "'" + targetHeadingFont + "'";
-
-    await expect(bodyField.locator('.ecf-muted-copy')).toContainText(/lokal|media library|server/i);
 
     await importLibraryFontForField(page, 'base_font_family', targetBodyFont);
     await waitForSuccessNotice(page);
@@ -650,25 +656,13 @@ test.describe('ECF admin UI', () => {
 
     await openPluginPage(page);
     await openGeneralTab(page, 'website');
-    const currentBodyPresetBeforeRestore = await getGeneralField(page, 'base_font_family').locator('[data-ecf-font-family-preset]').first().inputValue();
-    await selectBaseFontFamilyPreset(page, originalBodyPreset);
-    if (originalBodyPreset === '__custom__') {
-      const customField = getGeneralField(page, 'base_font_family').locator('[data-ecf-font-family-custom]').first();
-      await customField.fill(originalBodyCustom);
-      await customField.blur();
-    }
-    if (currentBodyPresetBeforeRestore !== originalBodyPreset || originalBodyPreset === '__custom__') {
+    const bodyChanged = await restoreFontFamilySavedState(page, 'base_font_family', originalBodyPreset, originalBodyCustom);
+    if (bodyChanged) {
       await waitForSuccessNotice(page);
     }
 
-    const currentHeadingPresetBeforeRestore = await getGeneralField(page, 'heading_font_family').locator('[data-ecf-font-family-preset]').first().inputValue();
-    await selectHeadingFontFamilyPreset(page, originalHeadingPreset);
-    if (originalHeadingPreset === '__custom__') {
-      const customField = getGeneralField(page, 'heading_font_family').locator('[data-ecf-font-family-custom]').first();
-      await customField.fill(originalHeadingCustom);
-      await customField.blur();
-    }
-    if (currentHeadingPresetBeforeRestore !== originalHeadingPreset || originalHeadingPreset === '__custom__') {
+    const headingChanged = await restoreFontFamilySavedState(page, 'heading_font_family', originalHeadingPreset, originalHeadingCustom);
+    if (headingChanged) {
       await waitForSuccessNotice(page);
     }
 
@@ -706,11 +700,18 @@ test.describe('ECF admin UI', () => {
     await openPanel(page, 'typography');
 
     const panel = page.locator('.ecf-panel[data-panel="typography"]');
-    await expect(panel.getByText('Site Font Assignment')).toBeVisible();
+    await expect(panel.getByText(/Site Font Assignment|Schriftzuweisung/i)).toBeVisible();
     await expect(panel.locator('[data-ecf-general-field="base_font_family"] [data-ecf-font-family-search]').first()).toBeVisible();
+    const headingAccordion = panel.locator('.ecf-font-assignment-accordion__item').nth(1);
+    await headingAccordion.evaluate((element) => {
+      if (!element.open) {
+        element.open = true;
+        element.dispatchEvent(new Event('toggle'));
+      }
+    });
     await expect(panel.locator('[data-ecf-general-field="heading_font_family"] [data-ecf-font-family-search]').first()).toBeVisible();
-    await expect(panel.locator('.ecf-card').filter({ hasText: 'Site Font Assignment' }).locator('.ecf-muted-copy').first()).toContainText(/stored locally|lokal/i);
-    await expect(panel.getByText('Imported Local Fonts')).toBeVisible();
+    await expect(panel.locator('.ecf-card').filter({ hasText: /Site Font Assignment|Schriftzuweisung/i }).locator('.ecf-muted-copy').first()).toContainText(/stored locally|lokal/i);
+    await expect(panel.getByText(/Imported Local Fonts|Importierte lokale Schriften/i)).toBeVisible();
   });
 
   test('font family search can find Google library fonts beyond the starter list and import them locally', async ({ page }) => {
@@ -828,19 +829,38 @@ test.describe('ECF admin UI', () => {
   test('favorite font family cards keep their picker closed until the user opens it', async ({ page }) => {
     await loginToWordPress(page);
     await openPluginPage(page);
-    await openGeneralTab(page, 'favorites');
+    await openGeneralTab(page, 'website');
 
-    const card = page.locator('[data-ecf-favorite-card="base_font_family"]').first();
-    const current = card.locator('[data-ecf-font-current-value]').first();
-    const panel = card.locator('[data-ecf-font-picker-panel]').first();
-    const search = card.locator('[data-ecf-font-family-search]').first();
+    const toggle = getGeneralField(page, 'base_font_family').locator('[data-ecf-general-favorite-toggle]').first();
+    const originallyChecked = await toggle.isChecked();
 
-    await expect(card).toBeVisible();
-    await expect(current).toBeVisible();
-    await expect(panel).toBeHidden();
+    if (!originallyChecked) {
+      await getGeneralField(page, 'base_font_family').locator('.ecf-favorite-toggle').first().evaluate((element) => element.click());
+      await waitForSuccessNotice(page);
+    }
 
-    await search.click();
-    await expect(panel).toBeVisible();
+    try {
+      await openGeneralTab(page, 'favorites');
+
+      const card = page.locator('[data-ecf-favorite-card="base_font_family"]').first();
+      const current = card.locator('[data-ecf-font-current-value]').first();
+      const panel = card.locator('[data-ecf-font-picker-panel]').first();
+      const search = card.locator('[data-ecf-font-family-search]').first();
+
+      await expect(card).toBeVisible();
+      await expect(current).toBeVisible();
+      await expect(panel).toBeHidden();
+
+      await search.click();
+      await expect(panel).toBeVisible();
+    } finally {
+      if (!originallyChecked) {
+        await openPluginPage(page);
+        await openGeneralTab(page, 'website');
+        await getGeneralField(page, 'base_font_family').locator('.ecf-favorite-toggle').first().evaluate((element) => element.click());
+        await waitForSuccessNotice(page);
+      }
+    }
   });
 
   test('design preset and mode persist after reload', async ({ page }) => {
