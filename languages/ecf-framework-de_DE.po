@@ -475,6 +475,9 @@ msgstr "Kuratiertes Utility-Set"
 msgid "Current design"
 msgstr "Aktuelles Design"
 
+msgid "Caption · Helper text"
+msgstr "Bildunterschrift · Hinweistext"
+
 msgid "Current rem base"
 msgstr "Aktuelle rem-Basis"
 
@@ -960,6 +963,9 @@ msgstr "Hilfe & Support"
 
 msgid "Hero"
 msgstr "Hero"
+
+msgid "Hero Heading"
+msgstr "Hero Heading"
 
 msgid "Hero section class for the main entry area of a page."
 msgstr "Hero-Klasse für den zentralen Einstiegsbereich einer Seite."
@@ -1839,6 +1845,15 @@ msgstr "Typ & Größe"
 
 msgid "Type Scale"
 msgstr "Schriftskala"
+
+msgid "Section heading"
+msgstr "Abschnittstitel"
+
+msgid "Page heading"
+msgstr "Seitenüberschrift"
+
+msgid "The quick brown fox jumps over the fence"
+msgstr "Der schnelle Fuchs springt über den Zaun"
 
 msgid "Typography"
 msgstr "Typografie"

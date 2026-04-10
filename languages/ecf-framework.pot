@@ -623,6 +623,12 @@ msgstr ""
 msgid "Current design"
 msgstr ""
 
+#: includes/trait-ecf-admin-page-sections.php:50
+#: includes/trait-ecf-admin-page-sections.php:865
+#: includes/trait-ecf-admin-page-sections.php:1252
+msgid "Caption · Helper text"
+msgstr ""
+
 #: includes/trait-ecf-admin-page-sections.php:835
 msgid "Current rem base"
 msgstr ""
@@ -1243,6 +1249,12 @@ msgstr ""
 #: includes/trait-ecf-admin-page-sections.php:309
 #: includes/trait-ecf-framework-config.php:787
 msgid "Hero"
+msgstr ""
+
+#: includes/trait-ecf-admin-page-sections.php:66
+#: includes/trait-ecf-admin-page-sections.php:869
+#: includes/trait-ecf-admin-page-sections.php:1256
+msgid "Hero Heading"
 msgstr ""
 
 #: includes/trait-ecf-framework-config.php:524
@@ -2440,6 +2452,24 @@ msgstr ""
 
 #: includes/trait-ecf-admin-page-sections.php:1108
 msgid "Type Scale"
+msgstr ""
+
+#: includes/trait-ecf-admin-page-sections.php:58
+#: includes/trait-ecf-admin-page-sections.php:867
+#: includes/trait-ecf-admin-page-sections.php:1254
+msgid "Section heading"
+msgstr ""
+
+#: includes/trait-ecf-admin-page-sections.php:62
+#: includes/trait-ecf-admin-page-sections.php:868
+#: includes/trait-ecf-admin-page-sections.php:1255
+msgid "Page heading"
+msgstr ""
+
+#: includes/trait-ecf-admin-page-sections.php:54
+#: includes/trait-ecf-admin-page-sections.php:866
+#: includes/trait-ecf-admin-page-sections.php:1253
+msgid "The quick brown fox jumps over the fence"
 msgstr ""
 
 #: Layrix.php:241

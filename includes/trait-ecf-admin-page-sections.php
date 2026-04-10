@@ -47,19 +47,19 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
         $normalized = strtolower(trim(str_replace('--ecf-text-', '', $step)));
 
         if (in_array($normalized, ['xs', 's'], true)) {
-            return __('Bildunterschrift · Hinweistext', 'ecf-framework');
+            return __('Caption · Helper text', 'ecf-framework');
         }
 
         if ($normalized === 'm') {
-            return __('Der schnelle Fuchs springt über den Zaun', 'ecf-framework');
+            return __('The quick brown fox jumps over the fence', 'ecf-framework');
         }
 
         if ($normalized === 'l') {
-            return __('Abschnittstitel', 'ecf-framework');
+            return __('Section heading', 'ecf-framework');
         }
 
         if ($normalized === 'xl') {
-            return __('Seitenüberschrift', 'ecf-framework');
+            return __('Page heading', 'ecf-framework');
         }
 
         if ($normalized === '2xl') {
@@ -70,7 +70,7 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
             return __('Display', 'ecf-framework');
         }
 
-        return __('Typografie', 'ecf-framework');
+        return __('Typography', 'ecf-framework');
     }
 
     private function render_variables_panel($args) {
@@ -862,10 +862,10 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                              data-label-min="<?php echo esc_attr__('Minimum', 'ecf-framework'); ?>"
                              data-label-max="<?php echo esc_attr__('Maximum', 'ecf-framework'); ?>"
                              data-preview-type-word="<?php echo esc_attr__('Typography', 'ecf-framework'); ?>"
-                             data-preview-text-xs="<?php echo esc_attr__('Bildunterschrift · Hinweistext', 'ecf-framework'); ?>"
-                             data-preview-text-m="<?php echo esc_attr__('Der schnelle Fuchs springt über den Zaun', 'ecf-framework'); ?>"
-                             data-preview-text-l="<?php echo esc_attr__('Abschnittstitel', 'ecf-framework'); ?>"
-                             data-preview-text-xl="<?php echo esc_attr__('Seitenüberschrift', 'ecf-framework'); ?>"
+                             data-preview-text-xs="<?php echo esc_attr__('Caption · Helper text', 'ecf-framework'); ?>"
+                             data-preview-text-m="<?php echo esc_attr__('The quick brown fox jumps over the fence', 'ecf-framework'); ?>"
+                             data-preview-text-l="<?php echo esc_attr__('Section heading', 'ecf-framework'); ?>"
+                             data-preview-text-xl="<?php echo esc_attr__('Page heading', 'ecf-framework'); ?>"
                              data-preview-text-2xl="<?php echo esc_attr__('Hero Heading', 'ecf-framework'); ?>"
                              data-preview-text-display="<?php echo esc_attr__('Display', 'ecf-framework'); ?>"
                              data-label-base="<?php echo esc_attr__('Current rem base', 'ecf-framework'); ?>">
@@ -1249,10 +1249,10 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                      data-preview-label-fixed="<?php echo esc_attr__('Static', 'ecf-framework'); ?>"
                      data-preview-label-fluid="<?php echo esc_attr__('Fluid', 'ecf-framework'); ?>"
                      data-preview-word="<?php echo esc_attr__('Typography', 'ecf-framework'); ?>"
-                     data-preview-text-xs="<?php echo esc_attr__('Bildunterschrift · Hinweistext', 'ecf-framework'); ?>"
-                     data-preview-text-m="<?php echo esc_attr__('Der schnelle Fuchs springt über den Zaun', 'ecf-framework'); ?>"
-                     data-preview-text-l="<?php echo esc_attr__('Abschnittstitel', 'ecf-framework'); ?>"
-                     data-preview-text-xl="<?php echo esc_attr__('Seitenüberschrift', 'ecf-framework'); ?>"
+                     data-preview-text-xs="<?php echo esc_attr__('Caption · Helper text', 'ecf-framework'); ?>"
+                     data-preview-text-m="<?php echo esc_attr__('The quick brown fox jumps over the fence', 'ecf-framework'); ?>"
+                     data-preview-text-l="<?php echo esc_attr__('Section heading', 'ecf-framework'); ?>"
+                     data-preview-text-xl="<?php echo esc_attr__('Page heading', 'ecf-framework'); ?>"
                      data-preview-text-2xl="<?php echo esc_attr__('Hero Heading', 'ecf-framework'); ?>"
                      data-preview-text-display="<?php echo esc_attr__('Display', 'ecf-framework'); ?>"
                      data-preview-helper="<?php echo esc_attr__('Click a scale step to inspect it in detail.', 'ecf-framework'); ?>"
