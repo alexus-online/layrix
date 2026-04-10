@@ -118,6 +118,30 @@ trait ECF_Framework_Settings_Sanitizer_Trait {
         $output['base_background_color'] = $base_background_color !== '' ? $base_background_color : $defaults['base_background_color'];
         $output['link_color'] = $link_color !== '' ? $link_color : $defaults['link_color'];
         $output['focus_color'] = $focus_color !== '' ? $focus_color : $defaults['focus_color'];
+        $focus_outline_width_value = trim((string) ($input['focus_outline_width_value'] ?? $input['focus_outline_width'] ?? ''));
+        $focus_outline_width_format = sanitize_key($input['focus_outline_width_format'] ?? '');
+        if (in_array($focus_outline_width_format, ['px', 'rem', 'em'], true)) {
+            $focus_outline_width = $this->sanitize_css_size_value($focus_outline_width_value . $focus_outline_width_format);
+        } else {
+            $focus_outline_width = $this->sanitize_css_size_value($focus_outline_width_value);
+        }
+        $output['focus_outline_width'] = $this->fallback_positive_css_size(
+            $focus_outline_width,
+            $saved_settings['focus_outline_width'] ?? '',
+            $defaults['focus_outline_width']
+        );
+        $focus_outline_offset_value = trim((string) ($input['focus_outline_offset_value'] ?? $input['focus_outline_offset'] ?? ''));
+        $focus_outline_offset_format = sanitize_key($input['focus_outline_offset_format'] ?? '');
+        if (in_array($focus_outline_offset_format, ['px', 'rem', 'em'], true)) {
+            $focus_outline_offset = $this->sanitize_css_size_value($focus_outline_offset_value . $focus_outline_offset_format);
+        } else {
+            $focus_outline_offset = $this->sanitize_css_size_value($focus_outline_offset_value);
+        }
+        $output['focus_outline_offset'] = $this->fallback_positive_css_size(
+            $focus_outline_offset,
+            $saved_settings['focus_outline_offset'] ?? '',
+            $defaults['focus_outline_offset']
+        );
         $output['show_elementor_status_cards'] = !empty($input['show_elementor_status_cards']) ? '1' : '0';
         $output['elementor_variable_type_filter'] = !empty($input['elementor_variable_type_filter']) ? '1' : '0';
         $output['general_setting_favorites'] = [];

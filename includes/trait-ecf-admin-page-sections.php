@@ -811,6 +811,20 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                 <?php $this->render_general_color_field($settings, 'base_background_color', 'Base Background Color', 'Basis-Hintergrundfarbe', 'Default page background for the website.', 'Standard-Seitenhintergrund für die Website.', 'art'); ?>
                                 <?php $this->render_general_color_field($settings, 'link_color', 'Link Color', 'Link-Farbe', 'Default color for normal links.', 'Standardfarbe für normale Links.', 'admin-links'); ?>
                                 <?php $this->render_general_color_field($settings, 'focus_color', 'Focus Color', 'Fokus-Farbe', 'Visible color for keyboard focus outlines and focus rings.', 'Sichtbare Farbe für Tastatur-Fokusrahmen und Focus-Rings.', 'visibility'); ?>
+                                <label data-ecf-general-field="focus_outline_width">
+                                    <span class="ecf-general-label-with-favorite">
+                                        <?php echo $this->general_setting_label(__('Focus Outline Width', 'ecf-framework'), 'Visible width of the keyboard focus outline.', 'editor-expand'); ?>
+                                        <?php $this->render_general_setting_favorite_toggle($settings, 'focus_outline_width'); ?>
+                                    </span>
+                                    <?php $this->render_general_size_field_inline($settings, 'focus_outline_width', $settings['focus_outline_width'] ?? '2px', $this->focus_outline_format_options(), 'px', '2', __('Visible width of the keyboard focus outline.', 'ecf-framework')); ?>
+                                </label>
+                                <label data-ecf-general-field="focus_outline_offset">
+                                    <span class="ecf-general-label-with-favorite">
+                                        <?php echo $this->general_setting_label(__('Focus Outline Offset', 'ecf-framework'), 'Distance between the element edge and the keyboard focus outline.', 'move'); ?>
+                                        <?php $this->render_general_setting_favorite_toggle($settings, 'focus_outline_offset'); ?>
+                                    </span>
+                                    <?php $this->render_general_size_field_inline($settings, 'focus_outline_offset', $settings['focus_outline_offset'] ?? '2px', $this->focus_outline_format_options(), 'px', '2', __('Distance between the element edge and the keyboard focus outline.', 'ecf-framework')); ?>
+                                </label>
                             </div>
                         </div>
                         <details class="ecf-settings-group ecf-settings-group--details" data-ecf-layout-item="website-scale-impact">

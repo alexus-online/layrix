@@ -20,6 +20,8 @@ trait ECF_Framework_Admin_General_Trait {
             'base_background_color',
             'link_color',
             'focus_color',
+            'focus_outline_width',
+            'focus_outline_offset',
             'show_elementor_status_cards',
             'elementor_variable_type_filter',
         ];
@@ -172,6 +174,18 @@ trait ECF_Framework_Admin_General_Trait {
                 'title' => __('Focus Color', 'ecf-framework'),
                 'value' => (string) ($settings['focus_color'] ?? '#6366f1'),
             ],
+            'focus_outline_width' => [
+                'group' => 'website',
+                'tab' => 'colors',
+                'title' => __('Focus Outline Width', 'ecf-framework'),
+                'value' => (string) ($settings['focus_outline_width'] ?? '2px'),
+            ],
+            'focus_outline_offset' => [
+                'group' => 'website',
+                'tab' => 'colors',
+                'title' => __('Focus Outline Offset', 'ecf-framework'),
+                'value' => (string) ($settings['focus_outline_offset'] ?? '2px'),
+            ],
             'show_elementor_status_cards' => [
                 'group' => 'plugin',
                 'tab' => 'behavior',
@@ -196,6 +210,8 @@ trait ECF_Framework_Admin_General_Trait {
             'base_background_color' => 50,
             'link_color' => 60,
             'focus_color' => 70,
+            'focus_outline_width' => 75,
+            'focus_outline_offset' => 76,
             'content_max_width' => 80,
             'elementor_boxed_width' => 90,
             'interface_language' => 110,
@@ -498,6 +514,14 @@ trait ECF_Framework_Admin_General_Trait {
         ];
     }
 
+    private function focus_outline_format_options() {
+        return [
+            'px'  => ['label' => 'px',  'tip' => __('Fixed pixel value for visible focus outlines.', 'ecf-framework')],
+            'rem' => ['label' => 'rem', 'tip' => __('Root-based unit if the focus outline should scale with the root font size.', 'ecf-framework')],
+            'em'  => ['label' => 'em',  'tip' => __('Element-based unit for focus styling that scales with the focused element.', 'ecf-framework')],
+        ];
+    }
+
     private function render_general_size_field_inline($settings, $field_key, $stored_value, $options, $default_format, $placeholder, $title) {
         $parts = $this->parse_css_size_parts($stored_value);
         $selected_format = isset($options[$parts['format']]) ? $parts['format'] : $default_format;
@@ -608,6 +632,28 @@ trait ECF_Framework_Admin_General_Trait {
                        value="<?php echo esc_attr((string) ($settings[$key] ?? '')); ?>"
                        data-default-color="<?php echo esc_attr((string) ($settings[$key] ?? '')); ?>">
                 <?php
+                break;
+            case 'focus_outline_width':
+                $this->render_general_size_field_inline(
+                    $settings,
+                    'focus_outline_width',
+                    $settings['focus_outline_width'] ?? '2px',
+                    $this->focus_outline_format_options(),
+                    'px',
+                    '2',
+                    __('Visible width of the keyboard focus outline.', 'ecf-framework')
+                );
+                break;
+            case 'focus_outline_offset':
+                $this->render_general_size_field_inline(
+                    $settings,
+                    'focus_outline_offset',
+                    $settings['focus_outline_offset'] ?? '2px',
+                    $this->focus_outline_format_options(),
+                    'px',
+                    '2',
+                    __('Distance between the element edge and the keyboard focus outline.', 'ecf-framework')
+                );
                 break;
             case 'show_elementor_status_cards':
             case 'elementor_variable_type_filter':

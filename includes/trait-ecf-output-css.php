@@ -93,6 +93,8 @@ trait ECF_Framework_Output_CSS_Trait {
         echo "--ecf-base-background-color:" . esc_attr($this->sanitize_css_color_value($settings['base_background_color'] ?? '#ffffff')) . ";";
         echo "--ecf-link-color:" . esc_attr($this->sanitize_css_color_value($settings['link_color'] ?? '#3b82f6')) . ";";
         echo "--ecf-focus-color:" . esc_attr($this->sanitize_css_color_value($settings['focus_color'] ?? '#6366f1')) . ";";
+        echo "--ecf-focus-outline-width:" . esc_attr($this->sanitize_css_size_value($settings['focus_outline_width'] ?? '2px') ?: '2px') . ";";
+        echo "--ecf-focus-outline-offset:" . esc_attr($this->sanitize_css_size_value($settings['focus_outline_offset'] ?? '2px') ?: '2px') . ";";
         $resolved_base_font_family = $this->resolved_base_font_family_css_value($settings);
         $resolved_heading_font_family = $this->resolved_heading_font_family_css_value($settings);
         echo "--ecf-base-font-family:" . $this->css_font_value_for_output($resolved_base_font_family) . ";";
@@ -138,7 +140,7 @@ trait ECF_Framework_Output_CSS_Trait {
         echo "body{font-family:var(--ecf-base-body-font-family,var(--ecf-base-font-family));font-size:var(--ecf-base-body-text-size);color:var(--ecf-base-text-color);background-color:var(--ecf-base-background-color);}";
         echo "h1,h2,h3,h4,h5,h6{font-family:var(--ecf-heading-font-family,var(--ecf-font-primary));}";
         echo "a{color:var(--ecf-link-color);}";
-        echo ":focus-visible{outline:2px solid var(--ecf-focus-color);outline-offset:2px;}";
+        echo ":focus-visible{outline:var(--ecf-focus-outline-width) solid var(--ecf-focus-color);outline-offset:var(--ecf-focus-outline-offset);}";
         echo ".ecf-content-width,.cf-content-width{width:min(100%,var(--ecf-content-max-width));margin-inline:auto;}";
         if ($settings['enabled_components']['cards'] === '1') {
             echo ".ecf-card,.cf-card{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:var(--ecf-radius-l,16px);padding:var(--ecf-space-l,24px);box-shadow:0 10px 30px rgba(0,0,0,.06);}";

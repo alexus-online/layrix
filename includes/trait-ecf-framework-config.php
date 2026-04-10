@@ -17,6 +17,8 @@ trait ECF_Framework_Config_Trait {
             'base_background_color' => '#ffffff',
             'link_color' => '#3b82f6',
             'focus_color' => '#6366f1',
+            'focus_outline_width' => '2px',
+            'focus_outline_offset' => '2px',
             'show_elementor_status_cards' => '1',
             'elementor_variable_type_filter' => '1',
             'general_setting_favorites' => $this->default_general_setting_favorites(),
