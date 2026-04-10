@@ -169,6 +169,7 @@ trait ECF_Framework_Output_CSS_Trait {
         if ($settings['enabled_components']['buttons'] === '1') {
             echo ".ecf-btn,.cf-btn{display:inline-flex;align-items:center;justify-content:center;padding:var(--ecf-space-s,8px) var(--ecf-space-m,16px);border-radius:var(--ecf-radius-m,12px);text-decoration:none;border:0;cursor:pointer;}.ecf-btn-primary,.cf-btn-primary{background:var(--ecf-color-primary,#3b82f6);color:#fff;}.ecf-btn-secondary,.cf-btn-secondary{background:var(--ecf-color-secondary,#64748b);color:#fff;}";
         }
+        echo ".ecf-container-boxed,.elementor .ecf-container-boxed{margin-left:auto!important;margin-right:auto!important;width:100%!important;}";
         echo "</style>";
     }
 }
