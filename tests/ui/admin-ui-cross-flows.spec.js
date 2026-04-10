@@ -92,6 +92,33 @@ test.describe('ECF cross-panel UI flows', () => {
     }
   });
 
+  test('legacy settings without enabled layout component still emit boxed layout CSS', async ({ page }) => {
+    await loginToWordPress(page);
+    await openPluginPage(page);
+
+    const originalSettings = await fetchRestSettings(page);
+    const legacySettings = cloneSettings(originalSettings);
+    legacySettings.enabled_components = {
+      buttons: '1',
+      cards: '1',
+    };
+
+    try {
+      await updateRestSettings(page, legacySettings);
+      await openPluginPage(page);
+
+      const repairedSettings = await fetchRestSettings(page);
+      expect(repairedSettings.enabled_components.layout).toBe('1');
+
+      await page.goto(`${process.env.ECF_WP_URL.replace(/\/$/, '')}/`, { waitUntil: 'domcontentloaded' });
+      const emittedCss = await page.locator('style#ecf-framework-v010').textContent();
+      expect(emittedCss || '').toContain('.ecf-container-boxed');
+    } finally {
+      await openPluginPage(page);
+      await updateRestSettings(page, originalSettings);
+    }
+  });
+
   test('removing the active local body font falls back to the primary font preset', async ({ page }) => {
     await loginToWordPress(page);
     await openPluginPage(page);
