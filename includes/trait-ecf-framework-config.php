@@ -276,7 +276,17 @@ trait ECF_Framework_Config_Trait {
             return $defaults;
         }
 
-        $settings = wp_parse_args($saved, $this->defaults());
+        $defaults = $this->defaults();
+        $settings = wp_parse_args($saved, $defaults);
+        $default_components = $defaults['enabled_components'];
+        if (!isset($saved['enabled_components']) || !is_array($saved['enabled_components'])) {
+            $settings['enabled_components'] = $default_components;
+        } else {
+            $settings['enabled_components'] = array_merge(
+                $default_components,
+                $saved['enabled_components']
+            );
+        }
         $settings['interface_language'] = in_array(($settings['interface_language'] ?? ''), ['de', 'en'], true)
             ? $settings['interface_language']
             : $this->wordpress_default_interface_language();
