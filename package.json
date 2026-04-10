@@ -1,6 +1,6 @@
 {
   "name": "layrix",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": true,
   "scripts": {
     "test": "bash scripts/smoke-check.sh",

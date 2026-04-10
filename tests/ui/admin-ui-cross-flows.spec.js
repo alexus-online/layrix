@@ -389,7 +389,7 @@ test.describe('ECF cross-panel UI flows', () => {
     const payload = {
       meta: {
         plugin: 'Layrix',
-        plugin_version: '0.3.0',
+        plugin_version: '0.3.1',
         schema_version: 1,
         exported_at: '2026-04-08T12:00:00Z',
       },

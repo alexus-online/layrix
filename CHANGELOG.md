@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.1 (2026-04-10)
+
+### Fix
+- Base color picker switched to the WordPress picker and positioned above the field.
+- Basis-Farbpicker auf den WordPress-Picker umgestellt und oberhalb des Felds positioniert.
+- Focus outline width and offset made configurable.
+- Fokus-Outline-Breite und -Offset konfigurierbar gemacht.
+- Typography preview synced to the selected base font family.
+- Typografie-Vorschau mit der gewählten Basis-Schriftfamilie synchronisiert.
+
 ## 0.3.0 (2026-04-10)
 
 ### Fix
