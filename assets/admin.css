@@ -427,10 +427,20 @@
   grid-auto-rows: 10px;
   align-items: start;
 }
+[data-ecf-masonry-layout].ecf-layout-group--sorting {
+  grid-auto-flow: row;
+  grid-auto-rows: auto;
+}
 [data-ecf-masonry-layout] > [data-ecf-layout-item] {
   min-width: 0;
   align-self: start;
   grid-row-end: span var(--ecf-masonry-span, 1);
+}
+[data-ecf-masonry-layout].ecf-layout-group--sorting > [data-ecf-layout-item],
+[data-ecf-masonry-layout].ecf-layout-group--sorting > .ecf-sortable-placeholder {
+  grid-column: auto !important;
+  grid-row: auto !important;
+  grid-row-end: auto !important;
 }
 .ecf-grid--single { grid-template-columns: 1fr; }
 .ecf-grid--2 { grid-template-columns: 1fr 1fr; }
@@ -872,6 +882,24 @@
     color-mix(in srgb, var(--ecf-card-2) 82%, transparent);
   border-radius: 12px;
   visibility: visible !important;
+  min-height: 120px;
+  width: 100% !important;
+  box-sizing: border-box;
+}
+[data-ecf-masonry-layout].ecf-layout-group--sorting .ecf-sortable-placeholder {
+  display: block;
+  position: relative;
+}
+[data-ecf-masonry-layout].ecf-layout-group--sorting .ecf-sortable-placeholder::before {
+  content: "Drop Here";
+  position: absolute;
+  top: 14px;
+  left: 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--ecf-accent) 76%, #fff);
 }
 .ecf-layout-handle-zone {
   position: relative;

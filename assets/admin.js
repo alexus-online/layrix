@@ -2270,6 +2270,10 @@ jQuery(function($){
         tolerance: 'pointer',
         placeholder: 'ecf-sortable-placeholder',
         forcePlaceholderSize: true,
+        change: function(event, ui) {
+          ui.placeholder.height(ui.item.outerHeight());
+          ui.placeholder.width(ui.item.outerWidth());
+        },
         start: function(event, ui) {
           var isMasonryGroup = $group.is('[data-ecf-masonry-layout]');
           ui.placeholder.height(ui.item.outerHeight());
