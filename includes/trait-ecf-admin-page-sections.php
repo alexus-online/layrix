@@ -1274,7 +1274,7 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                     </div>
                     <div class="ecf-typography-preview-list" data-ecf-type-scale-preview-list>
                         <?php foreach ($type_scale_preview as $item): ?>
-                            <button type="button" class="ecf-type-row<?php echo $item['step'] === $settings['typography']['scale']['base_index'] ? ' is-active' : ''; ?>" data-ecf-step="<?php echo esc_attr($item['step']); ?>" style="<?php echo esc_attr('--ecf-preview-size:' . $item['css_value'] . ';'); ?>">
+                            <div class="ecf-type-row<?php echo $item['step'] === $settings['typography']['scale']['base_index'] ? ' is-active' : ''; ?>" data-ecf-step="<?php echo esc_attr($item['step']); ?>" data-ecf-step-row tabindex="0" role="button" aria-pressed="<?php echo $item['step'] === $settings['typography']['scale']['base_index'] ? 'true' : 'false'; ?>" style="<?php echo esc_attr('--ecf-preview-size:' . $item['css_value'] . ';'); ?>">
                                 <div class="ecf-type-row__token">
                                     <div class="ecf-type-row__token-line">
                                         <span class="ecf-type-row__token-label"><?php echo esc_html($item['token']); ?></span>
@@ -1297,7 +1297,7 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                         <strong style="font-size:<?php echo esc_attr($item['max_px']); ?>px;"><?php echo esc_html($this->type_preview_text_for_step((string) $item['step'], $settings)); ?></strong>
                                     </div>
                                 </div>
-                            </button>
+                            </div>
                         <?php endforeach; ?>
                     </div>
                     <div class="ecf-step-controls ecf-step-controls--bottom">
