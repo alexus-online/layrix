@@ -142,8 +142,8 @@ trait ECF_Framework_Output_CSS_Trait {
         if ($settings['enabled_components']['layout'] === '1') {
             echo ".ecf-container-boxed{margin-left:auto!important;margin-right:auto!important;}";
             echo ".ecf-container-boxed,.cf-container-boxed,.elementor .ecf-container-boxed,.elementor .cf-container-boxed{--margin-inline-start:auto!important;--margin-inline-end:auto!important;width:100%!important;max-width:min(calc(100% - 2rem), var(--ecf-container-boxed))!important;margin-inline:auto!important;margin-left:auto!important;margin-right:auto!important;}";
-            echo ".elementor .e-con.e-flexbox-base:has(> .ecf-container-boxed),.elementor .e-con.e-flexbox-base:has(> .cf-container-boxed){justify-content:center!important;}";
-            echo ".elementor .ecf-container-boxed,.elementor .cf-container-boxed{position:relative!important;left:50%!important;transform:translateX(-50%)!important;}";
+            echo ".elementor .elementor-element.ecf-container-boxed,.elementor .elementor-element.cf-container-boxed{--margin-inline-start:auto!important;--margin-inline-end:auto!important;margin-inline-start:auto!important;margin-inline-end:auto!important;margin-left:auto!important;margin-right:auto!important;width:min(calc(100% - 2rem), var(--ecf-container-boxed))!important;max-width:min(calc(100% - 2rem), var(--ecf-container-boxed))!important;}";
+            echo ".elementor .elementor-element.e-con.e-atomic-element.e-flexbox-base:has(> .elementor-element.ecf-container-boxed),.elementor .elementor-element.e-con.e-atomic-element.e-flexbox-base:has(> .elementor-element.cf-container-boxed){justify-content:center!important;}";
         }
         echo "body{font-family:var(--ecf-base-body-font-family,var(--ecf-base-font-family));font-size:var(--ecf-base-body-text-size);font-weight:var(--ecf-base-body-font-weight);color:var(--ecf-base-text-color);background-color:var(--ecf-base-background-color);}";
         echo "h1,h2,h3,h4,h5,h6{font-family:var(--ecf-heading-font-family,var(--ecf-font-primary));}";
