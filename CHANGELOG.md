@@ -157,16 +157,16 @@
 ### Fix
 - Added a canonical plugin-folder fallback for GitHub updates.
 - Kanonischen Fallback für den Plugin-Ordner bei GitHub-Updates ergänzt.
-- Keeps the installer on `elementor-core-framework`.
-- Hält den Installer bei `elementor-core-framework`.
+- Keeps the installer on `Layrix`.
+- Hält den Installer bei `Layrix`.
 
 ## 0.1.15 (2026-04-05)
 
 ### Fix
 - Normalized the GitHub update install path.
 - Installationspfad für GitHub-Updates normalisiert.
-- Keeps the plugin folder as `elementor-core-framework` after updates.
-- Behält nach Updates den Plugin-Ordner `elementor-core-framework`.
+- Keeps the plugin folder as `Layrix` after updates.
+- Behält nach Updates den Plugin-Ordner `Layrix` nach Updates.
 
 ## 0.1.14 (2026-04-05)
 
