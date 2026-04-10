@@ -2047,6 +2047,14 @@
   align-items: flex-start;
   align-self: center;
 }
+.ecf-clamp-group {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+.ecf-clamp-group--focus {
+  margin-bottom: 4px;
+}
 .ecf-typography-focus__size-line {
   display: flex;
   align-items: center;
@@ -2121,7 +2129,7 @@
     gap: 12px;
   }
   .ecf-type-row__token {
-    font-size: 13px;
+    font-size: 12px;
   }
   .ecf-type-row__meta strong {
     font-size: 14px;
@@ -2145,11 +2153,23 @@
   box-shadow: inset 3px 0 0 var(--ecf-primary);
 }
 .ecf-type-row__token {
-  color: rgba(255,255,255,.6);
+  color: rgba(255,255,255,.65);
   font-size: 12px;
   font-weight: 600;
   line-height: 1.2;
   font-family: var(--font-mono);
+  display: grid;
+  gap: 8px;
+}
+.ecf-type-row__token-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.ecf-type-row__token-label {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 .ecf-type-row__meta {
   display: grid;
@@ -2393,11 +2413,12 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 11px;
+  font-size: 12px;
+  color: rgba(255,255,255,.65);
 }
 .ecf-spacing-token-name {
   white-space: nowrap;
-  font-size: 11px;
+  font-size: 12px;
   min-width: 140px;
 }
 .ecf-space-row:hover .ecf-copy-pill { opacity: 1; pointer-events: auto; }
@@ -5606,7 +5627,6 @@ body.ecf-modal-open {
     align-items: center;
     gap: 6px;
   }
-  .ecf-type-row__token,
   .ecf-type-row__meta strong {
     font-size: 18px;
   }

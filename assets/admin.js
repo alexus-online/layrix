@@ -1197,6 +1197,44 @@ jQuery(function($){
     });
   }
 
+  function getTypePreviewCopy($scope, key, fallback) {
+    if (!$scope || !$scope.length) {
+      return fallback;
+    }
+
+    var value = $scope.attr('data-' + key);
+    return typeof value === 'string' && value !== '' ? value : fallback;
+  }
+
+  function getTypePreviewText(stepOrToken, $scope) {
+    var normalized = String(stepOrToken || '')
+      .toLowerCase()
+      .replace(/^--ecf-text-/, '')
+      .trim();
+    var fallback = getTypePreviewCopy($scope, 'preview-word', getTypePreviewCopy($scope, 'preview-type-word', ''));
+
+    if (normalized === 'xs' || normalized === 's') {
+      return getTypePreviewCopy($scope, 'preview-text-xs', fallback);
+    }
+    if (normalized === 'm') {
+      return getTypePreviewCopy($scope, 'preview-text-m', fallback);
+    }
+    if (normalized === 'l') {
+      return getTypePreviewCopy($scope, 'preview-text-l', fallback);
+    }
+    if (normalized === 'xl') {
+      return getTypePreviewCopy($scope, 'preview-text-xl', fallback);
+    }
+    if (normalized === '2xl') {
+      return getTypePreviewCopy($scope, 'preview-text-2xl', fallback);
+    }
+    if (normalized === '3xl' || normalized === '4xl') {
+      return getTypePreviewCopy($scope, 'preview-text-display', fallback);
+    }
+
+    return fallback;
+  }
+
   function getPreviewFont() {
     var fontValue = $('[name^="ecf_framework_v50[typography][fonts]"][name$="[value]"]').first().val();
     return fontValue || 'Inter, sans-serif';
@@ -1213,7 +1251,6 @@ jQuery(function($){
     var labelMax = $preview.data('preview-label-max') || '';
     var labelFixed = $preview.data('preview-label-fixed') || '';
     var labelFluid = $preview.data('preview-label-fluid') || '';
-    var previewWord = $preview.data('preview-word') || '';
     var helperText = $preview.data('preview-helper') || '';
     var activeStep = $preview.attr('data-active-step') || config.baseIndex;
     var viewMode = $preview.attr('data-preview-view') || 'fluid';
@@ -1240,21 +1277,27 @@ jQuery(function($){
 
     $.each(items, function(_, item) {
       var selectedClass = item.step === activeStep ? ' is-active' : '';
+      var previewText = getTypePreviewText(item.token || item.step, $preview);
       html += '<div class="ecf-type-row' + selectedClass + '" data-ecf-step="' + item.step + '" data-ecf-step-row tabindex="0" role="button" aria-pressed="' + (item.step === activeStep ? 'true' : 'false') + '" style="--ecf-preview-size:' + sizeForView(item) + ';">'
-        + '<div class="ecf-type-row__token">' + item.token
+        + '<div class="ecf-type-row__token">'
+        + '<div class="ecf-type-row__token-line">'
+        + '<span class="ecf-type-row__token-label">' + item.token + '</span>'
+        + '<button type="button" class="ecf-clamp-toggle" data-ecf-clamp-toggle="' + escapeHtml(i18n.copy) + '"><span class="dashicons dashicons-editor-code"></span></button>'
         + '<span class="ecf-copy-pill" data-copy="' + item.token + '">' + i18n.copy + '</span>'
         + '</div>'
+        + '<button type="button" class="ecf-clamp-popover" data-copy="' + escapeHtml(item.cssValue) + '">' + escapeHtml(item.cssValue) + '</button>'
+        + '</div>'
         + '<div class="ecf-type-row__meta">'
-        + '<div><span><i class="dashicons dashicons-smartphone"></i>' + labelMin + '</span><div class="ecf-clamp-metric"><strong>' + item.minPx + 'px</strong><button type="button" class="ecf-clamp-toggle" data-ecf-clamp-toggle="' + escapeHtml(i18n.copy) + '"><span class="dashicons dashicons-editor-code"></span></button></div><button type="button" class="ecf-clamp-popover" data-copy="' + escapeHtml(item.cssValue) + '">' + escapeHtml(item.cssValue) + '</button></div>'
-        + '<div><span><i class="dashicons dashicons-desktop"></i>' + labelMax + '</span><div class="ecf-clamp-metric"><strong>' + item.maxPx + 'px</strong><button type="button" class="ecf-clamp-toggle" data-ecf-clamp-toggle="' + escapeHtml(i18n.copy) + '"><span class="dashicons dashicons-editor-code"></span></button></div><button type="button" class="ecf-clamp-popover" data-copy="' + escapeHtml(item.cssValue) + '">' + escapeHtml(item.cssValue) + '</button></div>'
+        + '<div><span><i class="dashicons dashicons-smartphone"></i>' + labelMin + '</span><div class="ecf-clamp-metric"><strong>' + item.minPx + 'px</strong></div></div>'
+        + '<div><span><i class="dashicons dashicons-desktop"></i>' + labelMax + '</span><div class="ecf-clamp-metric"><strong>' + item.maxPx + 'px</strong></div></div>'
         + '</div>'
         + '<div class="ecf-type-row__sample">'
         + '<div class="ecf-type-row__sample-line">'
-        + '<strong style="font-size:' + item.minPx + 'px;">' + previewWord + '</strong>'
+        + '<strong style="font-size:' + item.minPx + 'px;">' + escapeHtml(previewText) + '</strong>'
         + '<span><i class="dashicons dashicons-smartphone"></i>' + labelMin + '</span>'
         + '</div>'
         + '<div class="ecf-type-row__sample-line ecf-type-row__sample-line--max">'
-        + '<strong style="font-size:' + item.maxPx + 'px;">' + previewWord + '</strong>'
+        + '<strong style="font-size:' + item.maxPx + 'px;">' + escapeHtml(previewText) + '</strong>'
         + '<span><i class="dashicons dashicons-desktop"></i>' + labelMax + '</span>'
         + '</div>'
         + '</div>'
@@ -1262,6 +1305,7 @@ jQuery(function($){
     });
 
     var activeItem = items.find(function(item){ return item.step === activeStep; }) || items[0];
+    var activePreviewText = activeItem ? getTypePreviewText(activeItem.token || activeItem.step, $preview) : '';
 
     $preview.css('--ecf-preview-font', getPreviewFont());
     $preview.attr('data-active-step', activeStep);
@@ -1270,13 +1314,12 @@ jQuery(function($){
     $preview.find('[data-ecf-preview-mode]').html(modeLabel());
     $preview.find('[data-ecf-focus-token]').text(activeItem ? activeItem.token : '');
     $preview.find('[data-ecf-focus-helper]').text(helperText);
-    $preview.find('[data-ecf-focus-word]').text(previewWord).css('font-size', activeItem ? sizeForView(activeItem) : '');
+    $preview.find('[data-ecf-focus-word]').text(activePreviewText).css('font-size', activeItem ? sizeForView(activeItem) : '');
     $preview.find('[data-ecf-focus-min]').text(activeItem ? activeItem.minPx + 'px' : '');
     $preview.find('[data-ecf-focus-max]').text(activeItem ? activeItem.maxPx + 'px' : '');
-    $preview.find('[data-ecf-focus-min-copy]').text(activeItem ? activeItem.cssValue : '').attr('data-copy', activeItem ? activeItem.cssValue : '');
-    $preview.find('[data-ecf-focus-max-copy]').text(activeItem ? activeItem.cssValue : '').attr('data-copy', activeItem ? activeItem.cssValue : '');
-    $preview.find('[data-ecf-focus-min-line]').css('font-size', activeItem ? activeItem.minPx + 'px' : '').text(previewWord);
-    $preview.find('[data-ecf-focus-max-line]').css('font-size', activeItem ? activeItem.maxPx + 'px' : '').text(previewWord);
+    $preview.find('[data-ecf-focus-copy]').text(activeItem ? activeItem.cssValue : '').attr('data-copy', activeItem ? activeItem.cssValue : '');
+    $preview.find('[data-ecf-focus-min-line]').css('font-size', activeItem ? activeItem.minPx + 'px' : '').text(activePreviewText);
+    $preview.find('[data-ecf-focus-max-line]').css('font-size', activeItem ? activeItem.maxPx + 'px' : '').text(activePreviewText);
     $preview.find('[data-ecf-preview-view]').removeClass('is-active');
     $preview.find('[data-ecf-preview-view="' + viewMode + '"]').addClass('is-active');
   }
@@ -1335,7 +1378,7 @@ jQuery(function($){
     var radiusMax = parseFloat($radiusRow.find('input').eq(2).val()) || radiusMin;
     var labelMin = $box.attr('data-label-min') || '';
     var labelMax = $box.attr('data-label-max') || '';
-    var typePreviewWord = $box.attr('data-preview-type-word') || '';
+    var typePreviewWord = getTypePreviewText(typeStep, $box);
     var spacingMaxValue = spacingItems.reduce(function(max, item) {
       return Math.max(max, parseFloat(item.maxPx) || 0);
     }, 0);
@@ -3073,6 +3116,16 @@ jQuery(function($){
     $(this).data('ecf-prev-value', String($(this).val() || ''));
   });
 
+  $(document).on('pointerdown', '[data-ecf-font-family-search]', function() {
+    $(this).data('ecf-open-intent', 'pointer');
+  });
+
+  $(document).on('keydown', '[data-ecf-font-family-search]', function(event) {
+    if (event.key === 'Tab' || event.key === 'Enter' || event.key === 'ArrowDown' || event.key === ' ') {
+      $(this).data('ecf-open-intent', 'keyboard');
+    }
+  });
+
   $('[data-ecf-font-family-preset]').each(function() {
     $(this).data('ecf-prev-value', String($(this).val() || ''));
     var $field = $(this).closest('[data-ecf-general-field]');
@@ -3081,14 +3134,30 @@ jQuery(function($){
     closeFontPicker($field);
   });
 
-  $(document).on('click', '[data-ecf-font-family-search]', function() {
-    var $field = $(this).closest('[data-ecf-general-field]');
+  $(document).on('focusin', '[data-ecf-font-family-search]', function() {
+    var $search = $(this);
+    if (!$search.data('ecf-open-intent')) {
+      return;
+    }
+    var $field = $search.closest('[data-ecf-general-field]');
+    $search.removeData('ecf-open-intent');
     openFontPicker($field);
-    refreshFontFamilyList($field, $(this).val());
+    refreshFontFamilyList($field, $search.val());
+  });
+
+  $(document).on('click', '[data-ecf-font-family-search]', function() {
+    var $search = $(this);
+    var $field = $search.closest('[data-ecf-general-field]');
+    $search.removeData('ecf-open-intent');
+    openFontPicker($field);
+    refreshFontFamilyList($field, $search.val());
   });
 
   $(document).on('input', '[data-ecf-font-family-search]', function() {
     var $field = $(this).closest('[data-ecf-general-field]');
+    if (!$field.hasClass('is-open')) {
+      openFontPicker($field);
+    }
     refreshFontFamilyList($field, $(this).val());
   });
 
@@ -5254,7 +5323,7 @@ jQuery(function($){
     e.preventDefault();
     e.stopPropagation();
     var $toggle = $(this);
-    var $pop = $toggle.closest('div').siblings('.ecf-clamp-popover').first();
+    var $pop = $toggle.closest('.ecf-clamp-group, .ecf-type-row__token').find('.ecf-clamp-popover').first();
     $('.ecf-clamp-popover').not($pop).removeClass('is-open');
     $pop.toggleClass('is-open');
   });
