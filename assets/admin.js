@@ -1228,8 +1228,21 @@ jQuery(function($){
   }
 
   function getPreviewFont() {
-    var fontValue = $('[name^="ecf_framework_v50[typography][fonts]"][name$="[value]"]').first().val();
-    return fontValue || 'Inter, sans-serif';
+    var $field = getPrimaryFontFamilyField('base_font_family');
+    if ($field && $field.length) {
+      var presetValue = String($field.find('[data-ecf-font-family-preset-input]').first().val() || '');
+      var customValue = String($field.find('[data-ecf-font-family-custom]').first().val() || '').trim();
+
+      if (presetValue === '__custom__') {
+        return customValue || 'Inter, sans-serif';
+      }
+
+      if (presetValue) {
+        return presetValue;
+      }
+    }
+
+    return 'Inter, sans-serif';
   }
 
   function renderTypePreview() {
@@ -3362,6 +3375,10 @@ jQuery(function($){
     renderRootFontImpact();
     updateBaseBodyTextSizeWarning();
     scheduleSettingsAutosave({ delay: 900 });
+  });
+
+  $(document).on('input change', '[data-ecf-font-family-preset-input][data-ecf-font-family-field="base_font_family"], [data-ecf-font-family-custom][data-ecf-font-family-field="base_font_family"]', function() {
+    renderTypePreview();
   });
 
   var isSyncingRootFontControls = false;

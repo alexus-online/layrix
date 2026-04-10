@@ -211,7 +211,7 @@ class ECF_Framework {
         $type_root_preview = $this->find_preview_item_by_step($type_scale_preview, $settings['typography']['scale']['base_index'] ?? 'm');
         $spacing_root_preview = $this->find_preview_item_by_step($spacing_preview, $settings['spacing']['base_index'] ?? 'm');
         $radius_root_preview = $this->find_radius_preview_item($settings['radius'] ?? []);
-        $type_preview_font = sanitize_text_field($settings['typography']['fonts'][0]['value'] ?? 'Inter, sans-serif');
+        $type_preview_font = $this->resolved_base_font_family_css_value($settings);
         $changelog_entries = $this->get_localized_changelog_entries();
         $base_type_preview = $type_scale_preview[0] ?? ['min' => '1', 'max' => '1'];
         foreach ($type_scale_preview as $preview_item) {
