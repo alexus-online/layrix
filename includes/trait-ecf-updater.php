@@ -91,12 +91,29 @@ trait ECF_Framework_Updater_Trait {
         );
     }
 
+    private function github_raw_content_url($path) {
+        return sprintf(
+            'https://raw.githubusercontent.com/%s/%s/%s',
+            $this->github_repo,
+            $this->github_branch,
+            ltrim($path, '/')
+        );
+    }
+
+    private function github_file_url($path) {
+        if ($this->has_github_token()) {
+            return $this->github_contents_api_url($path);
+        }
+
+        return $this->github_raw_content_url($path);
+    }
+
     private function github_raw_plugin_url() {
-        return $this->github_contents_api_url(basename(ECF_FRAMEWORK_FILE));
+        return $this->github_file_url(basename(ECF_FRAMEWORK_FILE));
     }
 
     private function github_raw_changelog_url() {
-        return $this->github_contents_api_url('CHANGELOG.md');
+        return $this->github_file_url('CHANGELOG.md');
     }
 
     private function github_package_url() {
