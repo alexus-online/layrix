@@ -1,5 +1,10 @@
 /* ── Layrix Admin UI ────────────────────────────────────────────── */
 
+#adminmenu #toplevel_page_ecf-framework .wp-menu-image img {
+  filter: none !important;
+  opacity: 1 !important;
+}
+
 /* Variables */
 :root {
   --ecf-bg:        #0d0f18;

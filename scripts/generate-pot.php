@@ -34,6 +34,9 @@ foreach ($iterator as $file) {
     if (strpos($path, DIRECTORY_SEPARATOR . '.git' . DIRECTORY_SEPARATOR) !== false) {
         continue;
     }
+    if (strpos($path, DIRECTORY_SEPARATOR . '.claude' . DIRECTORY_SEPARATOR) !== false) {
+        continue;
+    }
     if (strpos($path, DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR) !== false) {
         continue;
     }
@@ -99,7 +102,7 @@ ksort($messages);
 $pot = [];
 $pot[] = 'msgid ""';
 $pot[] = 'msgstr ""';
-$pot[] = '"Project-Id-Version: ECF Elementor v4 Core Framework\\n"';
+$pot[] = '"Project-Id-Version: Layrix\\n"';
 $pot[] = '"Report-Msgid-Bugs-To: \\n"';
 $pot[] = '"POT-Creation-Date: ' . gmdate('Y-m-d H:i+0000') . '\\n"';
 $pot[] = '"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\\n"';

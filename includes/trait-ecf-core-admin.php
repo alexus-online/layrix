@@ -65,7 +65,13 @@ trait ECF_Framework_Core_Admin_Trait {
     }
 
     public function menu() {
-        add_menu_page('Layrix', 'Layrix', 'manage_options', 'ecf-framework', [$this, 'settings_page'], 'dashicons-admin-customizer', 58);
+        $svg_path = dirname(ECF_FRAMEWORK_FILE) . '/assets/layrix-icon.svg';
+        $svg_raw  = file_exists($svg_path) ? file_get_contents($svg_path) : '';
+        $icon     = $svg_raw
+            ? 'data:image/svg+xml;base64,' . base64_encode($svg_raw)
+            : 'dashicons-admin-customizer';
+
+        add_menu_page('Layrix', 'Layrix', 'manage_options', 'ecf-framework', [$this, 'settings_page'], $icon, 58);
     }
 
     public function register() {
