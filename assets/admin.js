@@ -262,6 +262,21 @@ jQuery(function($){
     $field.find('[data-ecf-color-swatch]').css('background', value || fallback);
   }
 
+  function openGeneralColorPicker($field) {
+    if (!$field || !$field.length) return;
+    var input = $field.find('[data-ecf-color-native]').get(0);
+    if (!input) return;
+
+    syncGeneralColorField($field);
+
+    if (typeof input.showPicker === 'function') {
+      input.showPicker();
+      return;
+    }
+
+    input.click();
+  }
+
   function applyDisplayValueToRow($row) {
     var $display = $row.find('.ecf-color-value-display');
     var format = $row.find('.ecf-color-format-select').val() || 'hex';
@@ -386,9 +401,13 @@ jQuery(function($){
   });
 
   $(document).on('click', '[data-ecf-color-swatch]', function() {
-    var $field = $(this).closest('[data-ecf-general-field]');
-    syncGeneralColorField($field);
-    $field.find('[data-ecf-color-native]').trigger('click');
+    openGeneralColorPicker($(this).closest('[data-ecf-general-field]'));
+  });
+
+  $(document).on('keydown', '[data-ecf-color-swatch]', function(event) {
+    if (event.key !== 'Enter' && event.key !== ' ') return;
+    event.preventDefault();
+    openGeneralColorPicker($(this).closest('[data-ecf-general-field]'));
   });
 
   $(document).on('input change', '[data-ecf-color-native]', function() {
