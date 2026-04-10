@@ -3,327 +3,321 @@
 ## 0.3.0 (2026-04-10)
 
 ### Fix
-- Bumped the plugin version so WordPress can detect the latest GitHub release after the Layrix repository rename and recent updater metadata changes.
-- Plugin-Version angehoben, damit WordPress nach der Umbenennung des Layrix-Repositories und den aktuellen Updater-Metadaten wieder ein neues GitHub-Update erkennen kann.
-- Switched the WordPress admin menu to the bundled Layrix SVG icon and preserved its original appearance in the sidebar.
-- WordPress-Admin-Menü auf das gebündelte Layrix-SVG-Icon umgestellt und dessen originale Darstellung in der Sidebar erhalten.
-- Cleaned the POT generator metadata and excluded `.claude` worktrees from translation source references.
-- POT-Generator-Metadaten bereinigt und `.claude`-Worktrees aus den Übersetzungs-Quellreferenzen ausgeschlossen.
+- Version bump for GitHub update detection after the Layrix rename.
+- Plugin-Version für die GitHub-Update-Erkennung nach dem Layrix-Rename angehoben.
+- Admin menu switched to the bundled Layrix SVG icon.
+- Admin-Menü auf das gebündelte Layrix-SVG-Icon umgestellt.
+- POT metadata cleaned and `.claude` worktrees excluded from translation references.
+- POT-Metadaten bereinigt und `.claude`-Worktrees aus Übersetzungsreferenzen ausgeschlossen.
 
 ## 0.2.10 (2026-04-10)
 
 ### Fix
-- Stabilized admin autosave after successful REST saves by removing a broken browser-side follow-up call and hardening the autosave init flow.
-- Admin-Autosave nach erfolgreichen REST-Saves stabilisiert, indem ein fehlerhafter browserseitiger Folgeaufruf entfernt und die Autosave-Initialisierung robuster gemacht wurde.
-- Ensured font preset changes, typography scale updates, repeated step fields, and invalid-to-valid recovery states trigger and persist autosave correctly.
-- Sichergestellt, dass Schrift-Preset-Wechsel, Typografie-Skalierungsänderungen, wiederholte Step-Felder und Recoverys von ungültig zu gültig Autosave korrekt auslösen und persistieren.
-- Cleared frontend-relevant caches after REST saves so color and token changes become visible immediately.
-- Frontend-relevante Caches nach REST-Saves geleert, damit Farb- und Token-Änderungen sofort sichtbar werden.
-- Added a direct local-font import entry in the font-family UI and tightened language loading for interface switching.
-- Direkten Einstieg für den Import lokaler Schriften im Font-Family-UI ergänzt und das Sprachladen für die Interface-Umschaltung nachgeschärft.
+- Admin autosave stabilized after successful REST saves.
+- Admin-Autosave nach erfolgreichen REST-Saves stabilisiert.
+- Autosave support expanded for font presets, scale updates, repeated step fields, and recovery states.
+- Autosave-Support für Schrift-Presets, Skalierungsänderungen, wiederholte Step-Felder und Recovery-Zustände erweitert.
+- Frontend caches cleared after REST saves.
+- Frontend-Caches nach REST-Saves geleert.
+- Direct local-font import entry and tighter interface language loading.
+- Direkten Einstieg für lokale Schriftimporte ergänzt und das Interface-Sprachladen robuster gemacht.
 
 ### Test
-- Expanded and updated the remote Playwright coverage for autosave, import/export metadata, language switching, font flows, layout persistence, and current accordion/layout expectations.
-- Remote-Playwright-Abdeckung für Autosave, Import-/Export-Metadaten, Sprachumschaltung, Schrift-Flows, Layout-Persistenz und die aktuellen Accordion-/Layout-Erwartungen erweitert und aktualisiert.
-- Verified the full admin UI suite against the test site with `83 passed`, `2 skipped`, `0 failed`.
-- Komplette Admin-UI-Suite gegen die Testseite mit `83 bestanden`, `2 übersprungen`, `0 fehlgeschlagen` verifiziert.
+- Remote Playwright coverage expanded for autosave, import/export, language, font flows, and layout persistence.
+- Remote-Playwright-Abdeckung für Autosave, Import/Export, Sprache, Schrift-Flows und Layout-Persistenz erweitert.
+- Full admin UI suite verified: `83 passed`, `2 skipped`, `0 failed`.
+- Komplette Admin-UI-Suite verifiziert: `83 bestanden`, `2 übersprungen`, `0 fehlgeschlagen`.
 
 ## 0.2.8 (2026-04-09)
 
 ### Fix
-- Refined the admin UI layout, typography/font pickers, sidebar/topbar behavior, and website settings cards for a calmer and denser workflow.
-- Admin-UI-Layout, Typografie-/Schrift-Picker, Sidebar-/Topbar-Verhalten und Website-Einstellungskarten für einen ruhigeren und dichteren Workflow verfeinert.
-- Fixed spacing preview min/max ordering, typography sample rendering, secondary class-sync styling, and token truncation in the spacing panel.
-- Reihenfolge von Minimum/Maximum in der Abstände-Vorschau, Typografie-Beispielrendering, sekundäres Styling des Klassen-Sync-Buttons und Token-Kürzung im Abstände-Panel korrigiert.
-- Expanded German interface coverage for tooltips, help texts, and admin copy.
-- Deutsche Oberfläche für Tooltips, Hilfetexte und Admin-Texte weiter vervollständigt.
+- Admin UI layout, typography pickers, sidebar/topbar behavior, and settings cards refined.
+- Admin-UI-Layout, Typografie-Picker, Sidebar-/Topbar-Verhalten und Einstellungskarten verfeinert.
+- Spacing preview ordering, typography samples, secondary class-sync styling, and spacing token truncation fixed.
+- Reihenfolge der Abstände-Vorschau, Typografie-Beispiele, sekundäres Klassen-Sync-Styling und Token-Kürzung korrigiert.
+- German tooltips, help texts, and admin copy expanded.
+- Deutsche Tooltips, Hilfetexte und Admin-Texte erweitert.
 
 ### Test
-- Added and verified UI flows for spacing preview values, typography preview samples, closed font pickers, masonry card layout, and secondary class-sync styling.
-- UI-Flows für Abstände-Vorschauwerte, Typografie-Beispieltexte, geschlossene Schrift-Picker, Masonry-Kartenlayout und sekundäres Klassen-Sync-Styling ergänzt und verifiziert.
+- UI flows for spacing previews, typography samples, closed font pickers, masonry cards, and secondary class-sync styling added and verified.
+- UI-Flows für Abstände-Vorschauen, Typografie-Beispiele, geschlossene Schrift-Picker, Masonry-Karten und sekundäres Klassen-Sync-Styling ergänzt und verifiziert.
 
 ## 0.2.7 (2026-04-08)
 
 ### Fix
-- Removed the duplicated changelog content from the Help panel and kept Help as a clean entry point with a single changelog action.
-- Doppelten Changelog-Inhalt aus dem Hilfe-Bereich entfernt und Hilfe als sauberen Einstieg mit nur einer Changelog-Aktion belassen.
-- Added the missing German translation for the changelog action button.
-- Fehlende deutsche Übersetzung für den Changelog-Aktionsbutton ergänzt.
+- Duplicate changelog content removed from the Help panel.
+- Doppelten Changelog-Inhalt aus dem Hilfe-Bereich entfernt.
+- Missing German changelog action translation added.
+- Fehlende deutsche Übersetzung für die Changelog-Aktion ergänzt.
 
 ### Test
-- Added and verified a UI flow that ensures Help keeps changelog access without rendering a second visible changelog feed.
-- UI-Flow ergänzt und verifiziert, der sicherstellt, dass Hilfe den Changelog weiter öffnet, aber keine zweite sichtbare Changelog-Liste rendert.
+- UI flow added and verified for changelog access without duplicate Help rendering.
+- UI-Flow für Changelog-Zugriff ohne doppelte Help-Ausgabe ergänzt und verifiziert.
 
 ## 0.2.6 (2026-04-08)
 
 ### Fix
-- Made the ECF admin UI default to dark mode for installs without a saved mode and switched the current live setup back to dark mode.
-- ECF-Admin-UI für Installationen ohne gespeicherten Modus standardmäßig auf Dunkelmodus gesetzt und die aktuelle Live-Installation wieder auf Dunkelmodus umgestellt.
-- Fixed the debug history clear action by replacing the invalid nested form with a dedicated external submit target.
-- Debug-Verlauf-Leeren korrigiert, indem das ungültig verschachtelte Formular durch ein eigenes externes Submit-Ziel ersetzt wurde.
-- Hardened plugin textdomain loading so language switching is applied more deterministically.
-- Laden der Plugin-Textdomain robuster gemacht, damit die Sprachumschaltung deterministischer greift.
-- Stabilized the global-search delete flow after sync by reopening the plugin state before search deletion.
-- Global-Search-Delete-Flow nach dem Sync stabilisiert, indem vor dem Löschen der Plugin-Zustand sauber neu geöffnet wird.
+- Default dark mode restored for installs without a saved mode.
+- Standard-Dunkelmodus für Installationen ohne gespeicherten Modus wiederhergestellt.
+- Debug history clear action fixed.
+- Aktion zum Leeren des Debug-Verlaufs korrigiert.
+- Plugin textdomain loading hardened for language switching.
+- Laden der Plugin-Textdomain für die Sprachumschaltung robuster gemacht.
+- Global search delete flow stabilized after sync.
+- Global-Search-Delete-Flow nach dem Sync stabilisiert.
 
 ### Test
-- Verified the full live UI suite against the production site with `33 passed`, `1 skipped`, `0 failed`.
-- Komplette Live-UI-Suite gegen die Produktivseite mit `33 bestanden`, `1 übersprungen`, `0 fehlgeschlagen` verifiziert.
+- Full live UI suite verified: `33 passed`, `1 skipped`, `0 failed`.
+- Komplette Live-UI-Suite verifiziert: `33 bestanden`, `1 übersprungen`, `0 fehlgeschlagen`.
 
 ## 0.2.5 (2026-04-08)
 
 ### Fix
-- Resolved `--ecf-base-font-family` to a real body font stack and aligned the body font handling with the selected base font family.
-- `--ecf-base-font-family` auf einen echten Body-Font-Stack aufgelöst und die Body-Schrift sauber an die ausgewählte Basis-Schriftfamilie gekoppelt.
-- Normalized token-style names in the UI so new token keys, local font keys, and custom starter names no longer keep spaces.
-- Token-artige Namen im UI normalisiert, sodass neue Token-Keys, Local-Font-Keys und Custom-Starter-Namen keine Leerzeichen mehr behalten.
-- Hardened foreign-variable editing with label normalization, visible error feedback, and better exception handling.
-- Bearbeitung fremder Variablen mit Label-Normalisierung, sichtbaren Fehlermeldungen und robusterem Exception-Handling gehärtet.
+- `--ecf-base-font-family` resolved to a real body font stack.
+- `--ecf-base-font-family` auf einen echten Body-Font-Stack aufgelöst.
+- Token-style names normalized in the UI.
+- Token-artige Namen im UI normalisiert.
+- Foreign-variable editing hardened with better validation and feedback.
+- Bearbeitung fremder Variablen mit besserer Validierung und Rückmeldung gehärtet.
 
 ### Test
-- Added live UI flows for base font family resolution and token-name normalization and verified them against the production site.
-- Live-UI-Flows für die Auflösung der Basis-Schriftfamilie und die Normalisierung von Token-Namen ergänzt und gegen die Produktivseite verifiziert.
+- Live UI flows for base font family resolution and token-name normalization added and verified.
+- Live-UI-Flows für Basis-Schriftfamilie und Token-Normalisierung ergänzt und verifiziert.
 
 ## 0.2.4 (2026-04-07)
 
 ### Fix
-- Removed remaining user-facing hardcoded messages from the admin JS flow.
-- Verbleibende sichtbare Hardcode-Meldungen aus dem Admin-JS-Flow entfernt.
-- Moved local-font placeholders, search-edit helper text, and preview labels fully into the translation pipeline.
-- Platzhalter für lokale Schriften, Search-Edit-Hilfetexte und Preview-Labels vollständig in die Übersetzungspipeline verschoben.
+- Remaining hardcoded admin JS messages removed.
+- Verbleibende Hardcode-Meldungen im Admin-JS entfernt.
+- Local-font placeholders, helper text, and preview labels moved into translations.
+- Platzhalter, Hilfetexte und Preview-Labels in die Übersetzungen verschoben.
 
 ## 0.2.3 (2026-04-07)
 
 ### Fix
-- Extended autosave to more dynamic UI actions like custom starter rows and type/spacing step buttons.
-- Autosave auf weitere dynamische UI-Aktionen wie Custom-Starter-Reihen und Typo-/Spacing-Step-Buttons erweitert.
-- Added a direct token hint below the base body text size field.
-- Direkten Token-Hinweis unter dem Feld für die Basis-Schriftgröße von Fließtext ergänzt.
+- Autosave extended to more dynamic UI actions.
+- Autosave auf weitere dynamische UI-Aktionen erweitert.
+- Direct token hint added below the base body text size field.
+- Direkten Token-Hinweis unter dem Feld für die Basis-Schriftgröße ergänzt.
 
 ## 0.2.2 (2026-04-07)
 
 ### Fix
-- Fixed the local font add flow so it opens and edits the correct Typography font section.
-- Flow für lokale Schriften korrigiert, sodass der richtige Typography-Bereich geöffnet und bearbeitet wird.
-- Fixed narrow layout issues in the local font file UI and the Export / Import card.
-- Schmale Layout-Probleme in der UI für lokale Schriftdateien und in der Export-/Import-Karte behoben.
+- Local font add flow fixed for the correct Typography section.
+- Flow für lokale Schriften für den richtigen Typography-Bereich korrigiert.
+- Narrow layout issues fixed in local font UI and Export / Import card.
+- Schmale Layout-Probleme in lokaler Schrift-UI und Export-/Import-Karte behoben.
 
 ## 0.2.1 (2026-04-07)
 
 ### UX
-- Reworked favorites markers to a calmer single-heart state with clearer status feedback.
-- Favoriten-Markierung auf eine ruhigere Ein-Herz-Lösung mit klarerem Status umgestellt.
-- Made the Favorites tab icon consistent with the rest of the favorites flow.
-- Favoriten-Tab-Icon wieder konsistent zur restlichen Favoritenlogik gemacht.
-- Switched the default base body text size to 16px for easier understanding.
-- Standardwert der Basis-Schriftgröße für Fließtext auf 16px umgestellt.
+- Favorites markers simplified to a calmer single-heart state.
+- Favoriten-Markierung auf eine ruhigere Ein-Herz-Lösung vereinfacht.
+- Favorites tab icon aligned with the rest of the flow.
+- Favoriten-Tab-Icon an die restliche Logik angepasst.
+- Default base body text size set to 16px.
+- Standardwert der Basis-Schriftgröße auf 16px gesetzt.
 
 ## 0.2.0 (2026-04-06)
 
 ### Change
-- Split updater, Elementor status, changelog, and general admin helpers into separate modules.
-- Updater, Elementor-Status, Changelog und allgemeine Admin-Helfer in eigene Module aufgeteilt.
-- Reduced the size of the main plugin file without changing the visible feature set.
-- Hauptdatei des Plugins verkleinert, ohne den sichtbaren Funktionsumfang zu ändern.
+- Updater, Elementor status, changelog, and admin helpers split into modules.
+- Updater, Elementor-Status, Changelog und Admin-Helfer in Module aufgeteilt.
+- Main plugin file reduced without feature loss.
+- Hauptdatei des Plugins ohne Funktionsverlust verkleinert.
 
 ## 0.1.20 (2026-04-06)
 
 ### UX
-- Split General Settings into System, Layout, and Behavior tabs.
+- General Settings split into System, Layout, and Behavior tabs.
 - Allgemeine Einstellungen in System-, Layout- und Verhalten-Tabs aufgeteilt.
-- Synced Elementor Boxed Width as token and helper class.
+- Elementor Boxed Width synced as token and helper class.
 - Elementor Boxed Width als Token und Helferklasse in den Sync aufgenommen.
 
 ## 0.1.19 (2026-04-06)
 
 ### Fix
-- Stopped class sync from overwriting existing Elementor global class values.
-- Klassen-Sync überschreibt keine bestehenden Werte globaler Elementor-Klassen mehr.
-- Existing class styles stay intact while missing classes are still added.
+- Class sync no longer overwrites existing Elementor global class values.
+- Klassen-Sync überschreibt keine bestehenden globalen Elementor-Klassenwerte mehr.
+- Existing class styles preserved while missing classes are still added.
 - Bestehende Klassenstile bleiben erhalten, fehlende Klassen werden weiter ergänzt.
 
 ## 0.1.18 (2026-04-06)
 
 ### Fix
-- Hardened the Elementor sync flow.
+- Elementor sync flow hardened.
 - Elementor-Sync robuster gemacht.
-- Improved admin-post handling.
+- Admin-post handling improved.
 - admin-post-Handling verbessert.
-- Stabilized previews for spacing, typography, and radius variables.
-- Vorschau für Abstands-, Typografie- und Radius-Variablen stabilisiert.
+- Spacing, typography, and radius previews stabilized.
+- Abstands-, Typografie- und Radius-Vorschauen stabilisiert.
 
 ## 0.1.17 (2026-04-06)
 
 ### UX
-- Refined the class library flow.
+- Class library flow refined.
 - Klassenbibliothek klarer strukturiert.
-- Added a guided BEM generator.
+- Guided BEM generator added.
 - Geführten BEM-Generator ergänzt.
-- Improved filters and compact helper states.
+- Filters and compact helper states improved.
 - Filter und kompakte Hilfszustände verbessert.
 
 ## 0.1.16 (2026-04-05)
 
 ### Fix
-- Added a canonical plugin-folder fallback for GitHub updates.
+- Canonical plugin-folder fallback added for GitHub updates.
 - Kanonischen Fallback für den Plugin-Ordner bei GitHub-Updates ergänzt.
-- Keeps the installer on `Layrix`.
-- Hält den Installer bei `Layrix`.
+- Installer kept on `Layrix`.
+- Installer bei `Layrix` gehalten.
 
 ## 0.1.15 (2026-04-05)
 
 ### Fix
-- Normalized the GitHub update install path.
+- GitHub update install path normalized.
 - Installationspfad für GitHub-Updates normalisiert.
-- Keeps the plugin folder as `Layrix` after updates.
-- Behält nach Updates den Plugin-Ordner `Layrix` nach Updates.
+- Plugin folder kept as `Layrix` after updates.
+- Plugin-Ordner nach Updates auf `Layrix` gehalten.
 
 ## 0.1.14 (2026-04-05)
 
 ### Feature
-- Added separate Elementor class overviews for ECF and foreign classes.
+- Separate Elementor class overviews added for ECF and foreign classes.
 - Eigene Klassenansichten für ECF- und fremde Elementor-Klassen ergänzt.
-- Added live counters for variables and classes.
+- Live counters added for variables and classes.
 - Live-Zähler für Variablen und Klassen ergänzt.
 
 ### UX
-- Renamed the utilities navigation label to classes.
+- Utilities navigation label renamed to classes.
 - Navigationspunkt Hilfsklassen in Klassen umbenannt.
-- Removed the generated example class block.
+- Generated example class block removed.
 - Generierten Beispielblock entfernt.
 
 ## 0.1.13 (2026-04-04)
 
 ### Fix
-- Guarded the plugin bootstrap against duplicate class loading.
+- Plugin bootstrap guarded against duplicate class loading.
 - Plugin-Bootstrap gegen doppelte Klassendeklaration abgesichert.
-- Prevents fatal activation errors after updates.
-- Verhindert fatale Aktivierungsfehler nach Updates.
+- Fatal activation errors after updates prevented.
+- Fatale Aktivierungsfehler nach Updates verhindert.
 
 ## 0.1.12 (2026-04-04)
 
 ### Fix
-- Remembers the active plugin state before GitHub updates.
-- Merkt sich vor GitHub-Updates den aktiven Plugin-Status.
-- Reactivates the plugin automatically after the update.
-- Aktiviert das Plugin nach dem Update automatisch wieder.
+- Active plugin state remembered before GitHub updates.
+- Aktiven Plugin-Status vor GitHub-Updates gemerkt.
+- Plugin reactivated automatically after updates.
+- Plugin nach Updates automatisch reaktiviert.
 
 ## 0.1.11 (2026-04-04)
 
 ### Change
-- Moved Root Font Size out of the Typography panel.
+- Root Font Size moved out of the Typography panel.
 - Root Font Size aus der Typografie herausgezogen.
-- Placed it in a more general settings area.
-- In einen allgemeineren Einstellungsbereich verschoben.
+- Root Font Size in a more general settings area placed.
+- Root Font Size in einen allgemeineren Einstellungsbereich verschoben.
 
 ## 0.1.10 (2026-04-04)
 
 ### Change
-- Unified output around `--ecf-*` variables and `.ecf-*` classes.
+- Output unified around `--ecf-*` variables and `.ecf-*` classes.
 - Ausgabe auf `--ecf-*`-Variablen und `.ecf-*`-Klassen vereinheitlicht.
-- Kept legacy `.cf-*` aliases for compatibility.
+- Legacy `.cf-*` aliases kept for compatibility.
 - Alte `.cf-*`-Aliase für Kompatibilität beibehalten.
-- Switched typography, spacing, and radius tokens to rem-based output.
-- Typografie-, Abstands- und Radius-Tokens auf rem-basierte Ausgabe umgestellt.
+- Typography, spacing, and radius tokens switched to rem output.
+- Typografie-, Abstands- und Radius-Tokens auf rem-Ausgabe umgestellt.
 
 ## 0.1.9 (2026-04-04)
 
 ### UX
 - Typography preview now shows real min/max font sizes.
 - Typografie-Vorschau zeigt jetzt echte Min-/Max-Schriftgrößen.
-- Replaced the raw clamp readout on the right side.
+- Raw clamp readout on the right replaced.
 - Rohe Clamp-Anzeige auf der rechten Seite ersetzt.
 
 ## 0.1.8 (2026-04-04)
 
 ### Fix
-- Improved Elementor sync and cleanup handling.
+- Elementor sync and cleanup handling improved.
 - Elementor-Sync und Cleanup robuster gemacht.
-- Added clearer notices and automatic cache clearing.
+- Clearer notices and automatic cache clearing added.
 - Klarere Meldungen und automatische Cache-Leerung ergänzt.
 
 ### Feature
-- Added type tabs for ECF and foreign Elementor variables.
+- Type tabs added for ECF and foreign Elementor variables.
 - Typ-Tabs für ECF- und fremde Elementor-Variablen ergänzt.
-- Makes large variable lists easier to scan.
-- Macht große Variablenlisten leichter scanbar.
+- Large variable lists made easier to scan.
+- Große Variablenlisten leichter scanbar gemacht.
 
 ## 0.1.7 (2026-04-04)
 
 ### Feature
-- Added selectable color formats for HEX, HEXA, RGB, RGBA, HSL, and HSLA.
+- Selectable color formats added for HEX, HEXA, RGB, RGBA, HSL, and HSLA.
 - Wählbare Farbformate für HEX, HEXA, RGB, RGBA, HSL und HSLA ergänzt.
-- Added GitHub-based plugin update checks with native WordPress support.
+- GitHub-based plugin update checks added with native WordPress support.
 - GitHub-basierte Plugin-Update-Prüfung mit nativer WordPress-Unterstützung ergänzt.
 
 ### UX
 - Color value field now updates the real color live.
 - Farbwert-Feld aktualisiert die echte Farbe jetzt live.
-- Replaced helper badges with direct hover tooltips.
+- Helper badges replaced with direct hover tooltips.
 - Helper-Badges durch direkte Hover-Tooltips ersetzt.
-- Cleaned up the admin header alignment.
+- Admin header alignment cleaned up.
 - Ausrichtung des Admin-Headers bereinigt.
-- Expanded the changelog view with version and date history.
+- Changelog view expanded with version and date history.
 - Changelog-Ansicht um Versions- und Datumsverlauf erweitert.
 
 ## 0.1.6 (2026-04-03)
 
 ### Feature
-- Added REST endpoints for live ECF settings access and Elementor sync.
-- REST-Endpunkte für den Live-Zugriff auf ECF-Einstellungen und den Elementor-Sync hinzugefügt.
-- Added live typography preview inside the Typography tab.
+- REST endpoints added for live ECF settings access and Elementor sync.
+- REST-Endpunkte für Live-Zugriff auf ECF-Einstellungen und Elementor-Sync hinzugefügt.
+- Live typography preview added inside the Typography tab.
 - Live-Typografie-Vorschau im Typography-Tab hinzugefügt.
-- Added preset dropdown values for type scale ratios.
-- Vordefinierte Dropdown-Werte für Skalierungsverhältnisse der Schriftskala hinzugefügt.
-- Added local font file management via the WordPress media library.
+- Preset dropdown values added for type scale ratios.
+- Vordefinierte Dropdown-Werte für Skalierungsverhältnisse hinzugefügt.
+- Local font file management added via the WordPress media library.
 - Verwaltung lokaler Schriftdateien über die WordPress-Mediathek hinzugefügt.
-- Added automatic `@font-face` output for locally stored font files.
-- Automatische `@font-face`-Ausgabe für lokal gespeicherte Schriftdateien hinzugefügt.
+- Automatic `@font-face` output added for local font files.
+- Automatische `@font-face`-Ausgabe für lokale Schriftdateien hinzugefügt.
 
 ### UX
-- Reworked the Typography tab layout to include a large visual preview panel.
-- Das Layout des Typography-Tabs für ein großes visuelles Vorschau-Panel überarbeitet.
-- Reworked the Shadows tab to mirror the Typography UI with a focused live preview and selectable shadow rows.
-- Den Schatten-Tab so überarbeitet, dass er die Typography-UI mit fokussierter Live-Vorschau und auswählbaren Schatten-Zeilen spiegelt.
-- Narrowed the shadow token name column so shadow values stay visible in tighter admin widths.
-- Die Namensspalte der Schatten-Tokens verschmälert, damit die Schattenwerte auch bei engerer Admin-Breite sichtbar bleiben.
-- Rebalanced the shadow preview sizing so the main preview is less oversized and the row previews are easier to compare.
-- Die Größenverhältnisse der Schattenvorschau angepasst, damit die Hauptvorschau weniger übergroß wirkt und die Zeilenvorschauen besser vergleichbar sind.
-- Added visual typography utility showcases for line heights, text modifiers, font weights, and text alignment inside the Typography tab.
-- Visuelle Typography-Utility-Ansichten für Zeilenhöhen, Text-Modifikatoren, Schriftstärken und Textausrichtung im Typography-Tab hinzugefügt.
-- Updated the utility table label to show `Selector` in English and `Klassenname` in German.
-- Die Tabellenüberschrift der Utility-Ansichten so angepasst, dass auf Englisch `Selector` und auf Deutsch `Klassenname` angezeigt wird.
-- Updated the shared token table header so standard lists like Colors also use `Klassenname` in German.
-- Die gemeinsame Tabellenüberschrift der Token-Listen angepasst, sodass Standardlisten wie Farben auf Deutsch ebenfalls `Klassenname` verwenden.
-- Standardized visible `Name` labels and placeholders to `Class Name` / `Klassenname` across the plugin tables.
-- Sichtbare `Name`-Beschriftungen und Platzhalter in den Plugin-Tabellen durchgängig auf `Class Name` / `Klassenname` vereinheitlicht.
-- Renamed the plugin branding to `ECF Elementor v4 Core Framework` across the main visible backend locations.
-- Das Plugin-Branding an den wichtigsten sichtbaren Stellen im Backend auf `ECF Elementor v4 Core Framework` umbenannt.
-- Reduced the oversized main shadow preview card so it matches the smaller shadow preview boxes more closely.
-- Die zu große Haupt-Schattenvorschau verkleinert, damit sie stärker zu den kleineren Schatten-Preview-Boxen passt.
-- Matched the main shadow preview box to the exact dimensions of the smaller shadow preview tiles.
-- Die Haupt-Schattenvorschau auf exakt dieselben Maße wie die kleineren Schatten-Preview-Kacheln gebracht.
-- Replaced the indirect typography scale factor control with direct `Min Font Size` and `Max Font Size` inputs.
-- Die indirekte Steuerung per Skalierungsfaktor in der Typografie durch direkte Eingaben für `Min Font Size` und `Max Font Size` ersetzt.
-- Added separate `Min Scale Ratio` and `Max Scale Ratio` controls so the minimum and maximum type scales can be tuned independently.
-- Separate Eingaben für `Min Scale Ratio` und `Max Scale Ratio` ergänzt, damit sich minimale und maximale Schriftskala unabhängig voneinander steuern lassen.
-- Set the default typography base values to `16` for minimum and `18` for maximum font size.
-- Die Standardwerte der Typografie-Basis auf `16` für die minimale und `18` für die maximale Schriftgröße gesetzt.
-- Added device icons to the typography preview so `Minimum` shows a phone icon and `Maximum` shows a desktop icon.
-- Der Typografie-Vorschau Geräte-Icons hinzugefügt, sodass `Minimum` ein Handy-Icon und `Maximum` ein Desktop-Icon zeigt.
-- Extended the minimum/maximum device icons to the remaining typography controls and state labels for consistent UI.
-- Die Geräte-Icons für Minimum und Maximum auf die übrigen Typografie-Steuerelemente und Status-Labels erweitert, damit die UI konsistent bleibt.
-- Restricted local font usage to files hosted on the same site inside the WordPress uploads directory.
-- Die Nutzung lokaler Schriften auf Dateien derselben Website im WordPress-Uploads-Ordner beschränkt.
-- Hardened sanitization for CSS-related settings such as font stacks, sizes, shadows, weights, and tracking values.
-- Die Sanitization für CSS-relevante Einstellungen wie Font-Stacks, Größen, Schatten, Gewichte und Tracking-Werte gehärtet.
+- Typography tab layout reworked with a large preview panel.
+- Typography-Tab mit großem Vorschau-Panel überarbeitet.
+- Shadows tab aligned with the Typography UI.
+- Schatten-Tab an die Typography-UI angeglichen.
+- Shadow token column narrowed for tighter admin widths.
+- Namensspalte der Schatten-Tokens für engere Admin-Breiten verschmälert.
+- Shadow preview sizing rebalanced.
+- Größenverhältnisse der Schattenvorschau angepasst.
+- Visual typography utility showcases added.
+- Visuelle Typography-Utility-Ansichten ergänzt.
+- Utility and token table labels standardized.
+- Tabellenlabels für Utilities und Tokens vereinheitlicht.
+- Visible `Name` labels and placeholders standardized to `Class Name` / `Klassenname`.
+- Sichtbare `Name`-Labels und Platzhalter auf `Class Name` / `Klassenname` vereinheitlicht.
+- Backend branding renamed to `ECF Elementor v4 Core Framework`.
+- Backend-Branding auf `ECF Elementor v4 Core Framework` umbenannt.
+- Main shadow preview card reduced and matched to smaller tiles.
+- Haupt-Schattenvorschau verkleinert und an kleinere Kacheln angeglichen.
+- Indirect type scale factor controls replaced with direct min/max font size inputs.
+- Indirekte Steuerung per Skalierungsfaktor durch direkte Min/Max-Schriftgrößen ersetzt.
+- Separate min/max scale ratio controls added.
+- Separate Min/Max-Skalierungsverhältnisse ergänzt.
+- Default typography base values set to `16` and `18`.
+- Standardwerte der Typografie-Basis auf `16` und `18` gesetzt.
+- Device icons added and extended across typography previews and controls.
+- Geräte-Icons in Typografie-Vorschauen und Steuerelementen ergänzt und erweitert.
+- Local font usage restricted to same-site uploads files.
+- Nutzung lokaler Schriften auf Dateien aus demselben Uploads-Ordner beschränkt.
+- CSS-related sanitization hardened.
+- Sanitization für CSS-relevante Einstellungen gehärtet.
 
 ### Security
-- Added stricter security checks for framework management actions and REST access.
-- Strengere Sicherheitsprüfungen für Framework-Aktionen und REST-Zugriffe hinzugefügt.
-- Limited sensitive plugin actions to users with both `manage_options` and `activate_plugins`.
+- Stricter security checks added for framework actions and REST access.
+- Strengere Sicherheitsprüfungen für Framework-Aktionen und REST-Zugriffe ergänzt.
+- Sensitive plugin actions limited to users with `manage_options` and `activate_plugins`.
 - Sensible Plugin-Aktionen auf Nutzer mit `manage_options` und `activate_plugins` beschränkt.
-- Scoped font MIME allowances to authorized admin usage.
+- Font MIME allowances scoped to authorized admin usage.
 - Freigaben für Font-MIME-Typen auf autorisierte Admin-Nutzung begrenzt.
-- Prevented arbitrary external font URLs from being stored as local font sources.
-- Verhindert, dass beliebige externe Font-URLs als lokale Schriftquellen gespeichert werden.
+- Arbitrary external font URLs blocked from local font sources.
+- Beliebige externe Font-URLs als lokale Schriftquellen blockiert.
