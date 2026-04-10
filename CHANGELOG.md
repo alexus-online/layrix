@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.2.11 (2026-04-10)
+
+### Fix
+- Bumped the plugin version so WordPress can detect the latest GitHub release after the Layrix repository rename and recent updater metadata changes.
+- Plugin-Version angehoben, damit WordPress nach der Umbenennung des Layrix-Repositories und den aktuellen Updater-Metadaten wieder ein neues GitHub-Update erkennen kann.
+- Switched the WordPress admin menu to the bundled Layrix SVG icon and preserved its original appearance in the sidebar.
+- WordPress-Admin-Menü auf das gebündelte Layrix-SVG-Icon umgestellt und dessen originale Darstellung in der Sidebar erhalten.
+- Cleaned the POT generator metadata and excluded `.claude` worktrees from translation source references.
+- POT-Generator-Metadaten bereinigt und `.claude`-Worktrees aus den Übersetzungs-Quellreferenzen ausgeschlossen.
+
 ## 0.2.10 (2026-04-10)
 
 ### Fix

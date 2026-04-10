@@ -114,7 +114,7 @@ test.describe('ECF extended admin UI flows', () => {
     const fileInput = page.locator('[data-ecf-import-file]').first();
     const payload = {
       meta: {
-        plugin_version: '0.2.10',
+        plugin_version: '0.2.11',
         schema_version: 1,
         exported_at: '2026-04-07 12:00:00',
       },
@@ -130,7 +130,7 @@ test.describe('ECF extended admin UI flows', () => {
     await expect(preview).toBeVisible();
     await expect(page.locator('[data-ecf-import-preview-title]')).toContainText(/Import/i);
     await expect(page.locator('[data-ecf-import-preview-meta]')).toContainText('ecf-ui-preview.json');
-    await expect(page.locator('[data-ecf-import-preview-meta]')).toContainText('0.2.10');
+    await expect(page.locator('[data-ecf-import-preview-meta]')).toContainText('0.2.11');
   });
 
   test('export download returns a valid JSON payload with metadata', async ({ page }) => {
@@ -160,7 +160,7 @@ test.describe('ECF extended admin UI flows', () => {
     const importPayload = {
       meta: {
         plugin: 'Layrix',
-        plugin_version: '0.2.10',
+        plugin_version: '0.2.11',
         schema_version: 1,
         exported_at: '2026-04-08T12:00:00Z',
       },
