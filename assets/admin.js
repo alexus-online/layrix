@@ -1270,6 +1270,17 @@ jQuery(function($){
     return previewFont || 'var(--ecf-base-body-font-family, var(--ecf-base-font-family, sans-serif))';
   }
 
+  function getPreviewWeight() {
+    var $field = $('[data-ecf-general-field="base_body_font_weight"]').first();
+    if ($field.length) {
+      var value = String($field.find('select').first().val() || '').trim();
+      if (value) {
+        return value;
+      }
+    }
+    return '400';
+  }
+
   function renderTypePreview() {
     var $preview = $('[data-ecf-type-scale-preview]');
     if (!$preview.length) return;
@@ -1338,6 +1349,7 @@ jQuery(function($){
     var activePreviewText = activeItem ? getTypePreviewText(activeItem.token || activeItem.step, $preview) : '';
 
     $preview.css('--ecf-preview-font', getPreviewFont());
+    $preview.css('--ecf-preview-weight', getPreviewWeight());
     $preview.attr('data-active-step', activeStep);
     $preview.attr('data-preview-view', viewMode);
     $preview.find('[data-ecf-type-scale-preview-list]').html(html);
@@ -3403,6 +3415,10 @@ jQuery(function($){
   });
 
   $(document).on('input change', '[data-ecf-font-family-preset-input][data-ecf-font-family-field="base_font_family"], [data-ecf-font-family-custom][data-ecf-font-family-field="base_font_family"]', function() {
+    renderTypePreview();
+  });
+
+  $(document).on('change', '[name="ecf_framework_v50[base_body_font_weight]"]', function() {
     renderTypePreview();
   });
 

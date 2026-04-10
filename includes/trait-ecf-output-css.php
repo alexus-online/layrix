@@ -62,6 +62,10 @@ trait ECF_Framework_Output_CSS_Trait {
         if ($this->should_upgrade_base_body_text_size($base_body_text_size, $settings)) {
             $base_body_text_size = $this->derived_base_body_text_size($settings);
         }
+        $base_body_font_weight = trim((string) ($settings['base_body_font_weight'] ?? ''));
+        if ($base_body_font_weight === '') {
+            $base_body_font_weight = $this->typography_row_value('weights', 'normal', '400');
+        }
         echo "<style id='ecf-framework-v010'>";
         echo ":root{font-size:" . esc_attr($root_font_css) . ";";
         foreach ($settings['colors'] as $row) {
@@ -101,6 +105,7 @@ trait ECF_Framework_Output_CSS_Trait {
         echo "--ecf-base-body-font-family:" . $this->css_font_value_for_output($resolved_base_font_family) . ";";
         echo "--ecf-heading-font-family:" . $this->css_font_value_for_output($resolved_heading_font_family) . ";";
         echo "--ecf-base-body-text-size:" . esc_attr($base_body_text_size) . ";";
+        echo "--ecf-base-body-font-weight:" . esc_attr($base_body_font_weight) . ";";
         foreach ($settings['typography']['fonts'] as $row) {
             $name = sanitize_key($row['name']);
             $value = $this->css_font_value_for_output($row['value'] ?? '');
@@ -137,7 +142,7 @@ trait ECF_Framework_Output_CSS_Trait {
         if ($settings['enabled_components']['layout'] === '1') {
             echo ".ecf-container-boxed,.cf-container-boxed{width:min(100% - 2rem, var(--ecf-container-boxed));margin-inline:auto;}";
         }
-        echo "body{font-family:var(--ecf-base-body-font-family,var(--ecf-base-font-family));font-size:var(--ecf-base-body-text-size);color:var(--ecf-base-text-color);background-color:var(--ecf-base-background-color);}";
+        echo "body{font-family:var(--ecf-base-body-font-family,var(--ecf-base-font-family));font-size:var(--ecf-base-body-text-size);font-weight:var(--ecf-base-body-font-weight);color:var(--ecf-base-text-color);background-color:var(--ecf-base-background-color);}";
         echo "h1,h2,h3,h4,h5,h6{font-family:var(--ecf-heading-font-family,var(--ecf-font-primary));}";
         echo "a{color:var(--ecf-link-color);}";
         echo ":focus-visible{outline:var(--ecf-focus-outline-width) solid var(--ecf-focus-color);outline-offset:var(--ecf-focus-outline-offset);}";

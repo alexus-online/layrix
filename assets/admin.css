@@ -1890,6 +1890,7 @@
 }
 .ecf-typography-preview-card {
   --ecf-preview-font: var(--ecf-base-body-font-family, var(--ecf-base-font-family, sans-serif));
+  --ecf-preview-weight: var(--ecf-base-body-font-weight, 400);
   container-type: inline-size;
   min-height: 100%;
   padding: 0;
@@ -2002,6 +2003,7 @@
 .ecf-typography-focus__word {
   grid-area: word;
   font-family: var(--ecf-preview-font);
+  font-weight: var(--ecf-preview-weight);
   font-size: 30px;
   line-height: .98;
   letter-spacing: -.04em;
@@ -2255,13 +2257,10 @@
 }
 .ecf-type-row__sample-line strong {
   font-family: var(--ecf-preview-font);
+  font-weight: var(--ecf-preview-weight);
   line-height: .95;
   letter-spacing: -.04em;
   color: #fff;
-  font-weight: 600;
-}
-.ecf-type-row__sample-line--max strong {
-  font-weight: 700;
 }
 .ecf-type-row__sample-line span {
   display: inline-flex;

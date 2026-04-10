@@ -16,6 +16,7 @@ trait ECF_Framework_Admin_General_Trait {
             'base_font_family',
             'heading_font_family',
             'base_body_text_size',
+            'base_body_font_weight',
             'base_text_color',
             'base_background_color',
             'link_color',
@@ -37,6 +38,7 @@ trait ECF_Framework_Admin_General_Trait {
             'base_font_family' => '1',
             'heading_font_family' => '1',
             'base_body_text_size' => '1',
+            'base_body_font_weight' => '1',
             'base_text_color' => '1',
             'github_update_checks_enabled' => '1',
             'show_elementor_status_cards' => '1',
@@ -150,6 +152,12 @@ trait ECF_Framework_Admin_General_Trait {
                 'title' => __('Base Body Text Size', 'ecf-framework'),
                 'value' => (string) ($settings['base_body_text_size'] ?? '16px'),
             ],
+            'base_body_font_weight' => [
+                'group' => 'website',
+                'tab' => 'typography',
+                'title' => __('Base Body Font Weight', 'ecf-framework'),
+                'value' => (string) ($settings['base_body_font_weight'] ?? '400'),
+            ],
             'base_text_color' => [
                 'group' => 'website',
                 'tab' => 'colors',
@@ -205,6 +213,7 @@ trait ECF_Framework_Admin_General_Trait {
         return [
             'root_font_size' => 10,
             'base_body_text_size' => 20,
+            'base_body_font_weight' => 25,
             'base_font_family' => 30,
             'base_text_color' => 40,
             'base_background_color' => 50,
@@ -620,6 +629,9 @@ trait ECF_Framework_Admin_General_Trait {
             case 'base_body_text_size':
                 $this->render_base_body_text_size_field($settings);
                 break;
+            case 'base_body_font_weight':
+                $this->render_base_body_font_weight_field($settings);
+                break;
             case 'base_text_color':
             case 'base_background_color':
             case 'link_color':
@@ -1016,6 +1028,57 @@ trait ECF_Framework_Admin_General_Trait {
             <p class="ecf-inline-warning"<?php echo $warning_message === '' ? ' hidden' : ''; ?> data-ecf-body-size-warning>
                 <?php echo esc_html($warning_message); ?>
             </p>
+        </label>
+        <?php
+    }
+
+    private function base_body_font_weight_options($settings) {
+        $options = [];
+
+        foreach ((array) ($settings['typography']['weights'] ?? []) as $row) {
+            $name = sanitize_key($row['name'] ?? '');
+            $value = trim((string) ($row['value'] ?? ''));
+            if ($name === '' || $value === '') {
+                continue;
+            }
+            $options[$value] = [
+                'label' => sprintf('%s (%s)', $name, $value),
+                'value' => $value,
+            ];
+        }
+
+        if (empty($options)) {
+            $options['400'] = ['label' => 'normal (400)', 'value' => '400'];
+        }
+
+        return $options;
+    }
+
+    private function render_base_body_font_weight_field($settings) {
+        $current = trim((string) ($settings['base_body_font_weight'] ?? ''));
+        if ($current === '') {
+            $current = $this->typography_row_value('weights', 'normal', '400');
+        }
+        $options = $this->base_body_font_weight_options($settings);
+        if (!isset($options[$current])) {
+            $options[$current] = [
+                'label' => $current,
+                'value' => $current,
+            ];
+        }
+        ?>
+        <label data-ecf-general-field="base_body_font_weight" class="ecf-general-field ecf-general-field--body-weight" data-ecf-body-weight-field>
+            <span class="ecf-general-label-with-favorite">
+                <?php echo $this->general_setting_label(__('Base Body Font Weight', 'ecf-framework'), 'Default font weight for normal paragraph text and flowing content across the site.', 'editor-bold'); ?>
+                <?php $this->render_general_setting_favorite_toggle($settings, 'base_body_font_weight'); ?>
+            </span>
+            <select name="<?php echo esc_attr($this->option_name); ?>[base_body_font_weight]" class="ecf-general-favorite-input">
+                <?php foreach ($options as $option): ?>
+                    <option value="<?php echo esc_attr($option['value']); ?>" <?php selected($current, $option['value']); ?>>
+                        <?php echo esc_html($option['label']); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
         </label>
         <?php
     }

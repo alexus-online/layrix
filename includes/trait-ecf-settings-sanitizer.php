@@ -110,6 +110,8 @@ trait ECF_Framework_Settings_Sanitizer_Trait {
             $defaults['base_body_text_size'],
             $output
         );
+        $base_body_font_weight = $this->sanitize_css_number_or_size($input['base_body_font_weight'] ?? $defaults['base_body_font_weight']);
+        $output['base_body_font_weight'] = $base_body_font_weight !== '' ? $base_body_font_weight : $this->typography_row_value('weights', 'normal', '400');
         $base_text_color = $this->sanitize_css_color_value($input['base_text_color'] ?? $defaults['base_text_color']);
         $base_background_color = $this->sanitize_css_color_value($input['base_background_color'] ?? $defaults['base_background_color']);
         $link_color = $this->sanitize_css_color_value($input['link_color'] ?? $defaults['link_color']);

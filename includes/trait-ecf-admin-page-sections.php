@@ -722,6 +722,9 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                 <div class="ecf-type-size-card" data-ecf-layout-item="type-size-body">
                                     <?php $this->render_base_body_text_size_field($settings); ?>
                                 </div>
+                                <div class="ecf-type-size-card" data-ecf-layout-item="type-size-body-weight">
+                                    <?php $this->render_base_body_font_weight_field($settings); ?>
+                                </div>
                                 <div class="ecf-type-size-card" data-ecf-layout-item="type-size-root">
                                     <?php $this->render_root_font_size_select($settings, true); ?>
                                 </div>

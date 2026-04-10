@@ -13,6 +13,7 @@ trait ECF_Framework_Config_Trait {
             'base_font_family' => 'var(--ecf-font-primary)',
             'heading_font_family' => 'var(--ecf-font-primary)',
             'base_body_text_size' => '16px',
+            'base_body_font_weight' => '400',
             'base_text_color' => '#111827',
             'base_background_color' => '#ffffff',
             'link_color' => '#3b82f6',
