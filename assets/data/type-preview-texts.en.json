@@ -1,0 +1,9 @@
+{
+  "default": "Typography",
+  "xs": "Caption · Helper text",
+  "m": "The quick brown fox jumps over the fence",
+  "l": "Section heading",
+  "xl": "Page heading",
+  "2xl": "Hero Heading",
+  "display": "Display"
+}

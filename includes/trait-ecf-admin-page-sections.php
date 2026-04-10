@@ -43,36 +43,6 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
         ];
     }
 
-    private function type_scale_preview_text(string $step): string {
-        $normalized = strtolower(trim(str_replace('--ecf-text-', '', $step)));
-
-        if (in_array($normalized, ['xs', 's'], true)) {
-            return __('Caption · Helper text', 'ecf-framework');
-        }
-
-        if ($normalized === 'm') {
-            return __('The quick brown fox jumps over the fence', 'ecf-framework');
-        }
-
-        if ($normalized === 'l') {
-            return __('Section heading', 'ecf-framework');
-        }
-
-        if ($normalized === 'xl') {
-            return __('Page heading', 'ecf-framework');
-        }
-
-        if ($normalized === '2xl') {
-            return __('Hero Heading', 'ecf-framework');
-        }
-
-        if (in_array($normalized, ['3xl', '4xl'], true)) {
-            return __('Display', 'ecf-framework');
-        }
-
-        return __('Typography', 'ecf-framework');
-    }
-
     private function render_variables_panel($args) {
         extract($args, EXTR_SKIP);
         ?>
@@ -861,13 +831,6 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                              data-label-radius="<?php echo esc_attr__('Radius token', 'ecf-framework'); ?>"
                              data-label-min="<?php echo esc_attr__('Minimum', 'ecf-framework'); ?>"
                              data-label-max="<?php echo esc_attr__('Maximum', 'ecf-framework'); ?>"
-                             data-preview-type-word="<?php echo esc_attr__('Typography', 'ecf-framework'); ?>"
-                             data-preview-text-xs="<?php echo esc_attr__('Caption · Helper text', 'ecf-framework'); ?>"
-                             data-preview-text-m="<?php echo esc_attr__('The quick brown fox jumps over the fence', 'ecf-framework'); ?>"
-                             data-preview-text-l="<?php echo esc_attr__('Section heading', 'ecf-framework'); ?>"
-                             data-preview-text-xl="<?php echo esc_attr__('Page heading', 'ecf-framework'); ?>"
-                             data-preview-text-2xl="<?php echo esc_attr__('Hero Heading', 'ecf-framework'); ?>"
-                             data-preview-text-display="<?php echo esc_attr__('Display', 'ecf-framework'); ?>"
                              data-label-base="<?php echo esc_attr__('Current rem base', 'ecf-framework'); ?>">
                             <div class="ecf-root-font-impact__header">
                                 <strong><?php echo esc_html__('Visible effect of the root font size', 'ecf-framework'); ?></strong>
@@ -887,12 +850,12 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                         <div class="ecf-root-font-impact__metric">
                                             <span data-ecf-root-type-min-label><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
                                             <strong data-ecf-root-type-min><?php echo esc_html(($type_root_preview['min_px'] ?? $type_root_preview['minPx'] ?? '') . 'px'); ?></strong>
-                                            <em data-ecf-root-type-min-preview><?php echo esc_html($this->type_scale_preview_text((string) ($type_root_preview['step'] ?? ($settings['typography']['scale']['base_index'] ?? 'm')))); ?></em>
+                                            <em data-ecf-root-type-min-preview><?php echo esc_html($this->type_preview_text_for_step((string) ($type_root_preview['step'] ?? ($settings['typography']['scale']['base_index'] ?? 'm')), $settings)); ?></em>
                                         </div>
                                         <div class="ecf-root-font-impact__metric">
                                             <span data-ecf-root-type-max-label><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
                                             <strong data-ecf-root-type-max><?php echo esc_html(($type_root_preview['max_px'] ?? $type_root_preview['maxPx'] ?? '') . 'px'); ?></strong>
-                                            <em data-ecf-root-type-max-preview><?php echo esc_html($this->type_scale_preview_text((string) ($type_root_preview['step'] ?? ($settings['typography']['scale']['base_index'] ?? 'm')))); ?></em>
+                                            <em data-ecf-root-type-max-preview><?php echo esc_html($this->type_preview_text_for_step((string) ($type_root_preview['step'] ?? ($settings['typography']['scale']['base_index'] ?? 'm')), $settings)); ?></em>
                                         </div>
                                     </div>
                                 </div>
@@ -1248,13 +1211,7 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                      data-preview-label-max="<?php echo esc_attr__('Maximum', 'ecf-framework'); ?>"
                      data-preview-label-fixed="<?php echo esc_attr__('Static', 'ecf-framework'); ?>"
                      data-preview-label-fluid="<?php echo esc_attr__('Fluid', 'ecf-framework'); ?>"
-                     data-preview-word="<?php echo esc_attr__('Typography', 'ecf-framework'); ?>"
-                     data-preview-text-xs="<?php echo esc_attr__('Caption · Helper text', 'ecf-framework'); ?>"
-                     data-preview-text-m="<?php echo esc_attr__('The quick brown fox jumps over the fence', 'ecf-framework'); ?>"
-                     data-preview-text-l="<?php echo esc_attr__('Section heading', 'ecf-framework'); ?>"
-                     data-preview-text-xl="<?php echo esc_attr__('Page heading', 'ecf-framework'); ?>"
-                     data-preview-text-2xl="<?php echo esc_attr__('Hero Heading', 'ecf-framework'); ?>"
-                     data-preview-text-display="<?php echo esc_attr__('Display', 'ecf-framework'); ?>"
+                     data-preview-word="<?php echo esc_attr($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?>"
                      data-preview-helper="<?php echo esc_attr__('Click a scale step to inspect it in detail.', 'ecf-framework'); ?>"
                      data-preview-font="<?php echo esc_attr($type_preview_font); ?>">
                     <div class="ecf-typography-preview-header">
@@ -1275,7 +1232,7 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                             <p data-ecf-focus-helper><?php echo esc_html__('Click a scale step to inspect it in detail.', 'ecf-framework'); ?></p>
                         </div>
                         <div class="ecf-typography-focus__sample">
-                            <div class="ecf-typography-focus__word" data-ecf-focus-word><?php echo esc_html($this->type_scale_preview_text((string) ($settings['typography']['scale']['base_index'] ?? 'm'))); ?></div>
+                            <div class="ecf-typography-focus__word" data-ecf-focus-word><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></div>
                             <div class="ecf-typography-focus__stats">
                                 <div>
                                     <span><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
@@ -1296,11 +1253,11 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                     <button type="button" class="ecf-clamp-popover" data-ecf-focus-copy><?php echo esc_html($base_type_preview['css_value'] ?? ''); ?></button>
                                 </div>
                                 <div class="ecf-typography-focus__size-line">
-                                    <strong data-ecf-focus-min-line><?php echo esc_html($this->type_scale_preview_text((string) ($settings['typography']['scale']['base_index'] ?? 'm'))); ?></strong>
+                                    <strong data-ecf-focus-min-line><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></strong>
                                     <span><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
                                 </div>
                                 <div class="ecf-typography-focus__size-line ecf-typography-focus__size-line--max">
-                                    <strong data-ecf-focus-max-line><?php echo esc_html($this->type_scale_preview_text((string) ($settings['typography']['scale']['base_index'] ?? 'm'))); ?></strong>
+                                    <strong data-ecf-focus-max-line><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></strong>
                                     <span><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
                                 </div>
                             </div>
@@ -1333,11 +1290,11 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                 <div class="ecf-type-row__sample">
                                     <div class="ecf-type-row__sample-line">
                                         <span><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
-                                        <strong style="font-size:<?php echo esc_attr($item['min_px']); ?>px;"><?php echo esc_html($this->type_scale_preview_text((string) $item['step'])); ?></strong>
+                                        <strong style="font-size:<?php echo esc_attr($item['min_px']); ?>px;"><?php echo esc_html($this->type_preview_text_for_step((string) $item['step'], $settings)); ?></strong>
                                     </div>
                                     <div class="ecf-type-row__sample-line ecf-type-row__sample-line--max">
                                         <span><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
-                                        <strong style="font-size:<?php echo esc_attr($item['max_px']); ?>px;"><?php echo esc_html($this->type_scale_preview_text((string) $item['step'])); ?></strong>
+                                        <strong style="font-size:<?php echo esc_attr($item['max_px']); ?>px;"><?php echo esc_html($this->type_preview_text_for_step((string) $item['step'], $settings)); ?></strong>
                                     </div>
                                 </div>
                             </button>

@@ -2,6 +2,7 @@ jQuery(function($){
   var i18n = (typeof ecfAdmin !== 'undefined' && ecfAdmin.i18n) ? ecfAdmin.i18n : {};
   var spacingPreviewMap = (typeof ecfAdmin !== 'undefined' && ecfAdmin.spacingPreview) ? ecfAdmin.spacingPreview : {};
   var typePreviewMap = (typeof ecfAdmin !== 'undefined' && ecfAdmin.typePreview) ? ecfAdmin.typePreview : {};
+  var typePreviewTexts = (typeof ecfAdmin !== 'undefined' && ecfAdmin.typePreviewTexts) ? ecfAdmin.typePreviewTexts : {};
   var radiusPreviewMap = (typeof ecfAdmin !== 'undefined' && ecfAdmin.radiusPreview) ? ecfAdmin.radiusPreview : {};
   var restUrl = (typeof ecfAdmin !== 'undefined' && ecfAdmin.restUrl) ? ecfAdmin.restUrl : '';
   var fontImportRestUrl = (typeof ecfAdmin !== 'undefined' && ecfAdmin.fontImportRestUrl) ? ecfAdmin.fontImportRestUrl : '';
@@ -1197,39 +1198,30 @@ jQuery(function($){
     });
   }
 
-  function getTypePreviewCopy($scope, key, fallback) {
-    if (!$scope || !$scope.length) {
-      return fallback;
-    }
-
-    var value = $scope.attr('data-' + key);
-    return typeof value === 'string' && value !== '' ? value : fallback;
-  }
-
   function getTypePreviewText(stepOrToken, $scope) {
     var normalized = String(stepOrToken || '')
       .toLowerCase()
       .replace(/^--ecf-text-/, '')
       .trim();
-    var fallback = getTypePreviewCopy($scope, 'preview-word', getTypePreviewCopy($scope, 'preview-type-word', ''));
+    var fallback = (typePreviewTexts && typeof typePreviewTexts.default === 'string') ? typePreviewTexts.default : (($scope && $scope.length) ? ($scope.data('preview-word') || '') : '');
 
     if (normalized === 'xs' || normalized === 's') {
-      return getTypePreviewCopy($scope, 'preview-text-xs', fallback);
+      return typePreviewTexts.xs || fallback;
     }
     if (normalized === 'm') {
-      return getTypePreviewCopy($scope, 'preview-text-m', fallback);
+      return typePreviewTexts.m || fallback;
     }
     if (normalized === 'l') {
-      return getTypePreviewCopy($scope, 'preview-text-l', fallback);
+      return typePreviewTexts.l || fallback;
     }
     if (normalized === 'xl') {
-      return getTypePreviewCopy($scope, 'preview-text-xl', fallback);
+      return typePreviewTexts.xl || fallback;
     }
     if (normalized === '2xl') {
-      return getTypePreviewCopy($scope, 'preview-text-2xl', fallback);
+      return typePreviewTexts['2xl'] || fallback;
     }
     if (normalized === '3xl' || normalized === '4xl') {
-      return getTypePreviewCopy($scope, 'preview-text-display', fallback);
+      return typePreviewTexts.display || fallback;
     }
 
     return fallback;

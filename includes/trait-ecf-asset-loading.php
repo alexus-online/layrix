@@ -5,6 +5,65 @@ if (!defined('ABSPATH')) {
 }
 
 trait ECF_Framework_Asset_Loading_Trait {
+    private function type_preview_texts_language_suffix($settings = null) {
+        return $this->selected_interface_language($settings) === 'de' ? 'de' : 'en';
+    }
+
+    private function load_type_preview_texts($settings = null) {
+        static $cache = [];
+
+        $suffix = $this->type_preview_texts_language_suffix($settings);
+
+        if (isset($cache[$suffix])) {
+            return $cache[$suffix];
+        }
+
+        $base_path = dirname(__DIR__) . '/assets/data/type-preview-texts.';
+        $path = $base_path . $suffix . '.json';
+        $fallback_path = $base_path . 'en.json';
+        $json = '';
+
+        if (file_exists($path)) {
+            $json = (string) file_get_contents($path);
+        } elseif (file_exists($fallback_path)) {
+            $json = (string) file_get_contents($fallback_path);
+        }
+
+        $decoded = json_decode($json, true);
+        $cache[$suffix] = is_array($decoded) ? $decoded : [];
+
+        return $cache[$suffix];
+    }
+
+    private function preview_text_key_for_step($step) {
+        $normalized = strtolower(trim(str_replace('--ecf-text-', '', (string) $step)));
+
+        if (in_array($normalized, ['xs', 's'], true)) {
+            return 'xs';
+        }
+
+        if (in_array($normalized, ['3xl', '4xl'], true)) {
+            return 'display';
+        }
+
+        if (in_array($normalized, ['m', 'l', 'xl', '2xl'], true)) {
+            return $normalized;
+        }
+
+        return 'default';
+    }
+
+    private function type_preview_text_for_step($step, $settings = null) {
+        $texts = $this->load_type_preview_texts($settings);
+        $key = $this->preview_text_key_for_step($step);
+
+        if (isset($texts[$key]) && is_string($texts[$key]) && $texts[$key] !== '') {
+            return $texts[$key];
+        }
+
+        return isset($texts['default']) && is_string($texts['default']) ? $texts['default'] : '';
+    }
+
     private function build_editor_preview_maps($settings) {
         $root_base_px = $this->get_root_font_base_px($settings);
         $spacing_preview_map = [];
@@ -211,6 +270,7 @@ trait ECF_Framework_Asset_Loading_Trait {
             'spacingPreview' => $preview_maps['spacingPreview'],
             'typePreview' => $preview_maps['typePreview'],
             'radiusPreview' => $preview_maps['radiusPreview'],
+            'typePreviewTexts' => $this->load_type_preview_texts($settings),
             'layoutOrders' => $this->get_user_layout_orders(),
             'layoutColumns' => $this->get_user_layout_columns(),
             'adminDesign' => [
