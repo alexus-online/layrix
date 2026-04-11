@@ -343,6 +343,9 @@ msgstr "Wähle hier die aktiven Body- und Überschriften-Schriften. Importierte 
 msgid "Choose the admin look of ECF. Current design keeps the existing appearance; other presets restyle the interface."
 msgstr "Wähle das Admin-Design von ECF. Aktuelles Design behält das bisherige Erscheinungsbild, andere Presets gestalten die Oberfläche neu."
 
+msgid "Choose the two active families for body copy and headings. Imported fonts are stored locally and stay manageable below."
+msgstr "Wähle hier die zwei aktiven Schriftfamilien für Fließtext und Überschriften. Importierte Schriften werden lokal gespeichert und bleiben unten verwaltbar."
+
 msgid "Choose the unit for simple values. Use f(x) for complete CSS expressions like min(...), calc(...) or clamp(...)."
 msgstr "Wähle die Einheit für einfache Werte. Nutze f(x) für komplette CSS-Ausdrücke wie min(...), calc(...) oder clamp(...)."
 
@@ -772,6 +775,9 @@ msgstr "Filtert Abstands-Variablen wie Gaps, Padding oder Margins in passende ab
 msgid "Filters typography variables like text sizes so they appear only in matching typography-related Elementor controls."
 msgstr "Filtert Typografie-Variablen wie Textgrößen so, dass sie nur in passenden typografiebezogenen Elementor-Feldern erscheinen."
 
+msgid "Find and review variables"
+msgstr "Variablen finden und prüfen"
+
 msgid "Fixed pixel value. Best default here, because the field inherits the max px value from your active body token such as --ecf-text-m."
 msgstr "Fester Pixelwert. Beste Standardwahl hier, weil das Feld den maximalen px-Wert deines aktiven Body-Tokens wie --ecf-text-m übernimmt."
 
@@ -879,6 +885,9 @@ msgstr "Allgemeine Einstellungen steuern globale Grundlagen wie Root-Schriftgrö
 
 msgid "Generated ECF variables cannot be edited here."
 msgstr "Generierte ECF-Variablen können hier nicht bearbeitet werden."
+
+msgid "Generated design tokens managed by Layrix and ready for sync or cleanup."
+msgstr "Von Layrix verwaltete Design-Tokens, bereit für Sync oder Bereinigung."
 
 msgid "German"
 msgstr "Deutsch"
@@ -1165,6 +1174,9 @@ msgstr "Maximum (px)"
 msgid "Media slot for image, video or illustration."
 msgstr "Media-Bereich für Bild, Video oder Illustration."
 
+msgid "Merge mode"
+msgstr "Merge-Modus"
+
 msgid "Meta information such as date, category or label."
 msgstr "Meta-Informationen wie Datum, Kategorie oder Label."
 
@@ -1195,6 +1207,9 @@ msgstr "Minimum"
 msgid "Minimum (px)"
 msgstr "Minimum (px)"
 
+msgid "Missing GitHub release zip for version %s. Publish the tagged release asset before offering updates."
+msgstr "Das GitHub-Release-ZIP fuer Version %s fehlt. Veröffentliche erst das getaggte Release-Asset, bevor Updates angeboten werden."
+
 msgid "Missing required fields."
 msgstr "Erforderliche Felder fehlen."
 
@@ -1206,6 +1221,9 @@ msgstr "Modifier"
 
 msgid "Mono"
 msgstr "Mono"
+
+msgid "Move settings between installations with one JSON file. Export first if you want a clean rollback point before larger changes."
+msgstr "Verschiebe Einstellungen per JSON-Datei zwischen Installationen. Exportiere zuerst, wenn du vor größeren Änderungen einen sauberen Rücksetzpunkt willst."
 
 msgid "Multiplier between spacing steps on desktop. A higher ratio creates more visual contrast between sizes."
 msgstr "Multiplikator zwischen den Abstands-Stufen auf dem Desktop. Ein höherer Wert erzeugt mehr visuellen Kontrast zwischen den Größen."
@@ -1378,6 +1396,9 @@ msgstr "Plugin-Sprache und das Erscheinungsbild des ECF-Backends."
 msgid "Plugin update check completed. Installed: %1$s. GitHub remote: %2$s. No newer version was registered."
 msgstr "Plugin-Update-Prüfung abgeschlossen. Installiert: %1$s. GitHub-Remote: %2$s. Es wurde keine neuere Version registriert."
 
+msgid "Plugin update check failed. Installed: %1$s. GitHub release error: %2$s."
+msgstr "Plugin-Update-Prüfung fehlgeschlagen. Installiert: %1$s. GitHub-Release-Fehler: %2$s."
+
 msgid "Plugin update check failed. Installed: %1$s. GitHub request error: %2$s."
 msgstr "Plugin-Update-Prüfung fehlgeschlagen. Installiert: %1$s. GitHub-Anfragefehler: %2$s."
 
@@ -1480,6 +1501,9 @@ msgstr "Root-basierte Einheit. Nützlich, wenn die Inhaltsbreite mit der Root Fo
 msgid "Run Sync & Export, then reload open Elementor tabs once so the new variables and classes appear reliably."
 msgstr "Führe Sync & Export aus und lade offene Elementor-Tabs danach einmal neu, damit die neuen Variablen und Klassen zuverlässig erscheinen."
 
+msgid "Safe first"
+msgstr "Sicherheit zuerst"
+
 msgid "Save"
 msgstr "Speichern"
 
@@ -1503,6 +1527,9 @@ msgstr "Bildschirmbreite, ab der die maximalen Abstände gelten. Üblicherweise 
 
 msgid "Screen width at which minimum spacing sizes apply. Usually 375px (iPhone)."
 msgstr "Bildschirmbreite, ab der die minimalen Abstände gelten. Üblicherweise 375px (iPhone)."
+
+msgid "Search across Layrix and foreign Elementor variables, then jump straight into cleanup or direct editing."
+msgstr "Durchsuche Layrix- und fremde Elementor-Variablen und springe direkt in Bereinigung oder Bearbeitung."
 
 msgid "Search classes…"
 msgstr "Klassen durchsuchen…"
@@ -1590,6 +1617,9 @@ msgstr "Schatten"
 
 msgid "Shadows"
 msgstr "Schatten"
+
+msgid "Shape the reading rhythm here first. The preview on the right mirrors the generated text tokens live while you edit."
+msgstr "Lege hier zuerst den Leserhythmus fest. Die Vorschau rechts spiegelt deine erzeugten Text-Tokens live beim Bearbeiten."
 
 msgid "Show clamp value"
 msgstr "Clamp-Wert anzeigen"
@@ -1837,6 +1867,9 @@ msgstr "Tracking-Token für engere Überschriften oder luftigere Interface-Label
 msgid "Trust"
 msgstr "Vertrauen"
 
+msgid "Tune the global foundation here first: root size, default fonts, core widths and base colors. The rest of the plugin builds on these choices."
+msgstr "Lege hier zuerst das globale Fundament fest: Root-Größe, Standardschriften, Kernbreiten und Basisfarben. Der Rest des Plugins baut auf diesen Entscheidungen auf."
+
 msgid "Type"
 msgstr "Typo"
 
@@ -1885,6 +1918,9 @@ msgstr "Hochgeladene Schrift"
 msgid "Use Content Max Width for readable text wrappers and Elementor Boxed Width for wider centered layout containers."
 msgstr "Nutze Content Max Width für lesbare Text-Wrapper und Elementor Boxed Width für breitere zentrierte Layout-Container."
 
+msgid "Use it when you need field-level helpers while building directly in Elementor."
+msgstr "Nutze das, wenn du beim direkten Arbeiten in Elementor feldbezogene Helfer brauchst."
+
 msgid "Use starter classes for semantic naming and utility classes for a compact curated helper set. Both count toward Elementor’s 100-class limit."
 msgstr "Nutze Starter-Klassen für semantische Benennung und Utility-Klassen für ein kompaktes kuratiertes Helfer-Set. Beides zählt in Elementors 100er-Klassenlimit."
 
@@ -1896,6 +1932,9 @@ msgstr "Nutze das als globale Body-Schrift. Lade lokale Schriften unter Typograf
 
 msgid "Use this file"
 msgstr "Diese Datei verwenden"
+
+msgid "Use this when your tokens and selected classes are ready. Layrix adds its data in merge mode without overwriting unrelated Elementor entries."
+msgstr "Nutze das, wenn deine Tokens und ausgewählten Klassen bereit sind. Layrix ergänzt seine Daten im Merge-Modus, ohne fremde Elementor-Einträge zu überschreiben."
 
 msgid "Use your own block name and build a small BEM family around it."
 msgstr "Nutze deinen eigenen Blocknamen und baue darum eine kleine BEM-Familie auf."
@@ -1945,6 +1984,9 @@ msgstr "Variablen sind wiederverwendbare Design-Tokens wie Farben, Abstände, Ra
 msgid "Variables module active"
 msgstr "Variables-Modul aktiv"
 
+msgid "Variables that already exist in Elementor outside Layrix. Review them here before editing or deleting."
+msgstr "Variablen, die bereits außerhalb von Layrix in Elementor existieren. Prüfe sie hier vor dem Bearbeiten oder Löschen."
+
 msgid "Version %s"
 msgstr "Version %s"
 
@@ -1980,6 +2022,9 @@ msgstr "Visuell verborgen"
 
 msgid "Website"
 msgstr "Webseite"
+
+msgid "Website basics"
+msgstr "Website-Grundlagen"
 
 msgid "Website basics live here: root size, readable widths, body font and the default base colors for your site."
 msgstr "Hier liegen die Website-Grundlagen: Root-Größe, lesbare Breiten, Fließtext-Schrift und die Standard-Basisfarben deiner Website."

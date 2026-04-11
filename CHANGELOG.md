@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.4 (2026-04-11)
+
+### Fix
+- Version metadata synced across the main plugin, compatibility shim, and legacy bridge for the next GitHub release/update cycle.
+- Versionsmetadaten fuer Haupt-Plugin, Kompatibilitaets-Shim und Legacy-Bridge fuer den naechsten GitHub-Release-/Update-Zyklus synchronisiert.
+- Release package version prepared so the published GitHub asset can be offered as a clean update.
+- Release-Paketversion vorbereitet, damit das veroeffentlichte GitHub-Asset als sauberes Update angeboten werden kann.
+
 ## 0.3.3 (2026-04-11)
 
 ### Fix

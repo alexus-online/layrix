@@ -47,50 +47,63 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
         extract($args, EXTR_SKIP);
         ?>
         <div class="ecf-panel" data-panel="variables">
-            <?php if ($show_elementor_status_cards): ?>
-                <div class="ecf-card ecf-class-limit-card ecf-class-limit-card--<?php echo esc_attr($elementor_variable_limit_status); ?>">
-                    <div class="ecf-class-limit-card__eyebrow"><?php echo esc_html__('Elementor Variables', 'ecf-framework'); ?></div>
-                    <div class="ecf-class-limit-card__hero">
-                        <div class="ecf-class-limit-card__headline">
-                            <span class="ecf-class-limit-card__usage">
-                                <span id="ecf-total-variables"><?php echo esc_html((string) $native_variable_counts['total']); ?></span>
-                                <span class="ecf-class-limit-card__slash">/</span>
-                                <span id="ecf-limit-variables"><?php echo esc_html((string) $elementor_variable_limit); ?></span>
-                            </span>
-                            <span><?php echo esc_html__('variables currently found in Elementor', 'ecf-framework'); ?></span>
+            <div class="ecf-variables-overview">
+                <?php if ($show_elementor_status_cards): ?>
+                    <div class="ecf-card ecf-class-limit-card ecf-class-limit-card--compact ecf-class-limit-card--<?php echo esc_attr($elementor_variable_limit_status); ?>">
+                        <div class="ecf-class-limit-card__eyebrow"><?php echo esc_html__('Elementor Variables', 'ecf-framework'); ?></div>
+                        <div class="ecf-class-limit-card__hero">
+                            <div class="ecf-class-limit-card__headline">
+                                <span class="ecf-class-limit-card__usage">
+                                    <span id="ecf-total-variables"><?php echo esc_html((string) $native_variable_counts['total']); ?></span>
+                                    <span class="ecf-class-limit-card__slash">/</span>
+                                    <span id="ecf-limit-variables"><?php echo esc_html((string) $elementor_variable_limit); ?></span>
+                                </span>
+                                <span><?php echo esc_html__('variables currently found in Elementor', 'ecf-framework'); ?></span>
+                            </div>
+                            <div class="ecf-class-limit-card__percent">
+                                <strong><?php echo esc_html((string) round((($native_variable_counts['total'] ?? 0) / max(1, $elementor_variable_limit)) * 100)); ?>%</strong>
+                                <span><?php echo esc_html__('of current Elementor limit', 'ecf-framework'); ?></span>
+                            </div>
                         </div>
-                        <div class="ecf-class-limit-card__percent">
-                            <strong><?php echo esc_html((string) round((($native_variable_counts['total'] ?? 0) / max(1, $elementor_variable_limit)) * 100)); ?>%</strong>
-                            <span><?php echo esc_html__('of current Elementor limit', 'ecf-framework'); ?></span>
+                        <ul class="ecf-class-limit-card__details ecf-class-limit-card__details--variables">
+                            <li>
+                                <span><?php echo esc_html__('ECF', 'ecf-framework'); ?></span>
+                                <strong><span id="ecf-total-ecf-variables"><?php echo esc_html((string) $native_variable_counts['ecf']); ?></span></strong>
+                            </li>
+                            <li>
+                                <span><?php echo esc_html__('Foreign', 'ecf-framework'); ?></span>
+                                <strong><span id="ecf-total-foreign-variables"><?php echo esc_html((string) $native_variable_counts['foreign']); ?></span></strong>
+                            </li>
+                            <li>
+                                <span><?php echo esc_html__('Total', 'ecf-framework'); ?></span>
+                                <strong><span id="ecf-total-variables-inline"><?php echo esc_html((string) $native_variable_counts['total']); ?></span></strong>
+                            </li>
+                            <li>
+                                <span><?php echo esc_html__('ecf_sync_layrix_variable_count_label', 'ecf-framework'); ?></span>
+                                <strong><span data-ecf-layrix-variable-count><?php echo esc_html((string) ($layrix_variable_count ?? 0)); ?></span></strong>
+                            </li>
+                        </ul>
+                    </div>
+                <?php endif; ?>
+                <div class="ecf-card ecf-global-search-card">
+                    <div class="ecf-global-search-card__intro">
+                        <div>
+                            <h2><?php echo esc_html__('Find and review variables', 'ecf-framework'); ?></h2>
+                            <p><?php echo esc_html__('Search across Layrix and foreign Elementor variables, then jump straight into cleanup or direct editing.', 'ecf-framework'); ?></p>
+                        </div>
+                        <div class="ecf-global-search-card__tags" aria-hidden="true">
+                            <span><?php echo esc_html__('Search', 'ecf-framework'); ?></span>
+                            <span><?php echo esc_html__('Inspect', 'ecf-framework'); ?></span>
+                            <span><?php echo esc_html__('Edit', 'ecf-framework'); ?></span>
                         </div>
                     </div>
-                    <ul class="ecf-class-limit-card__details ecf-class-limit-card__details--variables">
-                        <li>
-                            <span><?php echo esc_html__('ECF', 'ecf-framework'); ?></span>
-                            <strong><span id="ecf-total-ecf-variables"><?php echo esc_html((string) $native_variable_counts['ecf']); ?></span></strong>
-                        </li>
-                        <li>
-                            <span><?php echo esc_html__('Foreign', 'ecf-framework'); ?></span>
-                            <strong><span id="ecf-total-foreign-variables"><?php echo esc_html((string) $native_variable_counts['foreign']); ?></span></strong>
-                        </li>
-                        <li>
-                            <span><?php echo esc_html__('Total', 'ecf-framework'); ?></span>
-                            <strong><span id="ecf-total-variables-inline"><?php echo esc_html((string) $native_variable_counts['total']); ?></span></strong>
-                        </li>
-                        <li>
-                            <span><?php echo esc_html__('ecf_sync_layrix_variable_count_label', 'ecf-framework'); ?></span>
-                            <strong><span data-ecf-layrix-variable-count><?php echo esc_html((string) ($layrix_variable_count ?? 0)); ?></span></strong>
-                        </li>
-                    </ul>
-                </div>
-            <?php endif; ?>
-            <div class="ecf-card ecf-global-search-card">
-                <div class="ecf-global-search">
-                    <label class="ecf-global-search__field">
-                        <span class="dashicons dashicons-search" aria-hidden="true"></span>
-                        <input type="search" id="ecf-global-search-input" placeholder="<?php echo esc_attr__('Search variables…', 'ecf-framework'); ?>" autocomplete="off">
-                    </label>
-                    <div class="ecf-global-search__results" id="ecf-global-search-results" hidden></div>
+                    <div class="ecf-global-search">
+                        <label class="ecf-global-search__field">
+                            <span class="dashicons dashicons-search" aria-hidden="true"></span>
+                            <input type="search" id="ecf-global-search-input" placeholder="<?php echo esc_attr__('Search variables…', 'ecf-framework'); ?>" autocomplete="off">
+                        </label>
+                        <div class="ecf-global-search__results" id="ecf-global-search-results" hidden></div>
+                    </div>
                 </div>
             </div>
             <div class="ecf-modal" data-ecf-search-edit-modal hidden>
@@ -159,10 +172,14 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                     </div>
                 </div>
             </div>
-            <div class="ecf-grid" data-ecf-layout-group="variables-main" data-ecf-masonry-layout="1">
+            <p class="ecf-panel-note"><?php echo esc_html__('Changes take effect immediately in Elementor. The cache is cleared automatically; open Elementor tabs should be reloaded once.', 'ecf-framework'); ?></p>
+            <div class="ecf-grid ecf-grid--variables" data-ecf-layout-group="variables-main" data-ecf-masonry-layout="1">
                 <div class="ecf-card" id="ecf-vars-ecf" data-ecf-layout-item="ecf-vars-ecf">
                     <div class="ecf-vargroup-header">
-                        <h2><?php echo esc_html__('Layrix Variablen', 'ecf-framework'); ?> <span class="ecf-badge" id="ecf-badge-ecf">–</span></h2>
+                        <div class="ecf-vargroup-title">
+                            <h2><?php echo esc_html__('Layrix Variablen', 'ecf-framework'); ?> <span class="ecf-badge" id="ecf-badge-ecf">–</span></h2>
+                            <p class="ecf-vargroup-subtitle"><?php echo esc_html__('Generated design tokens managed by Layrix and ready for sync or cleanup.', 'ecf-framework'); ?></p>
+                        </div>
                         <div class="ecf-vargroup-tools">
                             <div class="ecf-vargroup-actions">
                                 <button type="button" class="ecf-btn ecf-btn--ghost ecf-btn--sm ecf-select-all" data-group="ecf">
@@ -179,7 +196,10 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                 </div>
                 <div class="ecf-card" id="ecf-vars-foreign" data-ecf-layout-item="ecf-vars-foreign">
                     <div class="ecf-vargroup-header">
-                        <h2><?php echo esc_html__('Foreign Variables', 'ecf-framework'); ?> <span class="ecf-badge" id="ecf-badge-foreign">–</span></h2>
+                        <div class="ecf-vargroup-title">
+                            <h2><?php echo esc_html__('Foreign Variables', 'ecf-framework'); ?> <span class="ecf-badge" id="ecf-badge-foreign">–</span></h2>
+                            <p class="ecf-vargroup-subtitle"><?php echo esc_html__('Variables that already exist in Elementor outside Layrix. Review them here before editing or deleting.', 'ecf-framework'); ?></p>
+                        </div>
                         <div class="ecf-vargroup-tools">
                             <div class="ecf-vargroup-actions">
                                 <button type="button" class="ecf-btn ecf-btn--ghost ecf-btn--sm ecf-select-all" data-group="foreign">
@@ -195,7 +215,6 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                     <div id="ecf-varlist-foreign" class="ecf-varlist"><p class="ecf-loading"><?php echo esc_html__('Loading…', 'ecf-framework'); ?></p></div>
                 </div>
             </div>
-            <p style="color:#6b7280;font-size:12px;margin-top:12px;"><?php echo esc_html__('Changes take effect immediately in Elementor. The cache is cleared automatically; open Elementor tabs should be reloaded once.', 'ecf-framework'); ?></p>
         </div>
         <?php
     }
@@ -701,6 +720,17 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                         <button type="button" class="ecf-var-tab" data-ecf-general-tab="favorites" data-ecf-new-key="general-favorites" title="<?php echo esc_attr__('Pinned quick settings from Website and Plugin basics.', 'ecf-framework'); ?>"><span class="dashicons dashicons-heart" aria-hidden="true"></span><?php echo esc_html__('Favorites', 'ecf-framework'); ?></button>
                     </div>
                     <div class="ecf-general-section is-active ecf-general-section--website" data-ecf-general-section="website" data-ecf-layout-group="components-website">
+                        <div class="ecf-general-overview-card" data-ecf-layout-item="website-overview">
+                            <div>
+                                <strong><?php echo esc_html__('Website basics', 'ecf-framework'); ?></strong>
+                                <p><?php echo esc_html__('Tune the global foundation here first: root size, default fonts, core widths and base colors. The rest of the plugin builds on these choices.', 'ecf-framework'); ?></p>
+                            </div>
+                            <div class="ecf-general-overview-card__tags" aria-hidden="true">
+                                <span><?php echo esc_html__('Type', 'ecf-framework'); ?></span>
+                                <span><?php echo esc_html__('Widths', 'ecf-framework'); ?></span>
+                                <span><?php echo esc_html__('Colors', 'ecf-framework'); ?></span>
+                            </div>
+                        </div>
                         <div class="ecf-settings-group" data-ecf-layout-item="website-type-size">
                             <div class="ecf-settings-group__header">
                                 <h3><?php echo esc_html__('Type & Size', 'ecf-framework'); ?></h3>
@@ -815,25 +845,33 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                 <h3><?php echo esc_html__('Base Colors', 'ecf-framework'); ?></h3>
                                 <p><?php echo esc_html__('These colors define the visual starting point before component-specific styles take over.', 'ecf-framework'); ?></p>
                             </div>
-                            <div class="ecf-form-grid ecf-form-grid--two">
+                            <div class="ecf-form-grid ecf-form-grid--base-colors">
                                 <?php $this->render_general_color_field($settings, 'base_text_color', 'Base Text Color', 'Basis-Textfarbe', 'Default body text color for the whole site.', 'Standard-Textfarbe für den Fließtext der ganzen Website.', 'editor-textcolor'); ?>
                                 <?php $this->render_general_color_field($settings, 'base_background_color', 'Base Background Color', 'Basis-Hintergrundfarbe', 'Default page background for the website.', 'Standard-Seitenhintergrund für die Website.', 'art'); ?>
                                 <?php $this->render_general_color_field($settings, 'link_color', 'Link Color', 'Link-Farbe', 'Default color for normal links.', 'Standardfarbe für normale Links.', 'admin-links'); ?>
                                 <?php $this->render_general_color_field($settings, 'focus_color', 'Focus Color', 'Fokus-Farbe', 'Visible color for keyboard focus outlines and focus rings.', 'Sichtbare Farbe für Tastatur-Fokusrahmen und Focus-Rings.', 'visibility'); ?>
-                                <label data-ecf-general-field="focus_outline_width">
-                                    <span class="ecf-general-label-with-favorite">
-                                        <?php echo $this->general_setting_label(__('Focus Outline Width', 'ecf-framework'), 'Visible width of the keyboard focus outline.', 'editor-expand'); ?>
-                                        <?php $this->render_general_setting_favorite_toggle($settings, 'focus_outline_width'); ?>
-                                    </span>
-                                    <?php $this->render_general_size_field_inline($settings, 'focus_outline_width', $settings['focus_outline_width'] ?? '2px', $this->focus_outline_format_options(), 'px', '2', __('Visible width of the keyboard focus outline.', 'ecf-framework')); ?>
-                                </label>
-                                <label data-ecf-general-field="focus_outline_offset">
-                                    <span class="ecf-general-label-with-favorite">
-                                        <?php echo $this->general_setting_label(__('Focus Outline Offset', 'ecf-framework'), 'Distance between the element edge and the keyboard focus outline.', 'move'); ?>
-                                        <?php $this->render_general_setting_favorite_toggle($settings, 'focus_outline_offset'); ?>
-                                    </span>
-                                    <?php $this->render_general_size_field_inline($settings, 'focus_outline_offset', $settings['focus_outline_offset'] ?? '2px', $this->focus_outline_format_options(), 'px', '2', __('Distance between the element edge and the keyboard focus outline.', 'ecf-framework')); ?>
-                                </label>
+                                <div class="ecf-base-colors-focus">
+                                    <div class="ecf-base-colors-focus__header">
+                                        <strong><?php echo esc_html__('Focus Outline', 'ecf-framework'); ?></strong>
+                                        <p><?php echo esc_html__('Width and offset stay together so the keyboard focus ring is easier to tune as one setting.', 'ecf-framework'); ?></p>
+                                    </div>
+                                    <div class="ecf-base-colors-focus__fields">
+                                        <label data-ecf-general-field="focus_outline_width">
+                                            <span class="ecf-general-label-with-favorite">
+                                                <?php echo $this->general_setting_label(__('Focus Outline Width', 'ecf-framework'), 'Visible width of the keyboard focus outline.', 'editor-expand'); ?>
+                                                <?php $this->render_general_setting_favorite_toggle($settings, 'focus_outline_width'); ?>
+                                            </span>
+                                            <?php $this->render_general_size_field_inline($settings, 'focus_outline_width', $settings['focus_outline_width'] ?? '2px', $this->focus_outline_format_options(), 'px', '2', __('Visible width of the keyboard focus outline.', 'ecf-framework')); ?>
+                                        </label>
+                                        <label data-ecf-general-field="focus_outline_offset">
+                                            <span class="ecf-general-label-with-favorite">
+                                                <?php echo $this->general_setting_label(__('Focus Outline Offset', 'ecf-framework'), 'Distance between the element edge and the keyboard focus outline.', 'move'); ?>
+                                                <?php $this->render_general_setting_favorite_toggle($settings, 'focus_outline_offset'); ?>
+                                            </span>
+                                            <?php $this->render_general_size_field_inline($settings, 'focus_outline_offset', $settings['focus_outline_offset'] ?? '2px', $this->focus_outline_format_options(), 'px', '2', __('Distance between the element edge and the keyboard focus outline.', 'ecf-framework')); ?>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <details class="ecf-settings-group ecf-settings-group--details" data-ecf-layout-item="website-scale-impact">
@@ -1147,6 +1185,7 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                 <div class="ecf-typography-sidebar" data-ecf-layout-item="typography-settings">
                     <div class="ecf-card">
                         <h2><?php echo esc_html__('Type Scale', 'ecf-framework'); ?></h2>
+                        <p class="ecf-card-intro"><?php echo esc_html__('Shape the reading rhythm here first. The preview on the right mirrors the generated text tokens live while you edit.', 'ecf-framework'); ?></p>
                         <?php $this->render_root_font_size_select($settings, false); ?>
                         <div class="ecf-form-grid ecf-form-grid--compact">
                             <div class="ecf-scale-group">
@@ -1189,7 +1228,7 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                     </div>
                     <div class="ecf-card">
                         <h2><?php echo esc_html__('Site Font Assignment', 'ecf-framework'); ?></h2>
-                        <p class="ecf-muted-copy"><?php echo esc_html__('Choose the active body and heading fonts here. Imported fonts are stored locally in the media library and can be removed again below.', 'ecf-framework'); ?></p>
+                        <p class="ecf-card-intro"><?php echo esc_html__('Choose the two active families for body copy and headings. Imported fonts are stored locally and stay manageable below.', 'ecf-framework'); ?></p>
                         <p class="ecf-muted-copy ecf-font-assignment-note"><?php echo esc_html__('Privacy note: imported library fonts are downloaded into your own media library on the server and served locally, so the frontend does not need live requests to external font providers.', 'ecf-framework'); ?></p>
                         <div class="ecf-font-assignment-accordion">
                             <details class="ecf-settings-group ecf-settings-group--details ecf-font-assignment-accordion__item" open>
@@ -1296,11 +1335,11 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                     <button type="button" class="ecf-clamp-popover" data-ecf-focus-copy><?php echo esc_html($base_type_preview['css_value'] ?? ''); ?></button>
                                 </div>
                                 <div class="ecf-typography-focus__size-line">
-                                    <strong data-ecf-focus-min-line><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></strong>
+                                    <span class="ecf-typography-focus__sample-text" data-ecf-focus-min-line><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></span>
                                     <span><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
                                 </div>
                                 <div class="ecf-typography-focus__size-line ecf-typography-focus__size-line--max">
-                                    <strong data-ecf-focus-max-line><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></strong>
+                                    <span class="ecf-typography-focus__sample-text" data-ecf-focus-max-line><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></span>
                                     <span><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
                                 </div>
                             </div>
@@ -1333,11 +1372,11 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                 <div class="ecf-type-row__sample">
                                     <div class="ecf-type-row__sample-line">
                                         <span><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
-                                        <strong style="font-size:<?php echo esc_attr($item['min_px']); ?>px;"><?php echo esc_html($this->type_preview_text_for_step((string) $item['step'], $settings)); ?></strong>
+                                        <span class="ecf-type-row__sample-text" style="font-size:<?php echo esc_attr($item['min_px']); ?>px;"><?php echo esc_html($this->type_preview_text_for_step((string) $item['step'], $settings)); ?></span>
                                     </div>
                                     <div class="ecf-type-row__sample-line ecf-type-row__sample-line--max">
                                         <span><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
-                                        <strong style="font-size:<?php echo esc_attr($item['max_px']); ?>px;"><?php echo esc_html($this->type_preview_text_for_step((string) $item['step'], $settings)); ?></strong>
+                                        <span class="ecf-type-row__sample-text" style="font-size:<?php echo esc_attr($item['max_px']); ?>px;"><?php echo esc_html($this->type_preview_text_for_step((string) $item['step'], $settings)); ?></span>
                                     </div>
                                 </div>
                             </div>
@@ -1513,8 +1552,17 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
         ?>
         <div class="ecf-panel" data-panel="sync">
             <div class="ecf-grid" data-ecf-layout-group="sync-main" data-ecf-masonry-layout="1">
-                <div class="ecf-card" data-ecf-layout-item="sync-native">
-                    <h2><?php echo esc_html__('Native Elementor Sync', 'ecf-framework'); ?></h2>
+                <div class="ecf-card ecf-sync-card ecf-sync-card--primary" data-ecf-layout-item="sync-native">
+                    <div class="ecf-sync-card__header">
+                        <div>
+                            <h2><?php echo esc_html__('Native Elementor Sync', 'ecf-framework'); ?></h2>
+                            <p><?php echo esc_html__('Use this when your tokens and selected classes are ready. Layrix adds its data in merge mode without overwriting unrelated Elementor entries.', 'ecf-framework'); ?></p>
+                        </div>
+                        <div class="ecf-sync-card__chips" aria-hidden="true">
+                            <span><?php echo esc_html__('Merge mode', 'ecf-framework'); ?></span>
+                            <span><?php echo esc_html__('Safe first', 'ecf-framework'); ?></span>
+                        </div>
+                    </div>
                     <div class="ecf-notice ecf-notice--warning">
                         <?php echo esc_html__('⚠ Sync actions change your Elementor data. Please create a backup first.', 'ecf-framework'); ?>
                     </div>
@@ -1549,13 +1597,22 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                             </p>
                         </div>
                     <?php endif; ?>
-                    <p style="color:#9ca3af;font-size:13px;margin:0 0 12px;"><?php echo wp_kses(__('Works in <strong>merge mode</strong> — ECF adds to existing Elementor variables and Global Classes without overwriting.', 'ecf-framework'), ['strong' => []]); ?></p>
-                    <p style="color:#6b7280;font-size:13px;margin:0 0 16px;"><?php echo esc_html__('Synced:', 'ecf-framework'); ?>
-                        <br>• <?php echo esc_html__('Variables', 'ecf-framework'); ?>: <code>ecf-color-*</code>, <code>ecf-space-*</code>, <code>ecf-radius-*</code>, <code>ecf-text-*</code>
-                        <br>• <?php echo esc_html__('ecf_sync_layrix_variable_count_label', 'ecf-framework'); ?>: <strong data-ecf-layrix-variable-count><?php echo esc_html((string) ($layrix_variable_count ?? 0)); ?></strong>
-                        <br>• <?php echo esc_html__('Global Classes', 'ecf-framework'); ?>: <?php echo esc_html__('selected starter classes and selected utility classes', 'ecf-framework'); ?>
-                    </p>
-                    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+                    <p class="ecf-sync-card__merge-note"><?php echo wp_kses(__('Works in <strong>merge mode</strong> — ECF adds to existing Elementor variables and Global Classes without overwriting.', 'ecf-framework'), ['strong' => []]); ?></p>
+                    <div class="ecf-sync-summary">
+                        <div class="ecf-sync-summary__item">
+                            <span><?php echo esc_html__('Variables', 'ecf-framework'); ?></span>
+                            <strong><code>ecf-color-*</code>, <code>ecf-space-*</code>, <code>ecf-radius-*</code>, <code>ecf-text-*</code></strong>
+                        </div>
+                        <div class="ecf-sync-summary__item">
+                            <span><?php echo esc_html__('ecf_sync_layrix_variable_count_label', 'ecf-framework'); ?></span>
+                            <strong data-ecf-layrix-variable-count><?php echo esc_html((string) ($layrix_variable_count ?? 0)); ?></strong>
+                        </div>
+                        <div class="ecf-sync-summary__item">
+                            <span><?php echo esc_html__('Global Classes', 'ecf-framework'); ?></span>
+                            <strong><?php echo esc_html__('selected starter classes and selected utility classes', 'ecf-framework'); ?></strong>
+                        </div>
+                    </div>
+                    <div class="ecf-sync-actions">
                         <form method="post" action="<?php echo esc_url(admin_url('admin-post.php?action=ecf_native_sync')); ?>">
                             <?php wp_nonce_field('ecf_native_sync'); ?>
                             <input type="hidden" name="action" value="ecf_native_sync">
@@ -1574,9 +1631,13 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                     </div>
                 </div>
 
-                <div class="ecf-card" data-ecf-layout-item="sync-import-export">
-                    <h2><?php echo esc_html__('Export / Import', 'ecf-framework'); ?></h2>
-                    <p style="color:#9ca3af;font-size:13px;margin:0 0 16px;"><?php echo esc_html__('Export settings as JSON or import from another installation.', 'ecf-framework'); ?></p>
+                <div class="ecf-card ecf-sync-card" data-ecf-layout-item="sync-import-export">
+                    <div class="ecf-sync-card__header">
+                        <div>
+                            <h2><?php echo esc_html__('Export / Import', 'ecf-framework'); ?></h2>
+                            <p><?php echo esc_html__('Move settings between installations with one JSON file. Export first if you want a clean rollback point before larger changes.', 'ecf-framework'); ?></p>
+                        </div>
+                    </div>
                     <div class="ecf-import-actions">
                         <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
                             <?php wp_nonce_field('ecf_export'); ?>
@@ -1597,9 +1658,17 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                     </div>
                 </div>
 
-                <div class="ecf-card" data-ecf-layout-item="sync-editor-panel">
-                    <h2><?php echo esc_html__('Elementor Editor Panel', 'ecf-framework'); ?></h2>
-                    <p style="color:#9ca3af;font-size:13px;"><?php echo wp_kses(__('In the Elementor editor, find the <strong>Layrix</strong> section under the <strong>Advanced</strong> tab of any element.', 'ecf-framework'), ['strong' => []]); ?></p>
+                <div class="ecf-card ecf-sync-card ecf-sync-card--aside" data-ecf-layout-item="sync-editor-panel">
+                    <div class="ecf-sync-card__header">
+                        <div>
+                            <h2><?php echo esc_html__('Elementor Editor Panel', 'ecf-framework'); ?></h2>
+                            <p><?php echo wp_kses(__('In the Elementor editor, find the <strong>Layrix</strong> section under the <strong>Advanced</strong> tab of any element.', 'ecf-framework'), ['strong' => []]); ?></p>
+                        </div>
+                    </div>
+                    <div class="ecf-sync-panel-note">
+                        <span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span>
+                        <span><?php echo esc_html__('Use it when you need field-level helpers while building directly in Elementor.', 'ecf-framework'); ?></span>
+                    </div>
                 </div>
             </div>
         </div>
