@@ -47,60 +47,43 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
         extract($args, EXTR_SKIP);
         ?>
         <div class="ecf-panel" data-panel="variables">
-            <div class="ecf-variables-overview">
-                <?php if ($show_elementor_status_cards): ?>
-                    <div class="ecf-card ecf-class-limit-card ecf-class-limit-card--compact ecf-class-limit-card--<?php echo esc_attr($elementor_variable_limit_status); ?>">
-                        <div class="ecf-class-limit-card__eyebrow"><?php echo esc_html__('Elementor Variables', 'ecf-framework'); ?></div>
-                        <div class="ecf-class-limit-card__hero">
-                            <div class="ecf-class-limit-card__headline">
-                                <span class="ecf-class-limit-card__usage">
-                                    <span id="ecf-total-variables"><?php echo esc_html((string) $native_variable_counts['total']); ?></span>
-                                    <span class="ecf-class-limit-card__slash">/</span>
-                                    <span id="ecf-limit-variables"><?php echo esc_html((string) $elementor_variable_limit); ?></span>
-                                </span>
-                                <span class="ecf-class-limit-card__context"><?php echo esc_html__('variables currently found in Elementor', 'ecf-framework'); ?></span>
-                            </div>
-                            <div class="ecf-class-limit-card__percent">
-                                <strong><?php echo esc_html((string) round((($native_variable_counts['total'] ?? 0) / max(1, $elementor_variable_limit)) * 100)); ?>%</strong>
-                                <span class="ecf-class-limit-card__percent-copy"><?php echo esc_html__('of current Elementor limit', 'ecf-framework'); ?></span>
-                            </div>
+            <?php if ($show_elementor_status_cards): ?>
+                <div class="ecf-card ecf-class-limit-card ecf-class-limit-card--compact ecf-class-limit-card--<?php echo esc_attr($elementor_variable_limit_status); ?>">
+                    <div class="ecf-class-limit-card__eyebrow"><?php echo esc_html__('Elementor Variables', 'ecf-framework'); ?></div>
+                    <div class="ecf-class-limit-card__hero">
+                        <div class="ecf-class-limit-card__headline">
+                            <span class="ecf-class-limit-card__usage">
+                                <span id="ecf-total-variables"><?php echo esc_html((string) $native_variable_counts['total']); ?></span>
+                                <span class="ecf-class-limit-card__slash">/</span>
+                                <span id="ecf-limit-variables"><?php echo esc_html((string) $elementor_variable_limit); ?></span>
+                            </span>
+                            <span class="ecf-class-limit-card__context"><?php echo esc_html__('variables currently found in Elementor', 'ecf-framework'); ?></span>
                         </div>
-                        <ul class="ecf-class-limit-card__details ecf-class-limit-card__details--variables">
-                            <li>
-                                <span><?php echo esc_html__('ECF', 'ecf-framework'); ?></span>
-                                <strong><span id="ecf-total-ecf-variables"><?php echo esc_html((string) $native_variable_counts['ecf']); ?></span></strong>
-                            </li>
-                            <li>
-                                <span><?php echo esc_html__('Foreign', 'ecf-framework'); ?></span>
-                                <strong><span id="ecf-total-foreign-variables"><?php echo esc_html((string) $native_variable_counts['foreign']); ?></span></strong>
-                            </li>
-                            <li>
-                                <span><?php echo esc_html__('Total', 'ecf-framework'); ?></span>
-                                <strong><span id="ecf-total-variables-inline"><?php echo esc_html((string) $native_variable_counts['total']); ?></span></strong>
-                            </li>
-                            <li>
-                                <span><?php echo esc_html__('ecf_sync_layrix_variable_count_label', 'ecf-framework'); ?></span>
-                                <strong><span data-ecf-layrix-variable-count><?php echo esc_html((string) ($layrix_variable_count ?? 0)); ?></span></strong>
-                            </li>
-                        </ul>
-                    </div>
-                <?php endif; ?>
-                <div class="ecf-card ecf-global-search-card">
-                    <div class="ecf-global-search-card__intro">
-                        <div>
-                            <h2><?php echo esc_html__('Find and review variables', 'ecf-framework'); ?></h2>
-                            <p><?php echo esc_html__('Search across Layrix and foreign Elementor variables, then jump straight into cleanup or direct editing.', 'ecf-framework'); ?></p>
+                        <div class="ecf-class-limit-card__percent">
+                            <strong><?php echo esc_html((string) round((($native_variable_counts['total'] ?? 0) / max(1, $elementor_variable_limit)) * 100)); ?>%</strong>
+                            <span class="ecf-class-limit-card__percent-copy"><?php echo esc_html__('of current Elementor limit', 'ecf-framework'); ?></span>
                         </div>
                     </div>
-                    <div class="ecf-global-search">
-                        <label class="ecf-global-search__field">
-                            <span class="dashicons dashicons-search" aria-hidden="true"></span>
-                            <input type="search" id="ecf-global-search-input" placeholder="<?php echo esc_attr__('Search variables…', 'ecf-framework'); ?>" autocomplete="off">
-                        </label>
-                        <div class="ecf-global-search__results" id="ecf-global-search-results" hidden></div>
-                    </div>
+                    <ul class="ecf-class-limit-card__details ecf-class-limit-card__details--variables">
+                        <li>
+                            <span><?php echo esc_html__('ECF', 'ecf-framework'); ?></span>
+                            <strong><span id="ecf-total-ecf-variables"><?php echo esc_html((string) $native_variable_counts['ecf']); ?></span></strong>
+                        </li>
+                        <li>
+                            <span><?php echo esc_html__('Foreign', 'ecf-framework'); ?></span>
+                            <strong><span id="ecf-total-foreign-variables"><?php echo esc_html((string) $native_variable_counts['foreign']); ?></span></strong>
+                        </li>
+                        <li>
+                            <span><?php echo esc_html__('Total', 'ecf-framework'); ?></span>
+                            <strong><span id="ecf-total-variables-inline"><?php echo esc_html((string) $native_variable_counts['total']); ?></span></strong>
+                        </li>
+                        <li>
+                            <span><?php echo esc_html__('ecf_sync_layrix_variable_count_label', 'ecf-framework'); ?></span>
+                            <strong><span data-ecf-layrix-variable-count><?php echo esc_html((string) ($layrix_variable_count ?? 0)); ?></span></strong>
+                        </li>
+                    </ul>
                 </div>
-            </div>
+            <?php endif; ?>
             <div class="ecf-modal" data-ecf-search-edit-modal hidden>
                 <div class="ecf-modal__backdrop" data-ecf-search-edit-close></div>
                 <div class="ecf-modal__dialog ecf-search-edit-modal" role="dialog" aria-modal="true" aria-labelledby="ecf-search-edit-title">
@@ -185,6 +168,21 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                     <span class="dashicons dashicons-trash" aria-hidden="true"></span>
                                 </button>
                             </div>
+                        </div>
+                    </div>
+                    <div class="ecf-global-search-card ecf-global-search-card--embedded">
+                        <div class="ecf-global-search-card__intro">
+                            <div>
+                                <h3><?php echo esc_html__('Find and review variables', 'ecf-framework'); ?></h3>
+                                <p><?php echo esc_html__('Search across Layrix and foreign Elementor variables, then jump straight into cleanup or direct editing.', 'ecf-framework'); ?></p>
+                            </div>
+                        </div>
+                        <div class="ecf-global-search">
+                            <label class="ecf-global-search__field">
+                                <span class="dashicons dashicons-search" aria-hidden="true"></span>
+                                <input type="search" id="ecf-global-search-input" placeholder="<?php echo esc_attr__('Search variables…', 'ecf-framework'); ?>" autocomplete="off">
+                            </label>
+                            <div class="ecf-global-search__results" id="ecf-global-search-results" hidden></div>
                         </div>
                     </div>
                     <div id="ecf-varlist-ecf" class="ecf-varlist"><p class="ecf-loading"><?php echo esc_html__('Loading…', 'ecf-framework'); ?></p></div>
