@@ -2170,6 +2170,34 @@ jQuery(function($){
     applyAdminDesignSettings(preset, mode);
   }
 
+  function applyAdminContentFontSize(value, syncInputs) {
+    var size = parseInt(value || 16, 10);
+    if (!size || size < 14) {
+      size = 14;
+    }
+    if (size > 22) {
+      size = 22;
+    }
+    $('.ecf-wrap').css('--ecf-admin-content-font-size', size + 'px');
+    if (syncInputs) {
+      $('[data-ecf-admin-content-font-size]').val(String(size));
+    }
+  }
+
+  function applyAdminMenuFontSize(value, syncInputs) {
+    var size = parseInt(value || 14, 10);
+    if (!size || size < 12) {
+      size = 12;
+    }
+    if (size > 20) {
+      size = 20;
+    }
+    $('.ecf-wrap').css('--ecf-admin-menu-font-size', size + 'px');
+    if (syncInputs) {
+      $('[data-ecf-admin-menu-font-size]').val(String(size));
+    }
+  }
+
   function normalizeLayoutOrders(orders) {
     var normalized = {};
 
@@ -2354,16 +2382,25 @@ jQuery(function($){
   function applyMasonryLayoutToGroup($group) {
     if (!$group.length) return;
 
+    if (!$group.is(':visible')) {
+      clearMasonryLayoutToGroup($group);
+      return;
+    }
+
     watchMasonryLayoutItems($group);
 
     var groupElement = $group.get(0);
     if (!groupElement) return;
 
     var computedGroupStyle = window.getComputedStyle(groupElement);
-    var declaredColumns = parseInt($group.attr('data-ecf-layout-columns') || $group.css('--ecf-layout-columns') || 1, 10);
+    var declaredColumnsValue = String($group.attr('data-ecf-layout-columns') || $group.css('--ecf-layout-columns') || '').trim();
+    var declaredColumns = parseInt(declaredColumnsValue, 10);
     var columns = declaredColumns && declaredColumns > 0
       ? declaredColumns
       : countGridTracks(computedGroupStyle.gridTemplateColumns);
+    if (!columns || columns < 1) {
+      columns = 1;
+    }
     var rowUnit = parseFloat(computedGroupStyle.getPropertyValue('--ecf-masonry-row-unit')) || 10;
     var gap = parseFloat(computedGroupStyle.rowGap || computedGroupStyle.gap || '20') || 20;
 
@@ -2715,6 +2752,12 @@ jQuery(function($){
       if (responseSettings.admin_design_mode) {
         $('[data-ecf-admin-design-mode]').val(responseSettings.admin_design_mode);
         adminDesign.mode = responseSettings.admin_design_mode;
+      }
+      if (responseSettings.admin_content_font_size) {
+        applyAdminContentFontSize(responseSettings.admin_content_font_size, true);
+      }
+      if (responseSettings.admin_menu_font_size) {
+        applyAdminMenuFontSize(responseSettings.admin_menu_font_size, true);
       }
       refreshAdminDesignChooser();
       markCurrentStateAsSaved();
@@ -3328,6 +3371,14 @@ jQuery(function($){
 
   $(document).on('input change', '.ecf-general-favorite-card [name], [data-ecf-general-section] [name]', function() {
     syncNamedField($(this));
+  });
+
+  $(document).on('input change', '[data-ecf-admin-content-font-size]', function(event) {
+    applyAdminContentFontSize($(this).val(), event.type === 'change');
+  });
+
+  $(document).on('input change', '[data-ecf-admin-menu-font-size]', function(event) {
+    applyAdminMenuFontSize($(this).val(), event.type === 'change');
   });
 
   $(document).on('blur change', '[data-ecf-slug-field="token"]', function() {

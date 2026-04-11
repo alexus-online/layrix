@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.5 (2026-04-11)
+
+### Fix
+- Typography settings layout restored with the scale controls, live preview, and font assignment cards separated into stable responsive columns.
+- Typografie-Einstellungen stabilisiert: Schriftskala, Live-Vorschau und Schriftzuweisung laufen jetzt in klar getrennten responsiven Spalten.
+- Admin content and sidebar menu font sizes are now configurable under Allgemeine Einstellungen > Interface.
+- Admin-Inhalts- und Menue-Schriftgroessen sind jetzt unter Allgemeine Einstellungen > Interface konfigurierbar.
+- Typography preview font weight now follows the selected body font weight setting.
+- Die Typografie-Vorschau uebernimmt jetzt die gewaehlte Basis-Schriftstaerke fuer Fliesstext.
+- Masonry card placement now measures visible typography grids correctly to avoid overlapping cards.
+- Masonry-Karten in der Typografie-Ansicht werden sichtbar korrekt vermessen, damit keine Ueberlagerungen entstehen.
+
 ## 0.3.4 (2026-04-11)
 
 ### Fix

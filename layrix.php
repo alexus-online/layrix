@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Layrix
  * Description: Core-Framework-style tokens, editor panel, and native Elementor variable/class sync.
- * Version: 0.3.4
+ * Version: 0.3.5
  * Author: Alexander Kaiser
  * Update URI: https://github.com/alexus-online/layrix
  * Text Domain: ecf-framework
@@ -224,7 +224,8 @@ class ECF_Framework {
         ?>
         <div class="wrap ecf-wrap"
              data-ecf-admin-design="<?php echo esc_attr($this->selected_admin_design_preset($settings)); ?>"
-             data-ecf-admin-mode="<?php echo esc_attr($this->selected_admin_design_mode($settings)); ?>">
+             data-ecf-admin-mode="<?php echo esc_attr($this->selected_admin_design_mode($settings)); ?>"
+             style="--ecf-admin-content-font-size: <?php echo esc_attr($this->selected_admin_content_font_size($settings)); ?>px; --ecf-admin-menu-font-size: <?php echo esc_attr($this->selected_admin_menu_font_size($settings)); ?>px;">
 
             <!-- Sidebar -->
             <aside class="ecf-sidebar">

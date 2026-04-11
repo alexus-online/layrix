@@ -7,6 +7,8 @@ trait ECF_Framework_Config_Trait {
             'interface_language' => $this->wordpress_default_interface_language(),
             'admin_design_preset' => 'current',
             'admin_design_mode' => 'dark',
+            'admin_content_font_size' => '16',
+            'admin_menu_font_size' => '14',
             'github_update_checks_enabled' => '1',
             'elementor_boxed_width' => '1140px',
             'content_max_width' => '72ch',

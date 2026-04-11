@@ -10,6 +10,8 @@ trait ECF_Framework_Admin_General_Trait {
             'root_font_size',
             'interface_language',
             'admin_design_preset',
+            'admin_content_font_size',
+            'admin_menu_font_size',
             'github_update_checks_enabled',
             'content_max_width',
             'elementor_boxed_width',
@@ -33,6 +35,8 @@ trait ECF_Framework_Admin_General_Trait {
             'root_font_size' => '1',
             'interface_language' => '1',
             'admin_design_preset' => '1',
+            'admin_content_font_size' => '1',
+            'admin_menu_font_size' => '1',
             'content_max_width' => '1',
             'elementor_boxed_width' => '1',
             'base_font_family' => '1',
@@ -121,6 +125,18 @@ trait ECF_Framework_Admin_General_Trait {
                         ? __('White mode', 'ecf-framework')
                         : __('Dark mode', 'ecf-framework')
                 ),
+            ],
+            'admin_content_font_size' => [
+                'group' => 'plugin',
+                'tab' => 'system',
+                'title' => __('Admin Content Font Size', 'ecf-framework'),
+                'value' => sprintf(__('%spx', 'ecf-framework'), (string) ($settings['admin_content_font_size'] ?? '16')),
+            ],
+            'admin_menu_font_size' => [
+                'group' => 'plugin',
+                'tab' => 'system',
+                'title' => __('Admin Menu Font Size', 'ecf-framework'),
+                'value' => sprintf(__('%spx', 'ecf-framework'), (string) ($settings['admin_menu_font_size'] ?? '14')),
             ],
             'content_max_width' => [
                 'group' => 'website',
@@ -225,6 +241,8 @@ trait ECF_Framework_Admin_General_Trait {
             'elementor_boxed_width' => 90,
             'interface_language' => 110,
             'admin_design_preset' => 120,
+            'admin_content_font_size' => 125,
+            'admin_menu_font_size' => 126,
             'github_update_checks_enabled' => 130,
             'show_elementor_status_cards' => 140,
             'elementor_variable_type_filter' => 150,
@@ -415,6 +433,66 @@ trait ECF_Framework_Admin_General_Trait {
         return in_array($current, ['dark', 'light'], true) ? $current : $defaults['admin_design_mode'];
     }
 
+    private function selected_admin_content_font_size($settings = null) {
+        $defaults = $this->defaults();
+        $raw = is_array($settings)
+            ? ($settings['admin_content_font_size'] ?? $defaults['admin_content_font_size'])
+            : ($this->get_settings()['admin_content_font_size'] ?? $defaults['admin_content_font_size']);
+        $size = absint($raw);
+
+        return (string) min(22, max(14, $size ?: (int) $defaults['admin_content_font_size']));
+    }
+
+    private function selected_admin_menu_font_size($settings = null) {
+        $defaults = $this->defaults();
+        $raw = is_array($settings)
+            ? ($settings['admin_menu_font_size'] ?? $defaults['admin_menu_font_size'])
+            : ($this->get_settings()['admin_menu_font_size'] ?? $defaults['admin_menu_font_size']);
+        $size = absint($raw);
+
+        return (string) min(20, max(12, $size ?: (int) $defaults['admin_menu_font_size']));
+    }
+
+    private function render_admin_content_font_size_field($settings) {
+        $current = $this->selected_admin_content_font_size($settings);
+        ?>
+        <label data-ecf-general-field="admin_content_font_size">
+            <span class="ecf-general-label-with-favorite">
+                <?php echo $this->general_setting_label(__('Admin Content Font Size', 'ecf-framework'), 'Controls the readable text size inside the Layrix admin interface. This does not affect frontend typography.', 'editor-textcolor'); ?>
+                <?php $this->render_general_setting_favorite_toggle($settings, 'admin_content_font_size'); ?>
+            </span>
+            <input type="number"
+                   min="14"
+                   max="22"
+                   step="1"
+                   name="<?php echo esc_attr($this->option_name); ?>[admin_content_font_size]"
+                   value="<?php echo esc_attr($current); ?>"
+                   data-ecf-admin-content-font-size
+                   class="ecf-general-favorite-input">
+        </label>
+        <?php
+    }
+
+    private function render_admin_menu_font_size_field($settings) {
+        $current = $this->selected_admin_menu_font_size($settings);
+        ?>
+        <label data-ecf-general-field="admin_menu_font_size">
+            <span class="ecf-general-label-with-favorite">
+                <?php echo $this->general_setting_label(__('Admin Menu Font Size', 'ecf-framework'), 'Controls the font size of the left Layrix menu. Default is 14px.', 'menu'); ?>
+                <?php $this->render_general_setting_favorite_toggle($settings, 'admin_menu_font_size'); ?>
+            </span>
+            <input type="number"
+                   min="12"
+                   max="20"
+                   step="1"
+                   name="<?php echo esc_attr($this->option_name); ?>[admin_menu_font_size]"
+                   value="<?php echo esc_attr($current); ?>"
+                   data-ecf-admin-menu-font-size
+                   class="ecf-general-favorite-input">
+        </label>
+        <?php
+    }
+
     private function render_admin_design_field($settings) {
         $current_preset = $this->selected_admin_design_preset($settings);
         $current_mode = $this->selected_admin_design_mode($settings);
@@ -586,6 +664,12 @@ trait ECF_Framework_Admin_General_Trait {
                 break;
             case 'admin_design_preset':
                 $this->render_admin_design_field($settings);
+                break;
+            case 'admin_content_font_size':
+                $this->render_admin_content_font_size_field($settings);
+                break;
+            case 'admin_menu_font_size':
+                $this->render_admin_menu_font_size_field($settings);
                 break;
             case 'github_update_checks_enabled':
                 ?>

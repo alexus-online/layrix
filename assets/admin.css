@@ -24,6 +24,9 @@
   --font-mono:     var(--ecf-font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
   --ecf-radius:    10px;
   --ecf-sidebar:   220px;
+  --ecf-admin-content-font-size: 16px;
+  --ecf-admin-content-heading-font-size: calc(var(--ecf-admin-content-font-size, 16px) + 2px);
+  --ecf-admin-menu-font-size: 14px;
 }
 
 .ecf-wrap[data-ecf-admin-design="hero"] {
@@ -203,11 +206,11 @@
 }
 .ecf-nav-section {
   padding: 20px 16px 6px;
-  font-size: 9px;
+  font-size: var(--ecf-admin-menu-font-size, 14px);
   font-weight: 600;
   color: var(--ecf-muted);
   text-transform: uppercase;
-  letter-spacing: .08em;
+  letter-spacing: 0;
   opacity: .35;
 }
 .ecf-nav-item {
@@ -215,7 +218,7 @@
   align-items: center;
   gap: 10px;
   padding: 10px 14px;
-  font-size: 13px;
+  font-size: var(--ecf-admin-menu-font-size, 14px);
   color: var(--ecf-muted-2);
   cursor: pointer;
   border-radius: 10px;
@@ -804,9 +807,37 @@
   margin-bottom: 14px;
 }
 
+.ecf-font-assignment-card {
+  margin-bottom: 16px;
+}
+
+.ecf-font-assignment-card .ecf-font-assignment-note {
+  max-width: 760px;
+  margin-bottom: 20px;
+}
+
+.ecf-font-assignment-card .ecf-font-assignment-accordion {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
+}
+
+.ecf-font-assignment-card .ecf-font-assignment-accordion__content > label,
+.ecf-font-assignment-card .ecf-font-assignment-accordion__content > .ecf-general-field,
+.ecf-font-assignment-card .ecf-font-assignment-accordion__content .ecf-form-grid--single,
+.ecf-font-assignment-card .ecf-font-assignment-accordion__content [data-ecf-font-family-preset],
+.ecf-font-assignment-card .ecf-font-assignment-accordion__content [data-ecf-font-family-search],
+.ecf-font-assignment-card .ecf-font-assignment-accordion__content [data-ecf-font-family-custom],
+.ecf-font-assignment-card .ecf-font-assignment-accordion__content .ecf-inline-actions--font-family-status {
+  width: 100%;
+  max-width: none;
+}
+
 @media (max-width: 900px) {
   .ecf-admin-design-grid,
   .ecf-admin-design-mode__options {
+    grid-template-columns: 1fr;
+  }
+  .ecf-font-assignment-card .ecf-font-assignment-accordion {
     grid-template-columns: 1fr;
   }
 }
@@ -2032,6 +2063,19 @@
 .ecf-form-grid--compact {
   grid-template-columns: 1fr;
 }
+
+.ecf-form-grid--two {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.ecf-form-grid--three {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.ecf-interface-basics-grid {
+  grid-template-columns: minmax(360px, 1.25fr) repeat(2, minmax(180px, 1fr));
+  margin-bottom: 0;
+}
 .ecf-form-grid--base-colors {
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 14px;
@@ -2162,8 +2206,8 @@
 /* ── Typography live preview ──────────────────────────────────── */
 .ecf-typography-layout {
   display: grid;
-  grid-template-columns: 1fr;
-  gap: 14px;
+  grid-template-columns: minmax(0, 32%) minmax(0, 68%);
+  gap: 12px;
   margin-bottom: 20px;
   align-items: start;
 }
@@ -2184,6 +2228,26 @@
 }
 .ecf-panel[data-panel="typography"] .ecf-row input[type="text"] {
   min-width: 0;
+}
+.ecf-panel[data-panel="typography"] .ecf-form-grid label {
+  font-size: 16px;
+  line-height: 1.45;
+}
+.ecf-panel[data-panel="typography"] .ecf-row input[type="text"],
+.ecf-panel[data-panel="typography"] .ecf-row input[type="number"],
+.ecf-panel[data-panel="typography"] .ecf-form-grid input[type="text"],
+.ecf-panel[data-panel="typography"] .ecf-form-grid input[type="number"],
+.ecf-panel[data-panel="typography"] .ecf-form-grid select,
+.ecf-panel[data-panel="typography"] .ecf-root-font-select select {
+  font-size: 16px;
+  min-height: 38px;
+  padding: 7px 10px;
+}
+.ecf-panel[data-panel="typography"] .ecf-general-setting-label__text {
+  font-size: 16px;
+}
+.ecf-panel[data-panel="typography"] .ecf-add-row {
+  font-size: 16px !important;
 }
 .ecf-panel[data-panel="typography"] .ecf-table[data-group="typography_fonts"] .ecf-head,
 .ecf-panel[data-panel="typography"] .ecf-table[data-group="typography_fonts"] .ecf-row {
@@ -2388,10 +2452,10 @@
   line-height: .95;
   letter-spacing: -.04em;
   color: #fff;
-  font-weight: 600;
+  font-weight: var(--ecf-preview-weight);
 }
 .ecf-typography-focus__size-line--max .ecf-typography-focus__sample-text {
-  font-weight: 700;
+  font-weight: var(--ecf-preview-weight);
 }
 .ecf-typography-focus__size-line span {
   display: inline-flex;
@@ -2584,6 +2648,13 @@
   color: #fff;
   display: inline-block;
 }
+.ecf-type-row__sample-line strong {
+  font-family: var(--ecf-preview-font);
+  font-weight: var(--ecf-preview-weight);
+  line-height: .95;
+  letter-spacing: -.04em;
+  color: #fff;
+}
 .ecf-type-row__sample-line span {
   display: inline-flex;
   align-items: center;
@@ -2683,7 +2754,7 @@
 /* ── Typography layout ────────────────────────────────────────── */
 .ecf-typography-layout {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 200px minmax(0, 1fr);
   gap: 16px;
   align-items: start;
   margin-bottom: 16px;
@@ -4719,7 +4790,7 @@
 }
 .ecf-color-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; border: 1px solid rgba(255,255,255,.1); flex-shrink: 0; }
 .ecf-panel-note {
-  margin: 12px 0 0;
+  margin: 12px 0 16px;
   color: #6b7280;
   font-size: 12px;
 }
@@ -6070,12 +6141,70 @@ body.ecf-modal-open {
   padding: 0 24px 24px;
 }
 
+/* ── Readable admin content scale ──────────────────────────────── */
+.ecf-main {
+  font-size: var(--ecf-admin-content-font-size, 16px);
+  line-height: 1.5;
+}
+
+.ecf-main p,
+.ecf-main label,
+.ecf-main summary,
+.ecf-main .ecf-card-intro,
+.ecf-main .ecf-muted-copy,
+.ecf-main .ecf-panel-note,
+.ecf-main .ecf-settings-group__header p,
+.ecf-main .ecf-card__summary small,
+.ecf-main .ecf-settings-group__summary small,
+.ecf-main .ecf-root-font-select__meta,
+.ecf-main .ecf-font-family-note,
+.ecf-main .ecf-layout-columns-toolbar__label,
+.ecf-main .ecf-layout-columns-toolbar__help {
+  font-size: var(--ecf-admin-content-font-size, 16px);
+  line-height: 1.55;
+}
+
+.ecf-main .ecf-card h2,
+.ecf-main .ecf-card h3,
+.ecf-main .ecf-card__summary strong,
+.ecf-main .ecf-settings-group__header h3,
+.ecf-main .ecf-settings-group__summary strong {
+  font-size: var(--ecf-admin-content-heading-font-size, 18px);
+  line-height: 1.35;
+}
+
+.ecf-main .ecf-btn,
+.ecf-main .ecf-btn--sm,
+.ecf-main .ecf-add-row,
+.ecf-main .ecf-layout-columns-btn,
+.ecf-main .ecf-row,
+.ecf-main .ecf-head,
+.ecf-main .ecf-form-grid input[type="text"],
+.ecf-main .ecf-form-grid input[type="number"],
+.ecf-main .ecf-form-grid select,
+.ecf-main .ecf-row input[type="text"],
+.ecf-main .ecf-row input[type="number"],
+.ecf-main .ecf-row select,
+.ecf-main textarea {
+  font-size: var(--ecf-admin-content-font-size, 16px);
+}
+
+.ecf-main .ecf-form-grid input[type="text"],
+.ecf-main .ecf-form-grid input[type="number"],
+.ecf-main .ecf-form-grid select,
+.ecf-main .ecf-row input[type="text"],
+.ecf-main .ecf-row input[type="number"],
+.ecf-main .ecf-row select,
+.ecf-main textarea {
+  min-height: 38px;
+}
+
 @media (max-width: 1280px) and (min-width: 1101px) {
   .ecf-main {
     padding: 20px 22px;
   }
   .ecf-typography-layout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 30%) minmax(0, 70%);
   }
   .ecf-shadow-layout {
     grid-template-columns: minmax(0, 30%) minmax(0, 70%);
@@ -6086,6 +6215,9 @@ body.ecf-modal-open {
   .ecf-typography-layout {
     grid-template-columns: 1fr;
     gap: 12px;
+  }
+  .ecf-typography-preview-card {
+    position: static;
   }
   .ecf-typography-preview-header {
     flex-direction: column;

@@ -1022,7 +1022,11 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                     </label>
                                 </div>
                             </details>
-                            <?php $this->render_interface_language_field($settings); ?>
+                            <div class="ecf-form-grid ecf-form-grid--three ecf-interface-basics-grid">
+                                <?php $this->render_interface_language_field($settings); ?>
+                                <?php $this->render_admin_content_font_size_field($settings); ?>
+                                <?php $this->render_admin_menu_font_size_field($settings); ?>
+                            </div>
                             <?php $this->render_admin_design_field($settings); ?>
                         </div>
                         <p class="ecf-muted-copy"><?php echo esc_html__('These options affect the Elementor editor, plugin language and the ECF backend appearance, not your frontend design.', 'ecf-framework'); ?></p>
@@ -1219,62 +1223,6 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                         </div>
                         <p class="ecf-muted-copy"><?php echo esc_html__('The preview updates live while you edit the scale settings.', 'ecf-framework'); ?></p>
                     </div>
-                    <div class="ecf-card">
-                        <h2><?php echo esc_html__('Site Font Assignment', 'ecf-framework'); ?></h2>
-                        <p class="ecf-card-intro"><?php echo esc_html__('Choose the two active families for body copy and headings. Imported fonts are stored locally and stay manageable below.', 'ecf-framework'); ?></p>
-                        <p class="ecf-muted-copy ecf-font-assignment-note"><?php echo esc_html__('Privacy note: imported library fonts are downloaded into your own media library on the server and served locally, so the frontend does not need live requests to external font providers.', 'ecf-framework'); ?></p>
-                        <div class="ecf-font-assignment-accordion">
-                            <details class="ecf-settings-group ecf-settings-group--details ecf-font-assignment-accordion__item" open>
-                                <summary class="ecf-settings-group__summary">
-                                    <span>
-                                        <strong><?php echo esc_html__('Body Font', 'ecf-framework'); ?></strong>
-                                        <small><?php echo esc_html__('Default font for flowing text and normal site copy.', 'ecf-framework'); ?></small>
-                                    </span>
-                                    <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
-                                </summary>
-                                <div class="ecf-font-assignment-accordion__content">
-                                    <?php $this->render_base_font_family_field($settings, false); ?>
-                                </div>
-                            </details>
-                            <details class="ecf-settings-group ecf-settings-group--details ecf-font-assignment-accordion__item">
-                                <summary class="ecf-settings-group__summary">
-                                    <span>
-                                        <strong><?php echo esc_html__('Heading Font', 'ecf-framework'); ?></strong>
-                                        <small><?php echo esc_html__('Separate font family for h1 to h6 and heading-like elements.', 'ecf-framework'); ?></small>
-                                    </span>
-                                    <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
-                                </summary>
-                                <div class="ecf-font-assignment-accordion__content">
-                                    <?php $this->render_heading_font_family_field($settings, false); ?>
-                                </div>
-                            </details>
-                        </div>
-                    </div>
-                    <details class="ecf-card ecf-card--details" open>
-                        <summary class="ecf-card__summary">
-                            <span>
-                                <strong><?php echo esc_html__('Core Font Tokens', 'ecf-framework'); ?></strong>
-                                <small><?php echo esc_html__('Reusable typography stacks like Primary, Secondary and Mono.', 'ecf-framework'); ?></small>
-                            </span>
-                            <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
-                        </summary>
-                        <div class="ecf-card__content">
-                            <?php $this->render_rows('typography_fonts', $settings['typography']['fonts'], $this->option_name.'[typography][fonts]'); ?>
-                        </div>
-                    </details>
-                    <details class="ecf-card ecf-card--details" data-ecf-local-fonts-section>
-                        <summary class="ecf-card__summary">
-                            <span>
-                                <strong><?php echo esc_html__('Imported Local Fonts', 'ecf-framework'); ?></strong>
-                                <small><?php echo esc_html__('Manage the fonts that were imported locally from the library.', 'ecf-framework'); ?></small>
-                            </span>
-                            <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
-                        </summary>
-                        <div class="ecf-card__content">
-                            <p class="ecf-muted-copy"><?php echo esc_html__('The old manual upload flow is intentionally hidden here to keep the typography workflow focused and consistent.', 'ecf-framework'); ?></p>
-                            <?php $this->render_imported_local_font_rows($settings['typography']['local_fonts'] ?? [], $this->option_name.'[typography][local_fonts]'); ?>
-                        </div>
-                    </details>
                 </div>
                 <div class="ecf-card ecf-typography-preview-card"
                      data-ecf-layout-item="typography-preview"
@@ -1381,7 +1329,63 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                     </div>
                 </div>
             </div>
+            <div class="ecf-card ecf-font-assignment-card">
+                <h2><?php echo esc_html__('Site Font Assignment', 'ecf-framework'); ?></h2>
+                <p class="ecf-card-intro"><?php echo esc_html__('Choose the two active families for body copy and headings. Imported fonts are stored locally and stay manageable below.', 'ecf-framework'); ?></p>
+                <p class="ecf-muted-copy ecf-font-assignment-note"><?php echo esc_html__('Privacy note: imported library fonts are downloaded into your own media library on the server and served locally, so the frontend does not need live requests to external font providers.', 'ecf-framework'); ?></p>
+                <div class="ecf-font-assignment-accordion">
+                    <details class="ecf-settings-group ecf-settings-group--details ecf-font-assignment-accordion__item" open>
+                        <summary class="ecf-settings-group__summary">
+                            <span>
+                                <strong><?php echo esc_html__('Body Font', 'ecf-framework'); ?></strong>
+                                <small><?php echo esc_html__('Default font for flowing text and normal site copy.', 'ecf-framework'); ?></small>
+                            </span>
+                            <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+                        </summary>
+                        <div class="ecf-font-assignment-accordion__content">
+                            <?php $this->render_base_font_family_field($settings, false); ?>
+                        </div>
+                    </details>
+                    <details class="ecf-settings-group ecf-settings-group--details ecf-font-assignment-accordion__item" open>
+                        <summary class="ecf-settings-group__summary">
+                            <span>
+                                <strong><?php echo esc_html__('Heading Font', 'ecf-framework'); ?></strong>
+                                <small><?php echo esc_html__('Separate font family for h1 to h6 and heading-like elements.', 'ecf-framework'); ?></small>
+                            </span>
+                            <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+                        </summary>
+                        <div class="ecf-font-assignment-accordion__content">
+                            <?php $this->render_heading_font_family_field($settings, false); ?>
+                        </div>
+                    </details>
+                </div>
+            </div>
             <div class="ecf-grid" data-ecf-layout-group="typography-secondary" data-ecf-masonry-layout="1">
+                <details class="ecf-card ecf-card--details" data-ecf-layout-item="typography-fonts" open>
+                    <summary class="ecf-card__summary">
+                        <span>
+                            <strong><?php echo esc_html__('Core Font Tokens', 'ecf-framework'); ?></strong>
+                            <small><?php echo esc_html__('Reusable typography stacks like Primary, Secondary and Mono.', 'ecf-framework'); ?></small>
+                        </span>
+                        <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+                    </summary>
+                    <div class="ecf-card__content">
+                        <?php $this->render_rows('typography_fonts', $settings['typography']['fonts'], $this->option_name.'[typography][fonts]'); ?>
+                    </div>
+                </details>
+                <details class="ecf-card ecf-card--details" data-ecf-layout-item="typography-local-fonts" data-ecf-local-fonts-section>
+                    <summary class="ecf-card__summary">
+                        <span>
+                            <strong><?php echo esc_html__('Imported Local Fonts', 'ecf-framework'); ?></strong>
+                            <small><?php echo esc_html__('Manage the fonts that were imported locally from the library.', 'ecf-framework'); ?></small>
+                        </span>
+                        <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+                    </summary>
+                    <div class="ecf-card__content">
+                        <p class="ecf-muted-copy"><?php echo esc_html__('The old manual upload flow is intentionally hidden here to keep the typography workflow focused and consistent.', 'ecf-framework'); ?></p>
+                        <?php $this->render_imported_local_font_rows($settings['typography']['local_fonts'] ?? [], $this->option_name.'[typography][local_fonts]'); ?>
+                    </div>
+                </details>
                 <details class="ecf-card ecf-card--details" data-ecf-layout-item="typography-weights" open>
                     <summary class="ecf-card__summary">
                         <span>
