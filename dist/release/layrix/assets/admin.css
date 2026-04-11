@@ -4575,9 +4575,6 @@
   cursor: pointer;
   transition: background .1s;
 }
-.ecf-var-check {
-  grid-area: check;
-}
 .ecf-var-row:hover { background: rgba(99,102,241,.06); }
 .ecf-var-row:last-child { border-bottom: none; }
 .ecf-var-row.is-flash {
@@ -4623,7 +4620,6 @@
   color: #cbd5e1;
 }
 .ecf-var-label {
-  grid-area: label;
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -4641,7 +4637,6 @@
   white-space: nowrap;
 }
 .ecf-var-type {
-  grid-area: type;
   font-size: 10px;
   color: var(--ecf-muted);
   background: var(--ecf-card-2);
@@ -4651,7 +4646,6 @@
   text-align: center;
 }
 .ecf-var-value {
-  grid-area: value;
   font-size: 11px;
   color: var(--ecf-muted-2);
   display: flex;
@@ -4764,6 +4758,9 @@
 }
 
 @media (max-width: 1080px) {
+  .ecf-var-check {
+    grid-area: check;
+  }
   .ecf-vargroup-tools {
     flex-direction: column;
     align-items: stretch;
@@ -4785,6 +4782,7 @@
     gap: 8px 12px;
   }
   .ecf-var-label {
+    grid-area: label;
     align-items: flex-start;
   }
   .ecf-var-label span:last-child {
@@ -4793,9 +4791,11 @@
     text-overflow: clip;
   }
   .ecf-var-type {
+    grid-area: type;
     justify-self: start;
   }
   .ecf-var-value {
+    grid-area: value;
     flex-wrap: wrap;
     word-break: break-word;
   }
