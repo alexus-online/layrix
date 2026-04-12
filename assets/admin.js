@@ -766,6 +766,31 @@ jQuery(function($){
   function syncFontFamilyCurrentLabel($field) {
     if (!$field || !$field.length) return;
     $field.find('[data-ecf-font-current-value]').text(currentFontFamilyLabel($field));
+    syncTypographyFontCardSummaries();
+  }
+
+  function syncTypographyFontCardSummaries() {
+    var currentPrefix = $.trim(String(i18n.current_prefix || 'Current:'));
+    var fontSizePrefix = $.trim(String(i18n.font_size_prefix || 'Font size:'));
+
+    var $bodyField = getPrimaryFontFamilyField('base_font_family');
+    if ($bodyField.length) {
+      $('[data-ecf-typography-body-current]').text(currentPrefix + ' ' + currentFontFamilyLabel($bodyField));
+    }
+
+    var $headingField = getPrimaryFontFamilyField('heading_font_family');
+    if ($headingField.length) {
+      $('[data-ecf-typography-heading-current]').text(currentPrefix + ' ' + currentFontFamilyLabel($headingField));
+    }
+
+    var $bodySizeField = $('[data-ecf-body-size-field]').first();
+    if ($bodySizeField.length) {
+      var sizeValue = $.trim(String($bodySizeField.find('[data-ecf-size-value-input]').val() || ''));
+      var sizeFormat = $.trim(String($bodySizeField.find('[data-ecf-size-format-input], [data-ecf-format-input]').first().val() || ''));
+      if (sizeValue && sizeFormat) {
+        $('[data-ecf-typography-body-size]').text(fontSizePrefix + ' ' + sizeValue + ' ' + sizeFormat);
+      }
+    }
   }
 
   function parseCssSizeParts(value) {
@@ -1072,6 +1097,7 @@ jQuery(function($){
 
     refreshBodySizeLinkedState();
     updateBaseBodyTextSizeWarning();
+    syncTypographyFontCardSummaries();
   }
 
   function syncGeneralFavoriteTogglesFromSettings(settings) {
@@ -3875,6 +3901,7 @@ jQuery(function($){
 
   $(document).on('input change', '[data-ecf-font-family-custom]', function() {
     syncFontFamilyCurrentLabel($(this).closest('[data-ecf-general-field]'));
+    syncTypographyFontCardSummaries();
   });
 
   $(document).on('click', function(event) {
@@ -4090,6 +4117,7 @@ jQuery(function($){
   renderShadowPreview();
   refreshBodySizeLinkedState();
   updateBaseBodyTextSizeWarning();
+  syncTypographyFontCardSummaries();
 
   $(document).on('input change', '[name="ecf_framework_v50[root_font_size]"], [name^="ecf_framework_v50[typography][scale]"], [name^="ecf_framework_v50[typography][fonts]"]', function(){
     renderTypePreview();
@@ -4101,10 +4129,15 @@ jQuery(function($){
 
   $(document).on('input change', '[data-ecf-font-family-preset-input][data-ecf-font-family-field="base_font_family"], [data-ecf-font-family-custom][data-ecf-font-family-field="base_font_family"]', function() {
     renderTypePreview();
+    syncTypographyFontCardSummaries();
   });
 
   $(document).on('change', '[name="ecf_framework_v50[base_body_font_weight]"]', function() {
     renderTypePreview();
+  });
+
+  $(document).on('input change', '[data-ecf-body-size-field] [data-ecf-size-value-input], [data-ecf-body-size-field] [data-ecf-size-format-input], [data-ecf-body-size-field] [data-ecf-format-input]', function() {
+    syncTypographyFontCardSummaries();
   });
 
   var isSyncingRootFontControls = false;

@@ -1285,8 +1285,8 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                 <span>
                                     <strong><?php echo esc_html__('Body Font', 'ecf-framework'); ?></strong>
                                     <span class="ecf-typography-font-card__meta">
-                                        <span><?php echo esc_html__('Current:', 'ecf-framework'); ?> <?php echo esc_html($current_body_font); ?></span>
-                                        <span><?php echo esc_html__('Font size:', 'ecf-framework'); ?> <?php echo esc_html($body_size_parts['value'] . ' ' . $body_size_parts['format']); ?></span>
+                                        <span data-ecf-typography-body-current><?php echo esc_html__('Current:', 'ecf-framework'); ?> <?php echo esc_html($current_body_font); ?></span>
+                                        <span data-ecf-typography-body-size><?php echo esc_html__('Font size:', 'ecf-framework'); ?> <?php echo esc_html($body_size_parts['value'] . ' ' . $body_size_parts['format']); ?></span>
                                     </span>
                                     <small><?php echo esc_html__('Default font for flowing text and normal site copy.', 'ecf-framework'); ?></small>
                                 </span>
@@ -1301,7 +1301,7 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                 <span>
                                     <strong><?php echo esc_html__('Heading Font', 'ecf-framework'); ?></strong>
                                     <span class="ecf-typography-font-card__meta">
-                                        <span><?php echo esc_html__('Current:', 'ecf-framework'); ?> <?php echo esc_html($current_heading_font); ?></span>
+                                        <span data-ecf-typography-heading-current><?php echo esc_html__('Current:', 'ecf-framework'); ?> <?php echo esc_html($current_heading_font); ?></span>
                                     </span>
                                     <small><?php echo esc_html__('Separate font family for h1 to h6 and heading-like elements.', 'ecf-framework'); ?></small>
                                 </span>

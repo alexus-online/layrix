@@ -750,12 +750,18 @@ test.describe('ECF admin UI', () => {
     await openGeneralTab(page, 'website');
     await expect(getGeneralField(page, 'base_font_family').locator('[data-ecf-font-family-preset]').first()).toHaveValue("'Manrope'");
 
+    await openPanel(page, 'typography');
+    await expect(page.locator('[data-ecf-typography-body-current]').first()).toContainText(/Manrope/);
+
     await page.reload();
     await openPluginPage(page);
     await openGeneralTab(page, 'website');
 
     const reloadedSelect = getGeneralField(page, 'base_font_family').locator('[data-ecf-base-font-preset]').first();
     await expect(reloadedSelect).toHaveValue("'Manrope'");
+
+    await openPanel(page, 'typography');
+    await expect(page.locator('[data-ecf-typography-body-current]').first()).toContainText(/Manrope/);
 
     const frontendStyles = await getFrontendStyles(page);
     expect(frontendStyles.rootBodyFontFamily).toContain('Manrope');
