@@ -52,6 +52,14 @@ trait ECF_Framework_Settings_Sanitizer_Trait {
         $output['admin_design_mode'] = in_array($admin_design_mode, ['dark', 'light'], true)
             ? $admin_design_mode
             : $defaults['admin_design_mode'];
+        $admin_content_font_size = absint($input['admin_content_font_size'] ?? $defaults['admin_content_font_size']);
+        $output['admin_content_font_size'] = (string) min(22, max(14, $admin_content_font_size ?: (int) $defaults['admin_content_font_size']));
+        $admin_menu_font_size = absint($input['admin_menu_font_size'] ?? $defaults['admin_menu_font_size']);
+        $output['admin_menu_font_size'] = (string) min(20, max(12, $admin_menu_font_size ?: (int) $defaults['admin_menu_font_size']));
+        $output['autosave_enabled'] = !empty($input['autosave_enabled']) ? '1' : '0';
+        $output['elementor_auto_sync_enabled'] = !empty($input['elementor_auto_sync_enabled']) ? '1' : '0';
+        $output['elementor_auto_sync_variables'] = !empty($input['elementor_auto_sync_variables']) ? '1' : '0';
+        $output['elementor_auto_sync_classes'] = !empty($input['elementor_auto_sync_classes']) ? '1' : '0';
         $output['github_update_checks_enabled'] = !empty($input['github_update_checks_enabled']) ? '1' : '0';
         $content_width_value  = trim((string) ($input['content_max_width_value'] ?? $input['content_max_width'] ?? ''));
         $content_width_format = sanitize_key($input['content_max_width_format'] ?? '');

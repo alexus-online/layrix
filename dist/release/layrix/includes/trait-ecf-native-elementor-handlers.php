@@ -596,13 +596,16 @@ trait ECF_Framework_Native_Elementor_Handlers_Trait {
 
     public function rest_sync_native(\WP_REST_Request $request) {
         try {
-            $var_result = $this->sync_native_variables_merge();
-            $class_result = $this->sync_native_classes_merge();
+            $sync_variables = $request->get_param('variables') !== false;
+            $sync_classes = $request->get_param('classes') === true;
+            $var_result = $sync_variables ? $this->sync_native_variables_merge() : ['created' => 0, 'updated' => 0, 'deleted' => 0, 'skipped' => true];
+            $class_result = $sync_classes ? $this->sync_native_classes_merge() : ['created' => 0, 'updated' => 0, 'deleted' => 0, 'skipped' => true];
 
             return rest_ensure_response([
                 'success' => true,
                 'variables' => $var_result,
                 'classes' => $class_result,
+                'meta' => method_exists($this, 'rest_admin_meta') ? $this->rest_admin_meta() : null,
                 'message' => 'Native Elementor sync completed.',
             ]);
         } catch (\Throwable $e) {

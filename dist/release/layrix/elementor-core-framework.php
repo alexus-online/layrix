@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Layrix Legacy Update Bridge
  * Description: Compatibility bridge for older Elementor Core Framework installs. Redirects future updates to the Layrix repository.
- * Version: 0.3.4
+ * Version: 0.3.7
  * Author: Alexander Kaiser
  * Update URI: https://github.com/alexus-online/layrix
  * Text Domain: ecf-framework

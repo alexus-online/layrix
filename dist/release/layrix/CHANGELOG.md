@@ -1,5 +1,37 @@
 # Changelog
 
+## 0.3.7 (2026-04-12)
+
+### Fix
+- Topbar autosave now uses a single toggle button with a collapsible options panel, immediate persistence for sync flags, and consistent button styling.
+- Topbar-Autosave nutzt jetzt einen einzelnen Toggle-Button mit einklappbarem Optionsbereich, sofortiger Speicherung der Sync-Flags und konsistentem Button-Styling.
+- Typography cards now start collapsed where intended and the font assignment area sits above the live preview in the updated layout.
+- Typografie-Karten starten jetzt wie vorgesehen eingeklappt und der Bereich fuer die Schriftzuweisung sitzt im aktualisierten Layout oberhalb der Live-Vorschau.
+- Admin labels and German copy were clarified around autosave and uploaded-font wording.
+- Admin-Beschriftungen und deutsche Texte rund um Autosave und die Benennung hochgeladener Schriften wurden klarer formuliert.
+
+### Test
+- Full live admin UI suite re-verified against `layrix.de`: `96 passed`, `8 skipped`, `0 failed`.
+- Komplette Live-Admin-UI-Suite gegen `layrix.de` erneut verifiziert: `96 bestanden`, `8 übersprungen`, `0 fehlgeschlagen`.
+
+## 0.3.6 (2026-04-12)
+
+### Fix
+- Boxed container fallback CSS now keeps `.ecf-container-boxed` and `.cf-container-boxed` centered and width-limited even outside the full layout component block.
+- Boxed-Container-Fallback stabilisiert: `.ecf-container-boxed` und `.cf-container-boxed` bleiben zentriert und breitenbegrenzt, auch ausserhalb des vollstaendigen Layout-Komponentenblocks.
+
+## 0.3.5 (2026-04-11)
+
+### Fix
+- Typography settings layout restored with the scale controls, live preview, and font assignment cards separated into stable responsive columns.
+- Typografie-Einstellungen stabilisiert: Schriftskala, Live-Vorschau und Schriftzuweisung laufen jetzt in klar getrennten responsiven Spalten.
+- Admin content and sidebar menu font sizes are now configurable under Allgemeine Einstellungen > Interface.
+- Admin-Inhalts- und Menue-Schriftgroessen sind jetzt unter Allgemeine Einstellungen > Interface konfigurierbar.
+- Typography preview font weight now follows the selected body font weight setting.
+- Die Typografie-Vorschau uebernimmt jetzt die gewaehlte Basis-Schriftstaerke fuer Fliesstext.
+- Masonry card placement now measures visible typography grids correctly to avoid overlapping cards.
+- Masonry-Karten in der Typografie-Ansicht werden sichtbar korrekt vermessen, damit keine Ueberlagerungen entstehen.
+
 ## 0.3.4 (2026-04-11)
 
 ### Fix

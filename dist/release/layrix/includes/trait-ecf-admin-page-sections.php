@@ -713,10 +713,10 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                         <button type="button" class="ecf-var-tab" data-ecf-general-tab="favorites" data-ecf-new-key="general-favorites" title="<?php echo esc_attr__('Pinned quick settings from Website and Plugin basics.', 'ecf-framework'); ?>"><span class="dashicons dashicons-heart" aria-hidden="true"></span><?php echo esc_html__('Favorites', 'ecf-framework'); ?></button>
                     </div>
                     <div class="ecf-general-section is-active ecf-general-section--website" data-ecf-general-section="website" data-ecf-layout-group="components-website">
-                        <div class="ecf-general-overview-card" data-ecf-layout-item="website-overview">
+                        <div class="ecf-general-overview-card ecf-general-overview-card--compact" data-ecf-layout-item="website-overview">
                             <div>
                                 <strong><?php echo esc_html__('Website basics', 'ecf-framework'); ?></strong>
-                                <p><?php echo esc_html__('Tune the global foundation here first: root size, default fonts, core widths and base colors. The rest of the plugin builds on these choices.', 'ecf-framework'); ?></p>
+                                <p><?php echo esc_html__('Site-wide font, layout and base color settings for the whole website.', 'ecf-framework'); ?></p>
                             </div>
                             <div class="ecf-general-overview-card__tags" aria-hidden="true">
                                 <span><?php echo esc_html__('Type', 'ecf-framework'); ?></span>
@@ -724,6 +724,13 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                 <span><?php echo esc_html__('Colors', 'ecf-framework'); ?></span>
                             </div>
                         </div>
+                        <div class="ecf-var-tabs ecf-website-subtabs" data-ecf-website-tabs>
+                            <button type="button" class="ecf-var-tab is-active" data-ecf-website-tab="type" aria-pressed="true"><span class="dashicons dashicons-editor-textcolor" aria-hidden="true"></span><?php echo esc_html__('Font', 'ecf-framework'); ?></button>
+                            <button type="button" class="ecf-var-tab" data-ecf-website-tab="layout" aria-pressed="false"><span class="dashicons dashicons-align-wide" aria-hidden="true"></span><?php echo esc_html__('Layout', 'ecf-framework'); ?></button>
+                            <button type="button" class="ecf-var-tab" data-ecf-website-tab="colors" aria-pressed="false"><span class="dashicons dashicons-art" aria-hidden="true"></span><?php echo esc_html__('Colors', 'ecf-framework'); ?></button>
+                            <button type="button" class="ecf-var-tab" data-ecf-website-tab="advanced" aria-pressed="false"><span class="dashicons dashicons-admin-tools" aria-hidden="true"></span><?php echo esc_html__('Advanced', 'ecf-framework'); ?></button>
+                        </div>
+                        <div class="ecf-website-subsection is-active" data-ecf-website-section="type">
                         <div class="ecf-settings-group" data-ecf-layout-item="website-type-size">
                             <div class="ecf-settings-group__header">
                                 <h3><?php echo esc_html__('Type & Size', 'ecf-framework'); ?></h3>
@@ -765,6 +772,8 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                 </div>
                             </div>
                         </div>
+                        </div>
+                        <div class="ecf-website-subsection" data-ecf-website-section="layout" hidden>
                         <div class="ecf-settings-group" data-ecf-layout-item="website-widths">
                             <div class="ecf-settings-group__header">
                                 <h3><?php echo esc_html__('Widths', 'ecf-framework'); ?></h3>
@@ -776,6 +785,10 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                         <?php echo $this->general_setting_label(__('Content Max Width', 'ecf-framework'), 'Creates the CSS token --ecf-content-max-width for readable text/content wrappers. ch works especially well for article-like content widths.', 'align-wide'); ?>
                                         <?php $this->render_general_setting_favorite_toggle($settings, 'content_max_width'); ?>
                                     </span>
+                                    <?php $this->render_field_token_pills([
+                                        ['type' => __('Variable', 'ecf-framework'), 'value' => '--ecf-content-max-width'],
+                                        ['type' => __('Class', 'ecf-framework'), 'value' => '.ecf-content-width'],
+                                    ]); ?>
                                     <div class="ecf-inline-size-input">
                                         <input type="text" name="<?php echo esc_attr($this->option_name); ?>[content_max_width_value]" value="<?php echo esc_attr($content_width_parts['value']); ?>" placeholder="72 oder min(72ch, 100% - 2rem)" title="<?php echo esc_attr__('Enter either a simple value like 72 or, with f(x), a full CSS expression such as min(72ch, 100% - 2rem).', 'ecf-framework'); ?>">
                                         <div class="ecf-format-picker" data-ecf-format-picker>
@@ -806,6 +819,10 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                         <?php echo $this->general_setting_label(__('Elementor Boxed Width', 'ecf-framework'), 'Creates the CSS token --ecf-container-boxed and the helper class .ecf-container-boxed. Choose a format like px, %, rem or switch to f(x) for values like min(...), calc(...) or clamp(...).', 'screenoptions'); ?>
                                         <?php $this->render_general_setting_favorite_toggle($settings, 'elementor_boxed_width'); ?>
                                     </span>
+                                    <?php $this->render_field_token_pills([
+                                        ['type' => __('Variable', 'ecf-framework'), 'value' => '--ecf-container-boxed'],
+                                        ['type' => __('Class', 'ecf-framework'), 'value' => '.ecf-container-boxed'],
+                                    ]); ?>
                                     <div class="ecf-inline-size-input">
                                         <input type="text" name="<?php echo esc_attr($this->option_name); ?>[elementor_boxed_width_value]" value="<?php echo esc_attr($boxed_width_parts['value']); ?>" placeholder="1140 oder clamp(20rem, 80vw, 1140px)" title="<?php echo esc_attr__('Enter either a plain value like 1140 or, with f(x), a full CSS expression such as clamp(20rem, 80vw, 1140px).', 'ecf-framework'); ?>">
                                         <div class="ecf-format-picker" data-ecf-format-picker>
@@ -833,6 +850,8 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                 </label>
                             </div>
                         </div>
+                        </div>
+                        <div class="ecf-website-subsection" data-ecf-website-section="colors" hidden>
                         <div class="ecf-settings-group" data-ecf-layout-item="website-base-colors">
                             <div class="ecf-settings-group__header">
                                 <h3><?php echo esc_html__('Base Colors', 'ecf-framework'); ?></h3>
@@ -854,6 +873,7 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                                 <?php echo $this->general_setting_label(__('Focus Outline Width', 'ecf-framework'), 'Visible width of the keyboard focus outline.', 'editor-expand'); ?>
                                                 <?php $this->render_general_setting_favorite_toggle($settings, 'focus_outline_width'); ?>
                                             </span>
+                                            <?php $this->render_field_token_pills([['type' => __('Variable', 'ecf-framework'), 'value' => '--ecf-focus-outline-width']]); ?>
                                             <?php $this->render_general_size_field_inline($settings, 'focus_outline_width', $settings['focus_outline_width'] ?? '2px', $this->focus_outline_format_options(), 'px', '2', __('Visible width of the keyboard focus outline.', 'ecf-framework')); ?>
                                         </label>
                                         <label data-ecf-general-field="focus_outline_offset">
@@ -861,12 +881,15 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                                 <?php echo $this->general_setting_label(__('Focus Outline Offset', 'ecf-framework'), 'Distance between the element edge and the keyboard focus outline.', 'move'); ?>
                                                 <?php $this->render_general_setting_favorite_toggle($settings, 'focus_outline_offset'); ?>
                                             </span>
+                                            <?php $this->render_field_token_pills([['type' => __('Variable', 'ecf-framework'), 'value' => '--ecf-focus-outline-offset']]); ?>
                                             <?php $this->render_general_size_field_inline($settings, 'focus_outline_offset', $settings['focus_outline_offset'] ?? '2px', $this->focus_outline_format_options(), 'px', '2', __('Distance between the element edge and the keyboard focus outline.', 'ecf-framework')); ?>
                                         </label>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        </div>
+                        <div class="ecf-website-subsection" data-ecf-website-section="advanced" hidden>
                         <details class="ecf-settings-group ecf-settings-group--details" data-ecf-layout-item="website-scale-impact">
                             <summary class="ecf-settings-group__summary">
                                 <span>
@@ -979,6 +1002,7 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                             <textarea id="ecf-generated-css-field" readonly rows="18" style="width:100%;font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,monospace;white-space:pre;"><?php echo esc_textarea($generated_css); ?></textarea>
                             <p class="ecf-muted-copy"><?php echo esc_html__('ecf_generated_css_note', 'ecf-framework'); ?></p>
                         </details>
+                        </div>
                     </div>
                     <div class="ecf-general-section" data-ecf-general-section="interface" hidden>
                         <div class="ecf-form-grid ecf-form-grid--single">
@@ -1022,7 +1046,29 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                     </label>
                                 </div>
                             </details>
-                            <?php $this->render_interface_language_field($settings); ?>
+                            <div class="ecf-form-grid ecf-form-grid--three ecf-interface-basics-grid">
+                                <?php $this->render_interface_language_field($settings); ?>
+                                <?php $this->render_admin_content_font_size_field($settings); ?>
+                                <?php $this->render_admin_menu_font_size_field($settings); ?>
+                            </div>
+                            <div class="ecf-form-grid ecf-form-grid--two ecf-interface-sync-grid">
+                                <label class="ecf-form-grid__checkbox" data-ecf-general-field="autosave_enabled">
+                                    <input type="checkbox" name="<?php echo esc_attr($this->option_name); ?>[autosave_enabled]" value="1" <?php checked(!empty($settings['autosave_enabled'])); ?> data-ecf-autosave-enabled>
+                                    <span class="ecf-general-label-with-favorite"><?php echo $this->general_setting_label(__('Save Layrix changes automatically', 'ecf-framework'), 'Automatically saves your Layrix settings after a short pause. If this is off, you need to use the save button manually.', 'saved'); ?><?php $this->render_general_setting_favorite_toggle($settings, 'autosave_enabled'); ?></span>
+                                </label>
+                                <label class="ecf-form-grid__checkbox" data-ecf-general-field="elementor_auto_sync_enabled">
+                                    <input type="checkbox" name="<?php echo esc_attr($this->option_name); ?>[elementor_auto_sync_enabled]" value="1" <?php checked(!empty($settings['elementor_auto_sync_enabled'])); ?> data-ecf-elementor-auto-sync-enabled>
+                                    <span class="ecf-general-label-with-favorite"><?php echo $this->general_setting_label(__('Also sync changes to Elementor automatically', 'ecf-framework'), 'After Layrix autosave, also sync the generated variables and classes to Elementor automatically. This can update Elementor data and clear Elementor caches.', 'update'); ?><?php $this->render_general_setting_favorite_toggle($settings, 'elementor_auto_sync_enabled'); ?></span>
+                                </label>
+                                <label class="ecf-form-grid__checkbox" data-ecf-general-field="elementor_auto_sync_variables">
+                                    <input type="checkbox" name="<?php echo esc_attr($this->option_name); ?>[elementor_auto_sync_variables]" value="1" <?php checked(!empty($settings['elementor_auto_sync_variables'])); ?>>
+                                    <span class="ecf-general-label-with-favorite"><?php echo $this->general_setting_label(__('Auto-sync variables', 'ecf-framework'), 'Syncs colors, shades, tints, spacing, radius, typography, shadows and layout variables into Elementor after autosave.', 'art'); ?><?php $this->render_general_setting_favorite_toggle($settings, 'elementor_auto_sync_variables'); ?></span>
+                                </label>
+                                <label class="ecf-form-grid__checkbox" data-ecf-general-field="elementor_auto_sync_classes">
+                                    <input type="checkbox" name="<?php echo esc_attr($this->option_name); ?>[elementor_auto_sync_classes]" value="1" <?php checked(!empty($settings['elementor_auto_sync_classes'])); ?>>
+                                    <span class="ecf-general-label-with-favorite"><?php echo $this->general_setting_label(__('Auto-sync classes', 'ecf-framework'), 'Syncs Layrix helper classes into Elementor after autosave. Enable this only if you want class changes to be pushed automatically.', 'editor-code'); ?><?php $this->render_general_setting_favorite_toggle($settings, 'elementor_auto_sync_classes'); ?></span>
+                                </label>
+                            </div>
                             <?php $this->render_admin_design_field($settings); ?>
                         </div>
                         <p class="ecf-muted-copy"><?php echo esc_html__('These options affect the Elementor editor, plugin language and the ECF backend appearance, not your frontend design.', 'ecf-framework'); ?></p>
@@ -1172,6 +1218,18 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
 
     private function render_typography_panel($args) {
         extract($args, EXTR_SKIP);
+        $current_body_font = $this->font_family_field_current_label(
+            $settings,
+            $this->normalize_font_family_field_current_value($settings, (string) ($settings['base_font_family'] ?? 'var(--ecf-font-primary)')),
+            'var(--ecf-font-primary)'
+        );
+        $current_heading_font = $this->font_family_field_current_label(
+            $settings,
+            $this->normalize_font_family_field_current_value($settings, (string) ($settings['heading_font_family'] ?? 'var(--ecf-font-primary)')),
+            'var(--ecf-font-primary)'
+        );
+        $body_size_value = $this->derived_base_body_text_size($settings);
+        $body_size_parts = $this->parse_css_size_parts($body_size_value);
         ?>
         <div class="ecf-panel" data-panel="typography">
             <div class="ecf-typography-layout" data-ecf-layout-group="typography-main">
@@ -1219,169 +1277,172 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                         </div>
                         <p class="ecf-muted-copy"><?php echo esc_html__('The preview updates live while you edit the scale settings.', 'ecf-framework'); ?></p>
                     </div>
-                    <div class="ecf-card">
-                        <h2><?php echo esc_html__('Site Font Assignment', 'ecf-framework'); ?></h2>
-                        <p class="ecf-card-intro"><?php echo esc_html__('Choose the two active families for body copy and headings. Imported fonts are stored locally and stay manageable below.', 'ecf-framework'); ?></p>
-                        <p class="ecf-muted-copy ecf-font-assignment-note"><?php echo esc_html__('Privacy note: imported library fonts are downloaded into your own media library on the server and served locally, so the frontend does not need live requests to external font providers.', 'ecf-framework'); ?></p>
-                        <div class="ecf-font-assignment-accordion">
-                            <details class="ecf-settings-group ecf-settings-group--details ecf-font-assignment-accordion__item" open>
-                                <summary class="ecf-settings-group__summary">
-                                    <span>
-                                        <strong><?php echo esc_html__('Body Font', 'ecf-framework'); ?></strong>
-                                        <small><?php echo esc_html__('Default font for flowing text and normal site copy.', 'ecf-framework'); ?></small>
-                                    </span>
-                                    <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
-                                </summary>
-                                <div class="ecf-font-assignment-accordion__content">
-                                    <?php $this->render_base_font_family_field($settings, false); ?>
-                                </div>
-                            </details>
-                            <details class="ecf-settings-group ecf-settings-group--details ecf-font-assignment-accordion__item">
-                                <summary class="ecf-settings-group__summary">
-                                    <span>
-                                        <strong><?php echo esc_html__('Heading Font', 'ecf-framework'); ?></strong>
-                                        <small><?php echo esc_html__('Separate font family for h1 to h6 and heading-like elements.', 'ecf-framework'); ?></small>
-                                    </span>
-                                    <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
-                                </summary>
-                                <div class="ecf-font-assignment-accordion__content">
-                                    <?php $this->render_heading_font_family_field($settings, false); ?>
-                                </div>
-                            </details>
-                        </div>
-                    </div>
-                    <details class="ecf-card ecf-card--details" open>
-                        <summary class="ecf-card__summary">
-                            <span>
-                                <strong><?php echo esc_html__('Core Font Tokens', 'ecf-framework'); ?></strong>
-                                <small><?php echo esc_html__('Reusable typography stacks like Primary, Secondary and Mono.', 'ecf-framework'); ?></small>
-                            </span>
-                            <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
-                        </summary>
-                        <div class="ecf-card__content">
-                            <?php $this->render_rows('typography_fonts', $settings['typography']['fonts'], $this->option_name.'[typography][fonts]'); ?>
-                        </div>
-                    </details>
-                    <details class="ecf-card ecf-card--details" data-ecf-local-fonts-section>
-                        <summary class="ecf-card__summary">
-                            <span>
-                                <strong><?php echo esc_html__('Imported Local Fonts', 'ecf-framework'); ?></strong>
-                                <small><?php echo esc_html__('Manage the fonts that were imported locally from the library.', 'ecf-framework'); ?></small>
-                            </span>
-                            <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
-                        </summary>
-                        <div class="ecf-card__content">
-                            <p class="ecf-muted-copy"><?php echo esc_html__('The old manual upload flow is intentionally hidden here to keep the typography workflow focused and consistent.', 'ecf-framework'); ?></p>
-                            <?php $this->render_imported_local_font_rows($settings['typography']['local_fonts'] ?? [], $this->option_name.'[typography][local_fonts]'); ?>
-                        </div>
-                    </details>
                 </div>
-                <div class="ecf-card ecf-typography-preview-card"
-                     data-ecf-layout-item="typography-preview"
-                     data-ecf-type-scale-preview
-                     style="--ecf-preview-font: <?php echo esc_attr($type_preview_font); ?>;"
-                     data-steps="<?php echo esc_attr(wp_json_encode($settings['typography']['scale']['steps'])); ?>"
-                     data-active-step="<?php echo esc_attr($settings['typography']['scale']['base_index']); ?>"
-                     data-preview-label-min="<?php echo esc_attr__('Minimum', 'ecf-framework'); ?>"
-                     data-preview-label-max="<?php echo esc_attr__('Maximum', 'ecf-framework'); ?>"
-                     data-preview-label-fixed="<?php echo esc_attr__('Static', 'ecf-framework'); ?>"
-                     data-preview-label-fluid="<?php echo esc_attr__('Fluid', 'ecf-framework'); ?>"
-                     data-preview-word="<?php echo esc_attr($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?>"
-                     data-preview-helper="<?php echo esc_attr__('Click a scale step to inspect it in detail.', 'ecf-framework'); ?>"
-                     data-preview-font="<?php echo esc_attr($type_preview_font); ?>">
-                    <div class="ecf-typography-preview-header">
-                        <div>
-                            <h2><?php echo esc_html__('Live Type Preview', 'ecf-framework'); ?></h2>
-                            <p><?php echo esc_html__('Preview for your generated Elementor text variables.', 'ecf-framework'); ?></p>
-                        </div>
-                        <div class="ecf-preview-toolbar">
-                            <button type="button" class="ecf-preview-toggle" data-ecf-preview-view="min"><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></button>
-                            <button type="button" class="ecf-preview-toggle is-active" data-ecf-preview-view="fluid"><?php echo esc_html__('Fluid', 'ecf-framework'); ?></button>
-                            <button type="button" class="ecf-preview-toggle" data-ecf-preview-view="max"><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></button>
-                        </div>
-                    </div>
-                    <div class="ecf-typography-focus" data-ecf-type-scale-focus>
-                        <div class="ecf-typography-focus__meta">
-                            <span class="ecf-preview-pill" data-ecf-preview-mode><?php echo esc_html(!empty($settings['typography']['scale']['fluid']) ? __('Fluid', 'ecf-framework') : __('Static', 'ecf-framework')); ?></span>
-                            <strong data-ecf-focus-token>--ecf-text-<?php echo esc_html($settings['typography']['scale']['base_index']); ?></strong>
-                            <p data-ecf-focus-helper><?php echo esc_html__('Click a scale step to inspect it in detail.', 'ecf-framework'); ?></p>
-                        </div>
-                        <div class="ecf-typography-focus__sample">
-                            <div class="ecf-typography-focus__word" data-ecf-focus-word><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></div>
-                            <div class="ecf-typography-focus__stats">
-                                <div>
-                                    <span><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
-                                    <div class="ecf-clamp-metric">
-                                        <strong data-ecf-focus-min><?php echo esc_html($base_type_preview['min_px'] ?? '16'); ?>px</strong>
-                                    </div>
-                                </div>
-                                <div>
-                                    <span><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
-                                    <div class="ecf-clamp-metric">
-                                        <strong data-ecf-focus-max><?php echo esc_html($base_type_preview['max_px'] ?? '16'); ?>px</strong>
-                                    </div>
-                                </div>
+                <div class="ecf-typography-main" data-ecf-layout-item="typography-preview">
+                    <div class="ecf-typography-font-grid">
+                        <details class="ecf-card ecf-typography-font-card">
+                            <summary class="ecf-typography-font-card__summary">
+                                <span>
+                                    <strong><?php echo esc_html__('Body Font', 'ecf-framework'); ?></strong>
+                                    <span class="ecf-typography-font-card__meta">
+                                        <span><?php echo esc_html__('Current:', 'ecf-framework'); ?> <?php echo esc_html($current_body_font); ?></span>
+                                        <span><?php echo esc_html__('Font size:', 'ecf-framework'); ?> <?php echo esc_html($body_size_parts['value'] . ' ' . $body_size_parts['format']); ?></span>
+                                    </span>
+                                    <small><?php echo esc_html__('Default font for flowing text and normal site copy.', 'ecf-framework'); ?></small>
+                                </span>
+                                <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+                            </summary>
+                            <div class="ecf-typography-font-card__content">
+                                <?php $this->render_base_font_family_field($settings, false); ?>
                             </div>
-                            <div class="ecf-typography-focus__sizes">
-                                <div class="ecf-clamp-group ecf-clamp-group--focus">
-                                    <button type="button" class="ecf-clamp-toggle" data-ecf-clamp-toggle="<?php echo esc_attr__('Show clamp value', 'ecf-framework'); ?>"><span class="dashicons dashicons-editor-code"></span></button>
-                                    <button type="button" class="ecf-clamp-popover" data-ecf-focus-copy><?php echo esc_html($base_type_preview['css_value'] ?? ''); ?></button>
-                                </div>
-                                <div class="ecf-typography-focus__size-line">
-                                    <span class="ecf-typography-focus__sample-text" data-ecf-focus-min-line><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></span>
-                                    <span><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
-                                </div>
-                                <div class="ecf-typography-focus__size-line ecf-typography-focus__size-line--max">
-                                    <span class="ecf-typography-focus__sample-text" data-ecf-focus-max-line><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></span>
-                                    <span><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
-                                </div>
+                        </details>
+                        <details class="ecf-card ecf-typography-font-card">
+                            <summary class="ecf-typography-font-card__summary">
+                                <span>
+                                    <strong><?php echo esc_html__('Heading Font', 'ecf-framework'); ?></strong>
+                                    <span class="ecf-typography-font-card__meta">
+                                        <span><?php echo esc_html__('Current:', 'ecf-framework'); ?> <?php echo esc_html($current_heading_font); ?></span>
+                                    </span>
+                                    <small><?php echo esc_html__('Separate font family for h1 to h6 and heading-like elements.', 'ecf-framework'); ?></small>
+                                </span>
+                                <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+                            </summary>
+                            <div class="ecf-typography-font-card__content">
+                                <?php $this->render_heading_font_family_field($settings, false); ?>
+                            </div>
+                        </details>
+                    </div>
+                    <div class="ecf-card ecf-typography-preview-card"
+                         data-ecf-type-scale-preview
+                         style="--ecf-preview-font: <?php echo esc_attr($type_preview_font); ?>;"
+                         data-steps="<?php echo esc_attr(wp_json_encode($settings['typography']['scale']['steps'])); ?>"
+                         data-active-step="<?php echo esc_attr($settings['typography']['scale']['base_index']); ?>"
+                         data-preview-label-min="<?php echo esc_attr__('Minimum', 'ecf-framework'); ?>"
+                         data-preview-label-max="<?php echo esc_attr__('Maximum', 'ecf-framework'); ?>"
+                         data-preview-label-fixed="<?php echo esc_attr__('Static', 'ecf-framework'); ?>"
+                         data-preview-label-fluid="<?php echo esc_attr__('Fluid', 'ecf-framework'); ?>"
+                         data-preview-word="<?php echo esc_attr($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?>"
+                         data-preview-helper="<?php echo esc_attr__('Click a scale step to inspect it in detail.', 'ecf-framework'); ?>"
+                         data-preview-font="<?php echo esc_attr($type_preview_font); ?>">
+                        <div class="ecf-typography-preview-header">
+                            <div>
+                                <h2><?php echo esc_html__('Live Type Preview', 'ecf-framework'); ?></h2>
+                                <p><?php echo esc_html__('Preview for your generated Elementor text variables.', 'ecf-framework'); ?></p>
+                            </div>
+                            <div class="ecf-preview-toolbar">
+                                <button type="button" class="ecf-preview-toggle" data-ecf-preview-view="min"><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></button>
+                                <button type="button" class="ecf-preview-toggle is-active" data-ecf-preview-view="fluid"><?php echo esc_html__('Fluid', 'ecf-framework'); ?></button>
+                                <button type="button" class="ecf-preview-toggle" data-ecf-preview-view="max"><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></button>
                             </div>
                         </div>
-                    </div>
-                    <div id="ecf-scale-steps-container">
-                        <?php foreach ($settings['typography']['scale']['steps'] as $step): ?>
-                        <input type="hidden" class="ecf-scale-step-input" name="<?php echo esc_attr($this->option_name); ?>[typography][scale][steps][]" value="<?php echo esc_attr($step); ?>">
-                        <?php endforeach; ?>
-                    </div>
-                    <div class="ecf-step-controls ecf-step-controls--top">
-                        <button type="button" class="ecf-step-btn" data-ecf-add-step="smaller" title="<?php echo esc_attr__('Add smaller step', 'ecf-framework'); ?>">+</button>
-                        <button type="button" class="ecf-step-btn ecf-step-btn--remove" data-ecf-remove-step="smaller" title="<?php echo esc_attr__('Remove smallest step', 'ecf-framework'); ?>">−</button>
-                    </div>
-                    <div class="ecf-typography-preview-list" data-ecf-type-scale-preview-list>
-                        <?php foreach ($type_scale_preview as $item): ?>
-                            <div class="ecf-type-row<?php echo $item['step'] === $settings['typography']['scale']['base_index'] ? ' is-active' : ''; ?>" data-ecf-step="<?php echo esc_attr($item['step']); ?>" data-ecf-step-row tabindex="0" role="button" aria-pressed="<?php echo $item['step'] === $settings['typography']['scale']['base_index'] ? 'true' : 'false'; ?>" style="<?php echo esc_attr('--ecf-preview-size:' . $item['css_value'] . ';'); ?>">
-                                <div class="ecf-type-row__token">
-                                    <div class="ecf-type-row__token-line">
-                                        <span class="ecf-type-row__token-label"><?php echo esc_html($item['token']); ?></span>
-                                        <button type="button" class="ecf-clamp-toggle" data-ecf-clamp-toggle="<?php echo esc_attr__('Show clamp value', 'ecf-framework'); ?>"><span class="dashicons dashicons-editor-code"></span></button>
-                                        <span class="ecf-copy-pill" data-copy="<?php echo esc_attr($item['token']); ?>"><?php echo esc_html__('Copy', 'ecf-framework'); ?></span>
-                                    </div>
-                                    <button type="button" class="ecf-clamp-popover" data-copy="<?php echo esc_attr($item['css_value']); ?>"><?php echo esc_html($item['css_value']); ?></button>
-                                </div>
-                                <div class="ecf-type-row__meta">
-                                    <div><span><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span><strong><?php echo esc_html($item['min_px']); ?>px</strong></div>
-                                    <div><span><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span><strong><?php echo esc_html($item['max_px']); ?>px</strong></div>
-                                </div>
-                                <div class="ecf-type-row__sample">
-                                    <div class="ecf-type-row__sample-line">
+                        <div class="ecf-typography-focus" data-ecf-type-scale-focus>
+                            <div class="ecf-typography-focus__meta">
+                                <span class="ecf-preview-pill" data-ecf-preview-mode><?php echo esc_html(!empty($settings['typography']['scale']['fluid']) ? __('Fluid', 'ecf-framework') : __('Static', 'ecf-framework')); ?></span>
+                                <strong data-ecf-focus-token>--ecf-text-<?php echo esc_html($settings['typography']['scale']['base_index']); ?></strong>
+                                <p data-ecf-focus-helper><?php echo esc_html__('Click a scale step to inspect it in detail.', 'ecf-framework'); ?></p>
+                            </div>
+                            <div class="ecf-typography-focus__sample">
+                                <div class="ecf-typography-focus__word" data-ecf-focus-word><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></div>
+                                <div class="ecf-typography-focus__stats">
+                                    <div>
                                         <span><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
-                                        <span class="ecf-type-row__sample-text" style="font-size:<?php echo esc_attr($item['min_px']); ?>px;"><?php echo esc_html($this->type_preview_text_for_step((string) $item['step'], $settings)); ?></span>
+                                        <div class="ecf-clamp-metric">
+                                            <strong data-ecf-focus-min><?php echo esc_html($base_type_preview['min_px'] ?? '16'); ?>px</strong>
+                                        </div>
                                     </div>
-                                    <div class="ecf-type-row__sample-line ecf-type-row__sample-line--max">
+                                    <div>
                                         <span><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
-                                        <span class="ecf-type-row__sample-text" style="font-size:<?php echo esc_attr($item['max_px']); ?>px;"><?php echo esc_html($this->type_preview_text_for_step((string) $item['step'], $settings)); ?></span>
+                                        <div class="ecf-clamp-metric">
+                                            <strong data-ecf-focus-max><?php echo esc_html($base_type_preview['max_px'] ?? '16'); ?>px</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="ecf-typography-focus__sizes">
+                                    <div class="ecf-clamp-group ecf-clamp-group--focus">
+                                        <button type="button" class="ecf-clamp-toggle" data-ecf-clamp-toggle="<?php echo esc_attr__('Show clamp value', 'ecf-framework'); ?>"><span class="dashicons dashicons-editor-code"></span></button>
+                                        <button type="button" class="ecf-clamp-popover" data-ecf-focus-copy><?php echo esc_html($base_type_preview['css_value'] ?? ''); ?></button>
+                                    </div>
+                                    <div class="ecf-typography-focus__size-line">
+                                        <span class="ecf-typography-focus__sample-text" data-ecf-focus-min-line><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></span>
+                                        <span><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
+                                    </div>
+                                    <div class="ecf-typography-focus__size-line ecf-typography-focus__size-line--max">
+                                        <span class="ecf-typography-focus__sample-text" data-ecf-focus-max-line><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></span>
+                                        <span><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
                                     </div>
                                 </div>
                             </div>
-                        <?php endforeach; ?>
-                    </div>
-                    <div class="ecf-step-controls ecf-step-controls--bottom">
-                        <button type="button" class="ecf-step-btn" data-ecf-add-step="larger" title="<?php echo esc_attr__('Add larger step', 'ecf-framework'); ?>">+</button>
-                        <button type="button" class="ecf-step-btn ecf-step-btn--remove" data-ecf-remove-step="larger" title="<?php echo esc_attr__('Remove largest step', 'ecf-framework'); ?>">−</button>
+                        </div>
+                        <div id="ecf-scale-steps-container">
+                            <?php foreach ($settings['typography']['scale']['steps'] as $step): ?>
+                            <input type="hidden" class="ecf-scale-step-input" name="<?php echo esc_attr($this->option_name); ?>[typography][scale][steps][]" value="<?php echo esc_attr($step); ?>">
+                            <?php endforeach; ?>
+                        </div>
+                        <div class="ecf-step-controls ecf-step-controls--top">
+                            <button type="button" class="ecf-step-btn" data-ecf-add-step="smaller" title="<?php echo esc_attr__('Add smaller step', 'ecf-framework'); ?>">+</button>
+                            <button type="button" class="ecf-step-btn ecf-step-btn--remove" data-ecf-remove-step="smaller" title="<?php echo esc_attr__('Remove smallest step', 'ecf-framework'); ?>">−</button>
+                        </div>
+                        <div class="ecf-typography-preview-list" data-ecf-type-scale-preview-list>
+                            <?php foreach ($type_scale_preview as $item): ?>
+                                <div class="ecf-type-row<?php echo $item['step'] === $settings['typography']['scale']['base_index'] ? ' is-active' : ''; ?>" data-ecf-step="<?php echo esc_attr($item['step']); ?>" data-ecf-step-row tabindex="0" role="button" aria-pressed="<?php echo $item['step'] === $settings['typography']['scale']['base_index'] ? 'true' : 'false'; ?>" style="<?php echo esc_attr('--ecf-preview-size:' . $item['css_value'] . ';'); ?>">
+                                    <div class="ecf-type-row__token">
+                                        <div class="ecf-type-row__token-line">
+                                            <span class="ecf-type-row__token-label"><?php echo esc_html($item['token']); ?></span>
+                                            <button type="button" class="ecf-clamp-toggle" data-ecf-clamp-toggle="<?php echo esc_attr__('Show clamp value', 'ecf-framework'); ?>"><span class="dashicons dashicons-editor-code"></span></button>
+                                            <span class="ecf-copy-pill" data-copy="<?php echo esc_attr($item['token']); ?>"><?php echo esc_html__('Copy', 'ecf-framework'); ?></span>
+                                        </div>
+                                        <button type="button" class="ecf-clamp-popover" data-copy="<?php echo esc_attr($item['css_value']); ?>"><?php echo esc_html($item['css_value']); ?></button>
+                                    </div>
+                                    <div class="ecf-type-row__meta">
+                                        <div><span><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span><strong><?php echo esc_html($item['min_px']); ?>px</strong></div>
+                                        <div><span><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span><strong><?php echo esc_html($item['max_px']); ?>px</strong></div>
+                                    </div>
+                                    <div class="ecf-type-row__sample">
+                                        <div class="ecf-type-row__sample-line">
+                                            <span><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
+                                            <span class="ecf-type-row__sample-text" style="font-size:<?php echo esc_attr($item['min_px']); ?>px;"><?php echo esc_html($this->type_preview_text_for_step((string) $item['step'], $settings)); ?></span>
+                                        </div>
+                                        <div class="ecf-type-row__sample-line ecf-type-row__sample-line--max">
+                                            <span><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
+                                            <span class="ecf-type-row__sample-text" style="font-size:<?php echo esc_attr($item['max_px']); ?>px;"><?php echo esc_html($this->type_preview_text_for_step((string) $item['step'], $settings)); ?></span>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                        </div>
+                        <div class="ecf-step-controls ecf-step-controls--bottom">
+                            <button type="button" class="ecf-step-btn" data-ecf-add-step="larger" title="<?php echo esc_attr__('Add larger step', 'ecf-framework'); ?>">+</button>
+                            <button type="button" class="ecf-step-btn ecf-step-btn--remove" data-ecf-remove-step="larger" title="<?php echo esc_attr__('Remove largest step', 'ecf-framework'); ?>">−</button>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="ecf-grid" data-ecf-layout-group="typography-secondary" data-ecf-masonry-layout="1">
+                <details class="ecf-card ecf-card--details" data-ecf-layout-item="typography-fonts" open>
+                    <summary class="ecf-card__summary">
+                        <span>
+                            <strong><?php echo esc_html__('Core Font Tokens', 'ecf-framework'); ?></strong>
+                            <small><?php echo esc_html__('Reusable typography stacks like Primary, Secondary and Mono.', 'ecf-framework'); ?></small>
+                        </span>
+                        <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+                    </summary>
+                    <div class="ecf-card__content">
+                        <?php $this->render_rows('typography_fonts', $settings['typography']['fonts'], $this->option_name.'[typography][fonts]'); ?>
+                    </div>
+                </details>
+                <details class="ecf-card ecf-card--details" data-ecf-layout-item="typography-local-fonts" data-ecf-local-fonts-section>
+                    <summary class="ecf-card__summary">
+                        <span>
+                            <strong><?php echo esc_html__('Imported Local Fonts', 'ecf-framework'); ?></strong>
+                            <small><?php echo esc_html__('Manage the fonts that were imported locally from the library.', 'ecf-framework'); ?></small>
+                        </span>
+                        <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+                    </summary>
+                    <div class="ecf-card__content">
+                        <p class="ecf-muted-copy"><?php echo esc_html__('The old manual upload flow is intentionally hidden here to keep the typography workflow focused and consistent.', 'ecf-framework'); ?></p>
+                        <?php $this->render_imported_local_font_rows($settings['typography']['local_fonts'] ?? [], $this->option_name.'[typography][local_fonts]'); ?>
+                    </div>
+                </details>
                 <details class="ecf-card ecf-card--details" data-ecf-layout-item="typography-weights" open>
                     <summary class="ecf-card__summary">
                         <span>

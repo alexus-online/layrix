@@ -45,6 +45,12 @@ const ftpHost = process.env.FTP_HOST || localEnv.FTP_HOST || '';
 const ftpUser = process.env.FTP_USER || localEnv.FTP_USER || '';
 const ftpPass = process.env.FTP_PASS || localEnv.FTP_PASS || '';
 const ftpPluginPath = process.env.FTP_PLUGIN_PATH || localEnv.FTP_PLUGIN_PATH || '';
+const uiFlowDefaults = Object.freeze({
+  autosave_enabled: '1',
+  elementor_auto_sync_enabled: '0',
+  elementor_auto_sync_variables: '1',
+  elementor_auto_sync_classes: '0',
+});
 
 function requiredEnvMissing() {
   return !wpUrl || !adminUser || !adminPassword;
@@ -112,6 +118,9 @@ async function loginToWordPress(page) {
   }
 
   await page.goto(loginUrl, { waitUntil: 'domcontentloaded' });
+  if (/\/404\/?$/i.test(page.url()) || /404/i.test(await page.title().catch(() => ''))) {
+    await page.goto(`${wpUrl}/wp-login.php`, { waitUntil: 'domcontentloaded' });
+  }
 
   const usernameField = page
     .locator('#user_login, input[name=\"log\"], input[name=\"username\"]')
@@ -155,8 +164,9 @@ async function loginToWordPress(page) {
 }
 
 async function openPluginPage(page) {
-  await page.goto(`${wpUrl}${pluginPath}`);
-  await expect(page.locator('.ecf-wrap')).toBeVisible();
+  await page.goto(`${wpUrl}${pluginPath}`, { waitUntil: 'domcontentloaded' });
+  await page.waitForLoadState('networkidle');
+  await expect(page.locator('.ecf-wrap, .ecf-panel, [data-panel]').first()).toBeVisible();
 }
 
 async function openPluginsPage(page) {
@@ -165,6 +175,11 @@ async function openPluginsPage(page) {
 }
 
 function getPluginRow(page, text = 'Layrix') {
+  if (/^layrix$/i.test(text)) {
+    return page.locator('#the-list tr').filter({
+      has: page.locator('th.check-column input[type="checkbox"][value^="layrix/"]'),
+    }).first();
+  }
   return page.locator('#the-list tr').filter({ hasText: new RegExp(text, 'i') }).first();
 }
 
@@ -182,7 +197,7 @@ async function triggerPluginUpdateCheck(page, text = 'Layrix') {
 async function openPanel(page, panel) {
   const trigger = page.locator(`.ecf-nav-item[data-panel="${panel}"], .ecf-sidebar-link[data-panel="${panel}"]`).first();
   await expect(trigger).toBeVisible();
-  await trigger.click();
+  await trigger.evaluate((element) => element.click());
   await expect(page.locator(`.ecf-panel[data-panel="${panel}"]`)).toBeVisible();
 }
 
@@ -195,6 +210,43 @@ async function openGeneralTab(page, tab) {
   await tabButton.evaluate((element) => element.click());
   await expect(tabButton).toHaveClass(/is-active/);
   await expect(panel.locator(`[data-ecf-general-section="${normalizedTab}"]`).first()).toBeVisible();
+}
+
+function websiteTabForField(name) {
+  const typeFields = new Set(['root_font_size', 'base_body_font_weight', 'base_body_text_size', 'base_font_family', 'heading_font_family']);
+  const layoutFields = new Set(['content_max_width', 'elementor_boxed_width']);
+  const colorFields = new Set(['base_text_color', 'base_background_color', 'link_color', 'focus_color']);
+  const advancedFields = new Set(['show_root_font_impact']);
+
+  if (typeFields.has(name)) return 'type';
+  if (layoutFields.has(name)) return 'layout';
+  if (colorFields.has(name)) return 'colors';
+  if (advancedFields.has(name)) return 'advanced';
+  return '';
+}
+
+async function openWebsiteTab(page, tab) {
+  await openGeneralTab(page, 'website');
+  const normalizedTab = String(tab || 'type');
+  const websiteSection = page.locator('[data-ecf-general-section="website"]').first();
+  const trigger = websiteSection.locator(`[data-ecf-website-tab="${normalizedTab}"]`).first();
+  if (await trigger.count()) {
+    await expect(trigger).toBeVisible();
+    await trigger.click();
+    await expect(trigger).toHaveClass(/is-active/);
+    await expect(websiteSection.locator(`[data-ecf-website-section="${normalizedTab}"]`).first()).toBeVisible();
+    return;
+  }
+
+  // Older admin layouts can render the website fields without the nested subtabs.
+  await expect(websiteSection).toBeVisible();
+}
+
+async function ensureGeneralFieldVisible(page, fieldName) {
+  const websiteTab = websiteTabForField(fieldName);
+  if (websiteTab) {
+    await openWebsiteTab(page, websiteTab);
+  }
 }
 
 async function chooseFormat(field, value) {
@@ -213,6 +265,7 @@ function getGeneralField(page, name) {
 }
 
 async function setBodyTextSize(page, value, format = 'px') {
+  await ensureGeneralFieldVisible(page, 'base_body_text_size');
   const field = getGeneralField(page, 'base_body_text_size');
   await expect(field).toBeVisible();
   await chooseFormat(field, format);
@@ -223,6 +276,7 @@ async function setBodyTextSize(page, value, format = 'px') {
 }
 
 async function getBodyTextSizeState(page) {
+  await ensureGeneralFieldVisible(page, 'base_body_text_size');
   const field = getGeneralField(page, 'base_body_text_size');
   return {
     field,
@@ -232,6 +286,7 @@ async function getBodyTextSizeState(page) {
 }
 
 async function selectBaseFontFamilyPreset(page, presetValue) {
+  await ensureGeneralFieldVisible(page, 'base_font_family');
   const field = getGeneralField(page, 'base_font_family');
   const search = field.locator('[data-ecf-font-family-search]').first();
   const panel = field.locator('[data-ecf-font-picker-panel]').first();
@@ -244,6 +299,7 @@ async function selectBaseFontFamilyPreset(page, presetValue) {
 }
 
 async function selectHeadingFontFamilyPreset(page, presetValue) {
+  await ensureGeneralFieldVisible(page, 'heading_font_family');
   const field = getGeneralField(page, 'heading_font_family');
   const search = field.locator('[data-ecf-font-family-search]').first();
   const panel = field.locator('[data-ecf-font-picker-panel]').first();
@@ -256,6 +312,7 @@ async function selectHeadingFontFamilyPreset(page, presetValue) {
 }
 
 async function getBaseFontFamilyState(page) {
+  await ensureGeneralFieldVisible(page, 'base_font_family');
   const field = getGeneralField(page, 'base_font_family');
   return {
     field,
@@ -265,6 +322,7 @@ async function getBaseFontFamilyState(page) {
 }
 
 async function getFontFamilySavedState(page, fieldName) {
+  await ensureGeneralFieldVisible(page, fieldName);
   const field = getGeneralField(page, fieldName);
   return {
     field,
@@ -293,6 +351,7 @@ async function restoreFontFamilySavedState(page, fieldName, presetValue, customV
 }
 
 async function clickRemoveSelectedLocalFont(page) {
+  await ensureGeneralFieldVisible(page, 'base_font_family');
   const field = getGeneralField(page, 'base_font_family');
   const button = field.locator('[data-ecf-local-font-remove]').first();
   await expect(button).toBeVisible();
@@ -300,6 +359,7 @@ async function clickRemoveSelectedLocalFont(page) {
 }
 
 async function clickRemoveSelectedHeadingLocalFont(page) {
+  await ensureGeneralFieldVisible(page, 'heading_font_family');
   const field = getGeneralField(page, 'heading_font_family');
   const button = field.locator('[data-ecf-local-font-remove]').first();
   await expect(button).toBeVisible();
@@ -307,6 +367,7 @@ async function clickRemoveSelectedHeadingLocalFont(page) {
 }
 
 async function importLibraryFontForField(page, fieldName, family) {
+  await ensureGeneralFieldVisible(page, fieldName);
   const field = getGeneralField(page, fieldName);
   await expect(field).toBeVisible();
   const search = field.locator('[data-ecf-font-family-search]').first();
@@ -408,6 +469,7 @@ async function getFavoriteToggleTip(page, fieldName) {
 }
 
 async function setGeneralCheckbox(page, fieldName, checked) {
+  await ensureGeneralFieldVisible(page, fieldName);
   const field = getGeneralField(page, fieldName);
   const checkbox = field.locator('input[type="checkbox"]').first();
   await expect(checkbox).toBeVisible();
@@ -418,6 +480,7 @@ async function setGeneralCheckbox(page, fieldName, checked) {
 }
 
 async function setGeneralColorValue(page, fieldName, value) {
+  await ensureGeneralFieldVisible(page, fieldName);
   const field = getGeneralField(page, fieldName);
   const input = field.locator('input.ecf-color-input').first();
   await expect(input).toBeVisible();
@@ -566,15 +629,32 @@ async function getSpacingPreviewRow(page, step = 'm') {
   return page.locator(`.ecf-panel[data-panel="spacing"] .ecf-space-row[data-ecf-space-step="${step}"]`).first();
 }
 
+async function ensureTypographyLocalFontsVisible(page) {
+  const card = page.locator('[data-ecf-layout-item="typography-local-fonts"]').first();
+  if (!(await card.count())) {
+    return;
+  }
+  const isOpen = await card.evaluate((element) => element.open);
+  if (!isOpen) {
+    await card.evaluate((element) => {
+      element.open = true;
+      element.dispatchEvent(new Event('toggle'));
+    });
+  }
+}
+
 async function addLocalFontRow(page) {
+  await ensureTypographyLocalFontsVisible(page);
   await page.locator('.ecf-panel[data-panel="typography"] .ecf-add-local-font:visible').first().click();
 }
 
 async function getLocalFontRows(page) {
+  await ensureTypographyLocalFontsVisible(page);
   return page.locator('[data-local-font-table] .ecf-font-file-row');
 }
 
 async function getLocalFontFamilies(page) {
+  await ensureTypographyLocalFontsVisible(page);
   return page.locator('[data-local-font-table] .ecf-font-file-row input[name$="[family]"]').evaluateAll((nodes) =>
     nodes.map((node) => node.value)
   );
@@ -606,6 +686,13 @@ async function fillLocalFontRow(row, values) {
 }
 
 async function removeLocalFontRow(row) {
+  await row.evaluate((element) => {
+    const details = element.closest('details');
+    if (details && !details.open) {
+      details.open = true;
+      details.dispatchEvent(new Event('toggle'));
+    }
+  });
   await row.locator('.ecf-remove-row').click();
 }
 
@@ -725,6 +812,7 @@ async function selectVariableRow(page, group, label) {
 async function bulkDeleteSelected(page, group) {
   page.once('dialog', (dialog) => dialog.accept());
   await page.locator(`.ecf-delete-selected[data-group="${group}"]`).first().click();
+  await page.waitForTimeout(800);
 }
 
 async function deleteSearchResult(page, label) {
@@ -733,6 +821,7 @@ async function deleteSearchResult(page, label) {
   await expect(item).toBeVisible();
   page.once('dialog', (dialog) => dialog.accept());
   await item.click();
+  await page.waitForTimeout(800);
 }
 
 async function openFirstEditableVariable(page) {
@@ -891,10 +980,104 @@ async function triggerNativeSync(page) {
   ]);
 }
 
+function getTopbarAutosaveToggle(page) {
+  return page.locator('[data-ecf-autosave-toggle]').first();
+}
+
+async function openTopbarAutosaveMenu(page) {
+  const toggle = getTopbarAutosaveToggle(page);
+  await expect(toggle).toBeVisible();
+  const box = await toggle.boundingBox();
+  if (!box) {
+    throw new Error('Autosave toggle has no bounding box.');
+  }
+
+  if ((await toggle.getAttribute('aria-expanded')) === 'true') {
+    return;
+  }
+
+  await toggle.click({
+    position: {
+      x: Math.max(8, Math.round(box.width - 20)),
+      y: Math.max(8, Math.round(box.height / 2)),
+    },
+  });
+  await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+  await expect(page.locator('[data-ecf-autosave-menu]').first()).toBeVisible();
+}
+
+async function closeTopbarAutosaveMenu(page) {
+  const toggle = getTopbarAutosaveToggle(page);
+  await expect(toggle).toBeVisible();
+  if ((await toggle.getAttribute('aria-expanded')) !== 'true') {
+    return;
+  }
+  const box = await toggle.boundingBox();
+  if (!box) {
+    throw new Error('Autosave toggle has no bounding box.');
+  }
+  await toggle.click({
+    position: {
+      x: Math.max(8, Math.round(box.width - 20)),
+      y: Math.max(8, Math.round(box.height / 2)),
+    },
+  });
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+}
+
+async function setTopbarAutosaveEnabled(page, enabled) {
+  const toggle = getTopbarAutosaveToggle(page);
+  await expect(toggle).toBeVisible();
+  const pill = page.locator('[data-ecf-autosave-pill]').first();
+  const currentText = String((await pill.textContent()) || '').toLowerCase();
+  const currentlyEnabled = !currentText.includes('off') && !currentText.includes('aus');
+  if (currentlyEnabled === Boolean(enabled)) {
+    return false;
+  }
+
+  const box = await toggle.boundingBox();
+  if (!box) {
+    throw new Error('Autosave toggle has no bounding box.');
+  }
+  await toggle.click({
+    position: {
+      x: Math.min(Math.round(box.width * 0.4), Math.round(box.width - 56)),
+      y: Math.max(8, Math.round(box.height / 2)),
+    },
+  });
+  await expect(pill).toContainText(enabled ? /Autosave active|Autosave aktiv/i : /Autosave off|Autosave aus/i);
+  return true;
+}
+
+async function setTopbarAutosaveSetting(page, key, checked) {
+  await openTopbarAutosaveMenu(page);
+  const input = page.locator(`[data-ecf-topbar-setting="${key}"]`).first();
+  await expect(input).toBeVisible();
+  if ((await input.isChecked()) !== Boolean(checked)) {
+    await input.setChecked(Boolean(checked));
+  }
+  return input;
+}
+
+async function saveSettingsManually(page) {
+  const saveButton = page.locator('.ecf-sticky-topbar__save').first();
+  await expect(saveButton).toBeVisible();
+  await Promise.all([
+    page.waitForURL(/page=ecf-framework/i),
+    saveButton.click(),
+  ]);
+  await page.waitForLoadState('networkidle');
+  await expect(page.locator('.ecf-wrap').first()).toBeVisible();
+}
+
 async function waitForSuccessNotice(page) {
   const notice = page.locator('.ecf-autosave-notice');
-  await expect(notice).toBeVisible();
-  await expect(notice).toHaveClass(/ecf-panel-notice--success/);
+  await expect.poll(async () => {
+    if (!(await notice.count())) {
+      return 'missing';
+    }
+    return await notice.first().getAttribute('class');
+  }).toContain('ecf-panel-notice--success');
 }
 
 async function waitForErrorNotice(page) {
@@ -933,6 +1116,14 @@ async function fetchRestSettings(page) {
   });
 }
 
+async function getSiteOrigin(page) {
+  const currentUrl = page.url();
+  if (currentUrl && /^https?:\/\//i.test(currentUrl)) {
+    return new URL(currentUrl).origin;
+  }
+  return wpUrl;
+}
+
 async function waitForRestSetting(page, key, expectedValue) {
   await expect.poll(async () => {
     const settings = await fetchRestSettings(page);
@@ -958,6 +1149,27 @@ async function updateRestSettings(page, settings) {
 
     return response.json();
   }, settings);
+}
+
+async function ensureUiFlowDefaults(page, overrides = {}) {
+  const currentSettings = await fetchRestSettings(page);
+  const nextSettings = {
+    ...currentSettings,
+    ...uiFlowDefaults,
+    ...overrides,
+  };
+
+  const relevantKeys = Object.keys({ ...uiFlowDefaults, ...overrides });
+  const hasChanges = relevantKeys.some((key) => String(currentSettings[key] ?? '') !== String(nextSettings[key] ?? ''));
+
+  if (!hasChanges) {
+    return currentSettings;
+  }
+
+  await updateRestSettings(page, nextSettings);
+  await page.reload({ waitUntil: 'networkidle' });
+  await expect(page.locator('.ecf-wrap')).toBeVisible();
+  return nextSettings;
 }
 
 async function reorderLayoutGroup(page, groupName, sourceItemId, targetItemId) {
@@ -1008,8 +1220,10 @@ module.exports = {
   triggerPluginUpdateCheck,
   openPanel,
   openGeneralTab,
+  openWebsiteTab,
   chooseFormat,
   getGeneralField,
+  ensureGeneralFieldVisible,
   setBodyTextSize,
   getBodyTextSizeState,
   selectBaseFontFamilyPreset,
@@ -1095,6 +1309,12 @@ module.exports = {
   getCopiedTexts,
   triggerClassSync,
   triggerNativeSync,
+  getTopbarAutosaveToggle,
+  openTopbarAutosaveMenu,
+  closeTopbarAutosaveMenu,
+  setTopbarAutosaveEnabled,
+  setTopbarAutosaveSetting,
+  saveSettingsManually,
   triggerClassCleanup,
   triggerNativeCleanup,
   waitForSuccessNotice,
@@ -1103,6 +1323,8 @@ module.exports = {
   fetchRestSettings,
   waitForRestSetting,
   updateRestSettings,
+  ensureUiFlowDefaults,
+  getSiteOrigin,
   reorderLayoutGroup,
   getLayoutOrder,
   setLayoutColumns,

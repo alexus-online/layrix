@@ -6,6 +6,7 @@ const {
   openPluginPage,
   openPanel,
   openGeneralTab,
+  openWebsiteTab,
   chooseFormat,
   getGeneralField,
   toggleGeneralFavorite,
@@ -19,16 +20,26 @@ const {
   getSyncStatusCard,
   getGithubStatus,
   waitForSuccessNotice,
+  saveSettingsManually,
+  waitForRestSetting,
   fetchRestSettings,
+  ensureUiFlowDefaults,
+  getSiteOrigin,
 } = require('./helpers/ecf-admin');
 
 test.describe('ECF additional linked UI flows', () => {
   test.skip(requiredEnvMissing, 'ECF_WP_URL, ECF_WP_ADMIN_USER/ECF_WP_USER and ECF_WP_ADMIN_PASSWORD are required for browser UI checks.');
 
+  test.beforeEach(async ({ page }) => {
+    await loginToWordPress(page);
+    await openPluginPage(page);
+    await ensureUiFlowDefaults(page);
+  });
+
   test('root font size stays in sync across Website, Typography, Spacing and the frontend root size', async ({ page }) => {
     await loginToWordPress(page);
     await openPluginPage(page);
-    await openGeneralTab(page, 'website');
+    await openWebsiteTab(page, 'type');
 
     const websiteSelect = getGeneralField(page, 'root_font_size').locator('select').first();
     const originalValue = await websiteSelect.inputValue();
@@ -37,7 +48,8 @@ test.describe('ECF additional linked UI flows', () => {
     const expectedRootSize = targetValue === '62.5' ? '62.5%' : '100%';
 
     await websiteSelect.selectOption(targetValue);
-    await waitForSuccessNotice(page);
+    await saveSettingsManually(page);
+    await waitForRestSetting(page, 'root_font_size', targetValue);
     await expect(getGeneralField(page, 'root_font_size').locator('[data-ecf-root-font-inline]').first()).toContainText(expectedInline);
 
     await openPanel(page, 'typography');
@@ -46,7 +58,7 @@ test.describe('ECF additional linked UI flows', () => {
     await openPanel(page, 'spacing');
     await expect(page.locator('[data-ecf-general-field="root_font_size"] [data-ecf-root-font-inline]').first()).toContainText(expectedInline);
 
-    await page.goto(`${process.env.ECF_WP_URL.replace(/\/$/, '')}/`, { waitUntil: 'domcontentloaded' });
+    await page.goto(`${await getSiteOrigin(page)}/`, { waitUntil: 'domcontentloaded' });
     await expect
       .poll(() => page.evaluate(() => getComputedStyle(document.documentElement).fontSize))
       .toBe(targetValue === '62.5' ? '10px' : '16px');
@@ -56,9 +68,10 @@ test.describe('ECF additional linked UI flows', () => {
       .not.toBe(expectedRootSize);
 
     await openPluginPage(page);
-    await openGeneralTab(page, 'website');
-    await websiteSelect.selectOption(originalValue);
-    await waitForSuccessNotice(page);
+    await openWebsiteTab(page, 'type');
+    await getGeneralField(page, 'root_font_size').locator('select').first().selectOption(originalValue);
+    await saveSettingsManually(page);
+    await waitForRestSetting(page, 'root_font_size', originalValue);
   });
 
   test('removing a favorite inside Favorites updates the source toggle in Website', async ({ page }) => {
@@ -76,7 +89,7 @@ test.describe('ECF additional linked UI flows', () => {
     await favoriteCard.locator('[data-ecf-favorite-remove]').click();
     await waitForSuccessNotice(page);
 
-    await openGeneralTab(page, 'website');
+    await openWebsiteTab(page, 'layout');
     await expect(getGeneralField(page, 'content_max_width').locator('[data-ecf-general-favorite-toggle]').first()).not.toBeChecked();
 
     if (originalChecked) {
@@ -88,7 +101,7 @@ test.describe('ECF additional linked UI flows', () => {
   test('content max width updates the frontend token after changing value and format', async ({ page }) => {
     await loginToWordPress(page);
     await openPluginPage(page);
-    await openGeneralTab(page, 'website');
+    await openWebsiteTab(page, 'layout');
 
     const field = getGeneralField(page, 'content_max_width');
     const valueInput = field.locator('input[name="ecf_framework_v50[content_max_width_value]"]').first();
@@ -101,11 +114,11 @@ test.describe('ECF additional linked UI flows', () => {
     await valueInput.blur();
     await waitForSuccessNotice(page);
 
-    await page.goto(`${process.env.ECF_WP_URL.replace(/\/$/, '')}/`, { waitUntil: 'domcontentloaded' });
+    await page.goto(`${await getSiteOrigin(page)}/`, { waitUntil: 'domcontentloaded' });
     expect(await getRootCssVariable(page, '--ecf-content-max-width')).toBe('66ch');
 
     await openPluginPage(page);
-    await openGeneralTab(page, 'website');
+    await openWebsiteTab(page, 'layout');
     await chooseFormat(field, originalFormat);
     await valueInput.fill(originalValue);
     await valueInput.blur();
@@ -115,7 +128,7 @@ test.describe('ECF additional linked UI flows', () => {
   test('elementor boxed width updates its frontend container token after changing value and format', async ({ page }) => {
     await loginToWordPress(page);
     await openPluginPage(page);
-    await openGeneralTab(page, 'website');
+    await openWebsiteTab(page, 'layout');
 
     const field = getGeneralField(page, 'elementor_boxed_width');
     const valueInput = field.locator('input[name="ecf_framework_v50[elementor_boxed_width_value]"]').first();
@@ -128,11 +141,11 @@ test.describe('ECF additional linked UI flows', () => {
     await valueInput.blur();
     await waitForSuccessNotice(page);
 
-    await page.goto(`${process.env.ECF_WP_URL.replace(/\/$/, '')}/`, { waitUntil: 'domcontentloaded' });
+    await page.goto(`${await getSiteOrigin(page)}/`, { waitUntil: 'domcontentloaded' });
     expect(await getRootCssVariable(page, '--ecf-container-boxed')).toBe('1180px');
 
     await openPluginPage(page);
-    await openGeneralTab(page, 'website');
+    await openWebsiteTab(page, 'layout');
     await chooseFormat(field, originalFormat);
     await valueInput.fill(originalValue);
     await valueInput.blur();
@@ -301,7 +314,7 @@ test.describe('ECF additional linked UI flows', () => {
   test('scale impact reacts when the root font size changes', async ({ page }) => {
     await loginToWordPress(page);
     await openPluginPage(page);
-    await openGeneralTab(page, 'website');
+    await openWebsiteTab(page, 'advanced');
 
     const details = page.locator('[data-ecf-layout-item="website-scale-impact"]').first();
     await details.evaluate((element) => {
@@ -309,14 +322,29 @@ test.describe('ECF additional linked UI flows', () => {
       element.dispatchEvent(new Event('toggle'));
     });
 
-    const rootField = getGeneralField(page, 'root_font_size');
-    const select = rootField.locator('select').first();
+    await openWebsiteTab(page, 'type');
+    const select = getGeneralField(page, 'root_font_size').locator('select').first();
     const originalValue = await select.inputValue();
     const targetValue = originalValue === '62.5' ? '100' : '62.5';
 
+    await openWebsiteTab(page, 'advanced');
+    await details.evaluate((element) => {
+      element.open = true;
+      element.dispatchEvent(new Event('toggle'));
+    });
     const before = await getRootFontImpactSnapshot(page);
+
+    await openWebsiteTab(page, 'type');
     await select.selectOption(targetValue);
-    await waitForSuccessNotice(page);
+    await saveSettingsManually(page);
+    await waitForRestSetting(page, 'root_font_size', targetValue);
+
+    await openPluginPage(page);
+    await openWebsiteTab(page, 'advanced');
+    await details.evaluate((element) => {
+      element.open = true;
+      element.dispatchEvent(new Event('toggle'));
+    });
     const after = await getRootFontImpactSnapshot(page);
 
     expect(after.currentBase).not.toBe(before.currentBase);
@@ -324,8 +352,11 @@ test.describe('ECF additional linked UI flows', () => {
     expect(after.spacingCopy).not.toBe(before.spacingCopy);
     expect(after.radiusCopy).not.toBe(before.radiusCopy);
 
-    await select.selectOption(originalValue);
-    await waitForSuccessNotice(page);
+    await openPluginPage(page);
+    await openWebsiteTab(page, 'type');
+    await getGeneralField(page, 'root_font_size').locator('select').first().selectOption(originalValue);
+    await saveSettingsManually(page);
+    await waitForRestSetting(page, 'root_font_size', originalValue);
   });
 
   test('variable type filter scopes persist after reload', async ({ page }) => {

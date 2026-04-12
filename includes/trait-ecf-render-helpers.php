@@ -1,6 +1,75 @@
 <?php
 
 trait ECF_Framework_Render_Helpers_Trait {
+    private function render_field_token_pills(array $items) {
+        $normalized_items = [];
+
+        foreach ($items as $item) {
+            $value = trim((string) ($item['value'] ?? ''));
+            if ($value === '') {
+                continue;
+            }
+            $type = trim((string) ($item['type'] ?? __('Variable', 'ecf-framework')));
+            $normalized_items[] = [
+                'type' => $type !== '' ? $type : __('Variable', 'ecf-framework'),
+                'value' => $value,
+                'copyable' => array_key_exists('copyable', $item) ? !empty($item['copyable']) : true,
+            ];
+        }
+
+        if (empty($normalized_items)) {
+            return;
+        }
+        ?>
+        <div class="ecf-field-token-row">
+            <?php foreach ($normalized_items as $item): ?>
+                <?php if (!empty($item['copyable'])): ?>
+                    <button type="button" class="ecf-field-token-pill" data-ecf-token-copy="<?php echo esc_attr($item['value']); ?>" title="<?php echo esc_attr__('Copy', 'ecf-framework'); ?>">
+                        <span><?php echo esc_html($item['type']); ?></span>
+                        <code><?php echo esc_html($item['value']); ?></code>
+                    </button>
+                <?php else: ?>
+                    <span class="ecf-field-token-pill ecf-field-token-pill--static">
+                        <span><?php echo esc_html($item['type']); ?></span>
+                        <code><?php echo esc_html($item['value']); ?></code>
+                    </span>
+                <?php endif; ?>
+            <?php endforeach; ?>
+        </div>
+        <?php
+    }
+
+    private function render_field_dependency_disclosure($summary, array $items) {
+        $summary = trim((string) $summary);
+        if ($summary === '') {
+            return;
+        }
+
+        $normalized_items = [];
+        foreach ($items as $item) {
+            $value = trim((string) ($item['value'] ?? ''));
+            if ($value === '') {
+                continue;
+            }
+            $normalized_items[] = $item;
+        }
+
+        if (empty($normalized_items)) {
+            return;
+        }
+        ?>
+        <details class="ecf-field-meta-disclosure">
+            <summary class="ecf-field-meta-disclosure__summary">
+                <span><?php echo esc_html($summary); ?></span>
+                <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+            </summary>
+            <div class="ecf-field-meta-disclosure__content">
+                <?php $this->render_field_token_pills($normalized_items); ?>
+            </div>
+        </details>
+        <?php
+    }
+
     private function render_rows($group, $rows, $input_key = null) {
         if ($input_key === null) {
             $input_key = $this->option_name . '[' . $group . ']';

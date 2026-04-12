@@ -6,7 +6,9 @@ const {
   openPluginPage,
   openPanel,
   openGeneralTab,
+  openWebsiteTab,
   getGeneralField,
+  setGeneralCheckbox,
   setBodyTextSize,
   getBodyTextSizeState,
   selectBaseFontFamilyPreset,
@@ -39,10 +41,23 @@ const {
   getSpacingStepCount,
   waitForSuccessNotice,
   waitForErrorNotice,
+  ensureUiFlowDefaults,
+  fetchRestSettings,
+  saveSettingsManually,
+  setTopbarAutosaveEnabled,
+  setTopbarAutosaveSetting,
+  openTopbarAutosaveMenu,
+  closeTopbarAutosaveMenu,
 } = require('./helpers/ecf-admin');
 
 test.describe('ECF admin UI', () => {
   test.skip(requiredEnvMissing, 'ECF_WP_URL, ECF_WP_ADMIN_USER/ECF_WP_USER and ECF_WP_ADMIN_PASSWORD are required for browser UI checks.');
+
+  test.beforeEach(async ({ page }) => {
+    await loginToWordPress(page);
+    await openPluginPage(page);
+    await ensureUiFlowDefaults(page);
+  });
 
   test('loads the plugin shell, switches panels and opens the changelog modal', async ({ page }) => {
     await loginToWordPress(page);
@@ -82,7 +97,7 @@ test.describe('ECF admin UI', () => {
   test('general color fields render clickable swatches next to each field', async ({ page }) => {
     await loginToWordPress(page);
     await openPluginPage(page);
-    await openGeneralTab(page, 'website');
+    await openWebsiteTab(page, 'colors');
 
     for (const fieldName of ['base_text_color', 'base_background_color', 'link_color', 'focus_color']) {
       const field = getGeneralField(page, fieldName);
@@ -196,6 +211,45 @@ test.describe('ECF admin UI', () => {
     await expect(tabs.nth(3).locator('.ecf-new-dot')).toHaveCount(0);
   });
 
+  test('website settings are grouped into compact subtabs', async ({ page }) => {
+    await loginToWordPress(page);
+    await openPluginPage(page);
+    await openPanel(page, 'components');
+
+    const panel = page.locator('.ecf-panel[data-panel="components"]');
+    const subtabs = panel.locator('[data-ecf-website-tab]');
+    await expect(subtabs).toHaveCount(4);
+    await expect(subtabs.nth(0)).toContainText(/Font|Schrift/i);
+    await expect(subtabs.nth(1)).toContainText(/Layout/i);
+    await expect(subtabs.nth(2)).toContainText(/Colors|Farben/i);
+    await expect(subtabs.nth(3)).toContainText(/Advanced|Erweitert/i);
+    const typeSection = panel.locator('[data-ecf-website-section="type"]');
+    const layoutSection = panel.locator('[data-ecf-website-section="layout"]');
+    const colorsSection = panel.locator('[data-ecf-website-section="colors"]');
+    await expect(typeSection).toBeVisible();
+    await expect(panel.locator('[data-ecf-website-section="layout"]')).toBeHidden();
+    await expect(typeSection.locator('[data-ecf-token-copy="--ecf-base-body-text-size"]')).toBeVisible();
+    await expect(typeSection.locator('[data-ecf-token-copy="--ecf-base-body-font-weight"]')).toBeVisible();
+    await expect(typeSection.locator('[data-ecf-token-copy="--ecf-base-font-family"]')).toBeVisible();
+    await expect(typeSection.locator('[data-ecf-token-copy="--ecf-heading-font-family"]')).toBeVisible();
+
+    await subtabs.nth(1).click();
+    await expect(layoutSection).toBeVisible();
+    await expect(typeSection).toBeHidden();
+    await expect(layoutSection.locator('[data-ecf-token-copy="--ecf-content-max-width"]')).toBeVisible();
+    await expect(layoutSection.locator('[data-ecf-token-copy="--ecf-container-boxed"]')).toBeVisible();
+    await expect(layoutSection.locator('[data-ecf-token-copy=".ecf-container-boxed"]')).toBeVisible();
+
+    await subtabs.nth(2).click();
+    await expect(colorsSection).toBeVisible();
+    await expect(colorsSection.locator('[data-ecf-token-copy="--ecf-base-text-color"]')).toBeVisible();
+    await expect(colorsSection.locator('[data-ecf-token-copy="--ecf-base-background-color"]')).toBeVisible();
+    await expect(colorsSection.locator('[data-ecf-token-copy="--ecf-link-color"]')).toBeVisible();
+    await expect(colorsSection.locator('[data-ecf-token-copy="--ecf-focus-color"]')).toBeVisible();
+    await expect(colorsSection.locator('[data-ecf-token-copy="--ecf-focus-outline-width"]')).toBeVisible();
+    await expect(colorsSection.locator('[data-ecf-token-copy="--ecf-focus-outline-offset"]')).toBeVisible();
+  });
+
   test('help panel keeps changelog access without duplicating visible changelog entries', async ({ page }) => {
     await loginToWordPress(page);
     await openPluginPage(page);
@@ -221,7 +275,7 @@ test.describe('ECF admin UI', () => {
   test('website width fields stay side by side in the widths section on desktop', async ({ page }) => {
     await loginToWordPress(page);
     await openPluginPage(page);
-    await openGeneralTab(page, 'website');
+    await openWebsiteTab(page, 'layout');
 
     const contentField = getGeneralField(page, 'content_max_width');
     const boxedField = getGeneralField(page, 'elementor_boxed_width');
@@ -450,34 +504,44 @@ test.describe('ECF admin UI', () => {
     expect(menuBox.width).toBeLessThan(140);
   });
 
-  test('site font assignment uses a stacked accordion with the body section open first', async ({ page }) => {
+  test('site font assignment sits above the type preview and starts collapsed', async ({ page }) => {
     await loginToWordPress(page);
     await openPluginPage(page);
     await openPanel(page, 'typography');
 
-    const accordionItems = page.locator('.ecf-font-assignment-accordion__item');
+    const panel = page.locator('.ecf-panel[data-panel="typography"]');
+    const assignmentCard = panel.locator('.ecf-typography-font-grid').first();
+    const previewCard = panel.locator('.ecf-typography-preview-card');
+    const accordionItems = assignmentCard.locator('.ecf-typography-font-card');
+
     await expect(accordionItems).toHaveCount(2);
-    await expect(accordionItems.nth(0)).toHaveAttribute('open', '');
+    await expect(accordionItems.nth(0)).not.toHaveAttribute('open', '');
     await expect(accordionItems.nth(1)).not.toHaveAttribute('open', '');
+    await expect(accordionItems.nth(0)).toContainText(/Body Font|Body-Schrift/i);
 
-    const firstBox = await accordionItems.nth(0).boundingBox();
-    const secondBox = await accordionItems.nth(1).boundingBox();
+    const assignmentBox = await assignmentCard.boundingBox();
+    const previewBox = await previewCard.boundingBox();
 
-    expect(firstBox).not.toBeNull();
-    expect(secondBox).not.toBeNull();
-    expect(secondBox.y).toBeGreaterThan(firstBox.y + 40);
+    expect(assignmentBox).not.toBeNull();
+    expect(previewBox).not.toBeNull();
+    expect(assignmentBox.y).toBeLessThan(previewBox.y);
   });
 
-  test('site font assignment shows the privacy note only once and keeps font library actions compact', async ({ page }) => {
+  test('site font assignment keeps font library actions compact when expanded', async ({ page }) => {
     await loginToWordPress(page);
     await openPluginPage(page);
     await openPanel(page, 'typography');
 
-    const fontAssignmentCard = page.locator('.ecf-panel[data-panel="typography"] .ecf-card').filter({ hasText: /Site Font Assignment|Schriftzuweisung/i }).first();
-    await expect(fontAssignmentCard.locator('.ecf-font-assignment-note')).toHaveCount(1);
+    const fontAssignmentCard = page.locator('.ecf-panel[data-panel="typography"] .ecf-typography-font-grid').first();
     await expect(fontAssignmentCard.locator('.ecf-font-family-note')).toHaveCount(0);
 
     const firstField = fontAssignmentCard.locator('[data-ecf-general-field="base_font_family"]').first();
+    await fontAssignmentCard.locator('.ecf-typography-font-card').first().evaluate((element) => {
+      if (!element.open) {
+        element.open = true;
+        element.dispatchEvent(new Event('toggle'));
+      }
+    });
     const searchBox = await firstField.locator('[data-ecf-font-family-search]').boundingBox();
     await firstField.locator('[data-ecf-font-family-search]').first().click();
     const selectBox = await firstField.locator('[data-ecf-font-picker-panel]').boundingBox();
@@ -494,10 +558,12 @@ test.describe('ECF admin UI', () => {
     await openPanel(page, 'typography');
 
     const detailCards = page.locator('[data-ecf-layout-group="typography-secondary"] .ecf-card--details');
-    await expect(detailCards).toHaveCount(3);
+    await expect(detailCards).toHaveCount(5);
     await expect(detailCards.nth(0)).toHaveAttribute('open', '');
     await expect(detailCards.nth(1)).not.toHaveAttribute('open', '');
-    await expect(detailCards.nth(2)).not.toHaveAttribute('open', '');
+    await expect(detailCards.nth(2)).toHaveAttribute('open', '');
+    await expect(detailCards.nth(3)).not.toHaveAttribute('open', '');
+    await expect(detailCards.nth(4)).not.toHaveAttribute('open', '');
   });
 
   test('typography detail tokens use stacked accordions with only the first section open', async ({ page }) => {
@@ -506,10 +572,12 @@ test.describe('ECF admin UI', () => {
     await openPanel(page, 'typography');
 
     const details = page.locator('.ecf-grid[data-ecf-layout-group="typography-secondary"] .ecf-card--details');
-    await expect(details).toHaveCount(3);
+    await expect(details).toHaveCount(5);
     await expect(details.nth(0)).toHaveAttribute('open', '');
     await expect(details.nth(1)).not.toHaveAttribute('open', '');
-    await expect(details.nth(2)).not.toHaveAttribute('open', '');
+    await expect(details.nth(2)).toHaveAttribute('open', '');
+    await expect(details.nth(3)).not.toHaveAttribute('open', '');
+    await expect(details.nth(4)).not.toHaveAttribute('open', '');
   });
 
   test('spacing container widths are grouped in an accordion that starts open', async ({ page }) => {
@@ -525,13 +593,15 @@ test.describe('ECF admin UI', () => {
   test('persists an autosaved body text size change after reload', async ({ page }) => {
     await loginToWordPress(page);
     await openPluginPage(page);
+    await setTopbarAutosaveEnabled(page, true);
+    await waitForRestSetting(page, 'autosave_enabled', '1');
     await openGeneralTab(page, 'website');
 
     const { value: originalValue, format: originalFormat } = await getBodyTextSizeState(page);
     const targetValue = originalValue === '19' ? '20' : '19';
 
     await setBodyTextSize(page, targetValue, 'px');
-    await waitForSuccessNotice(page);
+    await waitForRestSetting(page, 'base_body_text_size', `${targetValue}px`);
 
     await page.reload();
     await openPluginPage(page);
@@ -542,7 +612,73 @@ test.describe('ECF admin UI', () => {
     await expect(reloadedState.field.locator('[data-ecf-format-input]').first()).toHaveValue('px');
 
     await setBodyTextSize(page, originalValue, originalFormat);
-    await waitForSuccessNotice(page);
+    const restoredValue = originalFormat === 'px' ? `${originalValue}px` : `${originalValue}${originalFormat}`;
+    await waitForRestSetting(page, 'base_body_text_size', restoredValue);
+  });
+
+  test('persists a body text size change after manual save when autosave is disabled', async ({ page }) => {
+    await loginToWordPress(page);
+    await openPluginPage(page);
+    await setTopbarAutosaveEnabled(page, false);
+    await waitForRestSetting(page, 'autosave_enabled', '0');
+    await expect(page.locator('.ecf-autosave-pill')).toContainText(/Autosave off|Autosave aus/i);
+    await openGeneralTab(page, 'website');
+
+    const { value: originalValue, format: originalFormat } = await getBodyTextSizeState(page);
+    const targetValue = originalValue === '18' ? '17' : '18';
+
+    await setBodyTextSize(page, targetValue, 'px');
+
+    await saveSettingsManually(page);
+    await openPluginPage(page);
+    await waitForRestSetting(page, 'base_body_text_size', `${targetValue}px`);
+    await openGeneralTab(page, 'website');
+
+    const reloadedState = await getBodyTextSizeState(page);
+    await expect(reloadedState.field.locator('[data-ecf-size-value-input]').first()).toHaveValue(targetValue);
+    await expect(reloadedState.field.locator('[data-ecf-format-input]').first()).toHaveValue('px');
+
+    await setBodyTextSize(page, originalValue, originalFormat);
+    await saveSettingsManually(page);
+    await openPluginPage(page);
+    const restoredValue = originalFormat === 'px' ? `${originalValue}px` : `${originalValue}${originalFormat}`;
+    await waitForRestSetting(page, 'base_body_text_size', restoredValue);
+    await setTopbarAutosaveEnabled(page, true);
+    await waitForRestSetting(page, 'autosave_enabled', '1');
+  });
+
+  test('topbar autosave dropdown persists elementor sync flags after reload', async ({ page }) => {
+    await loginToWordPress(page);
+    await openPluginPage(page);
+
+    const originalSettings = await fetchRestSettings(page);
+    const originalEnabled = String(originalSettings.elementor_auto_sync_enabled || '') === '1';
+    const originalVariables = String(originalSettings.elementor_auto_sync_variables || '') === '1';
+    const originalClasses = String(originalSettings.elementor_auto_sync_classes || '') === '1';
+
+    await openTopbarAutosaveMenu(page);
+    await setTopbarAutosaveSetting(page, 'elementor_auto_sync_enabled', true);
+    await waitForRestSetting(page, 'elementor_auto_sync_enabled', '1');
+    await setTopbarAutosaveSetting(page, 'elementor_auto_sync_variables', false);
+    await waitForRestSetting(page, 'elementor_auto_sync_variables', '0');
+    await setTopbarAutosaveSetting(page, 'elementor_auto_sync_classes', true);
+    await waitForRestSetting(page, 'elementor_auto_sync_classes', '1');
+    await closeTopbarAutosaveMenu(page);
+
+    await page.reload();
+    await openPluginPage(page);
+    await openTopbarAutosaveMenu(page);
+    await expect(page.locator('[data-ecf-topbar-setting="elementor_auto_sync_enabled"]').first()).toBeChecked();
+    await expect(page.locator('[data-ecf-topbar-setting="elementor_auto_sync_variables"]').first()).not.toBeChecked();
+    await expect(page.locator('[data-ecf-topbar-setting="elementor_auto_sync_classes"]').first()).toBeChecked();
+
+    await setTopbarAutosaveSetting(page, 'elementor_auto_sync_enabled', originalEnabled);
+    await waitForRestSetting(page, 'elementor_auto_sync_enabled', originalEnabled ? '1' : '0');
+    await setTopbarAutosaveSetting(page, 'elementor_auto_sync_variables', originalVariables);
+    await waitForRestSetting(page, 'elementor_auto_sync_variables', originalVariables ? '1' : '0');
+    await setTopbarAutosaveSetting(page, 'elementor_auto_sync_classes', originalClasses);
+    await waitForRestSetting(page, 'elementor_auto_sync_classes', originalClasses ? '1' : '0');
+    await closeTopbarAutosaveMenu(page);
   });
 
   test('favorite toggle persists after reload', async ({ page }) => {
@@ -744,9 +880,16 @@ test.describe('ECF admin UI', () => {
     await openPanel(page, 'typography');
 
     const panel = page.locator('.ecf-panel[data-panel="typography"]');
-    await expect(panel.getByText(/Site Font Assignment|Schriftzuweisung/i)).toBeVisible();
+    const bodyAccordion = panel.locator('.ecf-typography-font-card').first();
+    await expect(bodyAccordion).toContainText(/Body Font|Body-Schrift/i);
+    await bodyAccordion.evaluate((element) => {
+      if (!element.open) {
+        element.open = true;
+        element.dispatchEvent(new Event('toggle'));
+      }
+    });
     await expect(panel.locator('[data-ecf-general-field="base_font_family"] [data-ecf-font-family-search]').first()).toBeVisible();
-    const headingAccordion = panel.locator('.ecf-font-assignment-accordion__item').nth(1);
+    const headingAccordion = panel.locator('.ecf-typography-font-card').nth(1);
     await headingAccordion.evaluate((element) => {
       if (!element.open) {
         element.open = true;
@@ -754,7 +897,6 @@ test.describe('ECF admin UI', () => {
       }
     });
     await expect(panel.locator('[data-ecf-general-field="heading_font_family"] [data-ecf-font-family-search]').first()).toBeVisible();
-    await expect(panel.locator('.ecf-card').filter({ hasText: /Site Font Assignment|Schriftzuweisung/i }).locator('.ecf-muted-copy').first()).toContainText(/stored locally|lokal/i);
     await expect(panel.getByText(/Imported Local Fonts|Importierte lokale Schriften/i)).toBeVisible();
   });
 

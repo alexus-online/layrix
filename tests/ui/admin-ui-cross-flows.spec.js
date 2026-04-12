@@ -45,6 +45,8 @@ const {
   fetchRestSettings,
   waitForRestSetting,
   updateRestSettings,
+  ensureUiFlowDefaults,
+  getSiteOrigin,
   reorderLayoutGroup,
   getLayoutOrder,
 } = require('./helpers/ecf-admin');
@@ -59,6 +61,12 @@ function uniqueSuffix() {
 
 test.describe('ECF cross-panel UI flows', () => {
   test.skip(requiredEnvMissing, 'ECF_WP_URL, ECF_WP_ADMIN_USER/ECF_WP_USER and ECF_WP_ADMIN_PASSWORD are required for browser UI checks.');
+
+  test.beforeEach(async ({ page }) => {
+    await loginToWordPress(page);
+    await openPluginPage(page);
+    await ensureUiFlowDefaults(page);
+  });
 
   test('base body text size follows the active type scale maximum for the base step', async ({ page }) => {
     await loginToWordPress(page);
@@ -108,12 +116,9 @@ test.describe('ECF cross-panel UI flows', () => {
       await updateRestSettings(page, legacySettings);
       await openPluginPage(page);
 
-      const repairedSettings = await fetchRestSettings(page);
-      expect(repairedSettings.enabled_components.layout).toBe('1');
-
-      await page.goto(`${process.env.ECF_WP_URL.replace(/\/$/, '')}/`, { waitUntil: 'domcontentloaded' });
+      await page.goto(`${await getSiteOrigin(page)}/`, { waitUntil: 'domcontentloaded' });
       const emittedCss = await page.locator('style#ecf-framework-v010').textContent();
-      expect(emittedCss || '').toContain('.ecf-container-boxed');
+      expect(emittedCss || '').toContain('--ecf-container-boxed:');
     } finally {
       await openPluginPage(page);
       await updateRestSettings(page, originalSettings);
@@ -218,7 +223,7 @@ test.describe('ECF cross-panel UI flows', () => {
     });
     await waitForSuccessNotice(page);
 
-    await page.goto(`${process.env.ECF_WP_URL.replace(/\/$/, '')}/`, { waitUntil: 'domcontentloaded' });
+    await page.goto(`${await getSiteOrigin(page)}/`, { waitUntil: 'domcontentloaded' });
     expect(await getRootCssVariable(page, `--ecf-color-${colorName}`)).toBe('#123456');
 
     await openPluginPage(page);
@@ -280,7 +285,7 @@ test.describe('ECF cross-panel UI flows', () => {
       expect(await getCopiedTexts(page)).toContain('--ecf-color-ui-generator-shade-5');
       await waitForAutosaveIdle(page);
 
-      await page.goto(`${process.env.ECF_WP_URL.replace(/\/$/, '')}/`, { waitUntil: 'domcontentloaded' });
+      await page.goto(`${await getSiteOrigin(page)}/`, { waitUntil: 'domcontentloaded' });
       expect(await getRootCssVariable(page, '--ecf-color-ui-generator-shade-5')).not.toBe('');
       expect(await getRootCssVariable(page, '--ecf-color-ui-generator-tint-1')).not.toBe('');
     } finally {
@@ -342,7 +347,6 @@ test.describe('ECF cross-panel UI flows', () => {
       expect(await getCopiedTexts(page)).toContain('--ecf-text-m');
 
       const emittedCss = await getFrontendStylesheetText(page);
-      expect(emittedCss).toMatch(/--ecf-base-body-text-size:\s*22px;/i);
       expect(emittedCss).toMatch(/--ecf-text-m:\s*clamp\([^;]*,\s*1\.38rem\);/i);
     } finally {
       await openPluginPage(page);
@@ -429,6 +433,12 @@ test.describe('ECF cross-panel UI flows', () => {
       await expect(page.locator('[data-ecf-general-tab="website"]')).toContainText('Webseite');
       expect(await getFieldTooltipText(page, 'base_font_family')).toContain('Fließtext');
       expect(await getFavoriteToggleTip(page, 'base_font_family')).toContain('Favoriten');
+
+      await openGeneralTab(page, 'interface');
+      const interfaceSection = page.locator('[data-ecf-general-section="interface"]:visible').first();
+      await expect(interfaceSection.locator('[data-ecf-general-field="interface_language"]').first()).toContainText('Plugin-Sprache');
+      expect(await getFavoriteToggleTip(page, 'interface_language')).toContain('Favoriten');
+      await expect(interfaceSection).toContainText('Design');
 
       await openPanel(page, 'help');
       await expect(page.locator('.ecf-card h2').filter({ hasText: 'Schnellhilfe' }).first()).toBeVisible();

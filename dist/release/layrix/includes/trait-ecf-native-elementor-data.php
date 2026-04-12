@@ -186,8 +186,34 @@ trait ECF_Framework_Native_Elementor_Data_Trait {
 
         $settings = $this->get_settings();
         $payloads = $this->build_native_variable_payloads($settings);
+        $desired_labels = array_keys($payloads);
+        $previous_labels = get_option($this->synced_variable_labels_option_name(), []);
         $updated = 0;
         $created = 0;
+        $deleted = 0;
+
+        $desired_lookup = [];
+        foreach ($desired_labels as $label) {
+            $desired_lookup[strtolower($label)] = true;
+        }
+
+        foreach ((array) $previous_labels as $old_label) {
+            $old_label = (string) $old_label;
+            $old_key = strtolower($old_label);
+            if ($old_label === '' || isset($desired_lookup[$old_key]) || !isset($existing_by_label[$old_key])) {
+                continue;
+            }
+            foreach ($collection->all() as $id => $variable) {
+                if (strtolower((string) $variable->label()) !== $old_key) {
+                    continue;
+                }
+                if ($this->delete_native_variable_entity($collection, $id, $variable)) {
+                    unset($existing_by_label[$old_key]);
+                    $deleted++;
+                }
+                break;
+            }
+        }
 
         $upsert = function($label, $type, $value) use ($collection, &$existing_by_label, &$updated, &$created) {
             $key = strtolower($label);
@@ -224,9 +250,9 @@ trait ECF_Framework_Native_Elementor_Data_Trait {
 
         $repo->save($collection);
         $this->clear_elementor_sync_caches();
-        update_option($this->synced_variable_labels_option_name(), array_keys($payloads), false);
+        update_option($this->synced_variable_labels_option_name(), $desired_labels, false);
 
-        return ['created' => $created, 'updated' => $updated];
+        return ['created' => $created, 'updated' => $updated, 'deleted' => $deleted];
     }
 
     private function sync_native_classes_merge() {

@@ -288,8 +288,30 @@ trait ECF_Framework_Core_Admin_Trait {
         }
 
         $saved = get_user_meta($user_id, $this->layout_order_meta_key(), true);
+        $orders = $this->sanitize_layout_orders(is_array($saved) ? $saved : []);
 
-        return $this->sanitize_layout_orders(is_array($saved) ? $saved : []);
+        if (!empty($orders['utilities-main']) && is_array($orders['utilities-main'])) {
+            $pinned = ['utilities-library'];
+            $existing = array_values(array_filter($orders['utilities-main'], static function ($item) {
+                return is_string($item) && $item !== '';
+            }));
+
+            $reordered = [];
+            foreach ($pinned as $item_id) {
+                if (in_array($item_id, $existing, true)) {
+                    $reordered[] = $item_id;
+                }
+            }
+            foreach ($existing as $item_id) {
+                if (!in_array($item_id, $reordered, true)) {
+                    $reordered[] = $item_id;
+                }
+            }
+
+            $orders['utilities-main'] = $reordered;
+        }
+
+        return $orders;
     }
 
     private function get_user_layout_columns($user_id = 0) {

@@ -118,11 +118,26 @@ msgstr "Passe fremde Elementor-Variablen direkt aus der Suche an."
 msgid "Adjust the ECF backend language and interface appearance here. This changes only the plugin UI, not your website design."
 msgstr "Passe hier Sprache und Erscheinungsbild des ECF-Backends an. Das ändert nur die Plugin-Oberfläche, nicht das Design deiner Website."
 
+msgid "Admin Content Font Size"
+msgstr "Admin-Inhaltsschriftgröße"
+
+msgid "Admin Menu Font Size"
+msgstr "Admin-Menüschriftgröße"
+
+msgid "Advanced"
+msgstr "Erweitert"
+
 msgid "Advanced classes"
 msgstr "Advanced-Klassen"
 
 msgid "Advanced layout helper for page structure and composition."
 msgstr "Erweiterte Layout-Klasse für Seitenstruktur und Aufbau."
+
+msgid "Affects"
+msgstr "Beeinflusst"
+
+msgid "After Layrix autosave, also sync the generated variables and classes to Elementor automatically. This can update Elementor data and clear Elementor caches."
+msgstr "Nach dem Layrix-Autosave werden die erzeugten Variablen und Klassen zusätzlich automatisch mit Elementor synchronisiert. Das kann Elementor-Daten aktualisieren und Elementor-Caches leeren."
 
 msgid "After sync:"
 msgstr "Nach Sync:"
@@ -151,6 +166,9 @@ msgstr "Alle Utilities"
 msgid "Already in Favorites"
 msgstr "Bereits in Favoriten"
 
+msgid "Also sync changes to Elementor automatically"
+msgstr "Änderungen auch automatisch mit Elementor synchronisieren"
+
 msgid "Applies a compact heading style for subsections."
 msgstr "Wendet einen kompakten Heading-Stil für Unterabschnitte an."
 
@@ -172,6 +190,12 @@ msgstr "Bereich"
 msgid "Aurora"
 msgstr "Aurora"
 
+msgid "Auto-sync classes"
+msgstr "Klassen automatisch synchronisieren"
+
+msgid "Auto-sync variables"
+msgstr "Variablen automatisch synchronisieren"
+
 msgid "Automatic updates delivered from the GitHub repository."
 msgstr "Automatische Updates werden aus dem GitHub-Repository bereitgestellt."
 
@@ -181,8 +205,17 @@ msgstr "Automatische Updates für dieses Plugin deaktiviert."
 msgid "Automatic updates enabled for this plugin."
 msgstr "Automatische Updates für dieses Plugin aktiviert."
 
+msgid "Automatically saves your Layrix settings after a short pause. If this is off, you need to use the save button manually."
+msgstr "Speichert deine Layrix-Einstellungen nach einer kurzen Pause automatisch. Wenn das aus ist, musst du den Speichern-Button manuell benutzen."
+
 msgid "Autosave active"
 msgstr "Autosave aktiv"
+
+msgid "Autosave is disabled. Use the save button to store changes."
+msgstr "Autosave ist deaktiviert. Nutze den Speichern-Button, um Änderungen zu sichern."
+
+msgid "Autosave off"
+msgstr "Autosave aus"
 
 msgid "BEM class generator"
 msgstr "BEM-Klassengenerator"
@@ -439,8 +472,17 @@ msgstr "Content-Klasse für Seiteninhalte oder unterstützende Blöcke."
 msgid "Controls helper cards and the optional variable filtering in the Elementor editor."
 msgstr "Steuert die Info-Karten und die optionale Variablen-Filterung im Elementor-Editor."
 
+msgid "Controls the ECF interface language. The initial selection follows the current WordPress language setting."
+msgstr "Steuert die Layrix-Oberflächensprache. Die erste Auswahl folgt der aktuellen WordPress-Spracheinstellung."
+
+msgid "Controls the font size of the left Layrix menu. Default is 14px."
+msgstr "Steuert die Schriftgröße des linken Layrix-Menüs. Vorgabe ist 14px."
+
 msgid "Controls the global rem base for typography, spacing, and radius tokens. Change this only if you want the whole sizing system to shift."
 msgstr "Steuert die globale rem-Basis für Typografie-, Abstands- und Radius-Tokens. Ändere das nur, wenn sich das gesamte Größensystem verschieben soll."
+
+msgid "Controls the readable text size inside the Layrix admin interface. This does not affect frontend typography."
+msgstr "Steuert die lesbare Schriftgröße in der Layrix-Adminoberfläche. Das beeinflusst die Frontend-Typografie nicht."
 
 msgid "Copied!"
 msgstr "Kopiert!"
@@ -673,6 +715,15 @@ msgstr "Elementor-Limits"
 msgid "Elementor status refreshed."
 msgstr "Elementor-Status aktualisiert."
 
+msgid "Elementor sync completed."
+msgstr "Elementor-Sync abgeschlossen."
+
+msgid "Elementor sync failed."
+msgstr "Elementor-Sync fehlgeschlagen."
+
+msgid "Elementor sync is running…"
+msgstr "Elementor-Sync läuft…"
+
 msgid "Elementor variable classes are not available."
 msgstr "Die Elementor-Variablenklassen sind nicht verfügbar."
 
@@ -790,6 +841,9 @@ msgstr "Fluid (clamp)"
 msgid "Focus Color"
 msgstr "Fokus-Farbe"
 
+msgid "Font"
+msgstr "Schrift"
+
 msgid "Font Families"
 msgstr "Schriftarten"
 
@@ -804,6 +858,9 @@ msgstr "Schrift lokal importiert."
 
 msgid "Font is being imported locally…"
 msgstr "Schrift wird lokal importiert…"
+
+msgid "Font name: %s"
+msgstr "Schriftname: %s"
 
 msgid "Font size at the largest viewport (desktop). The base step gets this size."
 msgstr "Schriftgröße am größten Viewport (Desktop). Die Basisstufe erhält diesen Wert."
@@ -1507,6 +1564,9 @@ msgstr "Sicherheit zuerst"
 msgid "Save"
 msgstr "Speichern"
 
+msgid "Save Layrix changes automatically"
+msgstr "Layrix-Änderungen automatisch speichern"
+
 msgid "Save framework settings"
 msgstr "Einstellungen speichern"
 
@@ -1648,6 +1708,9 @@ msgstr "Ein einzelnes Element innerhalb einer Liste oder Navigation."
 msgid "Site Font Assignment"
 msgstr "Website-Schriftzuweisung"
 
+msgid "Site-wide font, layout and base color settings for the whole website."
+msgstr "Website-weite Schrift-, Layout- und Basisfarben-Einstellungen für die ganze Website."
+
 msgid "Size"
 msgstr "Größe"
 
@@ -1674,6 +1737,9 @@ msgstr "Kleinste Größe des Clamp-Werts, hier zur einfacheren Bearbeitung in px
 
 msgid "Soft editorial workspace with calm surfaces and gentle blue structure."
 msgstr "Sanfter editorialer Workspace mit ruhigen Flächen und sanfter blauer Struktur."
+
+msgid "Source"
+msgstr "Quelle"
 
 msgid "Source: classes via %1$s, variables via %2$s"
 msgstr "Quelle: Klassen über %1$s, Variablen über %2$s"
@@ -1743,6 +1809,12 @@ msgstr "Mit Elementor synchronisieren"
 
 msgid "Synced:"
 msgstr "Synchronisiert:"
+
+msgid "Syncs Layrix helper classes into Elementor after autosave. Enable this only if you want class changes to be pushed automatically."
+msgstr "Synchronisiert Layrix-Helferklassen nach dem Autosave in Elementor. Aktiviere das nur, wenn Klassenänderungen automatisch übertragen werden sollen."
+
+msgid "Syncs colors, shades, tints, spacing, radius, typography, shadows and layout variables into Elementor after autosave."
+msgstr "Synchronisiert Farben, Schattierungen, Aufhellungen, Abstände, Radius, Typografie, Schatten und Layout-Variablen nach dem Autosave in Elementor."
 
 msgid "System"
 msgstr "System"
@@ -1962,6 +2034,9 @@ msgstr "Wert"
 
 msgid "Values in CSS box-shadow syntax, e.g. <code>0 4px 16px rgba(0,0,0,0.1)</code>."
 msgstr "Werte als CSS box-shadow-Syntax, z.B. <code>0 4px 16px rgba(0,0,0,0.1)</code>."
+
+msgid "Variable"
+msgstr "Variable"
 
 msgid "Variable could not be updated: %s"
 msgstr "Variable konnte nicht aktualisiert werden: %s"

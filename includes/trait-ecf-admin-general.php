@@ -12,6 +12,10 @@ trait ECF_Framework_Admin_General_Trait {
             'admin_design_preset',
             'admin_content_font_size',
             'admin_menu_font_size',
+            'autosave_enabled',
+            'elementor_auto_sync_enabled',
+            'elementor_auto_sync_variables',
+            'elementor_auto_sync_classes',
             'github_update_checks_enabled',
             'content_max_width',
             'elementor_boxed_width',
@@ -37,6 +41,10 @@ trait ECF_Framework_Admin_General_Trait {
             'admin_design_preset' => '1',
             'admin_content_font_size' => '1',
             'admin_menu_font_size' => '1',
+            'autosave_enabled' => '1',
+            'elementor_auto_sync_enabled' => '1',
+            'elementor_auto_sync_variables' => '1',
+            'elementor_auto_sync_classes' => '1',
             'content_max_width' => '1',
             'elementor_boxed_width' => '1',
             'base_font_family' => '1',
@@ -137,6 +145,30 @@ trait ECF_Framework_Admin_General_Trait {
                 'tab' => 'system',
                 'title' => __('Admin Menu Font Size', 'ecf-framework'),
                 'value' => sprintf(__('%spx', 'ecf-framework'), (string) ($settings['admin_menu_font_size'] ?? '14')),
+            ],
+            'autosave_enabled' => [
+                'group' => 'plugin',
+                'tab' => 'system',
+                'title' => __('Save Layrix changes automatically', 'ecf-framework'),
+                'value' => !empty($settings['autosave_enabled']) ? __('Enabled', 'ecf-framework') : __('Disabled', 'ecf-framework'),
+            ],
+            'elementor_auto_sync_enabled' => [
+                'group' => 'plugin',
+                'tab' => 'system',
+                'title' => __('Also sync changes to Elementor automatically', 'ecf-framework'),
+                'value' => !empty($settings['elementor_auto_sync_enabled']) ? __('Enabled', 'ecf-framework') : __('Disabled', 'ecf-framework'),
+            ],
+            'elementor_auto_sync_variables' => [
+                'group' => 'plugin',
+                'tab' => 'system',
+                'title' => __('Auto-sync variables', 'ecf-framework'),
+                'value' => !empty($settings['elementor_auto_sync_variables']) ? __('Enabled', 'ecf-framework') : __('Disabled', 'ecf-framework'),
+            ],
+            'elementor_auto_sync_classes' => [
+                'group' => 'plugin',
+                'tab' => 'system',
+                'title' => __('Auto-sync classes', 'ecf-framework'),
+                'value' => !empty($settings['elementor_auto_sync_classes']) ? __('Enabled', 'ecf-framework') : __('Disabled', 'ecf-framework'),
             ],
             'content_max_width' => [
                 'group' => 'website',
@@ -243,7 +275,11 @@ trait ECF_Framework_Admin_General_Trait {
             'admin_design_preset' => 120,
             'admin_content_font_size' => 125,
             'admin_menu_font_size' => 126,
-            'github_update_checks_enabled' => 130,
+            'autosave_enabled' => 130,
+            'elementor_auto_sync_enabled' => 132,
+            'elementor_auto_sync_variables' => 134,
+            'elementor_auto_sync_classes' => 136,
+            'github_update_checks_enabled' => 138,
             'show_elementor_status_cards' => 140,
             'elementor_variable_type_filter' => 150,
         ];
@@ -323,12 +359,22 @@ trait ECF_Framework_Admin_General_Trait {
         $root_base_px = $this->get_root_font_base_px($settings);
         $name_attr = $canonical ? ' name="' . esc_attr($this->option_name) . '[root_font_size]"' : '';
         $sync_attr = $canonical ? ' data-ecf-root-font-source="1"' : ' data-ecf-root-font-mirror="1"';
+        $no_variable_label = $this->selected_interface_language($settings) === 'de' ? 'keine' : 'none';
+        $dependency_summary = $this->selected_interface_language($settings) === 'de' ? 'Wirkt auf' : 'Affects';
         ?>
         <label class="ecf-root-font-select" data-ecf-general-field="root_font_size">
             <span class="ecf-root-font-select__label">
                 <?php echo $this->general_setting_label(__('Root Font Size', 'ecf-framework'), 'Base rem size used for token conversion. Choose 100% for 16px = 1rem or 62.5% for 10px = 1rem.', 'editor-textcolor'); ?>
                 <?php $this->render_general_setting_favorite_toggle($settings, 'root_font_size'); ?>
             </span>
+            <?php $this->render_field_token_pills([
+                ['type' => __('Variable', 'ecf-framework'), 'value' => $no_variable_label, 'copyable' => false],
+            ]); ?>
+            <?php $this->render_field_dependency_disclosure($dependency_summary, [
+                ['type' => __('Variable', 'ecf-framework'), 'value' => '--ecf-text-*'],
+                ['type' => __('Variable', 'ecf-framework'), 'value' => '--ecf-space-*'],
+                ['type' => __('Variable', 'ecf-framework'), 'value' => '--ecf-radius-*'],
+            ]); ?>
             <span class="ecf-root-font-select__control">
                 <select<?php echo $name_attr; ?><?php echo $sync_attr; ?>>
                     <option value="62.5" <?php selected($value, '62.5'); ?>>62,5%</option>
@@ -551,12 +597,21 @@ trait ECF_Framework_Admin_General_Trait {
 
     private function render_general_color_field($settings, $key, $label_en, $label_de, $tip_en, $tip_de, $icon = 'admin-appearance') {
         $value = (string) ($settings[$key] ?? '');
+        $tokens = [
+            'base_text_color' => '--ecf-base-text-color',
+            'base_background_color' => '--ecf-base-background-color',
+            'link_color' => '--ecf-link-color',
+            'focus_color' => '--ecf-focus-color',
+        ];
         ?>
         <label data-ecf-general-field="<?php echo esc_attr($key); ?>">
             <span class="ecf-general-label-with-favorite">
                 <?php echo $this->general_setting_label(__($label_en, 'ecf-framework'), $tip_en, $icon); ?>
                 <?php $this->render_general_setting_favorite_toggle($settings, $key); ?>
             </span>
+            <?php if (isset($tokens[$key])): ?>
+                <?php $this->render_field_token_pills([['type' => __('Variable', 'ecf-framework'), 'value' => $tokens[$key]]]); ?>
+            <?php endif; ?>
             <div class="ecf-color-field-wrap">
                 <input type="text" class="ecf-color-field ecf-color-field--general" value="<?php echo esc_attr($value); ?>" placeholder="#000000" />
                 <input type="text" class="ecf-color-input ecf-color-text" name="<?php echo esc_attr($this->option_name); ?>[<?php echo esc_attr($key); ?>]" value="<?php echo esc_attr($value); ?>" data-default-color="<?php echo esc_attr($value); ?>">
@@ -671,14 +726,18 @@ trait ECF_Framework_Admin_General_Trait {
             case 'admin_menu_font_size':
                 $this->render_admin_menu_font_size_field($settings);
                 break;
+            case 'autosave_enabled':
+            case 'elementor_auto_sync_enabled':
+            case 'elementor_auto_sync_variables':
+            case 'elementor_auto_sync_classes':
             case 'github_update_checks_enabled':
                 ?>
                 <label class="ecf-form-grid__checkbox ecf-form-grid__checkbox--favorite">
                     <input type="checkbox"
-                           name="<?php echo esc_attr($this->option_name); ?>[github_update_checks_enabled]"
+                           name="<?php echo esc_attr($this->option_name); ?>[<?php echo esc_attr($key); ?>]"
                            value="1"
-                           <?php checked(!empty($settings['github_update_checks_enabled'])); ?>>
-                    <span><?php echo esc_html(!empty($settings['github_update_checks_enabled']) ? __('Enabled', 'ecf-framework') : __('Disabled', 'ecf-framework')); ?></span>
+                           <?php checked(!empty($settings[$key])); ?>>
+                    <span><?php echo esc_html(!empty($settings[$key]) ? __('Enabled', 'ecf-framework') : __('Disabled', 'ecf-framework')); ?></span>
                 </label>
                 <?php
                 break;
@@ -970,6 +1029,17 @@ trait ECF_Framework_Admin_General_Trait {
                 <?php echo $this->general_setting_label($label, $tip, $icon); ?>
                 <?php $this->render_general_setting_favorite_toggle($settings, $field_key); ?>
             </span>
+            <?php
+            $font_tokens = $field_key === 'heading_font_family'
+                ? [
+                    ['type' => __('Variable', 'ecf-framework'), 'value' => '--ecf-heading-font-family'],
+                ]
+                : [
+                    ['type' => __('Variable', 'ecf-framework'), 'value' => '--ecf-base-font-family'],
+                    ['type' => __('Variable', 'ecf-framework'), 'value' => '--ecf-base-body-font-family'],
+                ];
+            $this->render_field_token_pills($font_tokens);
+            ?>
             <div class="ecf-font-current" data-ecf-font-current>
                 <?php echo esc_html__('Current:', 'ecf-framework'); ?>
                 <strong data-ecf-font-current-value><?php echo esc_html($current_label); ?></strong>
@@ -1067,6 +1137,7 @@ trait ECF_Framework_Admin_General_Trait {
         $stored_parts = $this->parse_css_size_parts($stored_value);
         $base_step = sanitize_key($settings['typography']['scale']['base_index'] ?? 'm');
         $warning_message = $this->base_body_text_size_warning_message($stored_value, $settings);
+        $dependency_summary = $this->selected_interface_language($settings) === 'de' ? 'Wirkt auf' : 'Affects';
         if ($base_step === '') {
             $base_step = 'm';
         }
@@ -1076,6 +1147,12 @@ trait ECF_Framework_Admin_General_Trait {
                 <?php echo $this->general_setting_label(__('Base Body Text Size', 'ecf-framework'), 'Default font size for normal paragraph text across the site. By default this follows the current max value of your active body token and can be overridden here if needed.', 'editor-paragraph'); ?>
                 <?php $this->render_general_setting_favorite_toggle($settings, 'base_body_text_size'); ?>
             </span>
+            <?php $this->render_field_token_pills([
+                ['type' => __('Variable', 'ecf-framework'), 'value' => '--ecf-base-body-text-size'],
+            ]); ?>
+            <?php $this->render_field_dependency_disclosure($dependency_summary, [
+                ['type' => __('Source', 'ecf-framework'), 'value' => '--ecf-text-' . $base_step],
+            ]); ?>
             <?php
             $this->render_general_size_field_inline(
                 $settings,
@@ -1156,6 +1233,7 @@ trait ECF_Framework_Admin_General_Trait {
                 <?php echo $this->general_setting_label(__('Base Body Font Weight', 'ecf-framework'), 'Default font weight for normal paragraph text and flowing content across the site.', 'editor-bold'); ?>
                 <?php $this->render_general_setting_favorite_toggle($settings, 'base_body_font_weight'); ?>
             </span>
+            <?php $this->render_field_token_pills([['type' => __('Variable', 'ecf-framework'), 'value' => '--ecf-base-body-font-weight']]); ?>
             <select name="<?php echo esc_attr($this->option_name); ?>[base_body_font_weight]" class="ecf-general-favorite-input">
                 <?php foreach ($options as $option): ?>
                     <option value="<?php echo esc_attr($option['value']); ?>" <?php selected($current, $option['value']); ?>>

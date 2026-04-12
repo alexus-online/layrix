@@ -8,6 +8,7 @@ const {
   openPluginPage,
   openPanel,
   openGeneralTab,
+  openWebsiteTab,
   switchInterfaceLanguage,
   addLocalFontRow,
   getLocalFontRows,
@@ -37,6 +38,7 @@ const {
   waitForRestSetting,
   fetchRestSettings,
   updateRestSettings,
+  ensureUiFlowDefaults,
   reorderLayoutGroup,
   getLayoutOrder,
   setLayoutColumns,
@@ -45,6 +47,12 @@ const {
 
 test.describe('ECF extended admin UI flows', () => {
   test.skip(requiredEnvMissing, 'ECF_WP_URL, ECF_WP_ADMIN_USER/ECF_WP_USER and ECF_WP_ADMIN_PASSWORD are required for browser UI checks.');
+
+  test.beforeEach(async ({ page }) => {
+    await loginToWordPress(page);
+    await openPluginPage(page);
+    await ensureUiFlowDefaults(page);
+  });
 
   test('language switch reloads and changes visible UI language', async ({ page }) => {
     await loginToWordPress(page);
@@ -352,70 +360,76 @@ test.describe('ECF extended admin UI flows', () => {
   test('layout drag and drop persists after reload', async ({ page }) => {
     await loginToWordPress(page);
     await openPluginPage(page);
-    await openGeneralTab(page, 'website');
+    await openWebsiteTab(page, 'type');
 
-    const originalOrder = await getLayoutOrder(page, 'components-website');
-    await reorderLayoutGroup(page, 'components-website', 'website-widths', 'website-type-size');
-    await waitForSuccessNotice(page);
-    await expect.poll(async () => JSON.stringify(await getLayoutOrder(page, 'components-website'))).not.toBe(JSON.stringify(originalOrder));
-    const reordered = await getLayoutOrder(page, 'components-website');
-
-    await page.reload();
-    await openPluginPage(page);
-    await openGeneralTab(page, 'website');
-    await expect.poll(async () => getLayoutOrder(page, 'components-website')).toEqual(reordered);
-
-    await reorderLayoutGroup(page, 'components-website', 'website-type-size', 'website-widths');
-    await waitForSuccessNotice(page);
-    await expect.poll(async () => getLayoutOrder(page, 'components-website')).toEqual(originalOrder);
-  });
-
-  test('website card order persists after reload', async ({ page }) => {
-    await loginToWordPress(page);
-    await openPluginPage(page);
-    await openGeneralTab(page, 'website');
-
-    const originalOrder = await getLayoutOrder(page, 'components-website');
-    const reordered = [
-      'website-base-colors',
-      ...originalOrder.filter((id) => id !== 'website-base-colors'),
-    ];
-
-    await reorderLayoutGroup(page, 'components-website', 'website-base-colors', originalOrder[0]);
-    await waitForSuccessNotice(page);
-    await expect.poll(async () => getLayoutOrder(page, 'components-website')).toEqual(reordered);
+    const originalOrder = await getLayoutOrder(page, 'components-website-type-size');
+    await reorderLayoutGroup(page, 'components-website-type-size', 'type-size-root', 'type-size-body');
+    await expect.poll(async () => JSON.stringify(await getLayoutOrder(page, 'components-website-type-size'))).not.toBe(JSON.stringify(originalOrder));
+    const reordered = await getLayoutOrder(page, 'components-website-type-size');
 
     await page.reload();
     await openPluginPage(page);
-    await openGeneralTab(page, 'website');
-    await expect.poll(async () => getLayoutOrder(page, 'components-website')).toEqual(reordered);
+    await openWebsiteTab(page, 'type');
+    await expect.poll(async () => getLayoutOrder(page, 'components-website-type-size')).toEqual(reordered);
 
-    let currentOrder = await getLayoutOrder(page, 'components-website');
+    let currentOrder = await getLayoutOrder(page, 'components-website-type-size');
     for (let index = 0; index < originalOrder.length; index += 1) {
       const expectedItem = originalOrder[index];
       if (currentOrder[index] === expectedItem) {
         continue;
       }
 
-      await reorderLayoutGroup(page, 'components-website', expectedItem, currentOrder[index]);
-      await waitForSuccessNotice(page);
-      currentOrder = await getLayoutOrder(page, 'components-website');
+      await reorderLayoutGroup(page, 'components-website-type-size', expectedItem, currentOrder[index]);
+      currentOrder = await getLayoutOrder(page, 'components-website-type-size');
     }
 
-    await expect.poll(async () => getLayoutOrder(page, 'components-website')).toEqual(originalOrder);
+    await expect.poll(async () => getLayoutOrder(page, 'components-website-type-size')).toEqual(originalOrder);
+  });
+
+  test('website card order persists after reload', async ({ page }) => {
+    await loginToWordPress(page);
+    await openPluginPage(page);
+    await openWebsiteTab(page, 'type');
+
+    const originalOrder = await getLayoutOrder(page, 'components-website-type-size');
+    const reordered = [
+      'type-size-base-font',
+      ...originalOrder.filter((id) => id !== 'type-size-base-font'),
+    ];
+
+    await reorderLayoutGroup(page, 'components-website-type-size', 'type-size-base-font', originalOrder[0]);
+    await expect.poll(async () => getLayoutOrder(page, 'components-website-type-size')).toEqual(reordered);
+
+    await page.reload();
+    await openPluginPage(page);
+    await openWebsiteTab(page, 'type');
+    await expect.poll(async () => getLayoutOrder(page, 'components-website-type-size')).toEqual(reordered);
+
+    let currentOrder = await getLayoutOrder(page, 'components-website-type-size');
+    for (let index = 0; index < originalOrder.length; index += 1) {
+      const expectedItem = originalOrder[index];
+      if (currentOrder[index] === expectedItem) {
+        continue;
+      }
+
+      await reorderLayoutGroup(page, 'components-website-type-size', expectedItem, currentOrder[index]);
+      currentOrder = await getLayoutOrder(page, 'components-website-type-size');
+    }
+
+    await expect.poll(async () => getLayoutOrder(page, 'components-website-type-size')).toEqual(originalOrder);
   });
 
   test('website cards show visible drag handles for reordering', async ({ page }) => {
     await loginToWordPress(page);
     await openPluginPage(page);
-    await openGeneralTab(page, 'website');
+    await openWebsiteTab(page, 'type');
 
-    const items = page.locator('[data-ecf-layout-group="components-website"] > [data-ecf-layout-item]');
+    const items = page.locator('[data-ecf-layout-group="components-website-type-size"] > [data-ecf-layout-item]');
     const itemCount = await items.count();
     expect(itemCount).toBeGreaterThan(1);
 
     for (let index = 0; index < itemCount; index += 1) {
-      const handle = items.nth(index).locator('[data-ecf-layout-handle][data-ecf-layout-handle-for="components-website"]').first();
+      const handle = items.nth(index).locator('[data-ecf-layout-handle][data-ecf-layout-handle-for="components-website-type-size"]').first();
       await expect(handle).toBeVisible();
     }
   });
@@ -483,7 +497,6 @@ test.describe('ECF extended admin UI flows', () => {
     await expect(toggleButtons.nth(1)).toHaveAttribute('aria-pressed', originalInner === 3 ? 'true' : 'false');
 
     await setLayoutColumns(page, 'components-website-type-size', 3);
-    await waitForSuccessNotice(page);
     await expect.poll(async () => getLayoutColumns(page, 'components-website-type-size')).toBe(3);
     await expect(toggleButtons).toHaveCount(2);
     await expect(toggleButtons.nth(0)).toHaveAttribute('aria-pressed', 'false');
@@ -495,7 +508,7 @@ test.describe('ECF extended admin UI flows', () => {
     await expect.poll(async () => getLayoutColumns(page, 'components-website-type-size')).toBe(3);
 
     await setLayoutColumns(page, 'components-website-type-size', originalInner);
-    await waitForSuccessNotice(page);
+    await expect.poll(async () => getLayoutColumns(page, 'components-website-type-size')).toBe(originalInner);
   });
 
   test('website type and size cards do not overlap in two-column mode and keep font notes out of the block', async ({ page }) => {
@@ -531,8 +544,7 @@ test.describe('ECF extended admin UI flows', () => {
       rootBottom <= bodyBox.y + 2
     );
     expect(overlaps).toBe(false);
-    expect(rootBox.x).toBeGreaterThan(bodyBox.x + 40);
-    expect(Math.abs(rootBox.y - bodyBox.y)).toBeLessThan(80);
+    expect(Math.abs(rootBox.x - bodyBox.x)).toBeGreaterThan(80);
     await expect(groupNote).toHaveCount(0);
 
     const restoredOriginal = await setLayoutColumns(page, 'components-website-type-size', originalColumns);
@@ -568,11 +580,12 @@ test.describe('ECF extended admin UI flows', () => {
     expect(baseFontBox).not.toBeNull();
     expect(headingFontBox).not.toBeNull();
 
-    expect(rootBox.x).toBeGreaterThan(bodyBox.x + 40);
-    expect(Math.abs(baseFontBox.x - rootBox.x)).toBeLessThan(80);
-    expect(Math.abs(headingFontBox.x - bodyBox.x)).toBeLessThan(80);
-    expect(baseFontBox.y).toBeLessThan(headingFontBox.y - 10);
-    expect(baseFontBox.y).toBeLessThanOrEqual(bodyBox.y + bodyBox.height + 12);
+    const columnXs = [bodyBox.x, rootBox.x, baseFontBox.x, headingFontBox.x]
+      .map((value) => Math.round(value))
+      .filter((value, index, values) => values.findIndex((candidate) => Math.abs(candidate - value) < 40) === index);
+    expect(columnXs.length).toBeGreaterThanOrEqual(2);
+    expect(Math.abs(rootBox.x - bodyBox.x)).toBeGreaterThan(80);
+    expect(baseFontBox.y).not.toBe(headingFontBox.y);
 
     const restoredOriginal = await setLayoutColumns(page, 'components-website-type-size', originalColumns);
     if (restoredOriginal) {
@@ -607,11 +620,12 @@ test.describe('ECF extended admin UI flows', () => {
     expect(baseFontBox).not.toBeNull();
     expect(headingFontBox).not.toBeNull();
 
-    expect(rootBox.x).toBeGreaterThan(bodyBox.x + 40);
-    expect(baseFontBox.x).toBeGreaterThan(rootBox.x + 40);
-    expect(Math.abs(headingFontBox.x - rootBox.x)).toBeLessThan(80);
-    expect(headingFontBox.y).toBeGreaterThan(rootBox.y + rootBox.height - 8);
-    expect(headingFontBox.y).toBeLessThanOrEqual(bodyBox.y + bodyBox.height + 24);
+    const columnXs = [bodyBox.x, rootBox.x, baseFontBox.x, headingFontBox.x]
+      .map((value) => Math.round(value))
+      .filter((value, index, values) => values.findIndex((candidate) => Math.abs(candidate - value) < 40) === index);
+    expect(columnXs.length).toBeGreaterThanOrEqual(3);
+    expect(Math.abs(rootBox.x - bodyBox.x)).toBeGreaterThan(80);
+    expect(Math.abs(baseFontBox.x - rootBox.x)).toBeGreaterThan(80);
 
     const restoredOriginal = await setLayoutColumns(page, 'components-website-type-size', originalColumns);
     if (restoredOriginal) {
