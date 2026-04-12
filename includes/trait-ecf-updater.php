@@ -24,7 +24,36 @@ trait ECF_Framework_Updater_Trait {
             $basenames[] = $default_legacy;
         }
 
+        $legacy_bridge = $this->update_target_plugin_slug() . '/elementor-core-framework.php';
+        if ($legacy_bridge !== $this->plugin_basename()) {
+            $basenames[] = $legacy_bridge;
+        }
+
         return array_values(array_unique(array_filter($basenames)));
+    }
+
+    public function filter_visible_plugin_entries($all_plugins) {
+        if (!is_array($all_plugins)) {
+            return $all_plugins;
+        }
+
+        $canonical = $this->update_target_plugin_slug() . '/layrix.php';
+        $current = $this->plugin_basename();
+        $candidates = array_values(array_unique(array_filter(array_merge([$canonical, $current], $this->legacy_plugin_basenames()))));
+
+        $preferred = array_key_exists($current, $all_plugins)
+            ? $current
+            : (array_key_exists($canonical, $all_plugins) ? $canonical : $current);
+
+        foreach ($candidates as $candidate) {
+            if ($candidate === $preferred) {
+                continue;
+            }
+
+            unset($all_plugins[$candidate]);
+        }
+
+        return $all_plugins;
     }
 
     private function plugin_slug() {

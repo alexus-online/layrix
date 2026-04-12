@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.8 (2026-04-12)
+
+### Fix
+- The plugin list now hides duplicate legacy bridge entries so normal installs only show one visible Layrix plugin row.
+- Die Plugin-Liste blendet doppelte Legacy-Bridge-Eintraege jetzt aus, damit normale Installationen nur noch eine sichtbare Layrix-Zeile zeigen.
+- Legacy bridge basenames are still recognized for update migration, including the old `elementor-core-framework.php` entry.
+- Legacy-Bridge-Basenames werden fuer die Update-Migration weiterhin erkannt, inklusive des alten Eintrags `elementor-core-framework.php`.
+
 ## 0.3.7 (2026-04-12)
 
 ### Fix

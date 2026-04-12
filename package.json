@@ -1,6 +1,6 @@
 {
   "name": "layrix",
-  "version": "0.3.7",
+  "version": "0.3.8",
   "private": true,
   "scripts": {
     "build:release": "bash scripts/build-release.sh",

@@ -50,6 +50,7 @@ trait ECF_Framework_Hook_Registration_Trait {
         add_filter('upgrader_pre_install', [$this, 'remember_active_state_before_upgrade'], 10, 2);
         add_filter('upgrader_source_selection', [$this, 'rename_github_update_source'], 10, 4);
         add_filter('upgrader_post_install', [$this, 'normalize_github_plugin_destination'], 10, 3);
+        add_filter('all_plugins', [$this, 'filter_visible_plugin_entries']);
         add_filter('plugin_action_links_' . plugin_basename(ECF_FRAMEWORK_FILE), [$this, 'add_plugin_action_links']);
         add_filter('plugin_auto_update_setting_html', [$this, 'render_plugin_auto_update_column'], 10, 3);
     }
