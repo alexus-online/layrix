@@ -1687,6 +1687,9 @@ msgstr "Clamp-Wert anzeigen"
 msgid "Show status cards in Variables & Sync"
 msgstr "Statuskarten in Variablen & Sync anzeigen"
 
+msgid "Shows small overview cards in the Variables and Sync areas so you can see current Elementor usage and limits at a glance."
+msgstr "Zeigt kleine Uebersichtskarten in den Bereichen Variablen und Sync, damit du die aktuelle Elementor-Nutzung und Limits direkt im Blick hast."
+
 msgid "Shows the class and variable limits ECF currently assumes from the installed Elementor setup."
 msgstr "Zeigt die Klassen- und Variablenlimits, die ECF aktuell aus dem installierten Elementor-Setup ableitet."
 

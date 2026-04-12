@@ -336,6 +336,7 @@ return [
     'Shadows' => 'Schatten',
     'Show clamp value' => 'Clamp-Wert anzeigen',
     'Show status cards in Variables & Sync' => 'Statuskarten in Variablen & Sync anzeigen',
+    'Shows small overview cards in the Variables and Sync areas so you can see current Elementor usage and limits at a glance.' => 'Zeigt kleine Uebersichtskarten in den Bereichen Variablen und Sync, damit du die aktuelle Elementor-Nutzung und Limits direkt im Blick hast.',
     'Simple pixel value. Example: 1140 becomes 1140px.' => 'Einfacher Pixelwert. Beispiel: 1140 wird zu 1140px.',
     'Simple pixel value. Good for strict content widths like 720px.' => 'Einfacher Pixelwert. Gut für feste Inhaltsbreiten wie 720px.',
     'Single item inside a repeated list or navigation.' => 'Ein einzelnes Element innerhalb einer Liste oder Navigation.',
