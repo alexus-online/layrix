@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Layrix\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-13 12:03+0000\n"
+"POT-Creation-Date: 2026-04-13 12:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -12,12 +12,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Domain: ecf-framework\n"
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:415
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:423
 #: includes/trait-ecf-admin-page-sections.php:423
 msgid "% of limit"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:200
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:210
 #: includes/trait-ecf-native-elementor-handlers.php:210
 msgid "%1$d ECF classes were removed from Elementor. You can now sync them again as clean empty classes."
 msgstr ""
@@ -27,14 +27,14 @@ msgstr ""
 msgid "%1$d created"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:119
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:124
 #: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:57
 #: includes/trait-ecf-native-elementor-handlers.php:124
 #: includes/trait-ecf-native-elementor-handlers.php:57
 msgid "%1$d new Global Classes were skipped because Elementor can currently not create more than %3$d Global Classes and already uses %2$d."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:112
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:117
 #: includes/trait-ecf-native-elementor-handlers.php:117
 msgid "%1$d removed."
 msgstr ""
@@ -44,7 +44,7 @@ msgstr ""
 msgid "%1$d updated"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:163
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:173
 #: includes/trait-ecf-native-elementor-handlers.php:173
 msgid "%1$d variables and %2$d global classes were removed. The Elementor cache was cleared automatically."
 msgstr ""
@@ -54,7 +54,7 @@ msgstr ""
 msgid "%1$s / %2$s"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1158
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1258
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:230
 #: includes/trait-ecf-admin-page-sections.php:1258
 #: includes/trait-ecf-asset-loading.php:230
@@ -93,22 +93,22 @@ msgstr ""
 msgid "%spx = 1rem"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:746
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:846
 #: includes/trait-ecf-admin-page-sections.php:846
 msgid "2 columns"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:742
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:842
 #: includes/trait-ecf-admin-page-sections.php:842
 msgid "2 columns side by side"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:752
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:852
 #: includes/trait-ecf-admin-page-sections.php:852
 msgid "3 columns"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:748
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:848
 #: includes/trait-ecf-admin-page-sections.php:848
 msgid "3 columns side by side"
 msgstr ""
@@ -138,35 +138,37 @@ msgstr ""
 msgid "Action area for buttons or controls."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1907
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:589
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:2007
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:689
 #: includes/trait-ecf-admin-page-sections.php:2007
 #: includes/trait-ecf-admin-page-sections.php:689
 msgid "Active"
 msgstr ""
 
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:462
 #: includes/trait-ecf-admin-page-sections.php:462
 msgid "Active classes"
 msgstr ""
 
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:528
 #: includes/trait-ecf-admin-page-sections.php:528
 msgid "Active utility classes"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:602
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:702
 #: dist/release/layrix/includes/trait-ecf-render-helpers.php:167
 #: includes/trait-ecf-admin-page-sections.php:702
 #: includes/trait-ecf-render-helpers.php:167
 msgid "Add"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:536
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:636
 #: includes/trait-ecf-admin-page-sections.php:636
 msgid "Add as custom classes"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1414
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1595
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1514
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1695
 #: includes/trait-ecf-admin-page-sections.php:1514
 #: includes/trait-ecf-admin-page-sections.php:1695
 msgid "Add larger step"
@@ -177,8 +179,8 @@ msgstr ""
 msgid "Add local font file"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1382
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1570
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1482
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1670
 #: includes/trait-ecf-admin-page-sections.php:1482
 #: includes/trait-ecf-admin-page-sections.php:1670
 msgid "Add smaller step"
@@ -194,12 +196,12 @@ msgstr ""
 msgid "Additional ECF classes separated by spaces."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:506
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:606
 #: includes/trait-ecf-admin-page-sections.php:606
 msgid "Additional elements"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:510
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:610
 #: includes/trait-ecf-admin-page-sections.php:610
 msgid "Additional modifiers"
 msgstr ""
@@ -228,12 +230,12 @@ msgstr ""
 msgid "Admin Menu Font Size"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:731
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:831
 #: includes/trait-ecf-admin-page-sections.php:831
 msgid "Advanced"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:454
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:463
 #: includes/trait-ecf-admin-page-sections.php:463
 msgid "Advanced classes"
 msgstr ""
@@ -243,7 +245,7 @@ msgstr ""
 msgid "Advanced layout helper for page structure and composition."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:431
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:439
 #: includes/trait-ecf-admin-page-sections.php:439
 msgid "After sync:"
 msgstr ""
@@ -258,7 +260,7 @@ msgstr ""
 msgid "Aligns text content to the right."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:438
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:446
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:160
 #: includes/trait-ecf-admin-page-sections.php:446
 #: includes/trait-ecf-asset-loading.php:160
@@ -266,7 +268,7 @@ msgid "All"
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-framework-config.php:610
-#: dist/release/layrix/includes/trait-ecf-framework-config.php:802
+#: dist/release/layrix/includes/trait-ecf-framework-config.php:817
 #: includes/trait-ecf-framework-config.php:610
 #: includes/trait-ecf-framework-config.php:817
 msgid "All classes"
@@ -288,7 +290,7 @@ msgid "Already in Favorites"
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:158
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1061
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1161
 #: includes/trait-ecf-admin-general.php:158
 #: includes/trait-ecf-admin-page-sections.php:1161
 msgid "Also sync changes to Elementor automatically"
@@ -319,19 +321,20 @@ msgstr ""
 msgid "Applies the strongest heading style for major titles."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:462
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:494
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:562
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:594
 #: includes/trait-ecf-admin-page-sections.php:562
 #: includes/trait-ecf-admin-page-sections.php:594
 msgid "Area"
 msgstr ""
 
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:488
 #: includes/trait-ecf-admin-page-sections.php:488
 msgid "Auto helper"
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:170
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1069
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1169
 #: dist/release/layrix/layrix.php:301
 #: includes/trait-ecf-admin-general.php:170
 #: includes/trait-ecf-admin-page-sections.php:1169
@@ -340,7 +343,7 @@ msgid "Auto-sync classes"
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:164
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1065
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1165
 #: dist/release/layrix/layrix.php:297
 #: includes/trait-ecf-admin-general.php:164
 #: includes/trait-ecf-admin-page-sections.php:1165
@@ -348,6 +351,7 @@ msgstr ""
 msgid "Auto-sync variables"
 msgstr ""
 
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:548
 #: includes/trait-ecf-admin-page-sections.php:548
 msgid "Automatic helper classes"
 msgstr ""
@@ -386,7 +390,7 @@ msgstr ""
 msgid "Autosave off"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:489
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:589
 #: includes/trait-ecf-admin-page-sections.php:589
 msgid "BEM class generator"
 msgstr ""
@@ -415,7 +419,7 @@ msgstr ""
 msgid "Base Body Text Size"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:857
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:957
 #: includes/trait-ecf-admin-page-sections.php:957
 msgid "Base Colors"
 msgstr ""
@@ -427,12 +431,12 @@ msgstr ""
 msgid "Base Font Family"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1494
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1594
 #: includes/trait-ecf-admin-page-sections.php:1594
 msgid "Base Settings"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1512
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1612
 #: includes/trait-ecf-admin-page-sections.php:1612
 msgid "Base Step"
 msgstr ""
@@ -447,25 +451,27 @@ msgstr ""
 msgid "Base layout class for the overall page structure."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1260
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1360
 #: includes/trait-ecf-admin-page-sections.php:1360
 msgid "Base step"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:441
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:449
 #: includes/trait-ecf-admin-page-sections.php:449
 msgid "Basic"
 msgstr ""
 
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:472
 #: includes/trait-ecf-admin-page-sections.php:472
 msgid "Basic active"
 msgstr ""
 
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:508
 #: includes/trait-ecf-admin-page-sections.php:508
 msgid "Basic active classes"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1286
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1386
 #: includes/trait-ecf-admin-page-sections.php:1386
 msgid "Body Font"
 msgstr ""
@@ -505,7 +511,7 @@ msgstr ""
 msgid "Build your tokens"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:353
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:361
 #: includes/trait-ecf-admin-page-sections.php:361
 msgid "Button"
 msgstr ""
@@ -520,7 +526,7 @@ msgstr ""
 msgid "Button variant styled more like a text link."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-framework-config.php:808
+#: dist/release/layrix/includes/trait-ecf-framework-config.php:823
 #: includes/trait-ecf-framework-config.php:823
 msgid "Buttons"
 msgstr ""
@@ -537,7 +543,7 @@ msgstr ""
 msgid "Caption"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:346
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:354
 #: includes/trait-ecf-admin-page-sections.php:354
 msgid "Card"
 msgstr ""
@@ -552,7 +558,7 @@ msgstr ""
 msgid "Card layout saved."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-framework-config.php:807
+#: dist/release/layrix/includes/trait-ecf-framework-config.php:822
 #: includes/trait-ecf-framework-config.php:822
 msgid "Cards"
 msgstr ""
@@ -583,7 +589,7 @@ msgid "Changes take effect immediately in Elementor. The cache is cleared automa
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:638
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:681
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:781
 #: includes/trait-ecf-admin-general.php:638
 #: includes/trait-ecf-admin-page-sections.php:781
 msgid "Character-based width. Great for readable text columns like 65ch or 72ch."
@@ -594,27 +600,27 @@ msgstr ""
 msgid "Check for updates"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1138
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1238
 #: includes/trait-ecf-admin-page-sections.php:1238
 msgid "Checks whether Elementor Pro is loaded. Some variables, sync and editor features can depend on it."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1153
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1253
 #: includes/trait-ecf-admin-page-sections.php:1253
 msgid "Checks whether Elementor's Design System Sync module is available. This can affect caches and synchronization behavior."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1149
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1249
 #: includes/trait-ecf-admin-page-sections.php:1249
 msgid "Checks whether Elementor's Global Classes module is available for ECF class sync."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1145
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1245
 #: includes/trait-ecf-admin-page-sections.php:1245
 msgid "Checks whether Elementor's Variables module is available, which is required for ECF variable sync and picker integration."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1131
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1231
 #: includes/trait-ecf-admin-page-sections.php:1231
 msgid "Checks whether the Elementor core plugin is loaded and available to ECF on this website."
 msgstr ""
@@ -624,7 +630,7 @@ msgstr ""
 msgid "Choose Color for color values, Size for lengths like px/rem/clamp(...), and Text only for real text strings."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:491
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:591
 #: includes/trait-ecf-admin-page-sections.php:591
 msgid "Choose a section, add elements or modifiers, and generate clean ECF BEM names for your own classes."
 msgstr ""
@@ -639,12 +645,12 @@ msgstr ""
 msgid "Choose font file"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:830
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:930
 #: includes/trait-ecf-admin-page-sections.php:930
 msgid "Choose the unit for simple values. Use f(x) for complete CSS expressions like min(...), calc(...) or clamp(...)."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:796
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:896
 #: includes/trait-ecf-admin-page-sections.php:896
 msgid "Choose the unit for simple values. ch is usually best for readable text widths. Use f(x) for full CSS expressions."
 msgstr ""
@@ -659,8 +665,8 @@ msgstr ""
 msgid "Clamp"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:790
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:824
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:890
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:924
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:276
 #: dist/release/layrix/includes/trait-ecf-render-helpers.php:94
 #: includes/trait-ecf-admin-page-sections.php:890
@@ -679,12 +685,12 @@ msgstr ""
 msgid "Class Name"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:399
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:407
 #: includes/trait-ecf-admin-page-sections.php:407
 msgid "Class library"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:403
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:411
 #: includes/trait-ecf-admin-page-sections.php:411
 msgid "Class usage overview"
 msgstr ""
@@ -704,23 +710,23 @@ msgstr ""
 msgid "Clean slate interface with crisp contrast and restrained accents."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1678
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1778
 #: includes/trait-ecf-admin-page-sections.php:1778
 msgid "Cleanup ECF Classes"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1683
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1783
 #: includes/trait-ecf-admin-page-sections.php:1783
 msgid "Cleanup ECF from Elementor"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1166
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1266
 #: includes/trait-ecf-admin-page-sections.php:1266
 msgid "Clear"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1325
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1342
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1425
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1442
 #: includes/trait-ecf-admin-page-sections.php:1425
 #: includes/trait-ecf-admin-page-sections.php:1442
 msgid "Click a scale step to inspect it in detail."
@@ -733,7 +739,7 @@ msgstr ""
 msgid "Click a shadow token to inspect it in detail."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1819
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1919
 #: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:95
 #: includes/trait-ecf-admin-page-sections.php:1919
 #: includes/trait-ecf-admin-page-sections.php:95
@@ -759,10 +765,10 @@ msgstr ""
 msgid "Color is for values like #3b82f6, rgb(...) or hsl(...)."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1025
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1125
 #: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:220
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:724
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:730
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:824
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:830
 #: includes/trait-ecf-admin-page-sections.php:1125
 #: includes/trait-ecf-admin-page-sections.php:220
 #: includes/trait-ecf-admin-page-sections.php:824
@@ -779,8 +785,8 @@ msgstr ""
 msgid "Colors & Radius"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:739
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:741
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:839
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:841
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:203
 #: includes/trait-ecf-admin-page-sections.php:839
 #: includes/trait-ecf-admin-page-sections.php:841
@@ -788,24 +794,24 @@ msgstr ""
 msgid "Columns"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:387
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:395
 #: includes/trait-ecf-admin-page-sections.php:395
 msgid "Commerce"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:308
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:316
 #: includes/trait-ecf-admin-page-sections.php:316
 msgid "Consistent, semantic naming instead of improvised labels per page."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1534
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1634
 #: includes/trait-ecf-admin-page-sections.php:1634
 msgid "Container Widths"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:332
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:385
-#: dist/release/layrix/includes/trait-ecf-framework-config.php:810
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:340
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:393
+#: dist/release/layrix/includes/trait-ecf-framework-config.php:825
 #: includes/trait-ecf-admin-page-sections.php:340
 #: includes/trait-ecf-admin-page-sections.php:393
 #: includes/trait-ecf-framework-config.php:825
@@ -813,7 +819,7 @@ msgid "Content"
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:176
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:785
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:885
 #: includes/trait-ecf-admin-general.php:176
 #: includes/trait-ecf-admin-page-sections.php:885
 msgid "Content Max Width"
@@ -834,9 +840,9 @@ msgstr ""
 msgid "Copied!"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1193
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1392
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1583
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1293
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1492
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1683
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:175
 #: dist/release/layrix/includes/trait-ecf-render-helpers.php:27
 #: includes/trait-ecf-admin-page-sections.php:1293
@@ -847,7 +853,7 @@ msgstr ""
 msgid "Copy"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1424
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1524
 #: includes/trait-ecf-admin-page-sections.php:1524
 msgid "Core Font Tokens"
 msgstr ""
@@ -886,12 +892,12 @@ msgstr ""
 msgid "Could not save settings automatically."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:312
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:320
 #: includes/trait-ecf-admin-page-sections.php:320
 msgid "Curated helper styles for headings, text and a few safe layout patterns."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:609
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:709
 #: includes/trait-ecf-admin-page-sections.php:709
 msgid "Curated utility set"
 msgstr ""
@@ -903,7 +909,7 @@ msgstr ""
 msgid "Current design"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:911
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1011
 #: includes/trait-ecf-admin-page-sections.php:1011
 msgid "Current rem base"
 msgstr ""
@@ -913,45 +919,45 @@ msgstr ""
 msgid "Current root font size: %spx = 1rem."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1096
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1196
 #: includes/trait-ecf-admin-page-sections.php:1196
 msgid "Current status"
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:1044
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1288
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1304
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1388
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1404
 #: includes/trait-ecf-admin-general.php:1044
 #: includes/trait-ecf-admin-page-sections.php:1388
 #: includes/trait-ecf-admin-page-sections.php:1404
 msgid "Current:"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1627
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1727
 #: includes/trait-ecf-admin-page-sections.php:1727
 msgid "Currently found in Elementor: %1$d ECF variables and %2$d Global Classes."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:914
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1014
 #: includes/trait-ecf-admin-page-sections.php:1014
 msgid "Currently: %spx = 1rem"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:449
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:457
 #: dist/release/layrix/includes/trait-ecf-framework-config.php:626
-#: dist/release/layrix/includes/trait-ecf-framework-config.php:813
+#: dist/release/layrix/includes/trait-ecf-framework-config.php:828
 #: includes/trait-ecf-admin-page-sections.php:457
 #: includes/trait-ecf-framework-config.php:626
 #: includes/trait-ecf-framework-config.php:828
 msgid "Custom"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:567
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:667
 #: includes/trait-ecf-admin-page-sections.php:667
 msgid "Custom classes"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:374
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:382
 #: includes/trait-ecf-admin-page-sections.php:382
 msgid "Custom section"
 msgstr ""
@@ -975,7 +981,7 @@ msgstr ""
 msgid "Dark variant for sections with a darker surface."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1125
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1225
 #: includes/trait-ecf-admin-page-sections.php:1225
 msgid "Debug"
 msgstr ""
@@ -995,7 +1001,7 @@ msgstr ""
 msgid "Default body text style for regular paragraphs."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1291
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1391
 #: includes/trait-ecf-admin-page-sections.php:1391
 msgid "Default font for flowing text and normal site copy."
 msgstr ""
@@ -1033,22 +1039,22 @@ msgstr ""
 msgid "Design"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1153
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1253
 #: includes/trait-ecf-admin-page-sections.php:1253
 msgid "Design System Sync active"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:755
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:855
 #: includes/trait-ecf-admin-page-sections.php:855
 msgid "Desktop stays in 2 or 3 columns. On smaller screens the cards stack automatically into one column."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1120
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1220
 #: includes/trait-ecf-admin-page-sections.php:1220
 msgid "Detected from the installed Elementor version on this website. Use Reload to fetch the current values again."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1157
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1257
 #: includes/trait-ecf-admin-page-sections.php:1257
 msgid "Detected limits"
 msgstr ""
@@ -1058,7 +1064,7 @@ msgstr ""
 msgid "Detected settings groups: %s"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1775
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1875
 #: includes/trait-ecf-admin-page-sections.php:1875
 msgid "Diagnostics"
 msgstr ""
@@ -1068,7 +1074,7 @@ msgstr ""
 msgid "Dialog or modal class for overlays and focused interactions."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-framework-config.php:812
+#: dist/release/layrix/includes/trait-ecf-framework-config.php:827
 #: includes/trait-ecf-framework-config.php:827
 msgid "Dialogs"
 msgstr ""
@@ -1087,7 +1093,7 @@ msgstr ""
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:255
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:740
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:820
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1097
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1197
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:232
 #: includes/trait-ecf-admin-general.php:115
 #: includes/trait-ecf-admin-general.php:153
@@ -1114,7 +1120,7 @@ msgid "Displays children inline with flexible spacing."
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:809
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:885
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:985
 #: includes/trait-ecf-admin-general.php:809
 #: includes/trait-ecf-admin-page-sections.php:985
 msgid "Distance between the element edge and the keyboard focus outline."
@@ -1125,12 +1131,12 @@ msgstr ""
 msgid "Do you really want to delete \"%s\"?"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1675
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1775
 #: includes/trait-ecf-admin-page-sections.php:1775
 msgid "Do you really want to remove %1$d ECF Global Classes from Elementor so they can be synced again as empty classes?"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1680
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1780
 #: includes/trait-ecf-admin-page-sections.php:1780
 msgid "Do you really want to remove %1$d ECF variables and %2$d Global Classes from Elementor?"
 msgstr ""
@@ -1177,7 +1183,7 @@ msgid "Element-based unit for focus styling that scales with the focused element
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:628
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:674
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:774
 #: includes/trait-ecf-admin-general.php:628
 #: includes/trait-ecf-admin-page-sections.php:774
 msgid "Element-based unit. Example: 72 becomes 72em."
@@ -1189,13 +1195,13 @@ msgid "Element-based unit. Rarely needed for body text, but available if you wan
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:641
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:684
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:784
 #: includes/trait-ecf-admin-general.php:641
 #: includes/trait-ecf-admin-page-sections.php:784
 msgid "Element-based unit. Rarely needed, but possible for content wrappers."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:423
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:431
 #: dist/release/layrix/layrix.php:246
 #: includes/trait-ecf-admin-page-sections.php:431
 #: layrix.php:246
@@ -1203,7 +1209,7 @@ msgid "Elementor"
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:182
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:819
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:919
 #: includes/trait-ecf-admin-general.php:182
 #: includes/trait-ecf-admin-page-sections.php:919
 msgid "Elementor Boxed Width"
@@ -1221,22 +1227,22 @@ msgstr ""
 msgid "Elementor Core"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1131
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1231
 #: includes/trait-ecf-admin-page-sections.php:1231
 msgid "Elementor Core recognized"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1718
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1818
 #: includes/trait-ecf-admin-page-sections.php:1818
 msgid "Elementor Editor Panel"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1636
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1736
 #: includes/trait-ecf-admin-page-sections.php:1736
 msgid "Elementor Global Classes"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1138
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1238
 #: includes/trait-ecf-admin-page-sections.php:1238
 msgid "Elementor Pro recognized"
 msgstr ""
@@ -1253,19 +1259,19 @@ msgstr ""
 msgid "Elementor auto-sync after autosave"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:711
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:811
 #: includes/trait-ecf-admin-page-sections.php:811
 msgid "Elementor editor helpers, plugin language and the ECF backend appearance."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:264
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:478
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:274
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:488
 #: includes/trait-ecf-native-elementor-handlers.php:274
 #: includes/trait-ecf-native-elementor-handlers.php:488
 msgid "Elementor global classes repository is not available."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1104
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1204
 #: includes/trait-ecf-admin-page-sections.php:1204
 msgid "Elementor limits"
 msgstr ""
@@ -1290,16 +1296,16 @@ msgstr ""
 msgid "Elementor sync is running…"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:224
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:322
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:366
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:234
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:332
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:376
 #: includes/trait-ecf-native-elementor-handlers.php:234
 #: includes/trait-ecf-native-elementor-handlers.php:332
 #: includes/trait-ecf-native-elementor-handlers.php:376
 msgid "Elementor variable classes are not available."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:517
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:617
 #: includes/trait-ecf-admin-page-sections.php:617
 msgid "Elements"
 msgstr ""
@@ -1328,7 +1334,7 @@ msgstr ""
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:255
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:740
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:820
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1097
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1197
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:231
 #: includes/trait-ecf-admin-general.php:115
 #: includes/trait-ecf-admin-general.php:153
@@ -1361,12 +1367,12 @@ msgstr ""
 msgid "Enter a custom block name and the preview will appear here."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:827
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:927
 #: includes/trait-ecf-admin-page-sections.php:927
 msgid "Enter either a plain value like 1140 or, with f(x), a full CSS expression such as clamp(20rem, 80vw, 1140px)."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:793
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:893
 #: includes/trait-ecf-admin-page-sections.php:893
 msgid "Enter either a simple value like 72 or, with f(x), a full CSS expression such as min(72ch, 100% - 2rem)."
 msgstr ""
@@ -1381,12 +1387,12 @@ msgstr ""
 msgid "Error:"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1691
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1791
 #: includes/trait-ecf-admin-page-sections.php:1791
 msgid "Export / Import"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1699
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1799
 #: includes/trait-ecf-admin-page-sections.php:1799
 msgid "Export JSON"
 msgstr ""
@@ -1401,15 +1407,17 @@ msgstr ""
 msgid "Exported from plugin version: %s"
 msgstr ""
 
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:518
 #: includes/trait-ecf-admin-page-sections.php:518
 msgid "Extra active classes"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:445
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:453
 #: includes/trait-ecf-admin-page-sections.php:453
 msgid "Extras"
 msgstr ""
 
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:476
 #: includes/trait-ecf-admin-page-sections.php:476
 msgid "Extras active"
 msgstr ""
@@ -1424,7 +1432,7 @@ msgstr ""
 msgid "Favorite"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:713
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:813
 #: includes/trait-ecf-admin-page-sections.php:813
 msgid "Favorites"
 msgstr ""
@@ -1434,7 +1442,7 @@ msgstr ""
 msgid "File URL"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:544
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:554
 #: includes/trait-ecf-native-elementor-handlers.php:554
 msgid "File upload failed."
 msgstr ""
@@ -1444,12 +1452,12 @@ msgstr ""
 msgid "File: %s"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1019
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1119
 #: includes/trait-ecf-admin-page-sections.php:1119
 msgid "Filter for"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:463
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:563
 #: includes/trait-ecf-admin-page-sections.php:563
 msgid "Filter the starter classes by area."
 msgstr ""
@@ -1474,16 +1482,16 @@ msgstr ""
 msgid "Fixed pixel value. Best default here, because the field inherits the max px value from your active body token such as --ecf-text-m."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1323
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1334
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1340
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1423
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1434
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1440
 #: includes/trait-ecf-admin-page-sections.php:1423
 #: includes/trait-ecf-admin-page-sections.php:1434
 #: includes/trait-ecf-admin-page-sections.php:1440
 msgid "Fluid"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1521
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1621
 #: includes/trait-ecf-admin-page-sections.php:1621
 msgid "Fluid (clamp)"
 msgstr ""
@@ -1493,31 +1501,31 @@ msgstr ""
 msgid "Focus Color"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:867
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:967
 #: includes/trait-ecf-admin-page-sections.php:967
 msgid "Focus Outline"
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:242
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:881
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:981
 #: includes/trait-ecf-admin-general.php:242
 #: includes/trait-ecf-admin-page-sections.php:981
 msgid "Focus Outline Offset"
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:236
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:873
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:973
 #: includes/trait-ecf-admin-general.php:236
 #: includes/trait-ecf-admin-page-sections.php:973
 msgid "Focus Outline Width"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:728
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:828
 #: includes/trait-ecf-admin-page-sections.php:828
 msgid "Font"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1449
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1549
 #: includes/trait-ecf-admin-page-sections.php:1549
 msgid "Font Weights"
 msgstr ""
@@ -1537,13 +1545,13 @@ msgstr ""
 msgid "Font is being imported locally…"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1289
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1389
 #: includes/trait-ecf-admin-page-sections.php:1389
 msgid "Font size:"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:367
-#: dist/release/layrix/includes/trait-ecf-framework-config.php:809
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:375
+#: dist/release/layrix/includes/trait-ecf-framework-config.php:824
 #: includes/trait-ecf-admin-page-sections.php:375
 #: includes/trait-ecf-framework-config.php:824
 msgid "Footer"
@@ -1554,7 +1562,7 @@ msgstr ""
 msgid "Footer class for the bottom area of the website."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:355
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:363
 #: includes/trait-ecf-admin-page-sections.php:363
 msgid "For CTA buttons with icons, labels and variants."
 msgstr ""
@@ -1564,37 +1572,37 @@ msgstr ""
 msgid "For Size, enter a simple number plus format like 24 + px. If the variable uses clamp(...), edit the Minimum and Maximum px values below instead."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:320
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:328
 #: includes/trait-ecf-admin-page-sections.php:328
 msgid "For brand, navigation and actions in the top area."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:362
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:370
 #: includes/trait-ecf-admin-page-sections.php:370
 msgid "For forms, groups, fields and actions."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:348
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:356
 #: includes/trait-ecf-admin-page-sections.php:356
 msgid "For grouped content surfaces like cards, teasers or tiles."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:341
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:349
 #: includes/trait-ecf-admin-page-sections.php:349
 msgid "For larger page sections and themed wrappers."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:334
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:342
 #: includes/trait-ecf-admin-page-sections.php:342
 msgid "For normal content blocks like text, media, lists or side content."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:369
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:377
 #: includes/trait-ecf-admin-page-sections.php:377
 msgid "For the lower website area with columns, links and meta info."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:327
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:335
 #: includes/trait-ecf-admin-page-sections.php:335
 msgid "For the main intro section with copy, media and CTAs."
 msgstr ""
@@ -1616,7 +1624,7 @@ msgstr ""
 msgid "Foreign Variables"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:360
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:368
 #: includes/trait-ecf-admin-page-sections.php:368
 msgid "Form"
 msgstr ""
@@ -1631,7 +1639,7 @@ msgstr ""
 msgid "Format"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-framework-config.php:811
+#: dist/release/layrix/includes/trait-ecf-framework-config.php:826
 #: includes/trait-ecf-framework-config.php:826
 msgid "Forms"
 msgstr ""
@@ -1642,20 +1650,20 @@ msgid "Full CSS expression. Use values like clamp(16px, 1rem + 0.2vw, 18px)."
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:631
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:677
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:777
 #: includes/trait-ecf-admin-general.php:631
 #: includes/trait-ecf-admin-page-sections.php:777
 msgid "Full CSS expression. Use values like min(100% - 2rem, 1140px), calc(...) or clamp(...)."
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:644
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:687
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:787
 #: includes/trait-ecf-admin-general.php:644
 #: includes/trait-ecf-admin-page-sections.php:787
 msgid "Full CSS expression. Use values like min(72ch, 100% - 2rem), calc(...) or clamp(...)."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:706
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:806
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:211
 #: dist/release/layrix/layrix.php:252
 #: includes/trait-ecf-admin-page-sections.php:806
@@ -1669,7 +1677,7 @@ msgstr ""
 msgid "General Settings control global basics like root font size, plugin language, container widths, base colors, body font, and editor helper behavior."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:391
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:401
 #: includes/trait-ecf-native-elementor-handlers.php:401
 msgid "Generated ECF variables cannot be edited here."
 msgstr ""
@@ -1691,7 +1699,7 @@ msgstr ""
 msgid "German (matches current WordPress language)"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1740
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1840
 #: includes/trait-ecf-admin-page-sections.php:1840
 msgid "Getting started"
 msgstr ""
@@ -1702,7 +1710,7 @@ msgid "Ghost-style variant with minimal visual weight."
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:114
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1081
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1181
 #: includes/trait-ecf-admin-general.php:114
 #: includes/trait-ecf-admin-page-sections.php:1181
 msgid "GitHub update checks"
@@ -1720,14 +1728,14 @@ msgstr ""
 msgid "Global Class"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1112
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1665
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1212
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1765
 #: includes/trait-ecf-admin-page-sections.php:1212
 #: includes/trait-ecf-admin-page-sections.php:1765
 msgid "Global Classes"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1149
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1249
 #: includes/trait-ecf-admin-page-sections.php:1249
 msgid "Global Classes active"
 msgstr ""
@@ -1761,7 +1769,7 @@ msgstr ""
 msgid "Groups related fields or controls together."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:318
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:326
 #: includes/trait-ecf-admin-page-sections.php:326
 msgid "Header"
 msgstr ""
@@ -1791,7 +1799,7 @@ msgstr ""
 msgid "Heading 5"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1302
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1402
 #: includes/trait-ecf-admin-page-sections.php:1402
 msgid "Heading Font"
 msgstr ""
@@ -1809,8 +1817,8 @@ msgid "Help & Support"
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:418
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:325
-#: dist/release/layrix/includes/trait-ecf-framework-config.php:806
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:333
+#: dist/release/layrix/includes/trait-ecf-framework-config.php:821
 #: includes/trait-ecf-admin-general.php:418
 #: includes/trait-ecf-admin-page-sections.php:333
 #: includes/trait-ecf-framework-config.php:821
@@ -1842,7 +1850,7 @@ msgstr ""
 msgid "Icon element inside the parent component."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1705
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1805
 #: includes/trait-ecf-admin-page-sections.php:1805
 msgid "Import"
 msgstr ""
@@ -1852,21 +1860,21 @@ msgstr ""
 msgid "Import local font"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1709
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1809
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:233
 #: includes/trait-ecf-admin-page-sections.php:1809
 #: includes/trait-ecf-asset-loading.php:233
 msgid "Import preview"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1175
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1784
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1275
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1884
 #: includes/trait-ecf-admin-page-sections.php:1275
 #: includes/trait-ecf-admin-page-sections.php:1884
 msgid "Import/Export"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1436
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1536
 #: includes/trait-ecf-admin-page-sections.php:1536
 msgid "Imported Local Fonts"
 msgstr ""
@@ -1876,7 +1884,7 @@ msgstr ""
 msgid "Imported font could not be resolved from the media library."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:584
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:594
 #: includes/trait-ecf-native-elementor-handlers.php:594
 msgid "Imported from plugin version %1$s into %2$s. Please review General Settings, Sync, and editor-related options afterwards."
 msgstr ""
@@ -1886,7 +1894,7 @@ msgstr ""
 msgid "Improves text wrapping for more pleasant paragraph breaks."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1719
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1819
 #: includes/trait-ecf-admin-page-sections.php:1819
 msgid "In the Elementor editor, find the <strong>Layrix</strong> section under the <strong>Advanced</strong> tab of any element."
 msgstr ""
@@ -1916,12 +1924,12 @@ msgstr ""
 msgid "Interactive classes for buttons, forms, and dialog-based UI elements."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:711
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:811
 #: includes/trait-ecf-admin-page-sections.php:811
 msgid "Interface"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:571
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:581
 #: includes/trait-ecf-native-elementor-handlers.php:581
 msgid "Invalid JSON file."
 msgstr ""
@@ -1941,12 +1949,12 @@ msgstr ""
 msgid "Invalid layout payload."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:403
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:413
 #: includes/trait-ecf-native-elementor-handlers.php:413
 msgid "Invalid variable value."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:780
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:880
 #: includes/trait-ecf-admin-page-sections.php:880
 msgid "Keep readable content widths and wider layout containers together in one place."
 msgstr ""
@@ -1956,7 +1964,7 @@ msgstr ""
 msgid "Keeps content accessible for screen readers while hiding it visually."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:309
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:317
 #: includes/trait-ecf-admin-page-sections.php:317
 msgid "Keeps naming and Elementor sync manageable while staying below the 100-class limit."
 msgstr ""
@@ -1986,11 +1994,11 @@ msgstr ""
 msgid "Largest size of the clamp value, shown here in px for easier editing."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:729
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:740
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:829
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:840
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:164
 #: dist/release/layrix/includes/trait-ecf-framework-config.php:499
-#: dist/release/layrix/includes/trait-ecf-framework-config.php:803
+#: dist/release/layrix/includes/trait-ecf-framework-config.php:818
 #: includes/trait-ecf-admin-page-sections.php:829
 #: includes/trait-ecf-admin-page-sections.php:840
 #: includes/trait-ecf-asset-loading.php:164
@@ -2033,6 +2041,7 @@ msgstr ""
 msgid "Layrix Variablen"
 msgstr ""
 
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:492
 #: includes/trait-ecf-admin-page-sections.php:492
 msgid "Layrix sync total"
 msgstr ""
@@ -2042,7 +2051,7 @@ msgstr ""
 msgid "Legacy export without metadata. Import is still possible."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1473
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1573
 #: includes/trait-ecf-admin-page-sections.php:1573
 msgid "Letter Spacing"
 msgstr ""
@@ -2052,12 +2061,12 @@ msgstr ""
 msgid "Library fonts are downloaded into your own media library on the server and then served locally, so the frontend does not need live requests to external font providers."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1015
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1115
 #: includes/trait-ecf-admin-page-sections.php:1115
 msgid "Limit Elementor variables by field type"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1461
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1561
 #: includes/trait-ecf-admin-page-sections.php:1561
 msgid "Line Heights"
 msgstr ""
@@ -2082,12 +2091,12 @@ msgstr ""
 msgid "Live Box Shadow Preview"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1560
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1660
 #: includes/trait-ecf-admin-page-sections.php:1660
 msgid "Live Spacing Preview"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1329
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1429
 #: includes/trait-ecf-admin-page-sections.php:1429
 msgid "Live Type Preview"
 msgstr ""
@@ -2135,12 +2144,12 @@ msgstr ""
 msgid "Manage starter classes and optional utility classes in the Klassen tab. Add class names here only when you really need them on the current element."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1437
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1537
 #: includes/trait-ecf-admin-page-sections.php:1537
 msgid "Manage the fonts that were imported locally from the library."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:384
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:392
 #: includes/trait-ecf-admin-page-sections.php:392
 msgid "Marketing"
 msgstr ""
@@ -2152,46 +2161,46 @@ msgstr ""
 msgid "Max"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1253
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1353
 #: includes/trait-ecf-admin-page-sections.php:1353
 msgid "Max Font Size (px)"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1256
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1509
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1356
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1609
 #: includes/trait-ecf-admin-page-sections.php:1356
 #: includes/trait-ecf-admin-page-sections.php:1609
 msgid "Max Scale Ratio"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1506
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1606
 #: includes/trait-ecf-admin-page-sections.php:1606
 msgid "Max Size (px)"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1526
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1626
 #: includes/trait-ecf-admin-page-sections.php:1626
 msgid "Max Viewport (px)"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1274
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1374
 #: includes/trait-ecf-admin-page-sections.php:1374
 msgid "Max viewport (px)"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1252
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1321
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1335
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1354
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1371
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1398
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1406
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1557
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1586
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:910
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:933
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:955
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:977
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1010
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1033
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1055
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1077
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1352
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1421
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1435
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1454
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1471
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1498
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1506
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1657
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1686
 #: includes/trait-ecf-admin-page-sections.php:1010
 #: includes/trait-ecf-admin-page-sections.php:1033
 #: includes/trait-ecf-admin-page-sections.php:1055
@@ -2218,7 +2227,7 @@ msgstr ""
 msgid "Media slot for image, video or illustration."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1616
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1716
 #: includes/trait-ecf-admin-page-sections.php:1716
 msgid "Merge mode"
 msgstr ""
@@ -2235,29 +2244,29 @@ msgstr ""
 msgid "Min"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1244
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1344
 #: includes/trait-ecf-admin-page-sections.php:1344
 msgid "Min Font Size (px)"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1247
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1503
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1347
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1603
 #: includes/trait-ecf-admin-page-sections.php:1347
 #: includes/trait-ecf-admin-page-sections.php:1603
 msgid "Min Scale Ratio"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1500
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1600
 #: includes/trait-ecf-admin-page-sections.php:1600
 msgid "Min Size (px)"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1523
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1623
 #: includes/trait-ecf-admin-page-sections.php:1623
 msgid "Min Viewport (px)"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1271
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1371
 #: includes/trait-ecf-admin-page-sections.php:1371
 msgid "Min viewport (px)"
 msgstr ""
@@ -2267,19 +2276,19 @@ msgstr ""
 msgid "Minimal"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1243
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1320
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1333
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1348
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1367
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1397
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1402
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1556
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1585
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:909
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:928
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:950
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:972
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1009
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1028
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1050
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1072
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1343
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1420
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1433
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1448
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1467
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1497
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1502
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1656
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1685
 #: includes/trait-ecf-admin-page-sections.php:1009
 #: includes/trait-ecf-admin-page-sections.php:1028
 #: includes/trait-ecf-admin-page-sections.php:1050
@@ -2306,7 +2315,7 @@ msgstr ""
 msgid "Missing GitHub release zip for version %s. Publish the tagged release asset before offering updates."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:358
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:368
 #: includes/trait-ecf-native-elementor-handlers.php:368
 msgid "Missing required fields."
 msgstr ""
@@ -2316,7 +2325,7 @@ msgstr ""
 msgid "Mode"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:521
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:621
 #: includes/trait-ecf-admin-page-sections.php:621
 msgid "Modifiers"
 msgstr ""
@@ -2330,7 +2339,7 @@ msgstr ""
 msgid "Mono"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1692
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1792
 #: includes/trait-ecf-admin-page-sections.php:1792
 msgid "Move settings between installations with one JSON file. Export first if you want a clean rollback point before larger changes."
 msgstr ""
@@ -2340,27 +2349,27 @@ msgstr ""
 msgid "Name"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1450
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1550
 #: includes/trait-ecf-admin-page-sections.php:1550
 msgid "Named weight tokens for text styles and component typography."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1535
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1635
 #: includes/trait-ecf-admin-page-sections.php:1635
 msgid "Named width sizes for wrappers and layout containers."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1497
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1597
 #: includes/trait-ecf-admin-page-sections.php:1597
 msgid "Naming Convention"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1612
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1712
 #: includes/trait-ecf-admin-page-sections.php:1712
 msgid "Native Elementor Sync"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-framework-config.php:805
+#: dist/release/layrix/includes/trait-ecf-framework-config.php:820
 #: includes/trait-ecf-framework-config.php:820
 msgid "Navigation"
 msgstr ""
@@ -2370,7 +2379,7 @@ msgstr ""
 msgid "Navigation-related class for header or menu structure."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1126
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1226
 #: includes/trait-ecf-admin-page-sections.php:1226
 msgid "New: Debug shows Elementor Core and Pro detection, active modules and the detected class and variable limits."
 msgstr ""
@@ -2380,11 +2389,11 @@ msgstr ""
 msgid "Next"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1132
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1139
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1146
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1150
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1154
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1232
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1239
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1246
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1250
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1254
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:227
 #: includes/trait-ecf-admin-page-sections.php:1232
 #: includes/trait-ecf-admin-page-sections.php:1239
@@ -2395,36 +2404,36 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1678
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1778
 #: includes/trait-ecf-admin-page-sections.php:1778
 msgid "No ECF classes found in Elementor."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:194
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:204
 #: includes/trait-ecf-native-elementor-handlers.php:204
 msgid "No ECF global classes were found in Elementor."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1683
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1783
 #: includes/trait-ecf-admin-page-sections.php:1783
 msgid "No ECF variables or classes found in Elementor."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:156
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:166
 #: includes/trait-ecf-native-elementor-handlers.php:166
 msgid "No ECF variables or global classes were found in Elementor."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:318
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:474
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:328
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:484
 #: includes/trait-ecf-native-elementor-handlers.php:328
 #: includes/trait-ecf-native-elementor-handlers.php:484
 msgid "No IDs were provided."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:229
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:327
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:371
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:239
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:337
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:381
 #: includes/trait-ecf-native-elementor-handlers.php:239
 #: includes/trait-ecf-native-elementor-handlers.php:337
 #: includes/trait-ecf-native-elementor-handlers.php:381
@@ -2436,13 +2445,13 @@ msgstr ""
 msgid "No changelog available."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1823
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1923
 #: includes/trait-ecf-admin-page-sections.php:1923
 msgid "No changelog entries found."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1204
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1801
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1304
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1901
 #: includes/trait-ecf-admin-page-sections.php:1304
 #: includes/trait-ecf-admin-page-sections.php:1901
 msgid "No debug history recorded yet. Entries appear here when WP_DEBUG is enabled and ECF logs an internal event."
@@ -2468,7 +2477,7 @@ msgstr ""
 msgid "No favorites selected yet. Mark important settings with the heart icon."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:531
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:541
 #: includes/trait-ecf-native-elementor-handlers.php:541
 msgid "No file uploaded."
 msgstr ""
@@ -2498,12 +2507,12 @@ msgstr ""
 msgid "Open General Settings and define root size, body text size, body font, heading font and the base colors of the site."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1770
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1870
 #: includes/trait-ecf-admin-page-sections.php:1870
 msgid "Open changelog"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1766
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1866
 #: includes/trait-ecf-admin-page-sections.php:1866
 msgid "Open the changelog modal for the full release history instead of repeating the same entries inside Help."
 msgstr ""
@@ -2513,7 +2522,7 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1045
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1145
 #: includes/trait-ecf-admin-page-sections.php:1145
 msgid "Other text values"
 msgstr ""
@@ -2523,21 +2532,23 @@ msgstr ""
 msgid "Overline"
 msgstr ""
 
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:484
 #: includes/trait-ecf-admin-page-sections.php:484
 msgid "Own active"
 msgstr ""
 
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:538
 #: includes/trait-ecf-admin-page-sections.php:538
 msgid "Own active classes"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:502
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:602
 #: includes/trait-ecf-admin-page-sections.php:602
 msgid "Own block name"
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:639
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:682
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:782
 #: includes/trait-ecf-admin-general.php:639
 #: includes/trait-ecf-admin-page-sections.php:782
 msgid "Percentage value if the content width should stay fluid."
@@ -2549,13 +2560,13 @@ msgid "Percentage value relative to the inherited font size."
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:626
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:672
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:772
 #: includes/trait-ecf-admin-general.php:626
 #: includes/trait-ecf-admin-page-sections.php:772
 msgid "Percentage value. Example: 90 becomes 90%."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:713
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:813
 #: includes/trait-ecf-admin-page-sections.php:813
 msgid "Pinned quick settings from Website and Plugin basics."
 msgstr ""
@@ -2575,7 +2586,7 @@ msgstr ""
 msgid "Please fix the highlighted field before saving."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:552
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:562
 #: includes/trait-ecf-native-elementor-handlers.php:562
 msgid "Please upload a valid JSON file."
 msgstr ""
@@ -2586,7 +2597,7 @@ msgid "Please use a valid variable label. Spaces are converted to hyphens automa
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:316
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:427
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:435
 #: includes/trait-ecf-admin-general.php:316
 #: includes/trait-ecf-admin-page-sections.php:435
 msgid "Plugin"
@@ -2615,18 +2626,18 @@ msgid "Plugin update check failed. Installed: %1$s. GitHub request error: %2$s."
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:258
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:526
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:626
 #: includes/trait-ecf-admin-page-sections.php:258
 #: includes/trait-ecf-admin-page-sections.php:626
 msgid "Preview"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1330
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1430
 #: includes/trait-ecf-admin-page-sections.php:1430
 msgid "Preview for your generated Elementor text variables."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1561
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1661
 #: includes/trait-ecf-admin-page-sections.php:1661
 msgid "Preview of your generated spacing tokens."
 msgstr ""
@@ -2654,17 +2665,17 @@ msgstr ""
 msgid "Primary variant for the main emphasis action or element."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1752
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1852
 #: includes/trait-ecf-admin-page-sections.php:1852
 msgid "Quick help"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1817
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1917
 #: includes/trait-ecf-admin-page-sections.php:1917
 msgid "Quick view of the latest documented plugin changes."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1037
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1137
 #: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:224
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:165
 #: includes/trait-ecf-admin-page-sections.php:1137
@@ -2673,8 +2684,8 @@ msgstr ""
 msgid "Radius"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:908
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:962
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1008
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1062
 #: includes/trait-ecf-admin-page-sections.php:1008
 #: includes/trait-ecf-admin-page-sections.php:1062
 msgid "Radius token"
@@ -2685,7 +2696,7 @@ msgstr ""
 msgid "Readable width for text/content areas."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1165
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1265
 #: includes/trait-ecf-admin-page-sections.php:1265
 msgid "Recent debug history"
 msgstr ""
@@ -2695,12 +2706,12 @@ msgstr ""
 msgid "Reduced monochrome admin look with subtle borders and quiet emphasis."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1107
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1207
 #: includes/trait-ecf-admin-page-sections.php:1207
 msgid "Reload"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1092
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1192
 #: includes/trait-ecf-admin-page-sections.php:1192
 msgid "Remote service"
 msgstr ""
@@ -2712,14 +2723,14 @@ msgstr ""
 msgid "Remove from favorites"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1415
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1596
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1515
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1696
 #: includes/trait-ecf-admin-page-sections.php:1515
 #: includes/trait-ecf-admin-page-sections.php:1696
 msgid "Remove largest step"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:603
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:703
 #: dist/release/layrix/includes/trait-ecf-render-helpers.php:168
 #: includes/trait-ecf-admin-page-sections.php:703
 #: includes/trait-ecf-render-helpers.php:168
@@ -2731,24 +2742,24 @@ msgstr ""
 msgid "Remove selected local font"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1383
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1571
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1483
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1671
 #: includes/trait-ecf-admin-page-sections.php:1483
 #: includes/trait-ecf-admin-page-sections.php:1671
 msgid "Remove smallest step"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1678
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1778
 #: includes/trait-ecf-admin-page-sections.php:1778
 msgid "Removes %1$d ECF classes from Elementor without touching variables."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1683
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1783
 #: includes/trait-ecf-admin-page-sections.php:1783
 msgid "Removes %1$d variables and %2$d classes from Elementor."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:532
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:632
 #: includes/trait-ecf-admin-page-sections.php:632
 msgid "Reset"
 msgstr ""
@@ -2763,7 +2774,7 @@ msgstr ""
 msgid "Reset the saved admin layout to the default view?"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1425
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1525
 #: includes/trait-ecf-admin-page-sections.php:1525
 msgid "Reusable typography stacks like Primary, Secondary and Mono."
 msgstr ""
@@ -2786,7 +2797,7 @@ msgid "Root-based unit if the focus outline should scale with the root font size
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:627
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:673
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:773
 #: includes/trait-ecf-admin-general.php:627
 #: includes/trait-ecf-admin-page-sections.php:773
 msgid "Root-based unit. Example: 72 becomes 72rem."
@@ -2798,7 +2809,7 @@ msgid "Root-based unit. Use this only if you want to override the body size inte
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:640
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:683
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:783
 #: includes/trait-ecf-admin-general.php:640
 #: includes/trait-ecf-admin-page-sections.php:783
 msgid "Root-based unit. Useful if content width should scale with your root font size."
@@ -2809,7 +2820,7 @@ msgstr ""
 msgid "Run Sync & Export, then reload open Elementor tabs once so the new variables and classes appear reliably."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1617
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1717
 #: includes/trait-ecf-admin-page-sections.php:1717
 msgid "Safe first"
 msgstr ""
@@ -2822,7 +2833,7 @@ msgid "Save"
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:152
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1057
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1157
 #: includes/trait-ecf-admin-general.php:152
 #: includes/trait-ecf-admin-page-sections.php:1157
 msgid "Save Layrix changes automatically"
@@ -2840,7 +2851,7 @@ msgstr ""
 msgid "Saving…"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:896
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:996
 #: includes/trait-ecf-admin-page-sections.php:996
 msgid "Scale Impact"
 msgstr ""
@@ -2855,8 +2866,8 @@ msgstr ""
 msgid "Search across Layrix and foreign Elementor variables, then jump straight into cleanup or direct editing."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:484
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:635
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:584
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:735
 #: includes/trait-ecf-admin-page-sections.php:584
 #: includes/trait-ecf-admin-page-sections.php:735
 msgid "Search classes…"
@@ -2893,7 +2904,7 @@ msgstr ""
 msgid "Secondary variant for quieter supporting actions or elements."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:339
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:347
 #: includes/trait-ecf-admin-page-sections.php:347
 msgid "Section"
 msgstr ""
@@ -2903,19 +2914,19 @@ msgstr ""
 msgid "Section wrapper for grouping a complete content block."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-framework-config.php:804
+#: dist/release/layrix/includes/trait-ecf-framework-config.php:819
 #: includes/trait-ecf-framework-config.php:819
 msgid "Sections"
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:34
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:92
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:97
 #: includes/trait-ecf-native-elementor-handlers.php:34
 #: includes/trait-ecf-native-elementor-handlers.php:97
 msgid "Security check failed. Please reload the page and try again."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:897
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:997
 #: includes/trait-ecf-admin-page-sections.php:997
 msgid "See how the current root size affects typography, spacing and radius tokens."
 msgstr ""
@@ -2929,8 +2940,8 @@ msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:165
 #: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:200
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:473
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:624
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:573
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:724
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:150
 #: includes/trait-ecf-admin-page-sections.php:165
 #: includes/trait-ecf-admin-page-sections.php:200
@@ -2957,12 +2968,12 @@ msgstr ""
 msgid "Semantic starter class for consistent naming and structure."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1306
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1406
 #: includes/trait-ecf-admin-page-sections.php:1406
 msgid "Separate font family for h1 to h6 and heading-like elements."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:737
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:837
 #: includes/trait-ecf-admin-page-sections.php:837
 msgid "Set the root rem size plus the default body type choices for your site."
 msgstr ""
@@ -2982,8 +2993,8 @@ msgstr ""
 msgid "Sets the token <code>%1$s</code>. This value is currently set manually to %2$s %3$s and no longer follows <code>%4$s</code> automatically (%5$s %6$s)."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1177
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1786
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1277
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1886
 #: dist/release/layrix/layrix.php:251
 #: includes/trait-ecf-admin-page-sections.php:1277
 #: includes/trait-ecf-admin-page-sections.php:1886
@@ -2991,7 +3002,7 @@ msgstr ""
 msgid "Settings"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:581
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:591
 #: includes/trait-ecf-native-elementor-handlers.php:591
 msgid "Settings imported successfully."
 msgstr ""
@@ -3018,7 +3029,7 @@ msgstr ""
 msgid "Shadow"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1041
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1141
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:207
 #: dist/release/layrix/layrix.php:244
 #: includes/trait-ecf-admin-page-sections.php:1141
@@ -3027,28 +3038,30 @@ msgstr ""
 msgid "Shadows"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1239
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1339
 #: includes/trait-ecf-admin-page-sections.php:1339
 msgid "Shape the reading rhythm here first. The preview on the right mirrors the generated text tokens live while you edit."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1362
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1391
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1462
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1491
 #: includes/trait-ecf-admin-page-sections.php:1462
 #: includes/trait-ecf-admin-page-sections.php:1491
 msgid "Show clamp value"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1011
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1111
 #: includes/trait-ecf-admin-page-sections.php:1111
 msgid "Show status cards in Variables & Sync"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1157
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1257
 #: includes/trait-ecf-admin-page-sections.php:1257
 msgid "Shows the class and variable limits ECF currently assumes from the installed Elementor setup."
 msgstr ""
 
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:462
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:466
 #: includes/trait-ecf-admin-page-sections.php:462
 #: includes/trait-ecf-admin-page-sections.php:466
 msgid "Shows the classes that are currently active right now, including the automatic helper class used for Elementor boxed containers."
@@ -3065,14 +3078,14 @@ msgid "Shows the complete utility set with all available text, alignment, layout
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:625
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:671
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:771
 #: includes/trait-ecf-admin-general.php:625
 #: includes/trait-ecf-admin-page-sections.php:771
 msgid "Simple pixel value. Example: 1140 becomes 1140px."
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:637
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:680
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:780
 #: includes/trait-ecf-admin-general.php:637
 #: includes/trait-ecf-admin-page-sections.php:780
 msgid "Simple pixel value. Good for strict content widths like 720px."
@@ -3083,7 +3096,7 @@ msgstr ""
 msgid "Single item inside a repeated list or navigation."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:719
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:819
 #: includes/trait-ecf-admin-page-sections.php:819
 msgid "Site-wide font, layout and base color settings for the whole website."
 msgstr ""
@@ -3110,7 +3123,7 @@ msgstr ""
 msgid "Small layout helpers for inline, cluster, centering, and visibility behavior."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:611
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:711
 #: includes/trait-ecf-admin-page-sections.php:711
 msgid "Small optional helpers for text styles, alignment, and a few safe layout utilities. They are intentionally limited so the class system stays manageable."
 msgstr ""
@@ -3140,14 +3153,14 @@ msgstr ""
 msgid "Source"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1159
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1259
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:229
 #: includes/trait-ecf-admin-page-sections.php:1259
 #: includes/trait-ecf-asset-loading.php:229
 msgid "Source: classes via %1$s, variables via %2$s"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1033
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1133
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:162
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:206
 #: dist/release/layrix/layrix.php:243
@@ -3158,14 +3171,14 @@ msgstr ""
 msgid "Spacing"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:907
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:940
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1007
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1040
 #: includes/trait-ecf-admin-page-sections.php:1007
 #: includes/trait-ecf-admin-page-sections.php:1040
 msgid "Spacing token"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:480
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:580
 #: includes/trait-ecf-admin-page-sections.php:580
 msgid "Start the sync to apply the currently selected classes to Elementor."
 msgstr ""
@@ -3177,7 +3190,7 @@ msgstr ""
 msgid "Starter class"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:307
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:315
 #: includes/trait-ecf-admin-page-sections.php:315
 msgid "Starter classes for common page elements like header, hero, buttons or footer."
 msgstr ""
@@ -3187,8 +3200,8 @@ msgstr ""
 msgid "Starter classes give you a semantic naming system for common page areas and components such as headers, heroes, cards, buttons, and footers."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1322
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1340
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1422
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1440
 #: includes/trait-ecf-admin-page-sections.php:1422
 #: includes/trait-ecf-admin-page-sections.php:1440
 msgid "Static"
@@ -3219,23 +3232,23 @@ msgstr ""
 msgid "Style: %s"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:570
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:670
 #: includes/trait-ecf-admin-page-sections.php:670
 msgid "Suggestions for quick, clean custom names. Click a chip to insert it into a free row."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:742
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:842
 #: includes/trait-ecf-admin-page-sections.php:842
 msgid "Switch to 2 columns"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:748
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:848
 #: includes/trait-ecf-admin-page-sections.php:848
 msgid "Switch to 3 columns"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1174
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1783
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1274
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1883
 #: includes/trait-ecf-admin-page-sections.php:1274
 #: includes/trait-ecf-admin-page-sections.php:1883
 msgid "Sync"
@@ -3253,43 +3266,43 @@ msgstr ""
 msgid "Sync and verify"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:631
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:731
 #: includes/trait-ecf-admin-page-sections.php:731
 msgid "Sync only the utility classes that are currently enabled here."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1673
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1773
 #: includes/trait-ecf-admin-page-sections.php:1773
 msgid "Sync to Elementor (Merge)"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:477
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:628
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:577
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:728
 #: includes/trait-ecf-admin-page-sections.php:577
 #: includes/trait-ecf-admin-page-sections.php:728
 msgid "Sync with Elementor"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1178
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1787
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:712
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1278
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1887
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:812
 #: includes/trait-ecf-admin-page-sections.php:1278
 #: includes/trait-ecf-admin-page-sections.php:1887
 #: includes/trait-ecf-admin-page-sections.php:812
 msgid "System"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:712
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:812
 #: includes/trait-ecf-admin-page-sections.php:812
 msgid "System status, update checks, limits and integrated help."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1208
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1308
 #: includes/trait-ecf-admin-page-sections.php:1308
 msgid "System status, updater behavior and Elementor limits live here. Guidance and changelog details are grouped in the Help area."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1776
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1876
 #: includes/trait-ecf-admin-page-sections.php:1876
 msgid "Technical status, updater controls and live Elementor limits are available under Settings > System. The latest debug entries are mirrored here for quick support review."
 msgstr ""
@@ -3345,17 +3358,19 @@ msgstr ""
 msgid "Text utility for alignment or text-flow behavior."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:560
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:570
 #: includes/trait-ecf-native-elementor-handlers.php:570
 msgid "The JSON file is empty or too large."
 msgstr ""
 
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:133
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:66
 #: includes/trait-ecf-native-elementor-handlers.php:133
 #: includes/trait-ecf-native-elementor-handlers.php:66
 msgid "The class count includes the automatic helper class ecf-container-boxed."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1741
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1841
 #: includes/trait-ecf-admin-page-sections.php:1841
 msgid "The fastest setup path for a fresh project: define the basics first, then sync only the parts you really want in Elementor."
 msgstr ""
@@ -3375,12 +3390,12 @@ msgstr ""
 msgid "The font library search could not be loaded right now."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1442
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1542
 #: includes/trait-ecf-admin-page-sections.php:1542
 msgid "The old manual upload flow is intentionally hidden here to keep the typography workflow focused and consistent."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1278
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1378
 #: includes/trait-ecf-admin-page-sections.php:1378
 msgid "The preview updates live while you edit the scale settings."
 msgstr ""
@@ -3390,20 +3405,22 @@ msgstr ""
 msgid "The selected file is not a valid ECF JSON export."
 msgstr ""
 
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:500
 #: includes/trait-ecf-admin-page-sections.php:500
 msgid "The sync total includes the automatic helper class ecf-container-boxed, because a boxed Elementor width is currently active."
 msgstr ""
 
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:501
 #: includes/trait-ecf-admin-page-sections.php:501
 msgid "The sync total matches your currently selected starter, utility and own classes."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:858
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:958
 #: includes/trait-ecf-admin-page-sections.php:958
 msgid "These colors define the visual starting point before component-specific styles take over."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1074
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1174
 #: includes/trait-ecf-admin-page-sections.php:1174
 msgid "These options affect the Elementor editor, plugin language and the ECF backend appearance, not your frontend design."
 msgstr ""
@@ -3442,9 +3459,9 @@ msgstr ""
 msgid "Title element inside this component."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:921
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:943
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:965
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1021
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1043
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1065
 #: includes/trait-ecf-admin-page-sections.php:1021
 #: includes/trait-ecf-admin-page-sections.php:1043
 #: includes/trait-ecf-admin-page-sections.php:1065
@@ -3461,18 +3478,18 @@ msgstr ""
 msgid "Total"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1474
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1574
 #: includes/trait-ecf-admin-page-sections.php:1574
 msgid "Tracking tokens for tighter headings or looser interface labels."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:386
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:394
 #: includes/trait-ecf-admin-page-sections.php:394
 msgid "Trust"
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:107
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:722
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:822
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:170
 #: includes/trait-ecf-admin-page-sections.php:107
 #: includes/trait-ecf-admin-page-sections.php:822
@@ -3480,17 +3497,17 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:736
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:836
 #: includes/trait-ecf-admin-page-sections.php:836
 msgid "Type & Size"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1238
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1338
 #: includes/trait-ecf-admin-page-sections.php:1338
 msgid "Type Scale"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1029
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1129
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:163
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:205
 #: dist/release/layrix/includes/trait-ecf-framework-config.php:497
@@ -3513,14 +3530,14 @@ msgstr ""
 msgid "Typography helpers for heading and body text styles that reuse your ECF text tokens."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:906
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:918
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1006
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1018
 #: includes/trait-ecf-admin-page-sections.php:1006
 #: includes/trait-ecf-admin-page-sections.php:1018
 msgid "Typography token"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:362
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:372
 #: includes/trait-ecf-native-elementor-handlers.php:372
 msgid "Unsupported variable type."
 msgstr ""
@@ -3535,13 +3552,13 @@ msgstr ""
 msgid "Update found: installed %1$s, remote %2$s."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1088
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1188
 #: includes/trait-ecf-admin-page-sections.php:1188
 msgid "Updater & privacy"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1176
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1785
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1276
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1885
 #: includes/trait-ecf-admin-page-sections.php:1276
 #: includes/trait-ecf-admin-page-sections.php:1885
 msgid "Updates"
@@ -3554,12 +3571,12 @@ msgstr ""
 msgid "Uploaded font"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1724
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1824
 #: includes/trait-ecf-admin-page-sections.php:1824
 msgid "Use it when you need field-level helpers while building directly in Elementor."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:401
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:409
 #: includes/trait-ecf-admin-page-sections.php:409
 msgid "Use starter classes for semantic naming and utility classes for a compact curated helper set. Both count toward Elementor’s 100-class limit."
 msgstr ""
@@ -3569,41 +3586,42 @@ msgstr ""
 msgid "Use this file"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1613
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1713
 #: includes/trait-ecf-admin-page-sections.php:1713
 msgid "Use this when your tokens and selected classes are ready. Layrix adds its data in merge mode without overwriting unrelated Elementor entries."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:376
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:384
 #: includes/trait-ecf-admin-page-sections.php:384
 msgid "Use your own block name and build a small BEM family around it."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1162
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1262
 #: includes/trait-ecf-admin-page-sections.php:1262
 msgid "Useful for checking whether Elementor and its design-system modules are available before debugging sync or editor issues."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:313
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:321
 #: includes/trait-ecf-admin-page-sections.php:321
 msgid "Useful when you want a small reusable utility layer without reviving the old full utility flood."
 msgstr ""
 
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:480
 #: includes/trait-ecf-admin-page-sections.php:480
 msgid "Utilities active"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:314
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:322
 #: includes/trait-ecf-admin-page-sections.php:322
 msgid "Utilities also count toward Elementor’s 100 global classes and should stay intentionally compact."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:652
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:752
 #: includes/trait-ecf-admin-page-sections.php:752
 msgid "Utility"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:455
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:464
 #: includes/trait-ecf-admin-page-sections.php:464
 msgid "Utility classes"
 msgstr ""
@@ -3641,10 +3659,10 @@ msgstr ""
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:375
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:376
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:613
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:789
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:823
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:876
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:884
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:889
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:923
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:976
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:984
 #: dist/release/layrix/includes/trait-ecf-render-helpers.php:12
 #: dist/release/layrix/includes/trait-ecf-render-helpers.php:14
 #: includes/trait-ecf-admin-general.php:1035
@@ -3666,7 +3684,7 @@ msgstr ""
 msgid "Variable"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:458
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:468
 #: includes/trait-ecf-native-elementor-handlers.php:468
 msgid "Variable could not be updated: %s"
 msgstr ""
@@ -3678,7 +3696,7 @@ msgstr ""
 msgid "Variable name"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:387
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:397
 #: includes/trait-ecf-native-elementor-handlers.php:397
 msgid "Variable not found."
 msgstr ""
@@ -3688,8 +3706,8 @@ msgstr ""
 msgid "Variable updated."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1116
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1657
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1216
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1757
 #: dist/release/layrix/layrix.php:247
 #: includes/trait-ecf-admin-page-sections.php:1216
 #: includes/trait-ecf-admin-page-sections.php:1757
@@ -3702,7 +3720,7 @@ msgstr ""
 msgid "Variables are reusable design tokens such as colors, spacing, radius, shadows, and text sizes. They help you keep Elementor and your CSS values consistent."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1145
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1245
 #: includes/trait-ecf-admin-page-sections.php:1245
 msgid "Variables module active"
 msgstr ""
@@ -3712,8 +3730,8 @@ msgstr ""
 msgid "Variables that already exist in Elementor outside Layrix. Review them here before editing or deleting."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1134
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1141
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1234
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1241
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:228
 #: includes/trait-ecf-admin-page-sections.php:1234
 #: includes/trait-ecf-admin-page-sections.php:1241
@@ -3721,53 +3739,53 @@ msgstr ""
 msgid "Version %s"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1765
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1816
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1865
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1916
 #: includes/trait-ecf-admin-page-sections.php:1865
 #: includes/trait-ecf-admin-page-sections.php:1916
 msgid "Version Changelog"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1462
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1562
 #: includes/trait-ecf-admin-page-sections.php:1562
 msgid "Vertical rhythm tokens for readable paragraphs and display text."
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:630
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:676
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:776
 #: includes/trait-ecf-admin-general.php:630
 #: includes/trait-ecf-admin-page-sections.php:776
 msgid "Viewport height unit. Example: 80 becomes 80vh."
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:643
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:686
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:786
 #: includes/trait-ecf-admin-general.php:643
 #: includes/trait-ecf-admin-page-sections.php:786
 msgid "Viewport height unit. Usually uncommon here, but available if needed."
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:629
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:675
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:775
 #: includes/trait-ecf-admin-general.php:629
 #: includes/trait-ecf-admin-page-sections.php:775
 msgid "Viewport width unit. Example: 90 becomes 90vw."
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:642
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:685
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:785
 #: includes/trait-ecf-admin-general.php:642
 #: includes/trait-ecf-admin-page-sections.php:785
 msgid "Viewport width unit. Useful for fluid readable widths."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:913
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1013
 #: includes/trait-ecf-admin-page-sections.php:1013
 msgid "Visible effect of the root font size"
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:798
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:877
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:977
 #: includes/trait-ecf-admin-general.php:798
 #: includes/trait-ecf-admin-page-sections.php:977
 msgid "Visible width of the keyboard focus outline."
@@ -3779,13 +3797,13 @@ msgid "Visually Hidden"
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-admin-general.php:315
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:710
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:810
 #: includes/trait-ecf-admin-general.php:315
 #: includes/trait-ecf-admin-page-sections.php:810
 msgid "Website"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:718
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:818
 #: includes/trait-ecf-admin-page-sections.php:818
 msgid "Website basics"
 msgstr ""
@@ -3795,7 +3813,7 @@ msgstr ""
 msgid "Website sections"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:710
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:810
 #: includes/trait-ecf-admin-page-sections.php:810
 msgid "Website-wide basics like root size, widths, body font and base colors."
 msgstr ""
@@ -3830,7 +3848,7 @@ msgstr ""
 msgid "What do General Settings do?"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1100
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1200
 #: includes/trait-ecf-admin-page-sections.php:1200
 msgid "When enabled, ECF can contact api.github.com and codeload.github.com from your server to check update metadata and download plugin updates. If an ECF_GITHUB_TOKEN is configured, it is sent only to GitHub for authenticated update requests."
 msgstr ""
@@ -3842,7 +3860,7 @@ msgstr ""
 msgid "White mode"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:868
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:968
 #: includes/trait-ecf-admin-page-sections.php:968
 msgid "Width and offset stay together so the keyboard focus ring is easier to tune as one setting."
 msgstr ""
@@ -3852,23 +3870,23 @@ msgstr ""
 msgid "Width of centered boxed layout containers."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:723
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:779
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:823
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:879
 #: includes/trait-ecf-admin-page-sections.php:823
 #: includes/trait-ecf-admin-page-sections.php:879
 msgid "Widths"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1654
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1754
 #: includes/trait-ecf-admin-page-sections.php:1754
 msgid "Works in <strong>merge mode</strong> — ECF adds to existing Elementor variables and Global Classes without overwriting."
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1132
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1139
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1146
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1150
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1154
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1232
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1239
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1246
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1250
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1254
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:226
 #: includes/trait-ecf-admin-page-sections.php:1232
 #: includes/trait-ecf-admin-page-sections.php:1239
@@ -3880,11 +3898,11 @@ msgid "Yes"
 msgstr ""
 
 #: dist/release/layrix/includes/trait-ecf-core-admin.php:376
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:220
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:260
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:313
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:349
-#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:469
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:230
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:270
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:323
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:359
+#: dist/release/layrix/includes/trait-ecf-native-elementor-handlers.php:479
 #: includes/trait-ecf-core-admin.php:376
 #: includes/trait-ecf-native-elementor-handlers.php:230
 #: includes/trait-ecf-native-elementor-handlers.php:270
@@ -3923,9 +3941,9 @@ msgstr ""
 msgid "by Alexander Kaiser"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1855
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1889
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1898
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1955
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1989
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1998
 #: dist/release/layrix/includes/trait-ecf-render-helpers.php:146
 #: dist/release/layrix/includes/trait-ecf-render-helpers.php:158
 #: includes/trait-ecf-admin-page-sections.php:1955
@@ -3936,24 +3954,24 @@ msgstr ""
 msgid "class name"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:424
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:428
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:432
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:436
 #: includes/trait-ecf-admin-page-sections.php:432
 #: includes/trait-ecf-admin-page-sections.php:436
 msgid "classes"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:411
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:419
 #: includes/trait-ecf-admin-page-sections.php:419
 msgid "classes used"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:511
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:611
 #: includes/trait-ecf-admin-page-sections.php:611
 msgid "e.g. dark, compact"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:507
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:607
 #: includes/trait-ecf-admin-page-sections.php:607
 msgid "e.g. subtitle, badge"
 msgstr ""
@@ -3970,7 +3988,7 @@ msgstr ""
 msgid "ecf_color_generator_copy"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1872
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1972
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:179
 #: dist/release/layrix/includes/trait-ecf-render-helpers.php:192
 #: includes/trait-ecf-admin-page-sections.php:1972
@@ -3979,7 +3997,7 @@ msgstr ""
 msgid "ecf_color_generator_generate_shades"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1876
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1976
 #: dist/release/layrix/includes/trait-ecf-asset-loading.php:180
 #: dist/release/layrix/includes/trait-ecf-render-helpers.php:203
 #: includes/trait-ecf-admin-page-sections.php:1976
@@ -3988,49 +4006,49 @@ msgstr ""
 msgid "ecf_color_generator_generate_tints"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1867
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1967
 #: dist/release/layrix/includes/trait-ecf-render-helpers.php:134
 #: includes/trait-ecf-admin-page-sections.php:1967
 #: includes/trait-ecf-render-helpers.php:134
 msgid "ecf_color_generator_show_details"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:999
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1099
 #: includes/trait-ecf-admin-page-sections.php:1099
 msgid "ecf_generated_css_copy"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:990
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1090
 #: includes/trait-ecf-admin-page-sections.php:1090
 msgid "ecf_generated_css_description"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1000
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1100
 #: includes/trait-ecf-admin-page-sections.php:1100
 msgid "ecf_generated_css_export"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1003
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1103
 #: includes/trait-ecf-admin-page-sections.php:1103
 msgid "ecf_generated_css_note"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:989
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1089
 #: includes/trait-ecf-admin-page-sections.php:1089
 msgid "ecf_generated_css_title"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:996
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1096
 #: includes/trait-ecf-admin-page-sections.php:1096
 msgid "ecf_generated_css_why_text"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:995
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1095
 #: includes/trait-ecf-admin-page-sections.php:1095
 msgid "ecf_generated_css_why_title"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1661
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1761
 #: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:81
 #: includes/trait-ecf-admin-page-sections.php:1761
 #: includes/trait-ecf-admin-page-sections.php:81
@@ -4080,7 +4098,7 @@ msgstr ""
 msgid "oblique"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:408
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:416
 #: includes/trait-ecf-admin-page-sections.php:416
 msgid "of"
 msgstr ""
@@ -4097,7 +4115,7 @@ msgstr ""
 msgid "optional"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:503
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:603
 #: includes/trait-ecf-admin-page-sections.php:603
 msgid "optional, e.g. testimonials"
 msgstr ""
@@ -4109,7 +4127,7 @@ msgstr ""
 msgid "primary-regular"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1666
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1766
 #: includes/trait-ecf-admin-page-sections.php:1766
 msgid "selected starter classes and selected utility classes"
 msgstr ""
@@ -4131,7 +4149,7 @@ msgstr ""
 msgid "variables currently found in Elementor"
 msgstr ""
 
-#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1621
+#: dist/release/layrix/includes/trait-ecf-admin-page-sections.php:1721
 #: includes/trait-ecf-admin-page-sections.php:1721
 msgid "⚠ Sync actions change your Elementor data. Please create a backup first."
 msgstr ""

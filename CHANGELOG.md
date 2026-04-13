@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.3.10 (2026-04-13)
+
+### Fix
+- Release packages now ship only the canonical lowercase main plugin file `layrix.php`.
+- Release-Pakete liefern jetzt nur noch die kanonische Plugin-Hauptdatei `layrix.php` in Kleinbuchstaben aus.
+- Open-flow checks now verify the stable lowercase plugin path directly.
+- Open-Flow-Checks pruefen jetzt den stabilen Plugin-Pfad in Kleinbuchstaben direkt.
+
 ## 0.3.9 (2026-04-13)
 
 ### Fix

@@ -75,7 +75,8 @@ test.describe('ECF open UI flows', () => {
     expect(remoteState.pluginFolderName).toBe('layrix');
     expect(remoteState.parentNames).toContain('layrix');
     expect(remoteState.parentNames).not.toContain('layrix-master');
-    expect(remoteState.pluginNames.some((name) => name === 'layrix.php' || name === 'Layrix.php')).toBeTruthy();
+    expect(remoteState.pluginNames).toContain('layrix.php');
+    expect(remoteState.pluginNames).not.toContain('Layrix.php');
   });
 
   test('plugin path stays stable in WordPress before and after the github update check', async ({ page }) => {
@@ -88,7 +89,7 @@ test.describe('ECF open UI flows', () => {
     const pluginPathBefore = await pluginRow.locator('th.check-column input[type="checkbox"]').first().getAttribute('value');
     const rowIdBefore = await pluginRow.getAttribute('id');
 
-    expect(pluginPathBefore).toMatch(/^layrix\/(Layrix|layrix)\.php$/);
+    expect(pluginPathBefore).toBe('layrix/layrix.php');
     expect(pluginPathBefore).not.toMatch(/layrix-master/i);
     expect(rowIdBefore || '').not.toMatch(/layrix-master/i);
     const updateLink = pluginRow.getByRole('link', { name: /Check for updates|Auf Updates prüfen/i }).first();
@@ -103,7 +104,7 @@ test.describe('ECF open UI flows', () => {
     const rowIdAfter = await pluginRowAfter.getAttribute('id');
 
     expect(pluginPathAfter).toBe(pluginPathBefore);
-    expect(pluginPathAfter).toMatch(/^layrix\/(Layrix|layrix)\.php$/);
+    expect(pluginPathAfter).toBe('layrix/layrix.php');
     expect(pluginPathAfter).not.toMatch(/layrix-master/i);
     expect(rowIdAfter).toBe(rowIdBefore);
     expect(rowIdAfter || '').not.toMatch(/layrix-master/i);

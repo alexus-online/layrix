@@ -39,22 +39,6 @@ EXCLUDES=(
   "website-quality-check"
 )
 
-case_sensitive_fs() {
-  local probe_dir="$1"
-  local lower="$probe_dir/.layrix_case_probe"
-  local upper="$probe_dir/.LAYRIX_CASE_PROBE"
-
-  rm -f "$lower" "$upper"
-  touch "$lower"
-  if [[ -e "$upper" ]]; then
-    rm -f "$lower" "$upper"
-    return 1
-  fi
-
-  rm -f "$lower" "$upper"
-  return 0
-}
-
 rm -rf "$BUILD_DIR"
 mkdir -p "$STAGE_DIR"
 
@@ -64,16 +48,6 @@ for item in "${EXCLUDES[@]}"; do
 done
 
 rsync -a "${RSYNC_EXCLUDES[@]}" "$ROOT_DIR/" "$STAGE_DIR/"
-
-# Transitional package for case-sensitive Linux builds:
-# keep the new main file and add the old bootstrap filename once more
-# so older GitHub-updater installs can migrate cleanly.
-if case_sensitive_fs "$STAGE_DIR"; then
-  cp "$STAGE_DIR/layrix.php" "$STAGE_DIR/Layrix.php"
-else
-  echo "Warning: case-insensitive filesystem detected; local build cannot add both layrix.php and Layrix.php." >&2
-  echo "GitHub Actions on Linux will include the legacy bootstrap filename in the release zip." >&2
-fi
 
 (
   cd "$BUILD_DIR/release"
