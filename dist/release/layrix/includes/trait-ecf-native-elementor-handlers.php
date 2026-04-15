@@ -5,6 +5,130 @@ trait ECF_Framework_Native_Elementor_Handlers_Trait {
         return trim((string) sanitize_title(wp_unslash((string) $label)));
     }
 
+    private function normalize_elementor_class_label($label) {
+        return strtolower(sanitize_key((string) $label));
+    }
+
+    private function extract_matching_class_labels_from_value($value, array $label_lookup) {
+        $matches = [];
+
+        if (is_array($value)) {
+            foreach ($value as $entry) {
+                foreach ($this->extract_matching_class_labels_from_value($entry, $label_lookup) as $label) {
+                    $matches[$label] = true;
+                }
+            }
+            return array_keys($matches);
+        }
+
+        if (!is_scalar($value)) {
+            return [];
+        }
+
+        $tokens = preg_split('/[\s,]+/', (string) $value) ?: [];
+        foreach ($tokens as $token) {
+            $normalized = $this->normalize_elementor_class_label($token);
+            if ($normalized !== '' && isset($label_lookup[$normalized])) {
+                $matches[$label_lookup[$normalized]] = true;
+            }
+        }
+
+        return array_keys($matches);
+    }
+
+    private function collect_elementor_document_class_matches($node, array $label_lookup, array &$found, $current_key = '') {
+        if (is_array($node)) {
+            foreach ($node as $key => $value) {
+                $key_name = is_string($key) ? strtolower($key) : '';
+                $next_key = $key_name !== '' ? $key_name : $current_key;
+                $is_class_key = $key_name !== '' && strpos($key_name, 'class') !== false;
+
+                if ($is_class_key) {
+                    foreach ($this->extract_matching_class_labels_from_value($value, $label_lookup) as $label) {
+                        $found[$label] = true;
+                    }
+                }
+
+                if (is_array($value)) {
+                    $this->collect_elementor_document_class_matches($value, $label_lookup, $found, $next_key);
+                    continue;
+                }
+
+                if (is_scalar($value) && $current_key !== '' && strpos($current_key, 'class') !== false) {
+                    foreach ($this->extract_matching_class_labels_from_value($value, $label_lookup) as $label) {
+                        $found[$label] = true;
+                    }
+                }
+            }
+        }
+    }
+
+    private function get_elementor_class_usage_snapshot(array $labels) {
+        $labels = array_values(array_unique(array_filter(array_map([$this, 'normalize_elementor_class_label'], $labels))));
+        if (empty($labels)) {
+            return [];
+        }
+
+        $label_lookup = [];
+        foreach ($labels as $label) {
+            $label_lookup[$label] = $label;
+        }
+
+        $usage = [];
+        foreach ($labels as $label) {
+            $usage[$label] = [
+                'count' => 0,
+                'post_ids' => [],
+                'post_titles' => [],
+            ];
+        }
+
+        global $wpdb;
+        $rows = $wpdb->get_results(
+            $wpdb->prepare(
+                "SELECT pm.post_id, pm.meta_value, p.post_title
+                 FROM {$wpdb->postmeta} pm
+                 INNER JOIN {$wpdb->posts} p ON p.ID = pm.post_id
+                 WHERE pm.meta_key = %s
+                   AND pm.meta_value <> ''
+                   AND p.post_type NOT IN ('revision', 'attachment', 'nav_menu_item', 'custom_css')
+                   AND p.post_status NOT IN ('trash', 'auto-draft')",
+                '_elementor_data'
+            )
+        );
+
+        if (!is_array($rows) || empty($rows)) {
+            return $usage;
+        }
+
+        foreach ($rows as $row) {
+            $decoded = json_decode((string) $row->meta_value, true);
+            if (!is_array($decoded)) {
+                continue;
+            }
+
+            $found = [];
+            $this->collect_elementor_document_class_matches($decoded, $label_lookup, $found);
+            if (empty($found)) {
+                continue;
+            }
+
+            foreach (array_keys($found) as $label) {
+                $usage[$label]['count']++;
+                $usage[$label]['post_ids'][] = (int) $row->post_id;
+                $usage[$label]['post_titles'][] = get_the_title((int) $row->post_id) ?: sprintf(__('Post %d', 'ecf-framework'), (int) $row->post_id);
+            }
+        }
+
+        foreach ($usage as $label => $entry) {
+            $usage[$label]['post_ids'] = array_values(array_unique(array_map('intval', $entry['post_ids'])));
+            $usage[$label]['post_titles'] = array_values(array_unique(array_filter(array_map('strval', $entry['post_titles']))));
+            $usage[$label]['count'] = count($usage[$label]['post_ids']);
+        }
+
+        return $usage;
+    }
+
     private function export_payload($settings) {
         return [
             'meta' => [
@@ -283,6 +407,10 @@ trait ECF_Framework_Native_Elementor_Handlers_Trait {
             $items = [];
         }
 
+        $usage_snapshot = $this->get_elementor_class_usage_snapshot(array_map(static function($item) {
+            return (string) ($item['label'] ?? '');
+        }, array_values($items)));
+
         $ordered_ids = [];
         foreach ($order as $id) {
             if (isset($items[$id])) {
@@ -306,6 +434,11 @@ trait ECF_Framework_Native_Elementor_Handlers_Trait {
                 'type' => $this->native_class_category($item),
                 'value' => $this->native_class_preview_value($item),
             ];
+            $normalized_label = $this->normalize_elementor_class_label($entry['label']);
+            $usage_entry = $usage_snapshot[$normalized_label] ?? ['count' => 0, 'post_titles' => []];
+            $entry['in_use'] = !empty($usage_entry['count']);
+            $entry['usage_count'] = (int) ($usage_entry['count'] ?? 0);
+            $entry['usage_posts'] = array_values(array_slice((array) ($usage_entry['post_titles'] ?? []), 0, 5));
 
             if ($this->is_ecf_native_class($id, $item)) {
                 $ecf[] = $entry;
@@ -496,6 +629,33 @@ trait ECF_Framework_Native_Elementor_Handlers_Trait {
 
         if (!is_array($items)) {
             $items = [];
+        }
+
+        $requested_labels = [];
+        foreach ($ids as $id) {
+            if (isset($items[$id])) {
+                $requested_labels[] = (string) ($items[$id]['label'] ?? $id);
+            }
+        }
+
+        $usage_snapshot = $this->get_elementor_class_usage_snapshot($requested_labels);
+        $used_labels = [];
+        foreach ($requested_labels as $label) {
+            $normalized_label = $this->normalize_elementor_class_label($label);
+            if (!empty($usage_snapshot[$normalized_label]['count'])) {
+                $used_labels[] = (string) $label;
+            }
+        }
+
+        $force_delete = !empty($_POST['force_delete']);
+        if (!$force_delete && !empty($used_labels)) {
+            $this->ajax_error(
+                __('One or more selected classes are still used on Elementor elements.', 'ecf-framework'),
+                409,
+                [
+                    'used_labels' => array_values(array_unique($used_labels)),
+                ]
+            );
         }
 
         foreach ($ids as $id) {

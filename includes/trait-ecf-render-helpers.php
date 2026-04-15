@@ -24,7 +24,7 @@ trait ECF_Framework_Render_Helpers_Trait {
         <div class="ecf-field-token-row">
             <?php foreach ($normalized_items as $item): ?>
                 <?php if (!empty($item['copyable'])): ?>
-                    <button type="button" class="ecf-field-token-pill" data-ecf-token-copy="<?php echo esc_attr($item['value']); ?>" title="<?php echo esc_attr__('Copy', 'ecf-framework'); ?>">
+                    <button type="button" class="ecf-field-token-pill" data-ecf-token-copy="<?php echo esc_attr($item['value']); ?>" data-tip="<?php echo esc_attr__('Copy', 'ecf-framework'); ?>" aria-label="<?php echo esc_attr__('Copy', 'ecf-framework'); ?>">
                         <span><?php echo esc_html($item['type']); ?></span>
                         <code><?php echo esc_html($item['value']); ?></code>
                     </button>
@@ -84,23 +84,23 @@ trait ECF_Framework_Render_Helpers_Trait {
         if ($is_color) {
             echo '<div class="ecf-head ecf-head--color">';
             echo '<span aria-hidden="true"></span>';
-            echo '<span>' . $this->tip_hover_label(__('Name', 'ecf-framework'), 'Color name / CSS variable', 'Farbname / CSS-Variable') . '</span>';
-            echo '<span>' . $this->tip_hover_label(__('Value', 'ecf-framework'), 'Color value', 'Wert') . '</span>';
-            echo '<span>' . $this->tip_hover_label(__('Format', 'ecf-framework'), 'Color format', 'Format') . '</span>';
+            echo '<span>' . $this->tip_hover_label(__('Name', 'ecf-framework'), __('Color name / CSS variable', 'ecf-framework'), '') . '</span>';
+            echo '<span>' . $this->tip_hover_label(__('Value', 'ecf-framework'), __('Color value', 'ecf-framework'), '') . '</span>';
+            echo '<span>' . $this->tip_hover_label(__('Format', 'ecf-framework'), __('Color format', 'ecf-framework'), '') . '</span>';
             echo '<span></span>';
             echo '<span></span>';
             echo '</div>';
         } elseif ($is_minmax) {
-            echo '<div class="ecf-head ecf-head--minmax"><span>' . $this->tip_hover_label(__('Class', 'ecf-framework'), 'Token name / CSS class name', 'Klasse') . '</span><span>' . $this->tip_hover_label(__('Min', 'ecf-framework'), 'Minimum value', 'Min') . '</span><span>' . $this->tip_hover_label(__('Max', 'ecf-framework'), 'Maximum value', 'Max') . '</span><span></span></div>';
+            echo '<div class="ecf-head ecf-head--minmax"><span>' . $this->tip_hover_label(__('Class', 'ecf-framework'), __('Token name / CSS class name', 'ecf-framework'), '') . '</span><span>' . $this->tip_hover_label(__('Min', 'ecf-framework'), __('Minimum value', 'ecf-framework'), '') . '</span><span>' . $this->tip_hover_label(__('Max', 'ecf-framework'), __('Maximum value', 'ecf-framework'), '') . '</span><span></span></div>';
         } elseif ($is_shadow) {
             echo '<div class="ecf-head">';
             echo '<span aria-hidden="true"></span>';
-            echo '<span>' . $this->tip_hover_label(__('Class Name', 'ecf-framework'), 'Token name / CSS class name', 'Klassenname') . '</span>';
-            echo '<span>' . $this->tip_hover_label(__('Value', 'ecf-framework'), 'Token value / CSS value', 'Wert') . '</span>';
+            echo '<span>' . $this->tip_hover_label(__('Class Name', 'ecf-framework'), __('Token name / CSS class name', 'ecf-framework'), '') . '</span>';
+            echo '<span>' . $this->tip_hover_label(__('Value', 'ecf-framework'), __('Token value / CSS value', 'ecf-framework'), '') . '</span>';
             echo '<span></span>';
             echo '</div>';
         } else {
-            echo '<div class="ecf-head"><span>' . $this->tip_hover_label(__('Class Name', 'ecf-framework'), 'Token name / CSS class name', 'Klassenname') . '</span><span>' . $this->tip_hover_label(__('Value', 'ecf-framework'), 'Token value / CSS value', 'Wert') . '</span><span></span></div>';
+            echo '<div class="ecf-head"><span>' . $this->tip_hover_label(__('Class Name', 'ecf-framework'), __('Token name / CSS class name', 'ecf-framework'), '') . '</span><span>' . $this->tip_hover_label(__('Value', 'ecf-framework'), __('Token value / CSS value', 'ecf-framework'), '') . '</span><span></span></div>';
         }
 
         foreach ($rows as $i => $row) {
@@ -131,8 +131,8 @@ trait ECF_Framework_Render_Helpers_Trait {
                 echo '</select>';
                 echo '<input type="hidden" name="' . $input_key . '[' . $i . '][generate_shades]" value="0" />';
                 echo '<input type="hidden" name="' . $input_key . '[' . $i . '][generate_tints]" value="0" />';
-                echo '<button type="button" class="ecf-color-detail-toggle" aria-expanded="false" title="' . esc_attr__('ecf_color_generator_show_details', 'ecf-framework') . '"><span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span></button>';
-                echo '<button type="button" class="ecf-remove-row" title="×">×</button>';
+                echo '<button type="button" class="ecf-color-detail-toggle" aria-expanded="false" data-tip="' . esc_attr__('ecf_color_generator_show_details', 'ecf-framework') . '" aria-label="' . esc_attr__('ecf_color_generator_show_details', 'ecf-framework') . '"><span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span></button>';
+                echo '<button type="button" class="ecf-remove-row" data-tip="' . esc_attr__('Remove', 'ecf-framework') . '" aria-label="' . esc_attr__('Remove', 'ecf-framework') . '">×</button>';
                 $this->render_color_detail_panel($color_name, $color_value, $picker_hex, [
                     'generate_shades' => $generate_shades ? '1' : '0',
                     'shade_count' => $shade_count,
@@ -148,7 +148,7 @@ trait ECF_Framework_Render_Helpers_Trait {
                 $max_val = esc_attr($row['max'] ?? $row['value'] ?? '');
                 echo '<input type="text" name="' . $input_key . '[' . $i . '][min]" value="' . $min_val . '" placeholder="min" />';
                 echo '<input type="text" name="' . $input_key . '[' . $i . '][max]" value="' . $max_val . '" placeholder="max" />';
-                echo '<button type="button" class="ecf-remove-row" title="×">×</button>';
+                echo '<button type="button" class="ecf-remove-row" data-tip="' . esc_attr__('Remove', 'ecf-framework') . '" aria-label="' . esc_attr__('Remove', 'ecf-framework') . '">×</button>';
                 echo '</div>';
             } else {
                 echo '<div class="ecf-row"' . ($is_shadow ? ' data-ecf-shadow-edit-row data-ecf-shadow-row-index="' . esc_attr((string) $i) . '"' : '') . '>';
@@ -157,15 +157,15 @@ trait ECF_Framework_Render_Helpers_Trait {
                 }
                 echo '<input type="text" data-ecf-slug-field="token" ' . ($is_shadow ? 'data-ecf-shadow-name-input ' : '') . 'name="' . $input_key . '[' . $i . '][name]" value="' . esc_attr($row['name']) . '" placeholder="' . esc_attr__('class name', 'ecf-framework') . '" />';
                 echo '<input type="text" ' . ($is_shadow ? 'data-ecf-shadow-value-input ' : '') . 'name="' . $input_key . '[' . $i . '][value]" value="' . esc_attr($row['value']) . '" placeholder="value" />';
-                echo '<button type="button" class="ecf-remove-row" title="×">×</button>';
+                echo '<button type="button" class="ecf-remove-row" data-tip="' . esc_attr__('Remove', 'ecf-framework') . '" aria-label="' . esc_attr__('Remove', 'ecf-framework') . '">×</button>';
                 echo '</div>';
             }
         }
         echo '</div>';
 
         echo '<div class="ecf-row-controls ecf-row-controls--bottom">';
-        echo '<button type="button" class="ecf-step-btn ecf-add-row" data-group="' . esc_attr($group) . '" title="' . esc_attr__('Add', 'ecf-framework') . '">+</button>';
-        echo '<button type="button" class="ecf-step-btn ecf-step-btn--remove ecf-remove-last-row" data-group="' . esc_attr($group) . '" title="' . esc_attr__('Remove last', 'ecf-framework') . '">−</button>';
+        echo '<button type="button" class="ecf-step-btn ecf-add-row" data-group="' . esc_attr($group) . '" data-tip="' . esc_attr__('Add', 'ecf-framework') . '" aria-label="' . esc_attr__('Add', 'ecf-framework') . '">+</button>';
+        echo '<button type="button" class="ecf-step-btn ecf-step-btn--remove ecf-remove-last-row" data-group="' . esc_attr($group) . '" data-tip="' . esc_attr__('Remove last', 'ecf-framework') . '" aria-label="' . esc_attr__('Remove last', 'ecf-framework') . '">−</button>';
         echo '</div>';
     }
 
@@ -212,7 +212,7 @@ trait ECF_Framework_Render_Helpers_Trait {
             <div class="ecf-color-detail__preview" style="<?php echo esc_attr('--ecf-color-detail-base:' . $safe_value . ';'); ?>">
                 <?php if (!empty($variants)): ?>
                     <?php foreach ($variants as $variant => $variant_hex): ?>
-                        <span style="<?php echo esc_attr('background:' . $variant_hex . ';'); ?>" title="<?php echo esc_attr($token . '-' . $variant . ': ' . $variant_hex); ?>"></span>
+                        <span style="<?php echo esc_attr('background:' . $variant_hex . ';'); ?>" data-tip="<?php echo esc_attr($token . '-' . $variant . ': ' . $variant_hex); ?>"></span>
                     <?php endforeach; ?>
                 <?php else: ?>
                     <span style="<?php echo esc_attr('background:' . $safe_value . ';'); ?>"></span>

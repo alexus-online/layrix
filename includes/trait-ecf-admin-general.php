@@ -23,6 +23,7 @@ trait ECF_Framework_Admin_General_Trait {
             'heading_font_family',
             'base_body_text_size',
             'base_body_font_weight',
+            'typography_browser_margin_reset',
             'base_text_color',
             'base_background_color',
             'link_color',
@@ -51,6 +52,7 @@ trait ECF_Framework_Admin_General_Trait {
             'heading_font_family' => '1',
             'base_body_text_size' => '1',
             'base_body_font_weight' => '1',
+            'typography_browser_margin_reset' => '1',
             'base_text_color' => '1',
             'github_update_checks_enabled' => '1',
             'show_elementor_status_cards' => '1',
@@ -125,14 +127,8 @@ trait ECF_Framework_Admin_General_Trait {
             'admin_design_preset' => [
                 'group' => 'plugin',
                 'tab' => 'system',
-                'title' => __('Design', 'ecf-framework'),
-                'value' => sprintf(
-                    __('%1$s / %2$s', 'ecf-framework'),
-                    $this->admin_design_preset_options()[$this->selected_admin_design_preset($settings)] ?? __('Current design', 'ecf-framework'),
-                    $this->selected_admin_design_mode($settings) === 'light'
-                        ? __('White mode', 'ecf-framework')
-                        : __('Dark mode', 'ecf-framework')
-                ),
+                'title' => __('UI Skin', 'ecf-framework'),
+                'value' => $this->admin_design_preset_options()[$this->selected_admin_design_preset($settings)] ?? __('Classic', 'ecf-framework'),
             ],
             'admin_content_font_size' => [
                 'group' => 'plugin',
@@ -206,6 +202,12 @@ trait ECF_Framework_Admin_General_Trait {
                 'title' => __('Base Body Font Weight', 'ecf-framework'),
                 'value' => (string) ($settings['base_body_font_weight'] ?? '400'),
             ],
+            'typography_browser_margin_reset' => [
+                'group' => 'website',
+                'tab' => 'typography',
+                'title' => __('Reset browser text margins', 'ecf-framework'),
+                'value' => !empty($settings['typography_browser_margin_reset']) ? __('Enabled', 'ecf-framework') : __('Disabled', 'ecf-framework'),
+            ],
             'base_text_color' => [
                 'group' => 'website',
                 'tab' => 'colors',
@@ -262,6 +264,7 @@ trait ECF_Framework_Admin_General_Trait {
             'root_font_size' => 10,
             'base_body_text_size' => 20,
             'base_body_font_weight' => 25,
+            'typography_browser_margin_reset' => 27,
             'base_font_family' => 30,
             'base_text_color' => 40,
             'base_background_color' => 50,
@@ -341,7 +344,7 @@ trait ECF_Framework_Admin_General_Trait {
                                 <div class="ecf-general-favorite-card__meta"><?php echo esc_html($definition['value']); ?></div>
                                 <div class="ecf-general-favorite-card__remove-row">
                                     <span class="ecf-general-favorite-card__remove-label"><?php echo esc_html__('Remove from favorites', 'ecf-framework'); ?></span>
-                                    <button type="button" class="ecf-btn ecf-btn--danger ecf-btn--tiny" data-ecf-favorite-remove="<?php echo esc_attr($favorite_key); ?>" title="<?php echo esc_attr__('Remove from favorites', 'ecf-framework'); ?>">
+                                    <button type="button" class="ecf-btn ecf-btn--danger ecf-btn--tiny" data-ecf-favorite-remove="<?php echo esc_attr($favorite_key); ?>" data-tip="<?php echo esc_attr__('Remove from favorites', 'ecf-framework'); ?>" aria-label="<?php echo esc_attr__('Remove from favorites', 'ecf-framework'); ?>">
                                         <span class="dashicons dashicons-no-alt" aria-hidden="true"></span>
                                     </button>
                                 </div>
@@ -410,29 +413,25 @@ trait ECF_Framework_Admin_General_Trait {
     private function admin_design_preset_definitions() {
         return [
             'current' => [
-                'label' => __('Current design', 'ecf-framework'),
-                'description' => __('Keeps the existing ECF look exactly as it is right now.', 'ecf-framework'),
+                'label' => __('Classic', 'ecf-framework'),
+                'description' => __('The current Layrix look with the familiar dark admin styling and the existing panel rhythm.', 'ecf-framework'),
                 'preview' => 'current',
+                'badge' => __('Current', 'ecf-framework'),
+                'visible' => true,
             ],
-            'hero' => [
-                'label' => __('Hero', 'ecf-framework'),
-                'description' => __('Bold purple product UI inspired by modern component systems.', 'ecf-framework'),
-                'preview' => 'hero',
+            'v2' => [
+                'label' => __('Glass', 'ecf-framework'),
+                'description' => __('Cleaner premium dark skin with calmer glass surfaces, softer spacing and a polished product feel.', 'ecf-framework'),
+                'preview' => 'v2',
+                'badge' => __('Premium', 'ecf-framework'),
+                'visible' => true,
             ],
-            'next' => [
-                'label' => __('Next', 'ecf-framework'),
-                'description' => __('Clean slate interface with crisp contrast and restrained accents.', 'ecf-framework'),
-                'preview' => 'next',
-            ],
-            'untitled' => [
-                'label' => __('Untitled', 'ecf-framework'),
-                'description' => __('Soft editorial workspace with calm surfaces and gentle blue structure.', 'ecf-framework'),
-                'preview' => 'untitled',
-            ],
-            'minimal' => [
-                'label' => __('Minimal', 'ecf-framework'),
-                'description' => __('Reduced monochrome admin look with subtle borders and quiet emphasis.', 'ecf-framework'),
-                'preview' => 'minimal',
+            'v3' => [
+                'label' => __('Obsidian', 'ecf-framework'),
+                'description' => __('The most refined dark skin: ultra-clean, premium, cinematic and intentionally high-end.', 'ecf-framework'),
+                'preview' => 'v3',
+                'badge' => __('New', 'ecf-framework'),
+                'visible' => true,
             ],
         ];
     }
@@ -440,9 +439,15 @@ trait ECF_Framework_Admin_General_Trait {
     private function normalize_admin_design_preset($preset) {
         $preset = sanitize_key((string) $preset);
         $aliases = [
-            'graphite' => 'next',
-            'ocean' => 'untitled',
-            'aurora' => 'hero',
+            'graphite' => 'v2',
+            'ocean' => 'v2',
+            'aurora' => 'v2',
+            'hero' => 'v2',
+            'next' => 'v2',
+            'untitled' => 'v2',
+            'minimal' => 'v2',
+            'glass' => 'v2',
+            'obsidian' => 'v3',
         ];
 
         if (isset($aliases[$preset])) {
@@ -455,6 +460,9 @@ trait ECF_Framework_Admin_General_Trait {
     private function admin_design_preset_options() {
         $options = [];
         foreach ($this->admin_design_preset_definitions() as $key => $definition) {
+            if (empty($definition['visible'])) {
+                continue;
+            }
             $options[$key] = $definition['label'];
         }
 
@@ -471,12 +479,7 @@ trait ECF_Framework_Admin_General_Trait {
     }
 
     private function selected_admin_design_mode($settings = null) {
-        $defaults = $this->defaults();
-        $current = is_array($settings)
-            ? sanitize_key($settings['admin_design_mode'] ?? $defaults['admin_design_mode'])
-            : sanitize_key((string) ($this->get_settings()['admin_design_mode'] ?? $defaults['admin_design_mode']));
-
-        return in_array($current, ['dark', 'light'], true) ? $current : $defaults['admin_design_mode'];
+        return 'dark';
     }
 
     private function selected_admin_content_font_size($settings = null) {
@@ -541,18 +544,19 @@ trait ECF_Framework_Admin_General_Trait {
 
     private function render_admin_design_field($settings) {
         $current_preset = $this->selected_admin_design_preset($settings);
-        $current_mode = $this->selected_admin_design_mode($settings);
+        $current_mode = 'dark';
         $preset_definitions = $this->admin_design_preset_definitions();
         ?>
         <div class="ecf-admin-design-field" data-ecf-general-field="admin_design_preset">
             <span class="ecf-general-label-with-favorite">
-                <?php echo $this->general_setting_label(__('Design', 'ecf-framework'), 'Choose the admin look of ECF. Current design keeps the existing appearance; other presets restyle the interface.', 'art'); ?>
+                <?php echo $this->general_setting_label(__('UI Skin', 'ecf-framework'), 'Choose how the Layrix admin should look. Classic keeps the current UI, Glass gives you a cleaner premium dark workspace, and Obsidian is the most polished cinematic version.', 'art'); ?>
                 <?php $this->render_general_setting_favorite_toggle($settings, 'admin_design_preset'); ?>
             </span>
             <input type="hidden" name="<?php echo esc_attr($this->option_name); ?>[admin_design_preset]" value="<?php echo esc_attr($current_preset); ?>" data-ecf-admin-design-preset>
             <input type="hidden" name="<?php echo esc_attr($this->option_name); ?>[admin_design_mode]" value="<?php echo esc_attr($current_mode); ?>" data-ecf-admin-design-mode>
             <div class="ecf-admin-design-grid" data-ecf-admin-design-grid>
                 <?php foreach ($preset_definitions as $value => $definition): ?>
+                    <?php if (empty($definition['visible'])) { continue; } ?>
                     <button type="button"
                             class="ecf-admin-design-card<?php echo $current_preset === $value ? ' is-active' : ''; ?>"
                             data-ecf-admin-design-option
@@ -565,32 +569,22 @@ trait ECF_Framework_Admin_General_Trait {
                                 <span class="ecf-admin-design-card__preview-panel"></span>
                                 <span class="ecf-admin-design-card__preview-accent"></span>
                                 <span class="ecf-admin-design-card__preview-chip"></span>
+                                <span class="ecf-admin-design-card__shots">
+                                    <span class="ecf-admin-design-card__shot ecf-admin-design-card__shot--main"></span>
+                                    <span class="ecf-admin-design-card__shot ecf-admin-design-card__shot--side"></span>
+                                    <span class="ecf-admin-design-card__shot ecf-admin-design-card__shot--meta"></span>
+                                </span>
                             </span>
                         </span>
                         <span class="ecf-admin-design-card__body">
+                            <span class="ecf-admin-design-card__eyebrow"><?php echo esc_html($definition['badge'] ?? ''); ?></span>
                             <strong><?php echo esc_html($definition['label']); ?></strong>
                             <span><?php echo esc_html($definition['description']); ?></span>
                         </span>
                     </button>
                 <?php endforeach; ?>
             </div>
-            <div class="ecf-admin-design-mode" data-ecf-admin-design-mode-group>
-                <span class="ecf-admin-design-mode__label"><?php echo esc_html__('Mode', 'ecf-framework'); ?></span>
-                <div class="ecf-admin-design-mode__options">
-                    <button type="button"
-                            class="ecf-admin-design-mode__option<?php echo $current_mode === 'dark' ? ' is-active' : ''; ?>"
-                            data-ecf-admin-design-mode-option
-                            data-value="dark">
-                        <?php echo esc_html__('Dark mode', 'ecf-framework'); ?>
-                    </button>
-                    <button type="button"
-                            class="ecf-admin-design-mode__option<?php echo $current_mode === 'light' ? ' is-active' : ''; ?>"
-                            data-ecf-admin-design-mode-option
-                            data-value="light">
-                        <?php echo esc_html__('White mode', 'ecf-framework'); ?>
-                    </button>
-                </div>
-            </div>
+            <p class="ecf-admin-design-field__hint"><?php echo esc_html__('Each card shows a compact preview of the expected mood. More skins can be added here later without changing the rest of the settings UI.', 'ecf-framework'); ?></p>
         </div>
         <?php
     }
@@ -673,7 +667,7 @@ trait ECF_Framework_Admin_General_Trait {
                    value="<?php echo esc_attr($parts['value']); ?>"
                    placeholder="<?php echo esc_attr($placeholder); ?>"
                    data-ecf-size-value-input
-                   title="<?php echo esc_attr($title); ?>">
+                   data-tip="<?php echo esc_attr($title); ?>">
             <div class="ecf-format-picker" data-ecf-format-picker>
                 <input type="hidden"
                        name="<?php echo esc_attr($this->option_name); ?>[<?php echo esc_attr($field_key); ?>_format]"
@@ -775,6 +769,17 @@ trait ECF_Framework_Admin_General_Trait {
             case 'base_body_font_weight':
                 $this->render_base_body_font_weight_field($settings);
                 break;
+            case 'typography_browser_margin_reset':
+                ?>
+                <label class="ecf-form-grid__checkbox ecf-form-grid__checkbox--favorite">
+                    <input type="checkbox"
+                           name="<?php echo esc_attr($this->option_name); ?>[typography_browser_margin_reset]"
+                           value="1"
+                           <?php checked(!empty($settings['typography_browser_margin_reset'])); ?>>
+                    <span><?php echo esc_html(!empty($settings['typography_browser_margin_reset']) ? __('Enabled', 'ecf-framework') : __('Disabled', 'ecf-framework')); ?></span>
+                </label>
+                <?php
+                break;
             case 'base_text_color':
             case 'base_background_color':
             case 'link_color':
@@ -828,7 +833,6 @@ trait ECF_Framework_Admin_General_Trait {
         $options = [
             'var(--ecf-font-primary)' => __('Primary', 'ecf-framework') . ': ' . ($settings['typography']['fonts'][0]['value'] ?? 'Inter, sans-serif'),
             'var(--ecf-font-secondary)' => __('Secondary', 'ecf-framework') . ': ' . ($settings['typography']['fonts'][1]['value'] ?? 'Georgia, serif'),
-            'var(--ecf-font-mono)' => __('Mono', 'ecf-framework') . ': ' . ($settings['typography']['fonts'][2]['value'] ?? 'JetBrains Mono, monospace'),
         ];
 
         foreach ((array) ($settings['typography']['local_fonts'] ?? []) as $row) {
@@ -875,11 +879,6 @@ trait ECF_Framework_Admin_General_Trait {
                 [
                     'value' => 'var(--ecf-font-secondary)',
                     'label' => __('Secondary', 'ecf-framework') . ': ' . ($settings['typography']['fonts'][1]['value'] ?? 'Georgia, serif'),
-                    'source' => 'core',
-                ],
-                [
-                    'value' => 'var(--ecf-font-mono)',
-                    'label' => __('Mono', 'ecf-framework') . ': ' . ($settings['typography']['fonts'][2]['value'] ?? 'JetBrains Mono, monospace'),
                     'source' => 'core',
                 ],
             ],
@@ -1241,6 +1240,24 @@ trait ECF_Framework_Admin_General_Trait {
                     </option>
                 <?php endforeach; ?>
             </select>
+        </label>
+        <?php
+    }
+
+    private function render_typography_browser_margin_reset_field($settings) {
+        ?>
+        <label data-ecf-general-field="typography_browser_margin_reset" class="ecf-general-field ecf-general-field--browser-margin-reset">
+            <span class="ecf-general-label-with-favorite">
+                <?php echo $this->general_setting_label(__('Reset browser text margins', 'ecf-framework'), 'Removes the default browser margins from headings and paragraphs so spacing can be controlled consistently through Layrix, Elementor, or your utility classes.', 'editor-contract'); ?>
+                <?php $this->render_general_setting_favorite_toggle($settings, 'typography_browser_margin_reset'); ?>
+            </span>
+            <label class="ecf-form-grid__checkbox ecf-form-grid__checkbox--favorite">
+                <input type="checkbox"
+                       name="<?php echo esc_attr($this->option_name); ?>[typography_browser_margin_reset]"
+                       value="1"
+                       <?php checked(!empty($settings['typography_browser_margin_reset'])); ?>>
+                <span><?php echo esc_html(!empty($settings['typography_browser_margin_reset']) ? __('Enabled', 'ecf-framework') : __('Disabled', 'ecf-framework')); ?></span>
+            </label>
         </label>
         <?php
     }

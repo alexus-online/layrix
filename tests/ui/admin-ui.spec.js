@@ -1055,7 +1055,7 @@ test.describe('ECF admin UI', () => {
     }
   });
 
-  test('design preset and mode persist after reload', async ({ page }) => {
+  test('ui skin persists after reload', async ({ page }) => {
     await loginToWordPress(page);
     await openPluginPage(page);
     await openGeneralTab(page, 'ui');
@@ -1063,13 +1063,9 @@ test.describe('ECF admin UI', () => {
     const presetInput = page.locator('[data-ecf-admin-design-preset]').first();
     const modeInput = page.locator('[data-ecf-admin-design-mode]').first();
     const originalPreset = await presetInput.inputValue();
-    const originalMode = await modeInput.inputValue();
-    const nextPreset = originalPreset === 'next' ? 'hero' : 'next';
-    const nextMode = originalMode === 'dark' ? 'light' : 'dark';
+    const nextPreset = originalPreset === 'v3' ? 'current' : 'v3';
 
     await selectDesignPreset(page, nextPreset);
-    await waitForSuccessNotice(page);
-    await selectDesignMode(page, nextMode);
     await waitForSuccessNotice(page);
 
     await page.reload();
@@ -1077,12 +1073,11 @@ test.describe('ECF admin UI', () => {
     await openGeneralTab(page, 'ui');
 
     await expect(page.locator('[data-ecf-admin-design-preset]').first()).toHaveValue(nextPreset);
-    await expect(page.locator('[data-ecf-admin-design-mode]').first()).toHaveValue(nextMode);
+    await expect(page.locator('[data-ecf-admin-design-mode]').first()).toHaveValue('dark');
 
     await selectDesignPreset(page, originalPreset);
     await waitForSuccessNotice(page);
-    await selectDesignMode(page, originalMode);
-    await waitForSuccessNotice(page);
+    await expect(modeInput).toHaveValue('dark');
   });
 
   test('system refresh works without reload', async ({ page }) => {

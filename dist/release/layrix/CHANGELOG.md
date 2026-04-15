@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.3.12 (2026-04-15)
+
+### Fix
+- Admin UI refinements, i18n cleanup, and typography/autosave fixes prepared as the next release version.
+- Admin-UI-Feinschliff, i18n-Bereinigung und Typografie-/Autosave-Fixes als naechste Release-Version vorbereitet.
+
 ## 0.3.11 (2026-04-13)
 
 ### Fix

@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Layrix
  * Description: Core-Framework-style tokens, editor panel, and native Elementor variable/class sync.
- * Version: 0.3.11
+ * Version: 0.3.12
  * Author: Alexander Kaiser
  * Update URI: https://github.com/alexus-online/layrix
  * Text Domain: ecf-framework
@@ -249,11 +249,11 @@ class ECF_Framework {
                     <button class="ecf-nav-item" data-panel="sync"><span class="dashicons dashicons-update"></span><?php echo esc_html__('Sync & Export', 'ecf-framework'); ?></button>
 
                     <div class="ecf-nav-section"><?php echo esc_html__('Settings', 'ecf-framework'); ?></div>
-                    <button class="ecf-nav-item" data-panel="components" data-ecf-new-key="general-settings"><span class="dashicons dashicons-layout"></span><?php echo esc_html__('General Settings', 'ecf-framework'); ?><span class="ecf-unsaved-badge" data-ecf-unsaved-badge hidden><?php echo esc_html__('ungespeichert', 'ecf-framework'); ?></span></button>
+                    <button class="ecf-nav-item" data-panel="components" data-ecf-new-key="general-settings"><span class="dashicons dashicons-layout"></span><?php echo esc_html__('General Settings', 'ecf-framework'); ?><span class="ecf-unsaved-badge" data-ecf-unsaved-badge hidden><?php echo esc_html__('Unsaved', 'ecf-framework'); ?></span></button>
                 </nav>
                 <div class="ecf-sidebar-footer">
                     <div class="ecf-sidebar-footer__links">
-                        <button type="button" class="ecf-sidebar-link" data-panel="help"><?php echo esc_html__('Hilfe', 'ecf-framework'); ?></button>
+                        <button type="button" class="ecf-sidebar-link" data-panel="help"><?php echo esc_html__('Help', 'ecf-framework'); ?></button>
                         <button type="button" class="ecf-sidebar-link" data-ecf-open-changelog-modal><?php echo esc_html__('Changelog', 'ecf-framework'); ?></button>
                     </div>
                 </div>

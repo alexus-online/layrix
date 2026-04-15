@@ -48,10 +48,7 @@ trait ECF_Framework_Settings_Sanitizer_Trait {
             : $this->wordpress_default_interface_language();
         $admin_design_preset = sanitize_key($input['admin_design_preset'] ?? $defaults['admin_design_preset']);
         $output['admin_design_preset'] = $this->normalize_admin_design_preset($admin_design_preset ?: $defaults['admin_design_preset']);
-        $admin_design_mode = sanitize_key($input['admin_design_mode'] ?? $defaults['admin_design_mode']);
-        $output['admin_design_mode'] = in_array($admin_design_mode, ['dark', 'light'], true)
-            ? $admin_design_mode
-            : $defaults['admin_design_mode'];
+        $output['admin_design_mode'] = 'dark';
         $admin_content_font_size = absint($input['admin_content_font_size'] ?? $defaults['admin_content_font_size']);
         $output['admin_content_font_size'] = (string) min(22, max(14, $admin_content_font_size ?: (int) $defaults['admin_content_font_size']));
         $admin_menu_font_size = absint($input['admin_menu_font_size'] ?? $defaults['admin_menu_font_size']);
@@ -120,6 +117,7 @@ trait ECF_Framework_Settings_Sanitizer_Trait {
         );
         $base_body_font_weight = $this->sanitize_css_number_or_size($input['base_body_font_weight'] ?? $defaults['base_body_font_weight']);
         $output['base_body_font_weight'] = $base_body_font_weight !== '' ? $base_body_font_weight : $this->typography_row_value('weights', 'normal', '400');
+        $output['typography_browser_margin_reset'] = !empty($input['typography_browser_margin_reset']) ? '1' : '0';
         $base_text_color = $this->sanitize_css_color_value($input['base_text_color'] ?? $defaults['base_text_color']);
         $base_background_color = $this->sanitize_css_color_value($input['base_background_color'] ?? $defaults['base_background_color']);
         $link_color = $this->sanitize_css_color_value($input['link_color'] ?? $defaults['link_color']);

@@ -177,7 +177,7 @@ test.describe('ECF cross-panel UI flows', () => {
     }
   });
 
-  test('design preset and mode also persist as active admin design attributes after reload', async ({ page }) => {
+  test('ui skin persists as active admin design attribute after reload', async ({ page }) => {
     await loginToWordPress(page);
     await openPluginPage(page);
     await openGeneralTab(page, 'ui');
@@ -186,25 +186,20 @@ test.describe('ECF cross-panel UI flows', () => {
     const presetInput = page.locator('[data-ecf-admin-design-preset]').first();
     const modeInput = page.locator('[data-ecf-admin-design-mode]').first();
     const originalPreset = await presetInput.inputValue();
-    const originalMode = await modeInput.inputValue();
-    const nextPreset = originalPreset === 'minimal' ? 'hero' : 'minimal';
-    const nextMode = originalMode === 'dark' ? 'light' : 'dark';
+    const nextPreset = originalPreset === 'v3' ? 'current' : 'v3';
 
     await selectDesignPreset(page, nextPreset);
-    await waitForSuccessNotice(page);
-    await selectDesignMode(page, nextMode);
     await waitForSuccessNotice(page);
 
     await page.reload();
     await openPluginPage(page);
     await openGeneralTab(page, 'ui');
     await expect(wrap).toHaveAttribute('data-ecf-admin-design', nextPreset);
-    await expect(wrap).toHaveAttribute('data-ecf-admin-mode', nextMode);
+    await expect(wrap).toHaveAttribute('data-ecf-admin-mode', 'dark');
 
     await selectDesignPreset(page, originalPreset);
     await waitForSuccessNotice(page);
-    await selectDesignMode(page, originalMode);
-    await waitForSuccessNotice(page);
+    await expect(modeInput).toHaveValue('dark');
   });
 
   test('added color tokens persist and are emitted as frontend CSS variables', async ({ page }) => {
@@ -438,7 +433,7 @@ test.describe('ECF cross-panel UI flows', () => {
       const interfaceSection = page.locator('[data-ecf-general-section="interface"]:visible').first();
       await expect(interfaceSection.locator('[data-ecf-general-field="interface_language"]').first()).toContainText('Plugin-Sprache');
       expect(await getFavoriteToggleTip(page, 'interface_language')).toContain('Favoriten');
-      await expect(interfaceSection).toContainText('Design');
+      await expect(interfaceSection).toContainText('UI-Skin');
 
       await openPanel(page, 'help');
       await expect(page.locator('.ecf-card h2').filter({ hasText: 'Schnellhilfe' }).first()).toBeVisible();
@@ -466,8 +461,8 @@ test.describe('ECF cross-panel UI flows', () => {
     const importedSettings = cloneSettings(originalSettings);
     importedSettings.root_font_size = String(originalSettings.root_font_size || '') === '62.5' ? '100' : '62.5';
     importedSettings.interface_language = originalSettings.interface_language === 'de' ? 'en' : 'de';
-    importedSettings.admin_design_preset = originalSettings.admin_design_preset === 'hero' ? 'next' : 'hero';
-    importedSettings.admin_design_mode = originalSettings.admin_design_mode === 'dark' ? 'light' : 'dark';
+    importedSettings.admin_design_preset = originalSettings.admin_design_preset === 'v2' ? 'current' : 'v2';
+    importedSettings.admin_design_mode = 'dark';
     importedSettings.base_body_text_size = '21px';
 
     const payload = {
@@ -494,7 +489,7 @@ test.describe('ECF cross-panel UI flows', () => {
       await openGeneralTab(page, 'ui');
       await expect(getGeneralField(page, 'interface_language').locator('select').first()).toHaveValue(importedSettings.interface_language);
       await expect(page.locator('[data-ecf-admin-design-preset]').first()).toHaveValue(importedSettings.admin_design_preset);
-      await expect(page.locator('[data-ecf-admin-design-mode]').first()).toHaveValue(importedSettings.admin_design_mode);
+      await expect(page.locator('[data-ecf-admin-design-mode]').first()).toHaveValue('dark');
     } finally {
       await openPluginPage(page);
       await updateRestSettings(page, originalSettings);

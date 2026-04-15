@@ -523,7 +523,8 @@ async function selectDesignPreset(page, preset) {
 }
 
 async function selectDesignMode(page, mode) {
-  await page.locator('[data-ecf-general-section="interface"]:visible').locator(`[data-ecf-admin-design-mode-option][data-value="${mode}"]`).first().click();
+  void page;
+  void mode;
 }
 
 async function refreshSystemInfo(page) {
@@ -731,13 +732,14 @@ async function downloadExport(page) {
 }
 
 async function searchClasses(page, value) {
+  await page.locator('[data-ecf-class-tier="basic"]').click();
   const search = page.locator('[data-ecf-library-section="starter"] [data-ecf-class-search]').first();
   await search.fill(value);
   return search;
 }
 
 async function openUtilityLibrary(page) {
-  const tab = page.locator('.ecf-panel[data-panel="utilities"] [data-ecf-library-tab="utility"]').first();
+  const tab = page.locator('.ecf-panel[data-panel="utilities"] [data-ecf-class-tier="utility"]').first();
   await tab.evaluate((element) => element.click());
 }
 

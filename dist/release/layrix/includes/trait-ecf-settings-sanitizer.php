@@ -48,10 +48,7 @@ trait ECF_Framework_Settings_Sanitizer_Trait {
             : $this->wordpress_default_interface_language();
         $admin_design_preset = sanitize_key($input['admin_design_preset'] ?? $defaults['admin_design_preset']);
         $output['admin_design_preset'] = $this->normalize_admin_design_preset($admin_design_preset ?: $defaults['admin_design_preset']);
-        $admin_design_mode = sanitize_key($input['admin_design_mode'] ?? $defaults['admin_design_mode']);
-        $output['admin_design_mode'] = in_array($admin_design_mode, ['dark', 'light'], true)
-            ? $admin_design_mode
-            : $defaults['admin_design_mode'];
+        $output['admin_design_mode'] = 'dark';
         $admin_content_font_size = absint($input['admin_content_font_size'] ?? $defaults['admin_content_font_size']);
         $output['admin_content_font_size'] = (string) min(22, max(14, $admin_content_font_size ?: (int) $defaults['admin_content_font_size']));
         $admin_menu_font_size = absint($input['admin_menu_font_size'] ?? $defaults['admin_menu_font_size']);
