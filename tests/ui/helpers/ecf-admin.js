@@ -164,6 +164,9 @@ async function loginToWordPress(page) {
 }
 
 async function openPluginPage(page) {
+  await page.addInitScript(() => {
+    try { window.sessionStorage.setItem('ecfSetupWizardDone', '1'); } catch (e) {}
+  });
   await page.goto(`${wpUrl}${pluginPath}`, { waitUntil: 'domcontentloaded' });
   await page.waitForLoadState('networkidle');
   await expect(page.locator('.ecf-wrap, .ecf-panel, [data-panel]').first()).toBeVisible();
