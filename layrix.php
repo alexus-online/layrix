@@ -300,8 +300,8 @@ class ECF_Framework {
                             <span class="dashicons dashicons-image-rotate" aria-hidden="true"></span>
                             <span><?php echo esc_html__('Reset layout', 'ecf-framework'); ?></span>
                         </button>
-                        <div class="ecf-sticky-topbar__autosave ecf-sticky-topbar__autosync" data-ecf-autosync-control>
-                            <button type="button" class="ecf-autosave-pill ecf-sticky-topbar__autosave-toggle ecf-sticky-topbar__autosync-toggle" data-ecf-autosync-toggle aria-haspopup="true" aria-expanded="false">
+                        <div class="ecf-sticky-topbar__autosave ecf-sticky-topbar__autosync" data-ecf-autosync-control data-ecf-autosave-control>
+                            <button type="button" class="ecf-autosave-pill ecf-sticky-topbar__autosave-toggle ecf-sticky-topbar__autosync-toggle" data-ecf-autosync-toggle data-ecf-autosave-toggle aria-haspopup="true" aria-expanded="false">
                                 <span class="dashicons dashicons-admin-generic" aria-hidden="true"></span>
                                 <span class="ecf-topbar-sync-label"><?php echo esc_html__('Sync', 'ecf-framework'); ?></span>
                                 <span data-ecf-autosave-pill hidden><?php echo esc_html(!empty($settings['autosave_enabled']) ? __('Autosave: on', 'ecf-framework') : __('Autosave: off', 'ecf-framework')); ?></span>
@@ -310,7 +310,7 @@ class ECF_Framework {
                                     <span class="dashicons dashicons-arrow-down-alt2 ecf-sticky-topbar__autosave-arrow" aria-hidden="true"></span>
                                 </span>
                             </button>
-                            <div class="ecf-sticky-topbar__autosave-menu" data-ecf-autosync-menu hidden>
+                            <div class="ecf-sticky-topbar__autosave-menu" data-ecf-autosync-menu data-ecf-autosave-menu hidden>
                                 <div class="ecf-topbar-menu__section"><?php echo esc_html__('Auto-save', 'ecf-framework'); ?></div>
                                 <label class="ecf-sticky-topbar__autosave-option">
                                     <input type="checkbox" data-ecf-topbar-setting="autosave_enabled" <?php checked(!empty($settings['autosave_enabled'])); ?>>

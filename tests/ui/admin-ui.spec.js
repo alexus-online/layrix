@@ -330,7 +330,7 @@ test.describe('ECF admin UI', () => {
     await expect(page.locator('[data-ecf-active-panel-title]')).toHaveText(/Elementor Classes|Elementor-Klassen/i);
 
     await openPanel(page, 'components');
-    await expect(page.locator('[data-ecf-active-panel-title]')).toHaveText(/General Settings|Allgemeine Einstellungen/i);
+    await expect(page.locator('[data-ecf-active-panel-title]')).toHaveText(/Base Settings|Basiseinstellungen/i);
   });
 
   test('spacing preview uses the green plugin palette', async ({ page }) => {
@@ -558,12 +558,10 @@ test.describe('ECF admin UI', () => {
     await openPanel(page, 'typography');
 
     const detailCards = page.locator('[data-ecf-layout-group="typography-secondary"] .ecf-card--details');
-    await expect(detailCards).toHaveCount(5);
+    await expect(detailCards).toHaveCount(3);
     await expect(detailCards.nth(0)).toHaveAttribute('open', '');
     await expect(detailCards.nth(1)).not.toHaveAttribute('open', '');
-    await expect(detailCards.nth(2)).toHaveAttribute('open', '');
-    await expect(detailCards.nth(3)).not.toHaveAttribute('open', '');
-    await expect(detailCards.nth(4)).not.toHaveAttribute('open', '');
+    await expect(detailCards.nth(2)).not.toHaveAttribute('open', '');
   });
 
   test('typography detail tokens use stacked accordions with only the first section open', async ({ page }) => {
@@ -572,12 +570,10 @@ test.describe('ECF admin UI', () => {
     await openPanel(page, 'typography');
 
     const details = page.locator('.ecf-grid[data-ecf-layout-group="typography-secondary"] .ecf-card--details');
-    await expect(details).toHaveCount(5);
+    await expect(details).toHaveCount(3);
     await expect(details.nth(0)).toHaveAttribute('open', '');
     await expect(details.nth(1)).not.toHaveAttribute('open', '');
-    await expect(details.nth(2)).toHaveAttribute('open', '');
-    await expect(details.nth(3)).not.toHaveAttribute('open', '');
-    await expect(details.nth(4)).not.toHaveAttribute('open', '');
+    await expect(details.nth(2)).not.toHaveAttribute('open', '');
   });
 
   test('spacing container widths are grouped in an accordion that starts open', async ({ page }) => {
