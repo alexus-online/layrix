@@ -20,6 +20,7 @@ trait ECF_Framework_Config_Trait {
             'heading_font_family' => 'var(--ecf-font-primary)',
             'base_body_text_size' => '16px',
             'base_body_font_weight' => '400',
+            'typography_browser_margin_reset' => '1',
             'base_text_color' => '#111827',
             'base_background_color' => '#ffffff',
             'link_color' => '#3b82f6',
@@ -84,7 +85,6 @@ trait ECF_Framework_Config_Trait {
                 'fonts' => [
                     ['name' => 'primary', 'value' => 'Inter, sans-serif'],
                     ['name' => 'secondary', 'value' => 'Georgia, serif'],
-                    ['name' => 'mono', 'value' => 'JetBrains Mono, monospace'],
                 ],
                 'local_fonts' => [],
                 'scale' => [

@@ -116,7 +116,16 @@ trait ECF_Framework_Asset_Loading_Trait {
 
     private function asset_version($relative_path, $fallback) {
         $full_path = plugin_dir_path(__FILE__) . '../' . ltrim($relative_path, '/');
-        return file_exists($full_path) ? filemtime($full_path) : $fallback;
+        if (!file_exists($full_path)) {
+            return $fallback;
+        }
+
+        $hash = @md5_file($full_path);
+        if (is_string($hash) && $hash !== '') {
+            return substr($hash, 0, 12);
+        }
+
+        return filemtime($full_path) ?: $fallback;
     }
 
     public function admin_assets($hook) {
@@ -134,7 +143,7 @@ trait ECF_Framework_Asset_Loading_Trait {
         wp_enqueue_style('wp-color-picker');
         wp_enqueue_style('ecf-admin', plugins_url('assets/admin.css', ECF_FRAMEWORK_FILE), [], $admin_css_ver);
         wp_enqueue_script('jquery-ui-sortable');
-        wp_enqueue_script('ecf-admin', plugins_url('assets/admin.js', ECF_FRAMEWORK_FILE), ['jquery', 'jquery-ui-sortable', 'wp-color-picker'], $admin_js_ver, true);
+        wp_enqueue_script('ecf-admin', plugins_url('assets/admin.js', ECF_FRAMEWORK_FILE), ['jquery', 'jquery-ui-sortable', 'wp-color-picker'], $admin_js_ver, false);
         wp_localize_script('ecf-admin', 'ecfAdmin', [
             'ajaxurl' => admin_url('admin-ajax.php'),
             'nonce' => wp_create_nonce('ecf_variables'),
@@ -186,8 +195,10 @@ trait ECF_Framework_Asset_Loading_Trait {
                 'autosave_saved' => __('Settings saved automatically.', 'ecf-framework'),
                 'autosave_failed'=> __('Could not save settings automatically.', 'ecf-framework'),
                 'autosave_invalid' => __('Please fix the highlighted field before saving.', 'ecf-framework'),
-                'autosave_active' => __('Autosave active', 'ecf-framework'),
-                'autosave_off' => __('Autosave off', 'ecf-framework'),
+                'autosave_active' => __('Autosave: on', 'ecf-framework'),
+                'autosave_off' => __('Autosave: off', 'ecf-framework'),
+                'autosync_active' => __('Auto-Sync: on', 'ecf-framework'),
+                'autosync_off' => __('Auto-Sync: off', 'ecf-framework'),
                 'autosave_disabled' => __('Autosave is disabled. Use the save button to store changes.', 'ecf-framework'),
                 'elementor_syncing' => __('Elementor sync is running…', 'ecf-framework'),
                 'elementor_synced' => __('Elementor sync completed.', 'ecf-framework'),
@@ -208,18 +219,27 @@ trait ECF_Framework_Asset_Loading_Trait {
                 'topbar_elementor_variables' => __('Elementor Variables', 'ecf-framework'),
                 'topbar_elementor_classes' => __('Elementor Classes', 'ecf-framework'),
                 'topbar_sync_export' => __('Sync & Export', 'ecf-framework'),
-                'topbar_general_settings' => __('General Settings', 'ecf-framework'),
+                'topbar_general_settings' => __('Base Settings', 'ecf-framework'),
+                'start_banner_storage_key' => 'ecfStartBannerDismissed',
                 'topbar_help_support' => __('Help & Support', 'ecf-framework'),
                 'font_import_missing' => __('Please choose a font from the library list first.', 'ecf-framework'),
                 'font_import_running' => __('Font is being imported locally…', 'ecf-framework'),
                 'font_import_success' => __('Font imported locally and activated.', 'ecf-framework'),
                 'font_import_failed' => __('The font could not be imported locally.', 'ecf-framework'),
+                'font_pairing_running' => __('Applying the font pairing…', 'ecf-framework'),
+                'font_pairing_success' => __('Font pairing applied.', 'ecf-framework'),
+                'font_pairing_failed' => __('The font pairing could not be applied.', 'ecf-framework'),
+                'style_preset_running' => __('Applying the style preset…', 'ecf-framework'),
+                'style_preset_success' => __('Style preset applied.', 'ecf-framework'),
+                'style_preset_failed' => __('The style preset could not be applied.', 'ecf-framework'),
+                'smart_recommendation_running' => __('Applying the recommendation…', 'ecf-framework'),
+                'smart_recommendation_success' => __('Recommendation applied.', 'ecf-framework'),
+                'smart_recommendation_failed' => __('The recommendation could not be applied.', 'ecf-framework'),
                 'font_search_running' => __('Searching the font library…', 'ecf-framework'),
                 'font_search_empty' => __('No matching fonts found.', 'ecf-framework'),
                 'font_search_error' => __('The font library search could not be loaded right now.', 'ecf-framework'),
                 'font_option_primary' => __('Primary', 'ecf-framework'),
                 'font_option_secondary' => __('Secondary', 'ecf-framework'),
-                'font_option_mono' => __('Mono', 'ecf-framework'),
                 'font_option_uploaded' => __('Uploaded font', 'ecf-framework'),
                 'font_option_custom_stack' => __('Custom stack', 'ecf-framework'),
                 'font_search_placeholder' => __('Search local and Google fonts', 'ecf-framework'),
@@ -257,8 +277,19 @@ trait ECF_Framework_Asset_Loading_Trait {
                 'class_delete_unused_only' => __('Delete unused only', 'ecf-framework'),
                 'class_delete_all_anyway' => __('Delete all anyway', 'ecf-framework'),
                 'class_delete_none_unused' => __('All selected classes are currently in use.', 'ecf-framework'),
-                'active_class_hint_default' => __('The sync total matches your currently active basic, extra, utility and own classes.', 'ecf-framework'),
-                'active_class_hint_helper' => __('The sync total currently also includes the automatic helper class ecf-container-boxed.', 'ecf-framework'),
+                'class_sync_prompt_title' => __('Sync to Elementor?', 'ecf-framework'),
+                'class_sync_prompt_subtitle' => __('Your changes were saved automatically.', 'ecf-framework'),
+                'class_sync_prompt_message' => __('Some updated Layrix data is not yet available in Elementor. Do you want to sync it now?', 'ecf-framework'),
+                'class_sync_prompt_yes' => __('Yes, sync now', 'ecf-framework'),
+                'class_sync_prompt_no' => __('No, maybe later', 'ecf-framework'),
+                'elementor_sync_prompt_variables_subtitle' => __('Your variable changes were saved automatically.', 'ecf-framework'),
+                'elementor_sync_prompt_variables_message' => __('Your updated Layrix variables are not yet available in Elementor. Do you want to sync them now?', 'ecf-framework'),
+                'elementor_sync_prompt_classes_subtitle' => __('Your class changes were saved automatically.', 'ecf-framework'),
+                'elementor_sync_prompt_classes_message' => __('Your updated Layrix classes are not yet available in Elementor. Do you want to sync them now?', 'ecf-framework'),
+                'elementor_sync_prompt_both_subtitle' => __('Your variable and class changes were saved automatically.', 'ecf-framework'),
+                'elementor_sync_prompt_both_message' => __('Your updated Layrix variables and classes are not yet available in Elementor. Do you want to sync them now?', 'ecf-framework'),
+                'active_class_hint_default' => __('These lists show which selected Layrix classes are currently ready for sync and which classes only remain in Elementor.', 'ecf-framework'),
+                'active_class_hint_helper' => __('These lists include the automatic helper class ecf-container-boxed because a boxed Elementor width is currently active.', 'ecf-framework'),
                 'body_size_warn_large_unit' => __('This value looks unusually large for rem/em body text. Did you mean px or the value from your active type scale token?', 'ecf-framework'),
                 'body_size_warn_unusual' => __('This body text size looks unusual for normal reading text. Please double-check the unit and value.', 'ecf-framework'),
                 'loading_elementor_classes' => __('Loading Elementor classes…', 'ecf-framework'),

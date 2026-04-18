@@ -23,6 +23,7 @@ trait ECF_Framework_Admin_General_Trait {
             'heading_font_family',
             'base_body_text_size',
             'base_body_font_weight',
+            'typography_browser_margin_reset',
             'base_text_color',
             'base_background_color',
             'link_color',
@@ -51,6 +52,7 @@ trait ECF_Framework_Admin_General_Trait {
             'heading_font_family' => '1',
             'base_body_text_size' => '1',
             'base_body_font_weight' => '1',
+            'typography_browser_margin_reset' => '1',
             'base_text_color' => '1',
             'github_update_checks_enabled' => '1',
             'show_elementor_status_cards' => '1',
@@ -200,6 +202,12 @@ trait ECF_Framework_Admin_General_Trait {
                 'title' => __('Base Body Font Weight', 'ecf-framework'),
                 'value' => (string) ($settings['base_body_font_weight'] ?? '400'),
             ],
+            'typography_browser_margin_reset' => [
+                'group' => 'website',
+                'tab' => 'typography',
+                'title' => __('Reset browser text margins', 'ecf-framework'),
+                'value' => !empty($settings['typography_browser_margin_reset']) ? __('Enabled', 'ecf-framework') : __('Disabled', 'ecf-framework'),
+            ],
             'base_text_color' => [
                 'group' => 'website',
                 'tab' => 'colors',
@@ -256,6 +264,7 @@ trait ECF_Framework_Admin_General_Trait {
             'root_font_size' => 10,
             'base_body_text_size' => 20,
             'base_body_font_weight' => 25,
+            'typography_browser_margin_reset' => 27,
             'base_font_family' => 30,
             'base_text_color' => 40,
             'base_background_color' => 50,
@@ -760,6 +769,17 @@ trait ECF_Framework_Admin_General_Trait {
             case 'base_body_font_weight':
                 $this->render_base_body_font_weight_field($settings);
                 break;
+            case 'typography_browser_margin_reset':
+                ?>
+                <label class="ecf-form-grid__checkbox ecf-form-grid__checkbox--favorite">
+                    <input type="checkbox"
+                           name="<?php echo esc_attr($this->option_name); ?>[typography_browser_margin_reset]"
+                           value="1"
+                           <?php checked(!empty($settings['typography_browser_margin_reset'])); ?>>
+                    <span><?php echo esc_html(!empty($settings['typography_browser_margin_reset']) ? __('Enabled', 'ecf-framework') : __('Disabled', 'ecf-framework')); ?></span>
+                </label>
+                <?php
+                break;
             case 'base_text_color':
             case 'base_background_color':
             case 'link_color':
@@ -813,7 +833,6 @@ trait ECF_Framework_Admin_General_Trait {
         $options = [
             'var(--ecf-font-primary)' => __('Primary', 'ecf-framework') . ': ' . ($settings['typography']['fonts'][0]['value'] ?? 'Inter, sans-serif'),
             'var(--ecf-font-secondary)' => __('Secondary', 'ecf-framework') . ': ' . ($settings['typography']['fonts'][1]['value'] ?? 'Georgia, serif'),
-            'var(--ecf-font-mono)' => __('Mono', 'ecf-framework') . ': ' . ($settings['typography']['fonts'][2]['value'] ?? 'JetBrains Mono, monospace'),
         ];
 
         foreach ((array) ($settings['typography']['local_fonts'] ?? []) as $row) {
@@ -860,11 +879,6 @@ trait ECF_Framework_Admin_General_Trait {
                 [
                     'value' => 'var(--ecf-font-secondary)',
                     'label' => __('Secondary', 'ecf-framework') . ': ' . ($settings['typography']['fonts'][1]['value'] ?? 'Georgia, serif'),
-                    'source' => 'core',
-                ],
-                [
-                    'value' => 'var(--ecf-font-mono)',
-                    'label' => __('Mono', 'ecf-framework') . ': ' . ($settings['typography']['fonts'][2]['value'] ?? 'JetBrains Mono, monospace'),
                     'source' => 'core',
                 ],
             ],
@@ -1226,6 +1240,24 @@ trait ECF_Framework_Admin_General_Trait {
                     </option>
                 <?php endforeach; ?>
             </select>
+        </label>
+        <?php
+    }
+
+    private function render_typography_browser_margin_reset_field($settings) {
+        ?>
+        <label data-ecf-general-field="typography_browser_margin_reset" class="ecf-general-field ecf-general-field--browser-margin-reset">
+            <span class="ecf-general-label-with-favorite">
+                <?php echo $this->general_setting_label(__('Reset browser text margins', 'ecf-framework'), 'Removes the default browser margins from headings and paragraphs so spacing can be controlled consistently through Layrix, Elementor, or your utility classes.', 'editor-contract'); ?>
+                <?php $this->render_general_setting_favorite_toggle($settings, 'typography_browser_margin_reset'); ?>
+            </span>
+            <label class="ecf-form-grid__checkbox ecf-form-grid__checkbox--favorite">
+                <input type="checkbox"
+                       name="<?php echo esc_attr($this->option_name); ?>[typography_browser_margin_reset]"
+                       value="1"
+                       <?php checked(!empty($settings['typography_browser_margin_reset'])); ?>>
+                <span><?php echo esc_html(!empty($settings['typography_browser_margin_reset']) ? __('Enabled', 'ecf-framework') : __('Disabled', 'ecf-framework')); ?></span>
+            </label>
         </label>
         <?php
     }

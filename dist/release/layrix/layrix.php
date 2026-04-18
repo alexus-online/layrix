@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Layrix
  * Description: Core-Framework-style tokens, editor panel, and native Elementor variable/class sync.
- * Version: 0.3.12
+ * Version: 0.3.13
  * Author: Alexander Kaiser
  * Update URI: https://github.com/alexus-online/layrix
  * Text Domain: ecf-framework
@@ -249,7 +249,7 @@ class ECF_Framework {
                     <button class="ecf-nav-item" data-panel="sync"><span class="dashicons dashicons-update"></span><?php echo esc_html__('Sync & Export', 'ecf-framework'); ?></button>
 
                     <div class="ecf-nav-section"><?php echo esc_html__('Settings', 'ecf-framework'); ?></div>
-                    <button class="ecf-nav-item" data-panel="components" data-ecf-new-key="general-settings"><span class="dashicons dashicons-layout"></span><?php echo esc_html__('General Settings', 'ecf-framework'); ?><span class="ecf-unsaved-badge" data-ecf-unsaved-badge hidden><?php echo esc_html__('Unsaved', 'ecf-framework'); ?></span></button>
+                    <button class="ecf-nav-item" data-panel="components" data-ecf-new-key="general-settings"><span class="dashicons dashicons-layout"></span><?php echo esc_html__('Base Settings', 'ecf-framework'); ?><span class="ecf-unsaved-badge" data-ecf-unsaved-badge hidden><?php echo esc_html__('Unsaved', 'ecf-framework'); ?></span></button>
                 </nav>
                 <div class="ecf-sidebar-footer">
                     <div class="ecf-sidebar-footer__links">
@@ -281,17 +281,18 @@ class ECF_Framework {
                             <span><?php echo esc_html__('Reset layout', 'ecf-framework'); ?></span>
                         </button>
                         <div class="ecf-sticky-topbar__autosave" data-ecf-autosave-control>
-                            <button type="button" class="ecf-autosave-pill ecf-sticky-topbar__autosave-toggle" data-ecf-autosave-toggle aria-haspopup="true" aria-expanded="false">
-                                <span data-ecf-autosave-pill><?php echo esc_html(!empty($settings['autosave_enabled']) ? __('Autosave active', 'ecf-framework') : __('Autosave off', 'ecf-framework')); ?></span>
-                                <span class="ecf-sticky-topbar__autosave-arrow-hit" data-ecf-autosave-arrow-hit>
+                            <button type="button" class="ecf-autosave-pill ecf-sticky-topbar__autosave-toggle" data-ecf-autosave-toggle aria-pressed="<?php echo !empty($settings['autosave_enabled']) ? 'true' : 'false'; ?>">
+                                <span data-ecf-autosave-pill><?php echo esc_html(!empty($settings['autosave_enabled']) ? __('Autosave: on', 'ecf-framework') : __('Autosave: off', 'ecf-framework')); ?></span>
+                            </button>
+                        </div>
+                        <div class="ecf-sticky-topbar__autosave ecf-sticky-topbar__autosync" data-ecf-autosync-control>
+                            <button type="button" class="ecf-autosave-pill ecf-sticky-topbar__autosave-toggle ecf-sticky-topbar__autosync-toggle" data-ecf-autosync-toggle aria-haspopup="true" aria-expanded="false">
+                                <span data-ecf-autosync-pill><?php echo esc_html(!empty($settings['elementor_auto_sync_enabled']) ? __('Auto-Sync: on', 'ecf-framework') : __('Auto-Sync: off', 'ecf-framework')); ?></span>
+                                <span class="ecf-sticky-topbar__autosave-arrow-hit" data-ecf-autosync-arrow-hit>
                                     <span class="dashicons dashicons-arrow-down-alt2 ecf-sticky-topbar__autosave-arrow" aria-hidden="true"></span>
                                 </span>
                             </button>
-                            <div class="ecf-sticky-topbar__autosave-menu" data-ecf-autosave-menu hidden>
-                                <label class="ecf-sticky-topbar__autosave-option">
-                                    <input type="checkbox" data-ecf-topbar-setting="elementor_auto_sync_enabled" <?php checked(!empty($settings['elementor_auto_sync_enabled'])); ?>>
-                                    <span><?php echo esc_html__('Elementor auto-sync after autosave', 'ecf-framework'); ?></span>
-                                </label>
+                            <div class="ecf-sticky-topbar__autosave-menu" data-ecf-autosync-menu hidden>
                                 <label class="ecf-sticky-topbar__autosave-option">
                                     <input type="checkbox" data-ecf-topbar-setting="elementor_auto_sync_variables" <?php checked(!empty($settings['elementor_auto_sync_variables'])); ?>>
                                     <span><?php echo esc_html__('Auto-sync variables', 'ecf-framework'); ?></span>

@@ -5,7 +5,7 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
         return [
             [
                 'title' => __('Set the site basics', 'ecf-framework'),
-                'description' => __('Open General Settings and define root size, body text size, body font, heading font and the base colors of the site.', 'ecf-framework'),
+                'description' => __('Open Base Settings and define root size, body text size, body font, heading font and the base colors of the site.', 'ecf-framework'),
             ],
             [
                 'title' => __('Build your tokens', 'ecf-framework'),
@@ -37,8 +37,8 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                 'description' => __('Global Classes count against Elementor’s class limit. Synced ECF variables count against Elementor’s variable limit. Keep utility classes intentionally compact.', 'ecf-framework'),
             ],
             [
-                'title' => __('What do General Settings do?', 'ecf-framework'),
-                'description' => __('General Settings control global basics like root font size, plugin language, container widths, base colors, body font, and editor helper behavior.', 'ecf-framework'),
+                'title' => __('What do Base Settings do?', 'ecf-framework'),
+                'description' => __('Base Settings control global basics like root font size, plugin language, container widths, base colors, body font, and editor helper behavior.', 'ecf-framework'),
             ],
         ];
     }
@@ -176,6 +176,367 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
         return '';
     }
 
+    private function typography_step_preview_item($step, $settings = null) {
+        $step = sanitize_key((string) $step);
+        if ($step === '') {
+            return null;
+        }
+
+        if (!is_array($settings)) {
+            $settings = $this->get_settings();
+        }
+
+        $scale = is_array($settings['typography']['scale'] ?? null)
+            ? $settings['typography']['scale']
+            : [];
+        $steps = is_array($scale['steps'] ?? null) ? $scale['steps'] : ['xs', 's', 'm', 'l', 'xl', '2xl', '3xl', '4xl'];
+        $base_index = sanitize_key($scale['base_index'] ?? 'm');
+        if ($base_index === '' || !in_array($base_index, $steps, true)) {
+            $base_index = in_array('m', $steps, true) ? 'm' : (string) reset($steps);
+        }
+
+        $root_base_px = $this->get_root_font_base_px($settings);
+        foreach ($this->build_type_scale_preview($scale + ['steps' => $steps, 'base_index' => $base_index], $root_base_px) as $item) {
+            if (($item['step'] ?? '') === $step) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
+    private function admin_parse_hex_color($value) {
+        $hex = strtolower(trim((string) $value));
+        $hex = ltrim($hex, '#');
+
+        if (strlen($hex) === 3) {
+            $hex = $hex[0] . $hex[0] . $hex[1] . $hex[1] . $hex[2] . $hex[2];
+        }
+
+        if (!preg_match('/^[0-9a-f]{6}$/', $hex)) {
+            return null;
+        }
+
+        return [
+            hexdec(substr($hex, 0, 2)),
+            hexdec(substr($hex, 2, 2)),
+            hexdec(substr($hex, 4, 2)),
+        ];
+    }
+
+    private function admin_relative_luminance($value) {
+        $rgb = $this->admin_parse_hex_color($value);
+        if ($rgb === null) {
+            return null;
+        }
+
+        $channels = array_map(static function($channel) {
+            $normalized = $channel / 255;
+            return $normalized <= 0.03928
+                ? $normalized / 12.92
+                : pow(($normalized + 0.055) / 1.055, 2.4);
+        }, $rgb);
+
+        return (0.2126 * $channels[0]) + (0.7152 * $channels[1]) + (0.0722 * $channels[2]);
+    }
+
+    private function admin_contrast_ratio($foreground, $background) {
+        $foreground_luminance = $this->admin_relative_luminance($foreground);
+        $background_luminance = $this->admin_relative_luminance($background);
+
+        if ($foreground_luminance === null || $background_luminance === null) {
+            return null;
+        }
+
+        $lighter = max($foreground_luminance, $background_luminance);
+        $darker = min($foreground_luminance, $background_luminance);
+
+        return round((($lighter + 0.05) / ($darker + 0.05)), 2);
+    }
+
+    private function admin_shadow_peak_alpha($shadows) {
+        $highest = 0.0;
+
+        foreach ((array) $shadows as $row) {
+            $value = (string) ($row['value'] ?? '');
+            if (preg_match_all('/rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*([0-9.]+)\s*\)/i', $value, $matches)) {
+                foreach (($matches[1] ?? []) as $alpha) {
+                    $highest = max($highest, (float) $alpha);
+                }
+            }
+        }
+
+        return $highest;
+    }
+
+    private function website_design_health_checks($settings) {
+        $checks = [];
+        $contrast_ratio = $this->admin_contrast_ratio($settings['base_text_color'] ?? '', $settings['base_background_color'] ?? '');
+        if ($contrast_ratio === null) {
+            $checks[] = [
+                'status' => 'notice',
+                'title' => __('Base contrast', 'ecf-framework'),
+                'message' => __('The current base text and background colors could not be evaluated automatically. Please check readability in the preview.', 'ecf-framework'),
+                'value' => __('Manual check', 'ecf-framework'),
+            ];
+        } elseif ($contrast_ratio >= 7) {
+            $checks[] = [
+                'status' => 'good',
+                'title' => __('Base contrast', 'ecf-framework'),
+                'message' => __('Your default text and background colors have strong contrast for normal reading text.', 'ecf-framework'),
+                'value' => sprintf(__('%s:1', 'ecf-framework'), $this->format_preview_number($contrast_ratio, 2)),
+            ];
+        } elseif ($contrast_ratio >= 4.5) {
+            $checks[] = [
+                'status' => 'notice',
+                'title' => __('Base contrast', 'ecf-framework'),
+                'message' => __('The default text contrast is usable, but a little more contrast would feel safer for long reading text.', 'ecf-framework'),
+                'value' => sprintf(__('%s:1', 'ecf-framework'), $this->format_preview_number($contrast_ratio, 2)),
+            ];
+        } else {
+            $checks[] = [
+                'status' => 'warn',
+                'title' => __('Base contrast', 'ecf-framework'),
+                'message' => __('Your default text and background colors look low in contrast. Increase readability before building more styles on top.', 'ecf-framework'),
+                'value' => sprintf(__('%s:1', 'ecf-framework'), $this->format_preview_number($contrast_ratio, 2)),
+            ];
+        }
+
+        $body_parts = $this->parse_css_size_parts($settings['base_body_text_size'] ?? '16px');
+        $body_format = strtolower((string) ($body_parts['format'] ?? ''));
+        $body_value = (float) str_replace(',', '.', (string) ($body_parts['value'] ?? '0'));
+        $root_base_px = $this->get_root_font_base_px($settings);
+        $body_px = $body_format === 'rem' || $body_format === 'em' ? ($body_value * $root_base_px) : $body_value;
+        if ($body_px >= 16 && $body_px <= 19) {
+            $checks[] = [
+                'status' => 'good',
+                'title' => __('Body text size', 'ecf-framework'),
+                'message' => __('Your current body text size sits in a comfortable reading range for most websites.', 'ecf-framework'),
+                'value' => sprintf(__('%spx', 'ecf-framework'), $this->format_preview_number($body_px, 1)),
+            ];
+        } elseif ($body_px >= 14 && $body_px <= 21) {
+            $checks[] = [
+                'status' => 'notice',
+                'title' => __('Body text size', 'ecf-framework'),
+                'message' => __('The body text size can work, but it is a little outside the most forgiving reading range.', 'ecf-framework'),
+                'value' => sprintf(__('%spx', 'ecf-framework'), $this->format_preview_number($body_px, 1)),
+            ];
+        } else {
+            $checks[] = [
+                'status' => 'warn',
+                'title' => __('Body text size', 'ecf-framework'),
+                'message' => __('The body text size looks unusually small or large for normal reading text. Review it before scaling the rest of the site.', 'ecf-framework'),
+                'value' => sprintf(__('%spx', 'ecf-framework'), $this->format_preview_number($body_px, 1)),
+            ];
+        }
+
+        $base_font = trim((string) ($settings['base_font_family'] ?? ''));
+        $heading_font = trim((string) ($settings['heading_font_family'] ?? ''));
+        if ($base_font !== '' && $base_font === $heading_font) {
+            $checks[] = [
+                'status' => 'notice',
+                'title' => __('Font hierarchy', 'ecf-framework'),
+                'message' => __('Body and heading currently use the same font. That can work, but a stronger pairing often creates clearer hierarchy.', 'ecf-framework'),
+                'value' => __('Single-font system', 'ecf-framework'),
+            ];
+        } else {
+            $checks[] = [
+                'status' => 'good',
+                'title' => __('Font hierarchy', 'ecf-framework'),
+                'message' => __('Body and heading fonts are separated, which usually gives headings more presence and improves scanning.', 'ecf-framework'),
+                'value' => __('Two-font system', 'ecf-framework'),
+            ];
+        }
+
+        $spacing = is_array($settings['spacing'] ?? null) ? $settings['spacing'] : [];
+        $spacing_min_ratio = (float) ($spacing['min_ratio'] ?? 1.25);
+        $spacing_max_ratio = (float) ($spacing['max_ratio'] ?? 1.414);
+        if ($spacing_max_ratio > 1.48 || $spacing_min_ratio < 1.15) {
+            $checks[] = [
+                'status' => 'notice',
+                'title' => __('Spacing rhythm', 'ecf-framework'),
+                'message' => __('Your spacing scale is quite contrast-heavy. That can feel expressive, but it may also make sections jump more than necessary.', 'ecf-framework'),
+                'value' => sprintf(__('%1$s-%2$s ratio', 'ecf-framework'), $this->format_preview_number($spacing_min_ratio, 3), $this->format_preview_number($spacing_max_ratio, 3)),
+            ];
+        } else {
+            $checks[] = [
+                'status' => 'good',
+                'title' => __('Spacing rhythm', 'ecf-framework'),
+                'message' => __('Your spacing ratios look balanced enough for a calm and coherent layout rhythm.', 'ecf-framework'),
+                'value' => sprintf(__('%1$s-%2$s ratio', 'ecf-framework'), $this->format_preview_number($spacing_min_ratio, 3), $this->format_preview_number($spacing_max_ratio, 3)),
+            ];
+        }
+
+        $peak_shadow_alpha = $this->admin_shadow_peak_alpha($settings['shadows'] ?? []);
+        if ($peak_shadow_alpha > 0.18) {
+            $checks[] = [
+                'status' => 'notice',
+                'title' => __('Shadow intensity', 'ecf-framework'),
+                'message' => __('One or more shadows are quite strong. If the UI starts to feel heavy, soften the larger shadow levels first.', 'ecf-framework'),
+                'value' => sprintf(__('Peak alpha %s', 'ecf-framework'), $this->format_preview_number($peak_shadow_alpha, 2)),
+            ];
+        } else {
+            $checks[] = [
+                'status' => 'good',
+                'title' => __('Shadow intensity', 'ecf-framework'),
+                'message' => __('Your current shadow tokens stay in a softer range that usually feels more premium and calm.', 'ecf-framework'),
+                'value' => sprintf(__('Peak alpha %s', 'ecf-framework'), $this->format_preview_number($peak_shadow_alpha, 2)),
+            ];
+        }
+
+        $active_class_snapshot = $this->get_active_class_snapshot($settings);
+        $sync_payload_count = count((array) ($active_class_snapshot['sync_payload'] ?? []));
+        $elementor_class_total = (int) $this->get_native_global_class_total_count();
+        $only_in_elementor = max(0, $elementor_class_total - $sync_payload_count);
+        if ($only_in_elementor > 0) {
+            $checks[] = [
+                'status' => 'notice',
+                'title' => __('Class cleanup', 'ecf-framework'),
+                'message' => __('Some classes already exist only in Elementor and are not part of your current Layrix selection. Review them before they become stale.', 'ecf-framework'),
+                'value' => sprintf(__('%d only in Elementor', 'ecf-framework'), $only_in_elementor),
+            ];
+        } else {
+            $checks[] = [
+                'status' => 'good',
+                'title' => __('Class cleanup', 'ecf-framework'),
+                'message' => __('Your current class selection and Elementor class state look aligned.', 'ecf-framework'),
+                'value' => __('No extra Elementor classes', 'ecf-framework'),
+            ];
+        }
+
+        $counts = ['good' => 0, 'notice' => 0, 'warn' => 0];
+        foreach ($checks as $check) {
+            $status = $check['status'] ?? 'notice';
+            if (!isset($counts[$status])) {
+                $counts[$status] = 0;
+            }
+            $counts[$status]++;
+        }
+
+        return [
+            'checks' => $checks,
+            'counts' => $counts,
+        ];
+    }
+
+    private function website_smart_recommendations($settings, $design_health_snapshot = []) {
+        $recommendations = [];
+        $contrast_ratio = $this->admin_contrast_ratio($settings['base_text_color'] ?? '', $settings['base_background_color'] ?? '');
+        if ($contrast_ratio !== null && $contrast_ratio < 4.5) {
+            $bg_luminance = $this->admin_relative_luminance($settings['base_background_color'] ?? '');
+            $suggested_text = ($bg_luminance !== null && $bg_luminance > 0.46) ? '#111827' : '#f8fafc';
+            $recommendations[] = [
+                'tone' => __('Readability', 'ecf-framework'),
+                'title' => __('Strengthen body contrast', 'ecf-framework'),
+                'description' => __('Darken or lighten the default text color so longer paragraphs feel clearer and safer to read.', 'ecf-framework'),
+                'impact' => __('Updates only the base text color.', 'ecf-framework'),
+                'apply_label' => __('Apply contrast fix', 'ecf-framework'),
+                'payload' => [
+                    'general' => [
+                        'base_text_color' => $suggested_text,
+                    ],
+                ],
+            ];
+        }
+
+        $body_parts = $this->parse_css_size_parts($settings['base_body_text_size'] ?? '16px');
+        $body_format = strtolower((string) ($body_parts['format'] ?? ''));
+        $body_value = (float) str_replace(',', '.', (string) ($body_parts['value'] ?? '0'));
+        $root_base_px = $this->get_root_font_base_px($settings);
+        $body_px = $body_format === 'rem' || $body_format === 'em' ? ($body_value * $root_base_px) : $body_value;
+        if ($body_px < 16 || $body_px > 19) {
+            $recommended_body_size = $body_px < 16 ? '16px' : '18px';
+            $recommendations[] = [
+                'tone' => __('Rhythm', 'ecf-framework'),
+                'title' => __('Normalize body size', 'ecf-framework'),
+                'description' => __('Bring the body text back into a safer default reading range before refining the smaller details.', 'ecf-framework'),
+                'impact' => sprintf(__('Sets body text to %s.', 'ecf-framework'), $recommended_body_size),
+                'apply_label' => __('Use this body size', 'ecf-framework'),
+                'payload' => [
+                    'general' => [
+                        'base_body_text_size' => $recommended_body_size,
+                    ],
+                ],
+            ];
+        }
+
+        $base_font = trim((string) ($settings['base_font_family'] ?? ''));
+        $heading_font = trim((string) ($settings['heading_font_family'] ?? ''));
+        if ($base_font !== '' && $base_font === $heading_font) {
+            $recommendations[] = [
+                'tone' => __('Hierarchy', 'ecf-framework'),
+                'title' => __('Separate headings from body copy', 'ecf-framework'),
+                'description' => __('Let headings use the secondary font stack so the page scans more clearly without rebuilding the whole type system.', 'ecf-framework'),
+                'impact' => __('Switches only the heading font family.', 'ecf-framework'),
+                'apply_label' => __('Use the secondary heading font', 'ecf-framework'),
+                'payload' => [
+                    'general' => [
+                        'heading_font_family' => 'var(--ecf-font-secondary)',
+                    ],
+                ],
+            ];
+        }
+
+        $spacing = is_array($settings['spacing'] ?? null) ? $settings['spacing'] : [];
+        $spacing_min_ratio = (float) ($spacing['min_ratio'] ?? 1.25);
+        $spacing_max_ratio = (float) ($spacing['max_ratio'] ?? 1.414);
+        if ($spacing_max_ratio > 1.48 || $spacing_min_ratio < 1.15) {
+            $recommendations[] = [
+                'tone' => __('Spacing', 'ecf-framework'),
+                'title' => __('Calm the spacing rhythm', 'ecf-framework'),
+                'description' => __('Bring the spacing scale back into a more balanced range so sections feel calmer and less jumpy.', 'ecf-framework'),
+                'impact' => __('Resets the spacing ratios to a calmer baseline.', 'ecf-framework'),
+                'apply_label' => __('Use calmer spacing', 'ecf-framework'),
+                'payload' => [
+                    'spacing' => [
+                        'min_base' => (string) ($spacing['min_base'] ?? '16'),
+                        'max_base' => (string) ($spacing['max_base'] ?? '24'),
+                        'min_ratio' => '1.2',
+                        'max_ratio' => '1.333',
+                        'base_index' => (string) ($spacing['base_index'] ?? 'm'),
+                        'fluid' => !empty($spacing['fluid']),
+                        'min_vw' => (string) ($spacing['min_vw'] ?? '375'),
+                        'max_vw' => (string) ($spacing['max_vw'] ?? '1280'),
+                    ],
+                ],
+            ];
+        }
+
+        $peak_shadow_alpha = $this->admin_shadow_peak_alpha($settings['shadows'] ?? []);
+        if ($peak_shadow_alpha > 0.18) {
+            $recommendations[] = [
+                'tone' => __('Shadows', 'ecf-framework'),
+                'title' => __('Soften the shadow scale', 'ecf-framework'),
+                'description' => __('Reduce the strongest shadow levels so cards and panels feel lighter, calmer and more premium.', 'ecf-framework'),
+                'impact' => __('Applies softer values to the shadow tokens.', 'ecf-framework'),
+                'apply_label' => __('Use softer shadows', 'ecf-framework'),
+                'payload' => [
+                    'shadows' => [
+                        'xs' => '0 1px 2px rgba(15,23,42,0.05)',
+                        's' => '0 6px 16px rgba(15,23,42,0.08)',
+                        'm' => '0 12px 28px rgba(15,23,42,0.10)',
+                        'l' => '0 20px 44px rgba(15,23,42,0.12)',
+                        'xl' => '0 32px 72px rgba(15,23,42,0.14)',
+                        'inner' => 'inset 0 2px 8px rgba(15,23,42,0.07)',
+                    ],
+                ],
+            ];
+        }
+
+        if (empty($recommendations)) {
+            $recommendations[] = [
+                'tone' => __('Healthy base', 'ecf-framework'),
+                'title' => __('Your current basics already look solid', 'ecf-framework'),
+                'description' => __('There is nothing urgent to fix here right now. You can keep refining style choices or move on to section building.', 'ecf-framework'),
+                'impact' => __('No quick fix needed at the moment.', 'ecf-framework'),
+                'apply_label' => '',
+                'payload' => [],
+            ];
+        }
+
+        return array_slice($recommendations, 0, 4);
+    }
+
     private function utility_class_size_display_value($value) {
         $value = trim((string) $value);
         if ($value === '') {
@@ -220,6 +581,136 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
         }
 
         return ucfirst(str_replace('-', ' ', $slug));
+    }
+
+    private function root_font_impact_preview_data($settings) {
+        $root_base_px = $this->get_root_font_base_px($settings);
+
+        $type_scale = is_array($settings['typography']['scale'] ?? null) ? $settings['typography']['scale'] : [];
+        $type_steps = is_array($type_scale['steps'] ?? null) ? $type_scale['steps'] : ['xs', 's', 'm', 'l', 'xl', '2xl', '3xl', '4xl'];
+        $type_base = sanitize_key($type_scale['base_index'] ?? 'm');
+        if ($type_base === '' || !in_array($type_base, $type_steps, true)) {
+            $type_base = in_array('m', $type_steps, true) ? 'm' : (string) reset($type_steps);
+        }
+        $type_root_preview = $this->find_preview_item_by_step(
+            $this->build_type_scale_preview($type_scale + ['steps' => $type_steps, 'base_index' => $type_base], $root_base_px),
+            $type_base
+        );
+
+        $spacing_scale = is_array($settings['spacing'] ?? null) ? $settings['spacing'] : [];
+        $spacing_steps = is_array($spacing_scale['steps'] ?? null) ? $spacing_scale['steps'] : ['2xs', 'xs', 's', 'm', 'l', 'xl', '2xl'];
+        $spacing_base = sanitize_key($spacing_scale['base_index'] ?? 'm');
+        if ($spacing_base === '' || !in_array($spacing_base, $spacing_steps, true)) {
+            $spacing_base = in_array('m', $spacing_steps, true) ? 'm' : (string) reset($spacing_steps);
+        }
+        $spacing_root_preview = $this->find_preview_item_by_step(
+            $this->build_spacing_scale_preview($spacing_scale + ['steps' => $spacing_steps, 'base_index' => $spacing_base], $root_base_px),
+            $spacing_base
+        );
+
+        $radius_rows = is_array($settings['radius'] ?? null) ? $settings['radius'] : [];
+        $radius_root_preview = $this->find_radius_preview_item($radius_rows);
+
+        return [
+            'root_base_px' => $root_base_px,
+            'type' => $type_root_preview,
+            'spacing' => $spacing_root_preview,
+            'radius' => $radius_root_preview,
+        ];
+    }
+
+    private function render_root_font_impact_panel($settings) {
+        $preview = $this->root_font_impact_preview_data($settings);
+        $root_base_px = $preview['root_base_px'];
+        $type_root_preview = $preview['type'];
+        $spacing_root_preview = $preview['spacing'];
+        $radius_root_preview = $preview['radius'];
+        ?>
+        <div class="ecf-root-font-impact"
+             data-ecf-root-font-impact
+             data-type-step="<?php echo esc_attr($type_root_preview['step'] ?? ($settings['typography']['scale']['base_index'] ?? 'm')); ?>"
+             data-spacing-step="<?php echo esc_attr($spacing_root_preview['step'] ?? ($settings['spacing']['base_index'] ?? 'm')); ?>"
+             data-radius-name="<?php echo esc_attr(sanitize_key($radius_root_preview['name'] ?? 'm')); ?>"
+             data-label-type="<?php echo esc_attr__('Typography token', 'ecf-framework'); ?>"
+             data-label-spacing="<?php echo esc_attr__('Spacing token', 'ecf-framework'); ?>"
+             data-label-radius="<?php echo esc_attr__('Radius token', 'ecf-framework'); ?>"
+             data-label-min="<?php echo esc_attr__('Minimum', 'ecf-framework'); ?>"
+             data-label-max="<?php echo esc_attr__('Maximum', 'ecf-framework'); ?>"
+             data-label-base="<?php echo esc_attr__('Current rem base', 'ecf-framework'); ?>">
+            <div class="ecf-root-font-impact__header">
+                <strong><?php echo esc_html__('Visible effect of the root font size', 'ecf-framework'); ?></strong>
+                <span data-ecf-root-font-base><?php echo esc_html(sprintf(__('Currently: %spx = 1rem', 'ecf-framework'), $root_base_px)); ?></span>
+            </div>
+            <div class="ecf-root-font-impact__items">
+                <div class="ecf-root-font-impact__item">
+                    <span><?php echo esc_html__('Typography token', 'ecf-framework'); ?></span>
+                    <div class="ecf-root-font-impact__token-row">
+                        <code data-ecf-root-type-token><?php echo esc_html('--ecf-text-' . ($type_root_preview['step'] ?? ($settings['typography']['scale']['base_index'] ?? 'm'))); ?></code>
+                        <button type="button" class="ecf-root-font-impact__copy-toggle" data-ecf-root-copy-toggle="<?php echo esc_attr__('Toggle clamp output', 'ecf-framework'); ?>">
+                            <span class="dashicons dashicons-editor-code"></span>
+                        </button>
+                    </div>
+                    <button type="button" class="ecf-root-font-impact__copy-pop" data-ecf-root-type-copy></button>
+                    <div class="ecf-root-font-impact__range">
+                        <div class="ecf-root-font-impact__metric">
+                            <span data-ecf-root-type-min-label><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
+                            <strong data-ecf-root-type-min><?php echo esc_html(($type_root_preview['min_px'] ?? $type_root_preview['minPx'] ?? '') . 'px'); ?></strong>
+                            <em data-ecf-root-type-min-preview><?php echo esc_html($this->type_preview_text_for_step((string) ($type_root_preview['step'] ?? ($settings['typography']['scale']['base_index'] ?? 'm')), $settings)); ?></em>
+                        </div>
+                        <div class="ecf-root-font-impact__metric">
+                            <span data-ecf-root-type-max-label><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
+                            <strong data-ecf-root-type-max><?php echo esc_html(($type_root_preview['max_px'] ?? $type_root_preview['maxPx'] ?? '') . 'px'); ?></strong>
+                            <em data-ecf-root-type-max-preview><?php echo esc_html($this->type_preview_text_for_step((string) ($type_root_preview['step'] ?? ($settings['typography']['scale']['base_index'] ?? 'm')), $settings)); ?></em>
+                        </div>
+                    </div>
+                </div>
+                <div class="ecf-root-font-impact__item">
+                    <span><?php echo esc_html__('Spacing token', 'ecf-framework'); ?></span>
+                    <div class="ecf-root-font-impact__token-row">
+                        <code data-ecf-root-spacing-token><?php echo esc_html('--ecf-' . sanitize_key($settings['spacing']['prefix'] ?? 'space') . '-' . ($spacing_root_preview['step'] ?? ($settings['spacing']['base_index'] ?? 'm'))); ?></code>
+                        <button type="button" class="ecf-root-font-impact__copy-toggle" data-ecf-root-copy-toggle="<?php echo esc_attr__('Toggle clamp output', 'ecf-framework'); ?>">
+                            <span class="dashicons dashicons-editor-code"></span>
+                        </button>
+                    </div>
+                    <button type="button" class="ecf-root-font-impact__copy-pop" data-ecf-root-spacing-copy></button>
+                    <div class="ecf-root-font-impact__range">
+                        <div class="ecf-root-font-impact__metric">
+                            <span data-ecf-root-spacing-min-label><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
+                            <strong data-ecf-root-spacing-min><?php echo esc_html(($spacing_root_preview['min_px'] ?? $spacing_root_preview['minPx'] ?? '') . 'px'); ?></strong>
+                            <div class="ecf-root-font-impact__bar"><div class="ecf-root-font-impact__bar-fill" data-ecf-root-spacing-min-bar></div></div>
+                        </div>
+                        <div class="ecf-root-font-impact__metric">
+                            <span data-ecf-root-spacing-max-label><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
+                            <strong data-ecf-root-spacing-max><?php echo esc_html(($spacing_root_preview['max_px'] ?? $spacing_root_preview['maxPx'] ?? '') . 'px'); ?></strong>
+                            <div class="ecf-root-font-impact__bar"><div class="ecf-root-font-impact__bar-fill" data-ecf-root-spacing-max-bar></div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ecf-root-font-impact__item">
+                    <span><?php echo esc_html__('Radius token', 'ecf-framework'); ?></span>
+                    <div class="ecf-root-font-impact__token-row">
+                        <code data-ecf-root-radius-token><?php echo esc_html('--ecf-radius-' . sanitize_key($radius_root_preview['name'] ?? 'm')); ?></code>
+                        <button type="button" class="ecf-root-font-impact__copy-toggle" data-ecf-root-copy-toggle="<?php echo esc_attr__('Toggle clamp output', 'ecf-framework'); ?>">
+                            <span class="dashicons dashicons-editor-code"></span>
+                        </button>
+                    </div>
+                    <button type="button" class="ecf-root-font-impact__copy-pop" data-ecf-root-radius-copy></button>
+                    <div class="ecf-root-font-impact__range">
+                        <div class="ecf-root-font-impact__metric">
+                            <span data-ecf-root-radius-min-label><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
+                            <strong data-ecf-root-radius-min><?php echo esc_html($this->format_preview_number($radius_root_preview['min'] ?? 0) . 'px'); ?></strong>
+                            <div class="ecf-root-font-impact__radius-preview" data-ecf-root-radius-min-preview></div>
+                        </div>
+                        <div class="ecf-root-font-impact__metric">
+                            <span data-ecf-root-radius-max-label><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
+                            <strong data-ecf-root-radius-max><?php echo esc_html($this->format_preview_number($radius_root_preview['max'] ?? ($radius_root_preview['min'] ?? 0)) . 'px'); ?></strong>
+                            <div class="ecf-root-font-impact__radius-preview" data-ecf-root-radius-max-preview></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <?php
     }
 
     private function render_variables_panel($args) {
@@ -323,6 +814,25 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                     </div>
                 </div>
             </div>
+            <div class="ecf-modal" data-ecf-class-sync-prompt-modal hidden>
+                <div class="ecf-modal__backdrop" data-ecf-class-sync-prompt-close></div>
+                <div class="ecf-modal__dialog ecf-class-sync-prompt-modal" role="dialog" aria-modal="true" aria-labelledby="ecf-class-sync-prompt-title">
+                    <div class="ecf-modal__header">
+                        <div>
+                            <h2 id="ecf-class-sync-prompt-title" data-ecf-class-sync-prompt-title><?php echo esc_html__('Sync to Elementor?', 'ecf-framework'); ?></h2>
+                            <p data-ecf-class-sync-prompt-subtitle><?php echo esc_html__('Your changes were saved automatically.', 'ecf-framework'); ?></p>
+                        </div>
+                        <button type="button" class="ecf-modal__close" data-ecf-class-sync-prompt-close aria-label="<?php echo esc_attr__('Close', 'ecf-framework'); ?>">×</button>
+                    </div>
+                    <div class="ecf-modal__body">
+                        <p data-ecf-class-sync-prompt-message><?php echo esc_html__('Some updated Layrix data is not yet available in Elementor. Do you want to sync it now?', 'ecf-framework'); ?></p>
+                    </div>
+                    <div class="ecf-modal__footer">
+                        <button type="button" class="ecf-btn ecf-btn--ghost" data-ecf-class-sync-prompt-no><span class="dashicons dashicons-no-alt" aria-hidden="true"></span><span><?php echo esc_html__('No, maybe later', 'ecf-framework'); ?></span></button>
+                        <button type="button" class="ecf-btn ecf-btn--primary" data-ecf-class-sync-prompt-yes><span class="dashicons dashicons-update" aria-hidden="true"></span><span><?php echo esc_html__('Yes, sync now', 'ecf-framework'); ?></span></button>
+                    </div>
+                </div>
+            </div>
             <div class="ecf-card ecf-starter-classes ecf-variable-library ecf-panel-shell">
                 <div class="ecf-vargroup-header">
                     <h2><?php echo esc_html__('Variable library', 'ecf-framework'); ?></h2>
@@ -338,27 +848,24 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                     <span class="ecf-class-limit-card__slash">/</span>
                                     <span id="ecf-limit-variables"><?php echo esc_html((string) $elementor_variable_limit); ?></span>
                                 </span>
-                                <span class="ecf-class-limit-card__context"><?php echo esc_html__('variables currently found in Elementor', 'ecf-framework'); ?></span>
+                                <span class="ecf-class-limit-card__context"><?php echo esc_html__('Variables currently available in Elementor', 'ecf-framework'); ?></span>
                             </div>
                         </div>
                         <ul class="ecf-class-limit-card__details ecf-class-limit-card__details--variables">
                             <li>
-                                <span><?php echo esc_html__('ECF', 'ecf-framework'); ?></span>
+                                <span><?php echo esc_html__('From Layrix', 'ecf-framework'); ?></span>
                                 <strong><span id="ecf-total-ecf-variables"><?php echo esc_html((string) $native_variable_counts['ecf']); ?></span></strong>
                             </li>
                             <li>
-                                <span><?php echo esc_html__('Foreign', 'ecf-framework'); ?></span>
+                                <span><?php echo esc_html__('Only in Elementor', 'ecf-framework'); ?></span>
                                 <strong><span id="ecf-total-foreign-variables"><?php echo esc_html((string) $native_variable_counts['foreign']); ?></span></strong>
                             </li>
                             <li>
-                                <span><?php echo esc_html__('Total', 'ecf-framework'); ?></span>
-                                <strong><span id="ecf-total-variables-inline"><?php echo esc_html((string) $native_variable_counts['total']); ?></span></strong>
-                            </li>
-                            <li>
-                                <span><?php echo esc_html__('ecf_sync_layrix_variable_count_label', 'ecf-framework'); ?></span>
+                                <span><?php echo esc_html__('Ready for sync', 'ecf-framework'); ?></span>
                                 <strong><span data-ecf-layrix-variable-count><?php echo esc_html((string) ($layrix_variable_count ?? 0)); ?></span></strong>
                             </li>
                         </ul>
+                        <p class="ecf-class-limit-card__explain"><?php echo esc_html__('The limit comes from your installed Elementor version. Layrix shows what is already there, what belongs to Layrix and what is still only stored in Elementor.', 'ecf-framework'); ?></p>
                     </div>
                 <?php endif; ?>
                 <p class="ecf-panel-note"><?php echo esc_html__('Changes take effect immediately in Elementor. The cache is cleared automatically; open Elementor tabs should be reloaded once.', 'ecf-framework'); ?></p>
@@ -426,7 +933,7 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
 
     private function render_tokens_panel($settings) {
         ?>
-        <div class="ecf-panel" data-panel="tokens">
+        <div class="ecf-panel is-active" data-panel="tokens">
             <div class="ecf-card ecf-panel-shell" data-ecf-layout-item="tokens-shell">
                 <div class="ecf-vargroup-header">
                     <h2><?php echo esc_html__('Token library', 'ecf-framework'); ?></h2>
@@ -672,90 +1179,58 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                         </div>
                         <ul class="ecf-class-limit-card__details">
                             <li>
-                                <span><?php echo esc_html__('Elementor', 'ecf-framework'); ?></span>
-                                <strong><span data-ecf-starter-current><?php echo esc_html((string) $elementor_total_class_count); ?></span> <?php echo esc_html__('classes', 'ecf-framework'); ?></strong>
+                                <span><?php echo esc_html__('Ready from Layrix', 'ecf-framework'); ?></span>
+                                <strong><span data-ecf-starter-selected><?php echo esc_html((string) count($active_sync_payload_classes)); ?></span></strong>
                             </li>
                             <li>
-                                <span><?php echo esc_html__('Plugin', 'ecf-framework'); ?></span>
-                                <strong><span data-ecf-starter-selected><?php echo esc_html((string) count($active_sync_payload_classes)); ?></span> <?php echo esc_html__('classes', 'ecf-framework'); ?></strong>
-                            </li>
-                            <li>
-                                <span><?php echo esc_html__('After sync:', 'ecf-framework'); ?></span>
-                                <strong><span data-ecf-starter-projected-inline><?php echo esc_html((string) $elementor_total_class_count); ?></span> / <?php echo esc_html((string) $elementor_class_limit); ?></strong>
+                                <span><?php echo esc_html__('Only in Elementor', 'ecf-framework'); ?></span>
+                                <strong><span data-ecf-existing-foreign-summary-count><?php echo esc_html((string) max(0, $elementor_class_total_count - count($active_sync_payload_classes))); ?></span></strong>
                             </li>
                         </ul>
-                        <p class="ecf-class-library-breakdown" data-ecf-class-breakdown>
-                            <?php
-                            echo esc_html(
-                                sprintf(
-                                    __('%1$d selected = %2$d basic + %3$d extras + %4$d utility + %5$d custom + %6$d helper.', 'ecf-framework'),
-                                    count($active_sync_payload_classes),
-                                    count($active_basic_classes),
-                                    count($active_extra_classes),
-                                    count($active_utility_classes),
-                                    count($active_custom_classes),
-                                    count($active_helper_classes)
-                                )
-                            );
-                            ?>
-                        </p>
+                        <p class="ecf-class-limit-card__explain"><?php echo esc_html__('This shows the total class load inside Elementor. Below you can decide which classes come from Layrix and which only remain inside Elementor.', 'ecf-framework'); ?></p>
                     </div>
                     <div class="ecf-var-tabs ecf-class-tier-tabs" data-ecf-class-tier-tabs>
-                        <button type="button" class="ecf-var-tab is-active" data-ecf-class-tier="all">
+                        <button type="button" class="ecf-var-tab is-active" data-ecf-class-tier="all" data-ecf-tier-title="<?php echo esc_attr__('Active classes', 'ecf-framework'); ?>" data-ecf-tier-copy="<?php echo esc_attr__('Review which selected Layrix classes are currently part of your sync and what still only exists in Elementor.', 'ecf-framework'); ?>">
                             <?php echo esc_html__('All', 'ecf-framework'); ?>
                         </button>
-                        <button type="button" class="ecf-var-tab" data-ecf-class-tier="basic" <?php echo empty($active_basic_classes) ? 'hidden' : ''; ?>>
+                        <button type="button" class="ecf-var-tab" data-ecf-class-tier="basic" data-ecf-tier-title="<?php echo esc_attr__('Basic classes', 'ecf-framework'); ?>" data-ecf-tier-copy="<?php echo esc_attr__('Use foundational starter classes for semantic page structure, layout wrappers and the core building blocks of your site.', 'ecf-framework'); ?>" <?php echo empty($active_basic_classes) ? 'hidden' : ''; ?>>
                             <?php echo esc_html__('Basic', 'ecf-framework'); ?>
                             <span class="ecf-var-tab__count" data-ecf-starter-basic-count><?php echo esc_html(count($active_basic_classes) . '/' . $starter_basic_total); ?></span>
                         </button>
-                        <button type="button" class="ecf-var-tab" data-ecf-class-tier="extras" <?php echo empty($active_extra_classes) ? 'hidden' : ''; ?>>
+                        <button type="button" class="ecf-var-tab" data-ecf-class-tier="extras" data-ecf-tier-title="<?php echo esc_attr__('Extra classes', 'ecf-framework'); ?>" data-ecf-tier-copy="<?php echo esc_attr__('Browse extended starter classes for additional sections, forms, trust blocks, commerce patterns and richer page structures.', 'ecf-framework'); ?>" <?php echo empty($active_extra_classes) ? 'hidden' : ''; ?>>
                             <?php echo esc_html__('Extras', 'ecf-framework'); ?>
                             <span class="ecf-var-tab__count" data-ecf-starter-extras-count><?php echo esc_html(count($active_extra_classes) . '/' . $starter_extras_total); ?></span>
                         </button>
-                        <button type="button" class="ecf-var-tab" data-ecf-class-tier="utility" <?php echo empty($active_utility_classes) ? 'hidden' : ''; ?>>
+                        <button type="button" class="ecf-var-tab" data-ecf-class-tier="utility" data-ecf-tier-title="<?php echo esc_attr__('Utility classes', 'ecf-framework'); ?>" data-ecf-tier-copy="<?php echo esc_attr__('Enable small helper classes for text, alignment, spacing and a few safe visual shortcuts without bloating your class system.', 'ecf-framework'); ?>" <?php echo empty($active_utility_classes) ? 'hidden' : ''; ?>>
                             <?php echo esc_html__('Utility', 'ecf-framework'); ?>
                             <span class="ecf-var-tab__count" data-ecf-utility-summary-count><?php echo esc_html(count($active_utility_classes) . '/' . $utility_total); ?></span>
                         </button>
-                        <button type="button" class="ecf-var-tab" data-ecf-class-tier="custom" <?php echo empty($active_custom_classes) ? 'hidden' : ''; ?>>
+                        <button type="button" class="ecf-var-tab" data-ecf-class-tier="custom" data-ecf-tier-title="<?php echo esc_attr__('Own classes', 'ecf-framework'); ?>" data-ecf-tier-copy="<?php echo esc_attr__('Add your own semantic class names for project-specific naming that does not fit the predefined starter library.', 'ecf-framework'); ?>" <?php echo empty($active_custom_classes) ? 'hidden' : ''; ?>>
                             <?php echo esc_html__('Custom', 'ecf-framework'); ?>
                             <span class="ecf-var-tab__count" data-ecf-starter-custom-count><?php echo esc_html(count($active_custom_classes) . '/' . $custom_total); ?></span>
                         </button>
-                        <button type="button" class="ecf-var-tab" data-ecf-class-tier="existing-foreign" <?php echo ($elementor_class_total_count - count($active_sync_payload_classes)) <= 0 ? 'hidden' : ''; ?>>
+                        <button type="button" class="ecf-var-tab" data-ecf-class-tier="existing-foreign" data-ecf-tier-title="<?php echo esc_attr__('Only in Elementor', 'ecf-framework'); ?>" data-ecf-tier-copy="<?php echo esc_attr__('Review classes that already exist in Elementor but are not part of your current Layrix selection.', 'ecf-framework'); ?>" <?php echo ($elementor_class_total_count - count($active_sync_payload_classes)) <= 0 ? 'hidden' : ''; ?>>
                             <?php echo esc_html__('Only in Elementor', 'ecf-framework'); ?>
                             <span class="ecf-var-tab__count" data-ecf-existing-foreign-summary-count><?php echo esc_html((string) max(0, $elementor_class_total_count - count($active_sync_payload_classes))); ?></span>
                         </button>
                     </div>
                     <?php wp_nonce_field('ecf_class_library_sync', '_ecf_class_library_sync_nonce'); ?>
                     <div class="ecf-library-section" data-ecf-library-section="active">
+                        <div class="ecf-class-workspace__header ecf-class-workspace__header--active">
+                            <h3 data-ecf-active-workspace-title><?php echo esc_html__('Active classes', 'ecf-framework'); ?></h3>
+                            <p data-ecf-active-workspace-copy><?php echo esc_html__('Review which selected Layrix classes are currently part of your sync and what still only exists in Elementor.', 'ecf-framework'); ?></p>
+                        </div>
                         <div class="ecf-active-class-summary" data-ecf-active-class-summary>
                             <div class="ecf-active-class-summary__grid">
-                                <div class="ecf-active-class-summary__item" data-ecf-active-summary-item="basic" data-tip="<?php echo esc_attr__('Currently enabled starter classes from the basic library.', 'ecf-framework'); ?>" <?php echo empty($active_basic_classes) ? 'hidden' : ''; ?>>
-                                    <span><?php echo esc_html__('Basic active', 'ecf-framework'); ?></span>
-                                    <strong data-ecf-active-basic-count><?php echo esc_html((string) count($active_basic_classes)); ?></strong>
-                                </div>
-                                <div class="ecf-active-class-summary__item" data-ecf-active-summary-item="extras" data-tip="<?php echo esc_attr__('Currently enabled starter classes from the extra library.', 'ecf-framework'); ?>" <?php echo empty($active_extra_classes) ? 'hidden' : ''; ?>>
-                                    <span><?php echo esc_html__('Extras active', 'ecf-framework'); ?></span>
-                                    <strong data-ecf-active-extras-count><?php echo esc_html((string) count($active_extra_classes)); ?></strong>
-                                </div>
-                                <div class="ecf-active-class-summary__item" data-ecf-active-summary-item="utility" data-tip="<?php echo esc_attr__('Currently enabled utility classes from the curated helper set.', 'ecf-framework'); ?>" <?php echo empty($active_utility_classes) ? 'hidden' : ''; ?>>
-                                    <span><?php echo esc_html__('Utilities active', 'ecf-framework'); ?></span>
-                                    <strong data-ecf-active-utility-count><?php echo esc_html((string) count($active_utility_classes)); ?></strong>
-                                </div>
-                                <div class="ecf-active-class-summary__item" data-ecf-active-summary-item="custom" data-tip="<?php echo esc_attr__('Your own custom class names that you added in Layrix.', 'ecf-framework'); ?>" <?php echo empty($active_custom_classes) ? 'hidden' : ''; ?>>
-                                    <span><?php echo esc_html__('Own active', 'ecf-framework'); ?></span>
-                                    <strong data-ecf-active-custom-count><?php echo esc_html((string) count($active_custom_classes)); ?></strong>
-                                </div>
-                                <div class="ecf-active-class-summary__item" data-ecf-active-summary-item="helper" data-tip="<?php echo esc_attr__('Automatic helper classes that Layrix adds for technical sync cases. Example: ecf-container-boxed for boxed container widths in Elementor.', 'ecf-framework'); ?>" <?php echo empty($active_helper_classes) ? 'hidden' : ''; ?>>
-                                    <span><?php echo esc_html__('Auto helper', 'ecf-framework'); ?></span>
-                                    <strong data-ecf-active-helper-count><?php echo esc_html((string) count($active_helper_classes)); ?></strong>
-                                </div>
                                 <div class="ecf-active-class-summary__item ecf-active-class-summary__item--total" data-ecf-active-summary-item="total" data-tip="<?php echo esc_attr__('Total number of classes that Layrix would sync from the current selection.', 'ecf-framework'); ?>">
                                     <span><?php echo esc_html__('Layrix sync total', 'ecf-framework'); ?></span>
                                     <strong data-ecf-active-total-count><?php echo esc_html((string) count($active_sync_payload_classes)); ?></strong>
+                                    <p class="ecf-active-class-summary__copy" data-ecf-active-summary-copy="total"><?php echo esc_html__('These classes are currently ready to come from Layrix into Elementor during the next sync.', 'ecf-framework'); ?></p>
                                 </div>
                                 <div class="ecf-active-class-summary__item" data-ecf-active-summary-item="existing-foreign" data-tip="<?php echo esc_attr__('Classes that already exist in Elementor but are not part of your current Layrix selection.', 'ecf-framework'); ?>" <?php echo ($elementor_class_total_count - count($active_sync_payload_classes)) <= 0 ? 'hidden' : ''; ?>>
                                     <span><?php echo esc_html__('Only in Elementor', 'ecf-framework'); ?></span>
                                     <strong data-ecf-active-existing-foreign-count><?php echo esc_html((string) max(0, $elementor_class_total_count - count($active_sync_payload_classes))); ?></strong>
+                                    <p class="ecf-active-class-summary__copy"><?php echo esc_html__('These classes already exist there, but they are not currently selected in Layrix.', 'ecf-framework'); ?></p>
                                 </div>
                             </div>
                             <p class="ecf-class-library-actions__hint" data-ecf-active-class-hint>
@@ -1147,12 +1622,254 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
         $debug_history = $this->debug_history_entries();
         $generated_css = $this->build_generated_css($settings, true);
         $generated_css_download = 'data:text/css;charset=utf-8,' . rawurlencode($generated_css);
+        $design_health_snapshot = $this->website_design_health_checks($settings);
+        $design_health_checks = $design_health_snapshot['checks'] ?? [];
+        $design_health_counts = $design_health_snapshot['counts'] ?? ['good' => 0, 'notice' => 0, 'warn' => 0];
+        $smart_recommendations = $this->website_smart_recommendations($settings, $design_health_snapshot);
+        $style_presets = [
+            [
+                'slug' => 'glass-product',
+                'tone' => __('Modern', 'ecf-framework'),
+                'title' => __('Glass Product', 'ecf-framework'),
+                'description' => __('A crisp product look with cool indigo accents, airy neutrals and soft rounded surfaces.', 'ecf-framework'),
+                'heading_sample' => __('Product pages that feel clear', 'ecf-framework'),
+                'body_sample' => __('Great for SaaS, product marketing and clean interface-driven brands.', 'ecf-framework'),
+                'heading_font_stack' => 'Avenir Next, Avenir, "Helvetica Neue", Arial, sans-serif',
+                'body_font_stack' => 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+                'preview' => [
+                    'background' => '#f8fafc',
+                    'surface' => '#ffffff',
+                    'primary' => '#4f46e5',
+                    'accent' => '#14b8a6',
+                    'text' => '#0f172a',
+                ],
+                'preset' => [
+                    'general' => [
+                        'root_font_size' => '62.5',
+                        'base_body_text_size' => '16px',
+                        'base_body_font_weight' => '400',
+                        'base_font_family' => 'var(--ecf-font-primary)',
+                        'heading_font_family' => 'var(--ecf-font-secondary)',
+                        'content_max_width' => ['value' => '72', 'format' => 'ch'],
+                        'elementor_boxed_width' => ['value' => '1240', 'format' => 'px'],
+                        'base_text_color' => '#0f172a',
+                        'base_background_color' => '#f8fafc',
+                        'link_color' => '#4f46e5',
+                        'focus_color' => '#0ea5e9',
+                    ],
+                    'colors' => [
+                        'primary' => '#4f46e5',
+                        'secondary' => '#64748b',
+                        'accent' => '#14b8a6',
+                        'surface' => '#ffffff',
+                        'text' => '#0f172a',
+                    ],
+                    'radius' => [
+                        'xs' => ['min' => '6px', 'max' => '6px'],
+                        's' => ['min' => '10px', 'max' => '12px'],
+                        'm' => ['min' => '14px', 'max' => '16px'],
+                        'l' => ['min' => '20px', 'max' => '24px'],
+                        'xl' => ['min' => '30px', 'max' => '36px'],
+                        'full' => ['min' => '999px', 'max' => '999px'],
+                    ],
+                    'shadows' => [
+                        'xs' => '0 1px 2px rgba(15,23,42,0.06)',
+                        's' => '0 10px 24px rgba(15,23,42,0.08)',
+                        'm' => '0 20px 44px rgba(15,23,42,0.10)',
+                        'l' => '0 30px 70px rgba(15,23,42,0.12)',
+                        'xl' => '0 44px 96px rgba(15,23,42,0.14)',
+                        'inner' => 'inset 0 1px 0 rgba(255,255,255,0.55), inset 0 -1px 0 rgba(15,23,42,0.05)',
+                    ],
+                    'spacing' => [
+                        'min_base' => '16',
+                        'max_base' => '28',
+                        'min_ratio' => '1.25',
+                        'max_ratio' => '1.414',
+                        'base_index' => 'm',
+                        'fluid' => true,
+                        'min_vw' => '375',
+                        'max_vw' => '1280',
+                    ],
+                    'fonts' => [
+                        'primary' => 'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+                        'secondary' => 'Avenir Next, Avenir, "Helvetica Neue", Arial, sans-serif',
+                    ],
+                ],
+            ],
+            [
+                'slug' => 'warm-editorial',
+                'tone' => __('Editorial', 'ecf-framework'),
+                'title' => __('Warm Editorial', 'ecf-framework'),
+                'description' => __('Creamy surfaces, elegant serif headlines and softer shadows for storytelling and premium content.', 'ecf-framework'),
+                'heading_sample' => __('Stories with more atmosphere', 'ecf-framework'),
+                'body_sample' => __('A gentler direction for brands, magazines and long-form reading experiences.', 'ecf-framework'),
+                'heading_font_stack' => 'Iowan Old Style, "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif',
+                'body_font_stack' => 'Avenir Next, Avenir, "Helvetica Neue", Arial, sans-serif',
+                'preview' => [
+                    'background' => '#f5efe7',
+                    'surface' => '#fffaf3',
+                    'primary' => '#7c3aed',
+                    'accent' => '#c2410c',
+                    'text' => '#1f2937',
+                ],
+                'preset' => [
+                    'general' => [
+                        'root_font_size' => '62.5',
+                        'base_body_text_size' => '17px',
+                        'base_body_font_weight' => '400',
+                        'base_font_family' => 'var(--ecf-font-primary)',
+                        'heading_font_family' => 'var(--ecf-font-secondary)',
+                        'content_max_width' => ['value' => '68', 'format' => 'ch'],
+                        'elementor_boxed_width' => ['value' => '1180', 'format' => 'px'],
+                        'base_text_color' => '#1f2937',
+                        'base_background_color' => '#f5efe7',
+                        'link_color' => '#7c3aed',
+                        'focus_color' => '#c2410c',
+                    ],
+                    'colors' => [
+                        'primary' => '#7c3aed',
+                        'secondary' => '#6b7280',
+                        'accent' => '#c2410c',
+                        'surface' => '#fffaf3',
+                        'text' => '#1f2937',
+                    ],
+                    'radius' => [
+                        'xs' => ['min' => '4px', 'max' => '4px'],
+                        's' => ['min' => '8px', 'max' => '10px'],
+                        'm' => ['min' => '12px', 'max' => '14px'],
+                        'l' => ['min' => '18px', 'max' => '22px'],
+                        'xl' => ['min' => '28px', 'max' => '34px'],
+                        'full' => ['min' => '999px', 'max' => '999px'],
+                    ],
+                    'shadows' => [
+                        'xs' => '0 1px 2px rgba(31,41,55,0.05)',
+                        's' => '0 6px 16px rgba(31,41,55,0.08)',
+                        'm' => '0 12px 28px rgba(31,41,55,0.10)',
+                        'l' => '0 20px 46px rgba(31,41,55,0.12)',
+                        'xl' => '0 32px 72px rgba(31,41,55,0.14)',
+                        'inner' => 'inset 0 2px 8px rgba(31,41,55,0.07)',
+                    ],
+                    'spacing' => [
+                        'min_base' => '17',
+                        'max_base' => '30',
+                        'min_ratio' => '1.2',
+                        'max_ratio' => '1.333',
+                        'base_index' => 'm',
+                        'fluid' => true,
+                        'min_vw' => '375',
+                        'max_vw' => '1280',
+                    ],
+                    'fonts' => [
+                        'primary' => 'Avenir Next, Avenir, "Helvetica Neue", Arial, sans-serif',
+                        'secondary' => 'Iowan Old Style, "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif',
+                    ],
+                ],
+            ],
+            [
+                'slug' => 'quiet-luxury',
+                'tone' => __('Premium', 'ecf-framework'),
+                'title' => __('Quiet Luxury', 'ecf-framework'),
+                'description' => __('Dark graphite text, rich plum accents and balanced rounding for a polished premium foundation.', 'ecf-framework'),
+                'heading_sample' => __('Refined without feeling loud', 'ecf-framework'),
+                'body_sample' => __('A calm premium base when you want elegance, contrast and a little more depth.', 'ecf-framework'),
+                'heading_font_stack' => 'Georgia, "Times New Roman", serif',
+                'body_font_stack' => 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+                'preview' => [
+                    'background' => '#faf7fb',
+                    'surface' => '#ffffff',
+                    'primary' => '#6d28d9',
+                    'accent' => '#0f766e',
+                    'text' => '#111827',
+                ],
+                'preset' => [
+                    'general' => [
+                        'root_font_size' => '62.5',
+                        'base_body_text_size' => '16px',
+                        'base_body_font_weight' => '500',
+                        'base_font_family' => 'var(--ecf-font-primary)',
+                        'heading_font_family' => 'var(--ecf-font-secondary)',
+                        'content_max_width' => ['value' => '70', 'format' => 'ch'],
+                        'elementor_boxed_width' => ['value' => '1200', 'format' => 'px'],
+                        'base_text_color' => '#111827',
+                        'base_background_color' => '#faf7fb',
+                        'link_color' => '#6d28d9',
+                        'focus_color' => '#0f766e',
+                    ],
+                    'colors' => [
+                        'primary' => '#6d28d9',
+                        'secondary' => '#475569',
+                        'accent' => '#0f766e',
+                        'surface' => '#ffffff',
+                        'text' => '#111827',
+                    ],
+                    'radius' => [
+                        'xs' => ['min' => '5px', 'max' => '5px'],
+                        's' => ['min' => '9px', 'max' => '11px'],
+                        'm' => ['min' => '13px', 'max' => '16px'],
+                        'l' => ['min' => '20px', 'max' => '24px'],
+                        'xl' => ['min' => '32px', 'max' => '38px'],
+                        'full' => ['min' => '999px', 'max' => '999px'],
+                    ],
+                    'shadows' => [
+                        'xs' => '0 1px 2px rgba(17,24,39,0.05)',
+                        's' => '0 8px 18px rgba(17,24,39,0.07)',
+                        'm' => '0 18px 38px rgba(17,24,39,0.10)',
+                        'l' => '0 28px 62px rgba(17,24,39,0.12)',
+                        'xl' => '0 40px 86px rgba(17,24,39,0.14)',
+                        'inner' => 'inset 0 1px 0 rgba(255,255,255,0.65), inset 0 -1px 0 rgba(17,24,39,0.04)',
+                    ],
+                    'spacing' => [
+                        'min_base' => '16',
+                        'max_base' => '26',
+                        'min_ratio' => '1.2',
+                        'max_ratio' => '1.333',
+                        'base_index' => 'm',
+                        'fluid' => true,
+                        'min_vw' => '375',
+                        'max_vw' => '1280',
+                    ],
+                    'fonts' => [
+                        'primary' => 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+                        'secondary' => 'Georgia, "Times New Roman", serif',
+                    ],
+                ],
+            ],
+        ];
+        $section_recipes = [
+            [
+                'tone' => __('Hero', 'ecf-framework'),
+                'title' => __('Hero Intro', 'ecf-framework'),
+                'description' => __('A clean first screen with headline, supporting copy, one main call to action and optional media.', 'ecf-framework'),
+                'headline' => __('Launch with a clear promise', 'ecf-framework'),
+                'body' => __('Use this when the first section should explain the offer quickly and feel intentional, not crowded.', 'ecf-framework'),
+                'classes' => 'ecf-section ecf-hero ecf-hero__content ecf-stack-l',
+                'tokens' => '--ecf-content-max-width --ecf-space-xl --ecf-radius-l',
+            ],
+            [
+                'tone' => __('Grid', 'ecf-framework'),
+                'title' => __('Feature Grid', 'ecf-framework'),
+                'description' => __('A balanced block for benefits, services or product highlights with clean cards and steady rhythm.', 'ecf-framework'),
+                'headline' => __('Show the core strengths fast', 'ecf-framework'),
+                'body' => __('Great for three to six cards when you want a scannable section with one shared visual system.', 'ecf-framework'),
+                'classes' => 'ecf-section ecf-section__inner ecf-layout ecf-card ecf-card__body ecf-stack-m',
+                'tokens' => '--ecf-space-l --ecf-shadow-s --ecf-radius-m',
+            ],
+            [
+                'tone' => __('CTA', 'ecf-framework'),
+                'title' => __('CTA Band', 'ecf-framework'),
+                'description' => __('A compact call-to-action block that closes a section with one message, one button and strong contrast.', 'ecf-framework'),
+                'headline' => __('Guide the next click clearly', 'ecf-framework'),
+                'body' => __('Use it after content sections when you want one obvious next step instead of adding another long paragraph.', 'ecf-framework'),
+                'classes' => 'ecf-section ecf-card ecf-card__body ecf-button ecf-button--primary ecf-stack-m',
+                'tokens' => '--ecf-primary --ecf-space-m --ecf-shadow-xs',
+            ],
+        ];
         ?>
         <div class="ecf-panel" data-panel="components">
             <div class="ecf-grid">
                 <div class="ecf-card">
                     <div class="ecf-general-settings__header">
-      <h2><?php echo esc_html__('General Settings', 'ecf-framework'); ?></h2>
+      <h2><?php echo esc_html__('Base Settings', 'ecf-framework'); ?></h2>
                         <div class="ecf-format-picker__tooltip ecf-format-picker__tooltip--header" data-ecf-format-tooltip hidden><?php echo esc_html($boxed_format_options[$boxed_selected_format]['tip']); ?></div>
                     </div>
                     <p class="ecf-muted-copy ecf-class-library-intro"><?php echo esc_html__('Manage website basics, editor behavior and system settings from one shared control area.', 'ecf-framework'); ?></p>
@@ -1163,6 +1880,16 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                         <button type="button" class="ecf-var-tab" data-ecf-general-tab="favorites" data-ecf-new-key="general-favorites" data-tip="<?php echo esc_attr__('Pinned quick settings from Website and Plugin basics.', 'ecf-framework'); ?>"><span class="dashicons dashicons-heart" aria-hidden="true"></span><?php echo esc_html__('Favorites', 'ecf-framework'); ?></button>
                     </div>
                     <div class="ecf-general-section is-active ecf-general-section--website" data-ecf-general-section="website" data-ecf-layout-group="components-website">
+                        <div class="ecf-start-banner" data-ecf-start-banner>
+                            <div class="ecf-start-banner__copy">
+                                <strong><?php echo esc_html__('Getting started', 'ecf-framework'); ?></strong>
+                                <p><?php echo esc_html__('Start with website basics first: choose a style preset or font pairing, set colors and widths, then sync only the pieces you really want in Elementor.', 'ecf-framework'); ?></p>
+                            </div>
+                            <div class="ecf-start-banner__actions">
+                                <button type="button" class="ecf-btn ecf-btn--secondary ecf-btn--sm" data-ecf-start-focus="style-presets"><?php echo esc_html__('Show presets', 'ecf-framework'); ?></button>
+                                <button type="button" class="ecf-btn ecf-btn--ghost ecf-btn--sm" data-ecf-start-dismiss><?php echo esc_html__('Got it', 'ecf-framework'); ?></button>
+                            </div>
+                        </div>
                         <div class="ecf-general-overview-card ecf-general-overview-card--compact" data-ecf-layout-item="website-overview">
                             <div>
                                 <strong><?php echo esc_html__('Website basics', 'ecf-framework'); ?></strong>
@@ -1172,6 +1899,151 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                 <span><?php echo esc_html__('Type', 'ecf-framework'); ?></span>
                                 <span><?php echo esc_html__('Widths', 'ecf-framework'); ?></span>
                                 <span><?php echo esc_html__('Colors', 'ecf-framework'); ?></span>
+                            </div>
+                        </div>
+                        <div class="ecf-card ecf-style-presets-card" data-ecf-layout-item="website-style-presets">
+                            <div class="ecf-style-presets-card__header">
+                                <div>
+                                    <h2><?php echo esc_html__('Style Presets', 'ecf-framework'); ?></h2>
+                                    <p><?php echo esc_html__('Apply one complete visual direction when you want a faster start for type, colors, radii, shadows and website basics.', 'ecf-framework'); ?></p>
+                                </div>
+                            </div>
+                            <div class="ecf-style-presets-grid">
+                                <?php foreach ($style_presets as $preset): ?>
+                                    <article class="ecf-style-preset">
+                                        <div class="ecf-style-preset__meta">
+                                            <span class="ecf-preview-pill"><?php echo esc_html($preset['tone']); ?></span>
+                                            <h3><?php echo esc_html($preset['title']); ?></h3>
+                                            <p><?php echo esc_html($preset['description']); ?></p>
+                                        </div>
+                                        <div class="ecf-style-preset__preview" style="<?php echo esc_attr('--ecf-style-preset-bg:' . $preset['preview']['background'] . ';--ecf-style-preset-surface:' . $preset['preview']['surface'] . ';--ecf-style-preset-primary:' . $preset['preview']['primary'] . ';--ecf-style-preset-accent:' . $preset['preview']['accent'] . ';--ecf-style-preset-text:' . $preset['preview']['text'] . ';'); ?>">
+                                            <div class="ecf-style-preset__swatches" aria-hidden="true">
+                                                <span></span><span></span><span></span><span></span>
+                                            </div>
+                                            <div class="ecf-style-preset__surface">
+                                                <strong style="font-family: <?php echo esc_attr($preset['heading_font_stack']); ?>;"><?php echo esc_html($preset['heading_sample']); ?></strong>
+                                                <p style="font-family: <?php echo esc_attr($preset['body_font_stack']); ?>;"><?php echo esc_html($preset['body_sample']); ?></p>
+                                                <div class="ecf-style-preset__actions" aria-hidden="true">
+                                                    <span></span><span></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <button type="button"
+                                                class="ecf-btn ecf-btn--secondary ecf-style-preset__apply"
+                                                data-ecf-style-preset-apply
+                                                data-ecf-style-preset="<?php echo esc_attr(wp_json_encode($preset['preset'])); ?>">
+                                            <?php echo esc_html__('Use this style preset', 'ecf-framework'); ?>
+                                        </button>
+                                    </article>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <div class="ecf-card ecf-design-health-card" data-ecf-layout-item="website-design-health">
+                            <div class="ecf-design-health-card__header">
+                                <div>
+                                    <h2><?php echo esc_html__('Design Health Check', 'ecf-framework'); ?></h2>
+                                    <p><?php echo esc_html__('A quick review of readability, hierarchy, rhythm and cleanup signals before you refine the details.', 'ecf-framework'); ?></p>
+                                </div>
+                                <div class="ecf-design-health-card__summary">
+                                    <?php if (!empty($design_health_counts['warn'])): ?>
+                                        <span class="ecf-design-health-badge ecf-design-health-badge--warn"><?php echo esc_html(sprintf(__('%d to fix', 'ecf-framework'), (int) $design_health_counts['warn'])); ?></span>
+                                    <?php endif; ?>
+                                    <?php if (!empty($design_health_counts['notice'])): ?>
+                                        <span class="ecf-design-health-badge ecf-design-health-badge--notice"><?php echo esc_html(sprintf(__('%d to review', 'ecf-framework'), (int) $design_health_counts['notice'])); ?></span>
+                                    <?php endif; ?>
+                                    <?php if (!empty($design_health_counts['good'])): ?>
+                                        <span class="ecf-design-health-badge ecf-design-health-badge--good"><?php echo esc_html(sprintf(__('%d look good', 'ecf-framework'), (int) $design_health_counts['good'])); ?></span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <div class="ecf-design-health-list">
+                                <?php foreach ($design_health_checks as $check): ?>
+                                    <article class="ecf-design-health-item ecf-design-health-item--<?php echo esc_attr($check['status'] ?? 'notice'); ?>">
+                                        <div class="ecf-design-health-item__status" aria-hidden="true"></div>
+                                        <div class="ecf-design-health-item__copy">
+                                            <div class="ecf-design-health-item__topline">
+                                                <strong><?php echo esc_html($check['title'] ?? ''); ?></strong>
+                                                <?php if (!empty($check['value'])): ?>
+                                                    <span><?php echo esc_html($check['value']); ?></span>
+                                                <?php endif; ?>
+                                            </div>
+                                            <p><?php echo esc_html($check['message'] ?? ''); ?></p>
+                                        </div>
+                                    </article>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <div class="ecf-card ecf-smart-recommendations-card" data-ecf-layout-item="website-smart-recommendations">
+                            <div class="ecf-smart-recommendations-card__header">
+                                <div>
+                                    <h2><?php echo esc_html__('Smart Recommendations', 'ecf-framework'); ?></h2>
+                                    <p><?php echo esc_html__('Use a few small one-click improvements when you want Layrix to smooth out the most common design friction for you.', 'ecf-framework'); ?></p>
+                                </div>
+                            </div>
+                            <div class="ecf-smart-recommendations-grid">
+                                <?php foreach ($smart_recommendations as $recommendation): ?>
+                                    <article class="ecf-smart-recommendation">
+                                        <div class="ecf-smart-recommendation__meta">
+                                            <span class="ecf-preview-pill"><?php echo esc_html($recommendation['tone'] ?? ''); ?></span>
+                                            <h3><?php echo esc_html($recommendation['title'] ?? ''); ?></h3>
+                                            <p><?php echo esc_html($recommendation['description'] ?? ''); ?></p>
+                                        </div>
+                                        <div class="ecf-smart-recommendation__impact">
+                                            <strong><?php echo esc_html__('Why this helps', 'ecf-framework'); ?></strong>
+                                            <p><?php echo esc_html($recommendation['impact'] ?? ''); ?></p>
+                                        </div>
+                                        <?php if (!empty($recommendation['payload']) && !empty($recommendation['apply_label'])): ?>
+                                            <button type="button"
+                                                    class="ecf-btn ecf-btn--secondary ecf-smart-recommendation__apply"
+                                                    data-ecf-smart-recommendation-apply
+                                                    data-ecf-smart-recommendation="<?php echo esc_attr(wp_json_encode($recommendation['payload'])); ?>">
+                                                <?php echo esc_html($recommendation['apply_label']); ?>
+                                            </button>
+                                        <?php endif; ?>
+                                    </article>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <div class="ecf-card ecf-section-recipes-card" data-ecf-layout-item="website-section-recipes">
+                            <div class="ecf-section-recipes-card__header">
+                                <div>
+                                    <h2><?php echo esc_html__('Section Recipes', 'ecf-framework'); ?></h2>
+                                    <p><?php echo esc_html__('Start with a few proven section patterns when you want a faster structure instead of building every block from scratch.', 'ecf-framework'); ?></p>
+                                </div>
+                            </div>
+                            <div class="ecf-section-recipes-grid">
+                                <?php foreach ($section_recipes as $recipe): ?>
+                                    <article class="ecf-section-recipe">
+                                        <div class="ecf-section-recipe__meta">
+                                            <span class="ecf-preview-pill"><?php echo esc_html($recipe['tone']); ?></span>
+                                            <h3><?php echo esc_html($recipe['title']); ?></h3>
+                                            <p><?php echo esc_html($recipe['description']); ?></p>
+                                        </div>
+                                        <div class="ecf-section-recipe__preview" aria-hidden="true">
+                                            <strong><?php echo esc_html($recipe['headline']); ?></strong>
+                                            <p><?php echo esc_html($recipe['body']); ?></p>
+                                            <div class="ecf-section-recipe__preview-actions">
+                                                <span></span><span></span>
+                                            </div>
+                                        </div>
+                                        <div class="ecf-section-recipe__fields">
+                                            <div class="ecf-section-recipe__field">
+                                                <div class="ecf-section-recipe__field-topline">
+                                                    <strong><?php echo esc_html__('Suggested classes', 'ecf-framework'); ?></strong>
+                                                    <button type="button" class="ecf-copy-pill" data-copy="<?php echo esc_attr($recipe['classes']); ?>"><?php echo esc_html__('Copy', 'ecf-framework'); ?></button>
+                                                </div>
+                                                <code><?php echo esc_html($recipe['classes']); ?></code>
+                                            </div>
+                                            <div class="ecf-section-recipe__field">
+                                                <div class="ecf-section-recipe__field-topline">
+                                                    <strong><?php echo esc_html__('Helpful tokens', 'ecf-framework'); ?></strong>
+                                                    <button type="button" class="ecf-copy-pill" data-copy="<?php echo esc_attr($recipe['tokens']); ?>"><?php echo esc_html__('Copy', 'ecf-framework'); ?></button>
+                                                </div>
+                                                <code><?php echo esc_html($recipe['tokens']); ?></code>
+                                            </div>
+                                        </div>
+                                    </article>
+                                <?php endforeach; ?>
                             </div>
                         </div>
                         <div class="ecf-var-tabs ecf-website-subtabs" data-ecf-website-tabs>
@@ -1210,6 +2082,9 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                 </div>
                                 <div class="ecf-type-size-card" data-ecf-layout-item="type-size-body-weight">
                                     <?php $this->render_base_body_font_weight_field($settings); ?>
+                                </div>
+                                <div class="ecf-type-size-card" data-ecf-layout-item="type-size-browser-reset">
+                                    <?php $this->render_typography_browser_margin_reset_field($settings); ?>
                                 </div>
                                 <div class="ecf-type-size-card" data-ecf-layout-item="type-size-root">
                                     <?php $this->render_root_font_size_select($settings, true); ?>
@@ -1348,90 +2223,7 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                 </span>
                                 <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
                             </summary>
-                            <div class="ecf-root-font-impact"
-                         data-ecf-root-font-impact
-                         data-type-step="<?php echo esc_attr($settings['typography']['scale']['base_index'] ?? 'm'); ?>"
-                         data-spacing-step="<?php echo esc_attr($settings['spacing']['base_index'] ?? 'm'); ?>"
-                             data-radius-name="<?php echo esc_attr(sanitize_key($radius_root_preview['name'] ?? 'm')); ?>"
-                             data-label-type="<?php echo esc_attr__('Typography token', 'ecf-framework'); ?>"
-                             data-label-spacing="<?php echo esc_attr__('Spacing token', 'ecf-framework'); ?>"
-                             data-label-radius="<?php echo esc_attr__('Radius token', 'ecf-framework'); ?>"
-                             data-label-min="<?php echo esc_attr__('Minimum', 'ecf-framework'); ?>"
-                             data-label-max="<?php echo esc_attr__('Maximum', 'ecf-framework'); ?>"
-                             data-label-base="<?php echo esc_attr__('Current rem base', 'ecf-framework'); ?>">
-                            <div class="ecf-root-font-impact__header">
-                                <strong><?php echo esc_html__('Visible effect of the root font size', 'ecf-framework'); ?></strong>
-                                <span data-ecf-root-font-base><?php echo esc_html(sprintf(__('Currently: %spx = 1rem', 'ecf-framework'), $root_base_px)); ?></span>
-                            </div>
-                            <div class="ecf-root-font-impact__items">
-                                <div class="ecf-root-font-impact__item">
-                                    <span><?php echo esc_html__('Typography token', 'ecf-framework'); ?></span>
-                                    <div class="ecf-root-font-impact__token-row">
-                                        <code data-ecf-root-type-token><?php echo esc_html('--ecf-text-' . ($type_root_preview['step'] ?? ($settings['typography']['scale']['base_index'] ?? 'm'))); ?></code>
-                                        <button type="button" class="ecf-root-font-impact__copy-toggle" data-ecf-root-copy-toggle="<?php echo esc_attr__('Toggle clamp output', 'ecf-framework'); ?>">
-                                            <span class="dashicons dashicons-editor-code"></span>
-                                        </button>
-                                    </div>
-                                    <button type="button" class="ecf-root-font-impact__copy-pop" data-ecf-root-type-copy></button>
-                                    <div class="ecf-root-font-impact__range">
-                                        <div class="ecf-root-font-impact__metric">
-                                            <span data-ecf-root-type-min-label><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
-                                            <strong data-ecf-root-type-min><?php echo esc_html(($type_root_preview['min_px'] ?? $type_root_preview['minPx'] ?? '') . 'px'); ?></strong>
-                                            <em data-ecf-root-type-min-preview><?php echo esc_html($this->type_preview_text_for_step((string) ($type_root_preview['step'] ?? ($settings['typography']['scale']['base_index'] ?? 'm')), $settings)); ?></em>
-                                        </div>
-                                        <div class="ecf-root-font-impact__metric">
-                                            <span data-ecf-root-type-max-label><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
-                                            <strong data-ecf-root-type-max><?php echo esc_html(($type_root_preview['max_px'] ?? $type_root_preview['maxPx'] ?? '') . 'px'); ?></strong>
-                                            <em data-ecf-root-type-max-preview><?php echo esc_html($this->type_preview_text_for_step((string) ($type_root_preview['step'] ?? ($settings['typography']['scale']['base_index'] ?? 'm')), $settings)); ?></em>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="ecf-root-font-impact__item">
-                                    <span><?php echo esc_html__('Spacing token', 'ecf-framework'); ?></span>
-                                    <div class="ecf-root-font-impact__token-row">
-                                        <code data-ecf-root-spacing-token><?php echo esc_html('--ecf-' . sanitize_key($settings['spacing']['prefix'] ?? 'space') . '-' . ($spacing_root_preview['step'] ?? ($settings['spacing']['base_index'] ?? 'm'))); ?></code>
-                                        <button type="button" class="ecf-root-font-impact__copy-toggle" data-ecf-root-copy-toggle="<?php echo esc_attr__('Toggle clamp output', 'ecf-framework'); ?>">
-                                            <span class="dashicons dashicons-editor-code"></span>
-                                        </button>
-                                    </div>
-                                    <button type="button" class="ecf-root-font-impact__copy-pop" data-ecf-root-spacing-copy></button>
-                                    <div class="ecf-root-font-impact__range">
-                                        <div class="ecf-root-font-impact__metric">
-                                            <span data-ecf-root-spacing-min-label><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
-                                            <strong data-ecf-root-spacing-min><?php echo esc_html(($spacing_root_preview['min_px'] ?? $spacing_root_preview['minPx'] ?? '') . 'px'); ?></strong>
-                                            <div class="ecf-root-font-impact__bar"><div class="ecf-root-font-impact__bar-fill" data-ecf-root-spacing-min-bar></div></div>
-                                        </div>
-                                        <div class="ecf-root-font-impact__metric">
-                                            <span data-ecf-root-spacing-max-label><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
-                                            <strong data-ecf-root-spacing-max><?php echo esc_html(($spacing_root_preview['max_px'] ?? $spacing_root_preview['maxPx'] ?? '') . 'px'); ?></strong>
-                                            <div class="ecf-root-font-impact__bar"><div class="ecf-root-font-impact__bar-fill" data-ecf-root-spacing-max-bar></div></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="ecf-root-font-impact__item">
-                                    <span><?php echo esc_html__('Radius token', 'ecf-framework'); ?></span>
-                                    <div class="ecf-root-font-impact__token-row">
-                                        <code data-ecf-root-radius-token><?php echo esc_html('--ecf-radius-' . sanitize_key($radius_root_preview['name'] ?? 'm')); ?></code>
-                                        <button type="button" class="ecf-root-font-impact__copy-toggle" data-ecf-root-copy-toggle="<?php echo esc_attr__('Toggle clamp output', 'ecf-framework'); ?>">
-                                            <span class="dashicons dashicons-editor-code"></span>
-                                        </button>
-                                    </div>
-                                    <button type="button" class="ecf-root-font-impact__copy-pop" data-ecf-root-radius-copy></button>
-                                    <div class="ecf-root-font-impact__range">
-                                        <div class="ecf-root-font-impact__metric">
-                                            <span data-ecf-root-radius-min-label><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
-                                            <strong data-ecf-root-radius-min><?php echo esc_html($this->format_preview_number($radius_root_preview['min'] ?? 0) . 'px'); ?></strong>
-                                            <div class="ecf-root-font-impact__radius-preview" data-ecf-root-radius-min-preview></div>
-                                        </div>
-                                        <div class="ecf-root-font-impact__metric">
-                                            <span data-ecf-root-radius-max-label><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
-                                            <strong data-ecf-root-radius-max><?php echo esc_html($this->format_preview_number($radius_root_preview['max'] ?? ($radius_root_preview['min'] ?? 0)) . 'px'); ?></strong>
-                                            <div class="ecf-root-font-impact__radius-preview" data-ecf-root-radius-max-preview></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            </div>
+                            <?php $this->render_root_font_impact_panel($settings); ?>
                         </details>
                         <details class="ecf-settings-group ecf-settings-group--details" data-ecf-layout-item="website-generated-css">
                             <summary class="ecf-settings-group__summary">
@@ -1680,6 +2472,113 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
         );
         $body_size_value = $this->derived_base_body_text_size($settings);
         $body_size_parts = $this->parse_css_size_parts($body_size_value);
+        $font_pairing_body_step = $this->typography_step_preview_item('m', $settings);
+        $font_pairing_heading_step = $this->typography_step_preview_item('2xl', $settings);
+        $font_pairing_body_max = trim((string) ($font_pairing_body_step['max_px'] ?? '18'));
+        $font_pairing_heading_max = trim((string) ($font_pairing_heading_step['max_px'] ?? '28'));
+        $font_pairing_body_label = '--ecf-text-m' . ' · ' . $font_pairing_body_max . 'px';
+        $font_pairing_heading_label = '--ecf-text-2xl' . ' · ' . $font_pairing_heading_max . 'px';
+        $font_pairings = [
+            [
+                'slug' => 'editorial-contrast',
+                'tone_key' => 'editorial',
+                'tone' => __('Editorial', 'ecf-framework'),
+                'title' => __('Editorial Contrast', 'ecf-framework'),
+                'description' => __('High-contrast serif headlines with a quiet sans body font for polished marketing pages.', 'ecf-framework'),
+                'heading_family' => 'DM Serif Display',
+                'body_family' => 'Inter',
+                'heading_sample' => __('Design that feels premium at first glance', 'ecf-framework'),
+                'body_sample' => __('Readable body copy keeps longer pages calm while the headline brings character.', 'ecf-framework'),
+            ],
+            [
+                'slug' => 'editorial-modernist',
+                'tone_key' => 'editorial',
+                'tone' => __('Editorial', 'ecf-framework'),
+                'title' => __('Modern Editorial', 'ecf-framework'),
+                'description' => __('Sharp magazine-like headlines with a clean editorial body font for stories, launches and standout sections.', 'ecf-framework'),
+                'heading_family' => 'Cormorant Garamond',
+                'body_family' => 'Plus Jakarta Sans',
+                'heading_sample' => __('Story-first design with a modern edge', 'ecf-framework'),
+                'body_sample' => __('This pairing feels more cultured and expressive while the body copy stays crisp and contemporary.', 'ecf-framework'),
+            ],
+            [
+                'slug' => 'calm-premium',
+                'tone_key' => 'premium',
+                'tone' => __('Premium', 'ecf-framework'),
+                'title' => __('Calm Premium', 'ecf-framework'),
+                'description' => __('Elegant serif headlines paired with a modern sans for brands that should feel refined, soft, and trustworthy.', 'ecf-framework'),
+                'heading_family' => 'Playfair Display',
+                'body_family' => 'Manrope',
+                'heading_sample' => __('Quiet luxury without feeling distant', 'ecf-framework'),
+                'body_sample' => __('This pairing gives headings warmth while keeping the reading experience contemporary and clear.', 'ecf-framework'),
+            ],
+            [
+                'slug' => 'premium-boutique',
+                'tone_key' => 'premium',
+                'tone' => __('Premium', 'ecf-framework'),
+                'title' => __('Boutique Premium', 'ecf-framework'),
+                'description' => __('Refined display headlines with a smooth sans body for premium brands, studios and service businesses.', 'ecf-framework'),
+                'heading_family' => 'Bodoni Moda',
+                'body_family' => 'Outfit',
+                'heading_sample' => __('Elegant detail with clear modern support', 'ecf-framework'),
+                'body_sample' => __('The contrast feels luxurious, while the body font keeps the interface grounded and easy to scan.', 'ecf-framework'),
+            ],
+            [
+                'slug' => 'modern-systems',
+                'tone_key' => 'modern',
+                'tone' => __('Modern', 'ecf-framework'),
+                'title' => __('Modern Systems', 'ecf-framework'),
+                'description' => __('A contemporary sans headline with a neutral body font for product, SaaS, and interface-heavy sites.', 'ecf-framework'),
+                'heading_family' => 'Space Grotesk',
+                'body_family' => 'Source Sans 3',
+                'heading_sample' => __('A crisp system for modern product pages', 'ecf-framework'),
+                'body_sample' => __('Balanced proportions and strong readability make this pair easy to use across many sections.', 'ecf-framework'),
+            ],
+            [
+                'slug' => 'modern-friendly',
+                'tone_key' => 'modern',
+                'tone' => __('Modern', 'ecf-framework'),
+                'title' => __('Friendly Modern', 'ecf-framework'),
+                'description' => __('Soft contemporary headlines with an approachable body font for products, startups and service pages.', 'ecf-framework'),
+                'heading_family' => 'Sora',
+                'body_family' => 'Public Sans',
+                'heading_sample' => __('Modern without feeling cold or technical', 'ecf-framework'),
+                'body_sample' => __('This version feels simpler and warmer while still working well for interfaces and long-form content.', 'ecf-framework'),
+            ],
+            [
+                'slug' => 'classic-reader',
+                'tone_key' => 'classic',
+                'tone' => __('Classic', 'ecf-framework'),
+                'title' => __('Classic Reader', 'ecf-framework'),
+                'description' => __('A familiar reading-focused serif headline with a clean sans body for content-rich websites.', 'ecf-framework'),
+                'heading_family' => 'Merriweather',
+                'body_family' => 'Work Sans',
+                'heading_sample' => __('Built for articles, stories, and long reads', 'ecf-framework'),
+                'body_sample' => __('The serif creates confidence in headings while the body font stays practical for longer text blocks.', 'ecf-framework'),
+            ],
+            [
+                'slug' => 'classic-journal',
+                'tone_key' => 'classic',
+                'tone' => __('Classic', 'ecf-framework'),
+                'title' => __('Classic Journal', 'ecf-framework'),
+                'description' => __('Traditional literary headlines with a restrained body font for trusted, reading-heavy websites.', 'ecf-framework'),
+                'heading_family' => 'Libre Baskerville',
+                'body_family' => 'Lato',
+                'heading_sample' => __('A timeless reading rhythm for thoughtful content', 'ecf-framework'),
+                'body_sample' => __('It feels familiar, trustworthy and calm, especially on editorial pages or structured long reads.', 'ecf-framework'),
+            ],
+        ];
+        $font_pairing_groups = [];
+        foreach ($font_pairings as $pairing) {
+            $tone_key = (string) ($pairing['tone_key'] ?? 'default');
+            if (!isset($font_pairing_groups[$tone_key])) {
+                $font_pairing_groups[$tone_key] = [
+                    'tone' => $pairing['tone'],
+                    'items' => [],
+                ];
+            }
+            $font_pairing_groups[$tone_key]['items'][] = $pairing;
+        }
         ?>
         <div class="ecf-panel" data-panel="typography">
             <div class="ecf-card ecf-panel-shell" data-ecf-layout-item="typography-shell">
@@ -1687,9 +2586,148 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                     <h2><?php echo esc_html__('Typography', 'ecf-framework'); ?></h2>
                 </div>
                 <p class="ecf-muted-copy ecf-class-library-intro"><?php echo esc_html__('Build your type scale, assign body and heading fonts, and review the generated text tokens in one consistent typography workspace.', 'ecf-framework'); ?></p>
-                <div class="ecf-typography-layout" data-ecf-layout-group="typography-main">
-                    <div class="ecf-typography-sidebar" data-ecf-layout-item="typography-settings">
-                        <div class="ecf-card">
+                <div class="ecf-var-tabs ecf-typography-tabs" data-ecf-typography-tabs>
+                    <button type="button" class="ecf-var-tab is-active" data-ecf-typography-tab="fonts" aria-pressed="true"><?php echo esc_html__('Fonts', 'ecf-framework'); ?></button>
+                    <button type="button" class="ecf-var-tab" data-ecf-typography-tab="scale" aria-pressed="false"><?php echo esc_html__('Live Preview', 'ecf-framework'); ?></button>
+                </div>
+                <div class="ecf-typography-tab-panel is-active" data-ecf-typography-section="fonts">
+                    <div class="ecf-card ecf-font-pairings-card">
+                        <div class="ecf-font-pairings-card__header">
+                            <div>
+                                <h2><?php echo esc_html__('Recommended Font Pairings', 'ecf-framework'); ?></h2>
+                                <p><?php echo esc_html__('Choose a ready-made headline and body combination when you want a faster, more confident typography start.', 'ecf-framework'); ?></p>
+                            </div>
+                        </div>
+                        <div class="ecf-font-pairings-grid">
+                            <?php foreach ($font_pairing_groups as $group_key => $group): ?>
+                                <?php $pairing = $group['items'][0]; ?>
+                                <article class="ecf-font-pairing" data-ecf-font-pairing-card data-ecf-font-pairing-current="<?php echo esc_attr($pairing['slug']); ?>">
+                                    <div class="ecf-font-pairing__meta">
+                                        <div class="ecf-font-pairing__topline">
+                                            <span class="ecf-preview-pill" data-ecf-font-pairing-tone><?php echo esc_html($pairing['tone']); ?></span>
+                                            <div class="ecf-font-pairing__actions">
+                                                <button type="button"
+                                                        class="ecf-btn ecf-btn--ghost ecf-btn--sm ecf-font-pairing__icon"
+                                                        data-ecf-font-pairing-reset
+                                                        data-ecf-font-pairing-default="<?php echo esc_attr(wp_json_encode($group['items'][0])); ?>"
+                                                        aria-label="<?php echo esc_attr__('Reset to the default pairing', 'ecf-framework'); ?>"
+                                                        title="<?php echo esc_attr__('Reset to the default pairing', 'ecf-framework'); ?>">
+                                                    <span class="dashicons dashicons-image-rotate" aria-hidden="true"></span>
+                                                </button>
+                                            <button type="button"
+                                                    class="ecf-btn ecf-btn--ghost ecf-btn--sm ecf-font-pairing__random"
+                                                    data-ecf-font-pairing-random
+                                                    data-ecf-font-pairing-options="<?php echo esc_attr(wp_json_encode($group['items'])); ?>">
+                                                <?php echo esc_html__('Random in this category', 'ecf-framework'); ?>
+                                            </button>
+                                            </div>
+                                        </div>
+                                        <h3 data-ecf-font-pairing-title><?php echo esc_html($pairing['title']); ?></h3>
+                                        <p data-ecf-font-pairing-description><?php echo esc_html($pairing['description']); ?></p>
+                                    </div>
+                                    <div class="ecf-font-pairing__preview">
+                                        <div class="ecf-font-pairing__preview-head" data-ecf-font-pairing-preview-head style="font-family: '<?php echo esc_attr($pairing['heading_family']); ?>', serif; font-size: <?php echo esc_attr($font_pairing_heading_max); ?>px;">
+                                            <?php echo esc_html($pairing['heading_sample']); ?>
+                                        </div>
+                                        <div class="ecf-font-pairing__preview-body" data-ecf-font-pairing-preview-body style="font-family: '<?php echo esc_attr($pairing['body_family']); ?>', sans-serif; font-size: <?php echo esc_attr($font_pairing_body_max); ?>px;">
+                                            <?php echo esc_html($pairing['body_sample']); ?>
+                                        </div>
+                                    </div>
+                                    <dl class="ecf-font-pairing__families">
+                                        <div>
+                                            <dt><?php echo esc_html__('Headings', 'ecf-framework'); ?></dt>
+                                            <dd data-ecf-font-pairing-heading-family><?php echo esc_html($pairing['heading_family']); ?></dd>
+                                            <small class="ecf-font-pairing__token"><?php echo esc_html($font_pairing_heading_label); ?></small>
+                                        </div>
+                                        <div>
+                                            <dt><?php echo esc_html__('Body', 'ecf-framework'); ?></dt>
+                                            <dd data-ecf-font-pairing-body-family><?php echo esc_html($pairing['body_family']); ?></dd>
+                                            <small class="ecf-font-pairing__token"><?php echo esc_html($font_pairing_body_label); ?></small>
+                                        </div>
+                                    </dl>
+                                    <button type="button"
+                                            class="ecf-btn ecf-btn--secondary ecf-font-pairing__apply"
+                                            data-ecf-font-pairing-apply
+                                            data-ecf-font-pairing-slug="<?php echo esc_attr($pairing['slug']); ?>"
+                                            data-ecf-font-pairing-heading="<?php echo esc_attr($pairing['heading_family']); ?>"
+                                            data-ecf-font-pairing-body="<?php echo esc_attr($pairing['body_family']); ?>">
+                                        <?php echo esc_html__('Use this pairing', 'ecf-framework'); ?>
+                                    </button>
+                                </article>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+                    <div class="ecf-typography-font-grid">
+                        <details class="ecf-card ecf-typography-font-card">
+                            <summary class="ecf-typography-font-card__summary">
+                                <span>
+                                    <strong><?php echo esc_html__('Body Font', 'ecf-framework'); ?></strong>
+                                    <span class="ecf-typography-font-card__meta">
+                                        <span data-ecf-typography-body-current><?php echo esc_html__('Current:', 'ecf-framework'); ?> <?php echo esc_html($current_body_font); ?></span>
+                                        <span data-ecf-typography-body-size><?php echo esc_html__('Font size:', 'ecf-framework'); ?> <?php echo esc_html($body_size_parts['value'] . ' ' . $body_size_parts['format']); ?></span>
+                                    </span>
+                                    <small><?php echo esc_html__('Default font for flowing text and normal site copy.', 'ecf-framework'); ?></small>
+                                </span>
+                                <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+                            </summary>
+                            <div class="ecf-typography-font-card__content">
+                                <?php $this->render_base_font_family_field($settings, false); ?>
+                            </div>
+                        </details>
+                        <details class="ecf-card ecf-typography-font-card">
+                            <summary class="ecf-typography-font-card__summary">
+                                <span>
+                                    <strong><?php echo esc_html__('Heading Font', 'ecf-framework'); ?></strong>
+                                    <span class="ecf-typography-font-card__meta">
+                                        <span data-ecf-typography-heading-current><?php echo esc_html__('Current:', 'ecf-framework'); ?> <?php echo esc_html($current_heading_font); ?></span>
+                                    </span>
+                                    <small><?php echo esc_html__('Separate font family for h1 to h6 and heading-like elements.', 'ecf-framework'); ?></small>
+                                </span>
+                                <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+                            </summary>
+                            <div class="ecf-typography-font-card__content">
+                                <?php $this->render_heading_font_family_field($settings, false); ?>
+                            </div>
+                        </details>
+                    </div>
+                    <div class="ecf-grid" data-ecf-layout-group="typography-font-details" data-ecf-masonry-layout="1">
+                        <details class="ecf-card ecf-card--details" data-ecf-layout-item="typography-fonts" open>
+                            <summary class="ecf-card__summary">
+                                <span>
+                                    <strong><?php echo esc_html__('Core Font Tokens', 'ecf-framework'); ?></strong>
+                                    <small><?php echo esc_html__('Reusable typography stacks like Primary and Secondary.', 'ecf-framework'); ?></small>
+                                </span>
+                                <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+                            </summary>
+                            <div class="ecf-card__content">
+                                <?php $this->render_rows('typography_fonts', array_slice((array) $settings['typography']['fonts'], 0, 2), $this->option_name.'[typography][fonts]'); ?>
+                            </div>
+                        </details>
+                        <details class="ecf-card ecf-card--details" data-ecf-layout-item="typography-local-fonts" data-ecf-local-fonts-section>
+                            <summary class="ecf-card__summary">
+                                <span>
+                                    <strong><?php echo esc_html__('Imported Local Fonts', 'ecf-framework'); ?></strong>
+                                    <small><?php echo esc_html__('Manage the fonts that were imported locally from the library.', 'ecf-framework'); ?></small>
+                                </span>
+                                <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+                            </summary>
+                            <div class="ecf-card__content">
+                                <p class="ecf-muted-copy"><?php echo esc_html__('The old manual upload flow is intentionally hidden here to keep the typography workflow focused and consistent.', 'ecf-framework'); ?></p>
+                                <?php $this->render_imported_local_font_rows($settings['typography']['local_fonts'] ?? [], $this->option_name.'[typography][local_fonts]'); ?>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+                <div class="ecf-typography-tab-panel" data-ecf-typography-section="scale" hidden>
+                    <div class="ecf-typography-tab-intro">
+                        <div>
+                            <h2><?php echo esc_html__('Live Typography Preview', 'ecf-framework'); ?></h2>
+                            <p><?php echo esc_html__('Review your type scale and generated text tokens in a live side-by-side preview while you fine-tune the reading rhythm.', 'ecf-framework'); ?></p>
+                        </div>
+                    </div>
+                    <div class="ecf-typography-scale-shell">
+                        <div class="ecf-typography-sidebar" data-ecf-layout-item="typography-settings">
+                            <div class="ecf-card">
                         <h2><?php echo esc_html__('Type Scale', 'ecf-framework'); ?></h2>
                         <p class="ecf-card-intro"><?php echo esc_html__('Shape the reading rhythm here first. The preview on the right mirrors the generated text tokens live while you edit.', 'ecf-framework'); ?></p>
                         <?php $this->render_root_font_size_select($settings, false); ?>
@@ -1731,115 +2769,133 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                             </label>
                         </div>
                         <p class="ecf-muted-copy"><?php echo esc_html__('The preview updates live while you edit the scale settings.', 'ecf-framework'); ?></p>
-                    </div>
-                    </div>
-                    <div class="ecf-typography-main" data-ecf-layout-item="typography-preview">
-                        <div class="ecf-typography-font-grid">
-                        <details class="ecf-card ecf-typography-font-card">
-                            <summary class="ecf-typography-font-card__summary">
-                                <span>
-                                    <strong><?php echo esc_html__('Body Font', 'ecf-framework'); ?></strong>
-                                    <span class="ecf-typography-font-card__meta">
-                                        <span data-ecf-typography-body-current><?php echo esc_html__('Current:', 'ecf-framework'); ?> <?php echo esc_html($current_body_font); ?></span>
-                                        <span data-ecf-typography-body-size><?php echo esc_html__('Font size:', 'ecf-framework'); ?> <?php echo esc_html($body_size_parts['value'] . ' ' . $body_size_parts['format']); ?></span>
-                                    </span>
-                                    <small><?php echo esc_html__('Default font for flowing text and normal site copy.', 'ecf-framework'); ?></small>
-                                </span>
-                                <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
-                            </summary>
-                            <div class="ecf-typography-font-card__content">
-                                <?php $this->render_base_font_family_field($settings, false); ?>
-                            </div>
-                        </details>
-                        <details class="ecf-card ecf-typography-font-card">
-                            <summary class="ecf-typography-font-card__summary">
-                                <span>
-                                    <strong><?php echo esc_html__('Heading Font', 'ecf-framework'); ?></strong>
-                                    <span class="ecf-typography-font-card__meta">
-                                        <span data-ecf-typography-heading-current><?php echo esc_html__('Current:', 'ecf-framework'); ?> <?php echo esc_html($current_heading_font); ?></span>
-                                    </span>
-                                    <small><?php echo esc_html__('Separate font family for h1 to h6 and heading-like elements.', 'ecf-framework'); ?></small>
-                                </span>
-                                <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
-                            </summary>
-                            <div class="ecf-typography-font-card__content">
-                                <?php $this->render_heading_font_family_field($settings, false); ?>
-                            </div>
-                        </details>
-                    </div>
-                    <div class="ecf-card ecf-typography-preview-card"
-                         data-ecf-type-scale-preview
-                         style="--ecf-preview-font: <?php echo esc_attr($type_preview_font); ?>;"
-                         data-steps="<?php echo esc_attr(wp_json_encode($settings['typography']['scale']['steps'])); ?>"
-                         data-active-step="<?php echo esc_attr($settings['typography']['scale']['base_index']); ?>"
-                         data-preview-label-min="<?php echo esc_attr__('Minimum', 'ecf-framework'); ?>"
-                         data-preview-label-max="<?php echo esc_attr__('Maximum', 'ecf-framework'); ?>"
-                         data-preview-label-fixed="<?php echo esc_attr__('Static', 'ecf-framework'); ?>"
-                         data-preview-label-fluid="<?php echo esc_attr__('Fluid', 'ecf-framework'); ?>"
-                         data-preview-word="<?php echo esc_attr($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?>"
-                         data-preview-helper="<?php echo esc_attr__('Click a scale step to inspect it in detail.', 'ecf-framework'); ?>"
-                         data-preview-font="<?php echo esc_attr($type_preview_font); ?>">
-                        <div class="ecf-typography-preview-header">
-                            <div>
-                                <h2><?php echo esc_html__('Live Type Preview', 'ecf-framework'); ?></h2>
-                                <p><?php echo esc_html__('Preview for your generated Elementor text variables.', 'ecf-framework'); ?></p>
-                            </div>
-                            <div class="ecf-preview-toolbar">
-                                <button type="button" class="ecf-preview-toggle" data-ecf-preview-view="min"><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></button>
-                                <button type="button" class="ecf-preview-toggle is-active" data-ecf-preview-view="fluid"><?php echo esc_html__('Fluid', 'ecf-framework'); ?></button>
-                                <button type="button" class="ecf-preview-toggle" data-ecf-preview-view="max"><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></button>
-                            </div>
                         </div>
-                        <div class="ecf-typography-focus" data-ecf-type-scale-focus>
-                            <div class="ecf-typography-focus__meta">
-                                <span class="ecf-preview-pill" data-ecf-preview-mode><?php echo esc_html(!empty($settings['typography']['scale']['fluid']) ? __('Fluid', 'ecf-framework') : __('Static', 'ecf-framework')); ?></span>
-                                <strong data-ecf-focus-token>--ecf-text-<?php echo esc_html($settings['typography']['scale']['base_index']); ?></strong>
-                                <p data-ecf-focus-helper><?php echo esc_html__('Click a scale step to inspect it in detail.', 'ecf-framework'); ?></p>
-                            </div>
-                            <div class="ecf-typography-focus__sample">
-                                <div class="ecf-typography-focus__word" data-ecf-focus-word><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></div>
-                                <div class="ecf-typography-focus__stats">
+                        <div class="ecf-grid" data-ecf-layout-group="typography-secondary" data-ecf-masonry-layout="1">
+                            <details class="ecf-settings-group ecf-settings-group--details" data-ecf-layout-item="website-scale-impact">
+                                <summary class="ecf-card__summary">
+                                    <span>
+                                        <strong><?php echo esc_html__('Visible effect of the root font size', 'ecf-framework'); ?></strong>
+                                        <small><?php echo esc_html__('See how the current root size affects the base text, spacing and radius output.', 'ecf-framework'); ?></small>
+                                    </span>
+                                    <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+                                </summary>
+                                <div class="ecf-card__content">
+                                    <?php $this->render_root_font_impact_panel($settings); ?>
+                                </div>
+                            </details>
+                            <details class="ecf-card ecf-card--details" data-ecf-layout-item="typography-weights" open>
+                                <summary class="ecf-card__summary">
+                                    <span>
+                                        <strong><?php echo esc_html__('Font Weights', 'ecf-framework'); ?></strong>
+                                        <small><?php echo esc_html__('Named weight tokens for text styles and component typography.', 'ecf-framework'); ?></small>
+                                    </span>
+                                    <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+                                </summary>
+                                <div class="ecf-card__content">
+                                    <?php $this->render_rows('typography_weights', $settings['typography']['weights'], $this->option_name.'[typography][weights]'); ?>
+                                </div>
+                            </details>
+                            <details class="ecf-card ecf-card--details" data-ecf-layout-item="typography-line-heights">
+                                <summary class="ecf-card__summary">
+                                    <span>
+                                        <strong><?php echo esc_html__('Line Heights', 'ecf-framework'); ?></strong>
+                                        <small><?php echo esc_html__('Vertical rhythm tokens for readable paragraphs and display text.', 'ecf-framework'); ?></small>
+                                    </span>
+                                    <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+                                </summary>
+                                <div class="ecf-card__content">
+                                    <?php $this->render_rows('typography_leading', $settings['typography']['leading'], $this->option_name.'[typography][leading]'); ?>
+                                </div>
+                            </details>
+                            <details class="ecf-card ecf-card--details" data-ecf-layout-item="typography-letter-spacing">
+                                <summary class="ecf-card__summary">
+                                    <span>
+                                        <strong><?php echo esc_html__('Letter Spacing', 'ecf-framework'); ?></strong>
+                                        <small><?php echo esc_html__('Tracking tokens for tighter headings or looser interface labels.', 'ecf-framework'); ?></small>
+                                    </span>
+                                    <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
+                                </summary>
+                                <div class="ecf-card__content">
+                                    <?php $this->render_rows('typography_tracking', $settings['typography']['tracking'], $this->option_name.'[typography][tracking]'); ?>
+                                </div>
+                            </details>
+                        </div>
+                        </div>
+                        <div class="ecf-typography-main" data-ecf-layout-item="typography-preview">
+                            <div class="ecf-card ecf-typography-preview-card"
+                                 data-ecf-type-scale-preview
+                                 style="--ecf-preview-font: <?php echo esc_attr($type_preview_font); ?>;"
+                                 data-steps="<?php echo esc_attr(wp_json_encode($settings['typography']['scale']['steps'])); ?>"
+                                 data-active-step="<?php echo esc_attr($settings['typography']['scale']['base_index']); ?>"
+                                 data-preview-label-min="<?php echo esc_attr__('Minimum', 'ecf-framework'); ?>"
+                                 data-preview-label-max="<?php echo esc_attr__('Maximum', 'ecf-framework'); ?>"
+                                 data-preview-label-fixed="<?php echo esc_attr__('Static', 'ecf-framework'); ?>"
+                                 data-preview-label-fluid="<?php echo esc_attr__('Fluid', 'ecf-framework'); ?>"
+                                 data-preview-word="<?php echo esc_attr($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?>"
+                                 data-preview-helper="<?php echo esc_attr__('Click a scale step to inspect it in detail.', 'ecf-framework'); ?>"
+                                 data-preview-font="<?php echo esc_attr($type_preview_font); ?>">
+                                <div class="ecf-typography-preview-header">
                                     <div>
-                                        <span><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
-                                        <div class="ecf-clamp-metric">
-                                            <strong data-ecf-focus-min><?php echo esc_html($base_type_preview['min_px'] ?? '16'); ?>px</strong>
-                                        </div>
+                                        <h2><?php echo esc_html__('Live Type Preview', 'ecf-framework'); ?></h2>
+                                        <p><?php echo esc_html__('Preview for your generated Elementor text variables.', 'ecf-framework'); ?></p>
                                     </div>
-                                    <div>
-                                        <span><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
-                                        <div class="ecf-clamp-metric">
-                                            <strong data-ecf-focus-max><?php echo esc_html($base_type_preview['max_px'] ?? '16'); ?>px</strong>
+                                    <div class="ecf-preview-toolbar">
+                                        <button type="button" class="ecf-preview-toggle" data-ecf-preview-view="min"><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></button>
+                                        <button type="button" class="ecf-preview-toggle is-active" data-ecf-preview-view="fluid"><?php echo esc_html__('Fluid', 'ecf-framework'); ?></button>
+                                        <button type="button" class="ecf-preview-toggle" data-ecf-preview-view="max"><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></button>
+                                    </div>
+                                </div>
+                                <div class="ecf-typography-focus" data-ecf-type-scale-focus>
+                                    <div class="ecf-typography-focus__meta">
+                                        <span class="ecf-preview-pill" data-ecf-preview-mode><?php echo esc_html(!empty($settings['typography']['scale']['fluid']) ? __('Fluid', 'ecf-framework') : __('Static', 'ecf-framework')); ?></span>
+                                        <strong data-ecf-focus-token>--ecf-text-<?php echo esc_html($settings['typography']['scale']['base_index']); ?></strong>
+                                        <p data-ecf-focus-helper><?php echo esc_html__('Click a scale step to inspect it in detail.', 'ecf-framework'); ?></p>
+                                    </div>
+                                    <div class="ecf-typography-focus__sample">
+                                        <div class="ecf-typography-focus__word" data-ecf-focus-word><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></div>
+                                        <div class="ecf-typography-focus__stats">
+                                            <div>
+                                                <span><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
+                                                <div class="ecf-clamp-metric">
+                                                    <strong data-ecf-focus-min><?php echo esc_html($base_type_preview['min_px'] ?? '16'); ?>px</strong>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <span><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
+                                                <div class="ecf-clamp-metric">
+                                                    <strong data-ecf-focus-max><?php echo esc_html($base_type_preview['max_px'] ?? '16'); ?>px</strong>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="ecf-typography-focus__sizes">
+                                            <div class="ecf-clamp-group ecf-clamp-group--focus">
+                                                <button type="button" class="ecf-clamp-toggle" data-ecf-clamp-toggle="<?php echo esc_attr__('Show clamp value', 'ecf-framework'); ?>"><span class="dashicons dashicons-editor-code"></span></button>
+                                                <button type="button" class="ecf-clamp-popover" data-ecf-focus-copy><?php echo esc_html($base_type_preview['css_value'] ?? ''); ?></button>
+                                            </div>
+                                            <div class="ecf-typography-focus__size-line">
+                                                <span class="ecf-typography-focus__sample-text" data-ecf-focus-min-line><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></span>
+                                                <span><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
+                                            </div>
+                                            <div class="ecf-typography-focus__size-line ecf-typography-focus__size-line--max">
+                                                <span class="ecf-typography-focus__sample-text" data-ecf-focus-max-line><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></span>
+                                                <span><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="ecf-typography-focus__sizes">
-                                    <div class="ecf-clamp-group ecf-clamp-group--focus">
-                                        <button type="button" class="ecf-clamp-toggle" data-ecf-clamp-toggle="<?php echo esc_attr__('Show clamp value', 'ecf-framework'); ?>"><span class="dashicons dashicons-editor-code"></span></button>
-                                        <button type="button" class="ecf-clamp-popover" data-ecf-focus-copy><?php echo esc_html($base_type_preview['css_value'] ?? ''); ?></button>
-                                    </div>
-                                    <div class="ecf-typography-focus__size-line">
-                                        <span class="ecf-typography-focus__sample-text" data-ecf-focus-min-line><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></span>
-                                        <span><i class="dashicons dashicons-smartphone"></i><?php echo esc_html__('Minimum', 'ecf-framework'); ?></span>
-                                    </div>
-                                    <div class="ecf-typography-focus__size-line ecf-typography-focus__size-line--max">
-                                        <span class="ecf-typography-focus__sample-text" data-ecf-focus-max-line><?php echo esc_html($this->type_preview_text_for_step((string) ($settings['typography']['scale']['base_index'] ?? 'm'), $settings)); ?></span>
-                                        <span><i class="dashicons dashicons-desktop"></i><?php echo esc_html__('Maximum', 'ecf-framework'); ?></span>
-                                    </div>
-                                </div>
                             </div>
-                        </div>
-                        <div id="ecf-scale-steps-container">
-                            <?php foreach ($settings['typography']['scale']['steps'] as $step): ?>
-                            <input type="hidden" class="ecf-scale-step-input" name="<?php echo esc_attr($this->option_name); ?>[typography][scale][steps][]" value="<?php echo esc_attr($step); ?>">
-                            <?php endforeach; ?>
-                        </div>
-                        <div class="ecf-step-controls ecf-step-controls--top">
-                            <button type="button" class="ecf-step-btn" data-ecf-add-step="smaller" data-tip="<?php echo esc_attr__('Add smaller step', 'ecf-framework'); ?>" aria-label="<?php echo esc_attr__('Add smaller step', 'ecf-framework'); ?>">+</button>
-                            <button type="button" class="ecf-step-btn ecf-step-btn--remove" data-ecf-remove-step="smaller" data-tip="<?php echo esc_attr__('Remove smallest step', 'ecf-framework'); ?>" aria-label="<?php echo esc_attr__('Remove smallest step', 'ecf-framework'); ?>">−</button>
-                        </div>
-                        <div class="ecf-typography-preview-list" data-ecf-type-scale-preview-list>
-                            <?php foreach ($type_scale_preview as $item): ?>
-                                <div class="ecf-type-row<?php echo $item['step'] === $settings['typography']['scale']['base_index'] ? ' is-active' : ''; ?>" data-ecf-step="<?php echo esc_attr($item['step']); ?>" data-ecf-step-row tabindex="0" role="button" aria-pressed="<?php echo $item['step'] === $settings['typography']['scale']['base_index'] ? 'true' : 'false'; ?>" style="<?php echo esc_attr('--ecf-preview-size:' . $item['css_value'] . ';'); ?>">
+                            <div id="ecf-scale-steps-container">
+                                <?php foreach ($settings['typography']['scale']['steps'] as $step): ?>
+                                <input type="hidden" class="ecf-scale-step-input" name="<?php echo esc_attr($this->option_name); ?>[typography][scale][steps][]" value="<?php echo esc_attr($step); ?>">
+                                <?php endforeach; ?>
+                            </div>
+                            <div class="ecf-step-controls ecf-step-controls--top">
+                                <button type="button" class="ecf-step-btn" data-ecf-add-step="smaller" data-tip="<?php echo esc_attr__('Add smaller step', 'ecf-framework'); ?>" aria-label="<?php echo esc_attr__('Add smaller step', 'ecf-framework'); ?>">+</button>
+                                <button type="button" class="ecf-step-btn ecf-step-btn--remove" data-ecf-remove-step="smaller" data-tip="<?php echo esc_attr__('Remove smallest step', 'ecf-framework'); ?>" aria-label="<?php echo esc_attr__('Remove smallest step', 'ecf-framework'); ?>">−</button>
+                            </div>
+                            <div class="ecf-typography-preview-list" data-ecf-type-scale-preview-list>
+                                <?php foreach ($type_scale_preview as $item): ?>
+                                    <div class="ecf-type-row<?php echo $item['step'] === $settings['typography']['scale']['base_index'] ? ' is-active' : ''; ?>" data-ecf-step="<?php echo esc_attr($item['step']); ?>" data-ecf-step-row tabindex="0" role="button" aria-pressed="<?php echo $item['step'] === $settings['typography']['scale']['base_index'] ? 'true' : 'false'; ?>" style="<?php echo esc_attr('--ecf-preview-size:' . $item['css_value'] . ';'); ?>">
                                     <div class="ecf-type-row__token">
                                         <div class="ecf-type-row__token-line">
                                             <span class="ecf-type-row__token-label"><?php echo esc_html($item['token']); ?></span>
@@ -1863,77 +2919,14 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                         </div>
                                     </div>
                                 </div>
-                            <?php endforeach; ?>
+                                <?php endforeach; ?>
+                            </div>
+                            <div class="ecf-step-controls ecf-step-controls--bottom">
+                                <button type="button" class="ecf-step-btn" data-ecf-add-step="larger" data-tip="<?php echo esc_attr__('Add larger step', 'ecf-framework'); ?>" aria-label="<?php echo esc_attr__('Add larger step', 'ecf-framework'); ?>">+</button>
+                                <button type="button" class="ecf-step-btn ecf-step-btn--remove" data-ecf-remove-step="larger" data-tip="<?php echo esc_attr__('Remove largest step', 'ecf-framework'); ?>" aria-label="<?php echo esc_attr__('Remove largest step', 'ecf-framework'); ?>">−</button>
+                            </div>
                         </div>
-                        <div class="ecf-step-controls ecf-step-controls--bottom">
-                            <button type="button" class="ecf-step-btn" data-ecf-add-step="larger" data-tip="<?php echo esc_attr__('Add larger step', 'ecf-framework'); ?>" aria-label="<?php echo esc_attr__('Add larger step', 'ecf-framework'); ?>">+</button>
-                            <button type="button" class="ecf-step-btn ecf-step-btn--remove" data-ecf-remove-step="larger" data-tip="<?php echo esc_attr__('Remove largest step', 'ecf-framework'); ?>" aria-label="<?php echo esc_attr__('Remove largest step', 'ecf-framework'); ?>">−</button>
-                        </div>
-                        </div>
                     </div>
-                </div>
-                <div class="ecf-grid" data-ecf-layout-group="typography-secondary" data-ecf-masonry-layout="1">
-                    <details class="ecf-card ecf-card--details" data-ecf-layout-item="typography-fonts" open>
-                    <summary class="ecf-card__summary">
-                        <span>
-                            <strong><?php echo esc_html__('Core Font Tokens', 'ecf-framework'); ?></strong>
-                            <small><?php echo esc_html__('Reusable typography stacks like Primary, Secondary and Mono.', 'ecf-framework'); ?></small>
-                        </span>
-                        <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
-                    </summary>
-                    <div class="ecf-card__content">
-                        <?php $this->render_rows('typography_fonts', $settings['typography']['fonts'], $this->option_name.'[typography][fonts]'); ?>
-                    </div>
-                </details>
-                <details class="ecf-card ecf-card--details" data-ecf-layout-item="typography-local-fonts" data-ecf-local-fonts-section>
-                    <summary class="ecf-card__summary">
-                        <span>
-                            <strong><?php echo esc_html__('Imported Local Fonts', 'ecf-framework'); ?></strong>
-                            <small><?php echo esc_html__('Manage the fonts that were imported locally from the library.', 'ecf-framework'); ?></small>
-                        </span>
-                        <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
-                    </summary>
-                    <div class="ecf-card__content">
-                        <p class="ecf-muted-copy"><?php echo esc_html__('The old manual upload flow is intentionally hidden here to keep the typography workflow focused and consistent.', 'ecf-framework'); ?></p>
-                        <?php $this->render_imported_local_font_rows($settings['typography']['local_fonts'] ?? [], $this->option_name.'[typography][local_fonts]'); ?>
-                    </div>
-                </details>
-                <details class="ecf-card ecf-card--details" data-ecf-layout-item="typography-weights" open>
-                    <summary class="ecf-card__summary">
-                        <span>
-                            <strong><?php echo esc_html__('Font Weights', 'ecf-framework'); ?></strong>
-                            <small><?php echo esc_html__('Named weight tokens for text styles and component typography.', 'ecf-framework'); ?></small>
-                        </span>
-                        <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
-                    </summary>
-                    <div class="ecf-card__content">
-                        <?php $this->render_rows('typography_weights', $settings['typography']['weights'], $this->option_name.'[typography][weights]'); ?>
-                    </div>
-                </details>
-                <details class="ecf-card ecf-card--details" data-ecf-layout-item="typography-line-heights">
-                    <summary class="ecf-card__summary">
-                        <span>
-                            <strong><?php echo esc_html__('Line Heights', 'ecf-framework'); ?></strong>
-                            <small><?php echo esc_html__('Vertical rhythm tokens for readable paragraphs and display text.', 'ecf-framework'); ?></small>
-                        </span>
-                        <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
-                    </summary>
-                    <div class="ecf-card__content">
-                        <?php $this->render_rows('typography_leading', $settings['typography']['leading'], $this->option_name.'[typography][leading]'); ?>
-                    </div>
-                </details>
-                <details class="ecf-card ecf-card--details" data-ecf-layout-item="typography-letter-spacing">
-                    <summary class="ecf-card__summary">
-                        <span>
-                            <strong><?php echo esc_html__('Letter Spacing', 'ecf-framework'); ?></strong>
-                            <small><?php echo esc_html__('Tracking tokens for tighter headings or looser interface labels.', 'ecf-framework'); ?></small>
-                        </span>
-                        <span class="dashicons dashicons-arrow-down-alt2" aria-hidden="true"></span>
-                    </summary>
-                    <div class="ecf-card__content">
-                        <?php $this->render_rows('typography_tracking', $settings['typography']['tracking'], $this->option_name.'[typography][tracking]'); ?>
-                    </div>
-                    </details>
                 </div>
             </div>
         </div>
@@ -2182,14 +3175,15 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                     <div class="ecf-card ecf-sync-card ecf-sync-card--aside" data-ecf-layout-item="sync-editor-panel">
                     <div class="ecf-sync-card__header">
                         <div>
-                            <h2><?php echo esc_html__('Elementor Editor Panel', 'ecf-framework'); ?></h2>
-                            <p><?php echo wp_kses(__('In the Elementor editor, find the <strong>Layrix</strong> section under the <strong>Advanced</strong> tab of any element.', 'ecf-framework'), ['strong' => []]); ?></p>
+                            <h2><?php echo esc_html__('After sync', 'ecf-framework'); ?></h2>
+                            <p><?php echo esc_html__('Keep the final Elementor step simple so freshly synced variables and classes appear where you expect them.', 'ecf-framework'); ?></p>
                         </div>
                     </div>
-                    <div class="ecf-sync-panel-note">
-                        <span class="dashicons dashicons-arrow-right-alt2" aria-hidden="true"></span>
-                        <span><?php echo esc_html__('Use it when you need field-level helpers while building directly in Elementor.', 'ecf-framework'); ?></span>
-                    </div>
+                    <ul class="ecf-sync-checklist">
+                        <li><?php echo esc_html__('Reload open Elementor tabs once after a manual sync.', 'ecf-framework'); ?></li>
+                        <li><?php echo esc_html__('Use Auto-Sync when you want Layrix to push changes right after autosave.', 'ecf-framework'); ?></li>
+                        <li><?php echo esc_html__('If something still looks outdated, clear Elementor caches once and reopen the editor.', 'ecf-framework'); ?></li>
+                    </ul>
                     </div>
                 </div>
             </div>

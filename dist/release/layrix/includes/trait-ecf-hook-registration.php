@@ -60,7 +60,6 @@ trait ECF_Framework_Hook_Registration_Trait {
     }
 
     private function register_elementor_editor_hooks() {
-        add_action('elementor/element/after_section_end', [$this, 'inject_editor_controls'], 10, 3);
         add_action('elementor/frontend/widget/before_render', [$this, 'append_ecf_classes_before_render']);
         add_action('elementor/frontend/container/before_render', [$this, 'append_ecf_classes_before_render']);
         add_action('elementor/frontend/section/before_render', [$this, 'append_ecf_classes_before_render']);

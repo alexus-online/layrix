@@ -18,6 +18,7 @@ jQuery(function($){
   var fontLibrary = (typeof ecfAdmin !== 'undefined' && Array.isArray(ecfAdmin.fontLibrary)) ? ecfAdmin.fontLibrary : [];
   var fontSearchTimers = {};
   var fontSearchRequests = {};
+  var suppressSettingsAutosave = false;
   i18n.copy    = String(i18n.copy || '');
   i18n.copied  = String(i18n.copied || '');
 
@@ -642,10 +643,6 @@ jQuery(function($){
       {
         value: 'var(--ecf-font-secondary)',
         label: (i18n.font_option_secondary || '') + ': ' + (((fontRows[1] || {}).value) || 'Georgia, serif')
-      },
-      {
-        value: 'var(--ecf-font-mono)',
-        label: (i18n.font_option_mono || '') + ': ' + (((fontRows[2] || {}).value) || 'JetBrains Mono, monospace')
       }
     ];
 
@@ -688,7 +685,7 @@ jQuery(function($){
 
     groups.push({
       label: i18n.font_group_core || '',
-      options: getFontFamilyOptionsFromSettings(settings).slice(0, 3).map(function(option) {
+      options: getFontFamilyOptionsFromSettings(settings).slice(0, 2).map(function(option) {
         return $.extend({}, option, { source: 'core' });
       })
     });
@@ -1332,6 +1329,347 @@ jQuery(function($){
     });
   }
 
+  function findExistingFontValue(fieldName, family) {
+    var normalizedFamily = $.trim(String(family || '')).toLowerCase();
+    var $field = getPrimaryFontFamilyField(fieldName);
+    if (!$field.length || !normalizedFamily) {
+      return '';
+    }
+
+    var match = '';
+    $field.find('[data-ecf-font-family-preset] option').each(function() {
+      var value = String($(this).attr('value') || '');
+      var label = $.trim(String($(this).text() || ''));
+      if (!value || value.indexOf('__library__|') === 0) {
+        return;
+      }
+      if (label.toLowerCase() === normalizedFamily) {
+        match = value;
+        return false;
+      }
+      var parts = label.split(':');
+      if (parts.length > 1 && $.trim(parts.slice(1).join(':')).toLowerCase() === normalizedFamily) {
+        match = value;
+        return false;
+      }
+    });
+
+    return match;
+  }
+
+  function applyFontValueToField(fieldName, value) {
+    var $field = getPrimaryFontFamilyField(fieldName);
+    if (!$field.length || !value) {
+      return;
+    }
+
+    var $presetInput = $field.find('[data-ecf-font-family-preset-input]').first();
+    applyFontFamilyPresetSelection(fieldName, value);
+    $presetInput.trigger('input').trigger('change');
+    closeFontPicker($field);
+    updateUnsavedBadge();
+    scheduleSettingsAutosave({ delay: 250 });
+  }
+
+  function applyFontPairingSelection(pairing, $button) {
+    var bodyFamily = $.trim(String((pairing && pairing.bodyFamily) || ''));
+    var headingFamily = $.trim(String((pairing && pairing.headingFamily) || ''));
+    var tasks = [];
+
+    function queueField(fieldName, target, family) {
+      if (!family) {
+        return;
+      }
+      var existingValue = findExistingFontValue(fieldName, family);
+      if (existingValue) {
+        tasks.push(function() {
+          applyFontValueToField(fieldName, existingValue);
+          return Promise.resolve();
+        });
+        return;
+      }
+      tasks.push(function() {
+        return importLibraryFontIntoField(fieldName, target, family, $button);
+      });
+    }
+
+    queueField('base_font_family', 'body', bodyFamily);
+    queueField('heading_font_family', 'heading', headingFamily);
+
+    if (!tasks.length) {
+      return Promise.resolve();
+    }
+
+    showAutosaveNotice(i18n.font_pairing_running || '', 'saving');
+    if ($button && $button.length) {
+      $button.prop('disabled', true).addClass('is-busy');
+    }
+
+    return tasks.reduce(function(chain, task) {
+      return chain.then(task);
+    }, Promise.resolve()).then(function() {
+      syncTypographyFontCardSummaries();
+      renderTypePreview();
+      showAutosaveNotice(i18n.font_pairing_success || '', 'success');
+    }).catch(function(error) {
+      showAutosaveNotice((error && error.message) ? error.message : (i18n.font_pairing_failed || ''), 'error');
+      throw error;
+    }).finally(function() {
+      if ($button && $button.length) {
+        $button.prop('disabled', false).removeClass('is-busy');
+      }
+    });
+  }
+
+  function updateFontPairingCard($card, pairing) {
+    if (!$card || !$card.length || !pairing) {
+      return;
+    }
+    var headingFamily = $.trim(String(pairing.heading_family || pairing.headingFamily || ''));
+    var bodyFamily = $.trim(String(pairing.body_family || pairing.bodyFamily || ''));
+    var title = String(pairing.title || '');
+    var description = String(pairing.description || '');
+    var headingSample = String(pairing.heading_sample || pairing.headingSample || '');
+    var bodySample = String(pairing.body_sample || pairing.bodySample || '');
+    var slug = String(pairing.slug || '');
+
+    $card.attr('data-ecf-font-pairing-current', slug);
+    $card.find('[data-ecf-font-pairing-title]').text(title);
+    $card.find('[data-ecf-font-pairing-description]').text(description);
+    $card.find('[data-ecf-font-pairing-preview-head]')
+      .text(headingSample)
+      .css('font-family', "'" + headingFamily + "', serif");
+    $card.find('[data-ecf-font-pairing-preview-body]')
+      .text(bodySample)
+      .css('font-family', "'" + bodyFamily + "', sans-serif");
+    $card.find('[data-ecf-font-pairing-heading-family]').text(headingFamily);
+    $card.find('[data-ecf-font-pairing-body-family]').text(bodyFamily);
+    $card.find('[data-ecf-font-pairing-apply]')
+      .attr('data-ecf-font-pairing-slug', slug)
+      .attr('data-ecf-font-pairing-heading', headingFamily)
+      .attr('data-ecf-font-pairing-body', bodyFamily);
+  }
+
+  function pickRandomFontPairing(options, currentSlug) {
+    var list = Array.isArray(options) ? options.filter(Boolean) : [];
+    if (!list.length) {
+      return null;
+    }
+    if (list.length === 1) {
+      return list[0];
+    }
+    var pool = list.filter(function(item) {
+      return String((item && item.slug) || '') !== String(currentSlug || '');
+    });
+    if (!pool.length) {
+      pool = list;
+    }
+    return pool[Math.floor(Math.random() * pool.length)] || null;
+  }
+
+  function setTextOrSelectValue($field, value) {
+    if (!$field || !$field.length) {
+      return;
+    }
+    $field.val(value);
+  }
+
+  function syncFormatPickerState($scope, format) {
+    if (!$scope || !$scope.length) {
+      return;
+    }
+    $scope.find('[data-ecf-size-format-input], [data-ecf-format-input]').val(format);
+    $scope.find('[data-ecf-format-current]').text(format);
+    $scope.find('[data-ecf-format-option]').removeClass('is-active');
+    $scope.find('[data-ecf-format-option][data-value="' + format + '"]').addClass('is-active');
+  }
+
+  function applyWebsiteSizeField(fieldName, payload) {
+    var $fields = $('[data-ecf-general-field="' + fieldName + '"]');
+    if (!$fields.length || !payload) {
+      return;
+    }
+    var value = $.trim(String(payload.value || ''));
+    var format = $.trim(String(payload.format || 'px')).toLowerCase();
+    $fields.each(function() {
+      var $field = $(this);
+      $field.find('input[type="text"]').first().val(value);
+      syncFormatPickerState($field, format);
+    });
+  }
+
+  function applyGeneralFieldValue(fieldName, value) {
+    var $fields = $('[data-ecf-general-field="' + fieldName + '"]');
+    if (!$fields.length) {
+      return;
+    }
+    $fields.each(function() {
+      var $field = $(this);
+      var $input = $field.find('select, input[type="text"], input[type="number"], input[type="hidden"]').filter(':not([data-ecf-font-family-preset-input])').first();
+      if (!$input.length) {
+        return;
+      }
+      if ($input.is(':checkbox')) {
+        $input.prop('checked', !!value);
+        return;
+      }
+      $input.val(String(value));
+    });
+  }
+
+  function findTokenRow(groupName, tokenName) {
+    return $('.ecf-table[data-group="' + groupName + '"] .ecf-row').filter(function() {
+      return $.trim(String($(this).find('[data-ecf-slug-field="token"]').first().val() || '')) === tokenName;
+    }).first();
+  }
+
+  function applyColorTokenPreset(presetMap) {
+    $.each(presetMap || {}, function(tokenName, tokenValue) {
+      var $row = findTokenRow('colors', tokenName);
+      if (!$row.length) {
+        return;
+      }
+      $row.find('.ecf-color-value-input').val(tokenValue);
+      $row.find('.ecf-color-value-display').val(tokenValue);
+      $row.find('.ecf-color-format-select').val('hex');
+      $row.find('.ecf-color-field').val(tokenValue);
+      updateColorRowDisplay($row);
+    });
+  }
+
+  function applyRadiusPreset(presetMap) {
+    $.each(presetMap || {}, function(tokenName, valueMap) {
+      var $row = findTokenRow('radius', tokenName);
+      if (!$row.length) {
+        return;
+      }
+      $row.find('input').eq(1).val(String((valueMap || {}).min || ''));
+      $row.find('input').eq(2).val(String((valueMap || {}).max || ''));
+    });
+  }
+
+  function applyValueTokenPreset(groupName, presetMap) {
+    $.each(presetMap || {}, function(tokenName, tokenValue) {
+      var $row = findTokenRow(groupName, tokenName);
+      if (!$row.length) {
+        return;
+      }
+      $row.find('input').eq(1).val(String(tokenValue || ''));
+    });
+  }
+
+  function applySpacingPreset(presetMap) {
+    var mapping = {
+      minBase: '[name$="[spacing][min_base]"]',
+      maxBase: '[name$="[spacing][max_base]"]',
+      minRatio: '[name$="[spacing][min_ratio]"]',
+      maxRatio: '[name$="[spacing][max_ratio]"]',
+      baseIndex: '[name$="[spacing][base_index]"]',
+      minVw: '[name$="[spacing][min_vw]"]',
+      maxVw: '[name$="[spacing][max_vw]"]'
+    };
+
+    $.each(mapping, function(key, selector) {
+      if (typeof presetMap[key] === 'undefined') {
+        return;
+      }
+      $(selector).first().val(String(presetMap[key]));
+    });
+
+    if (typeof presetMap.fluid !== 'undefined') {
+      $('[name$="[spacing][fluid]"]').first().prop('checked', !!presetMap.fluid);
+    }
+  }
+
+  function applySettingsPayload(preset, $button, messages) {
+    var general = (preset && preset.general) || {};
+    var fonts = (preset && preset.fonts) || {};
+    var runningMessage = i18n[(messages && messages.running) || ''] || '';
+    var successMessage = i18n[(messages && messages.success) || ''] || '';
+    var failedMessage = i18n[(messages && messages.failed) || ''] || '';
+
+    if (!preset) {
+      return Promise.resolve();
+    }
+
+    showAutosaveNotice(runningMessage || '', 'saving');
+    if ($button && $button.length) {
+      $button.prop('disabled', true).addClass('is-busy');
+    }
+
+    suppressSettingsAutosave = true;
+
+    try {
+      applyGeneralFieldValue('root_font_size', general.root_font_size);
+      applyGeneralFieldValue('base_body_font_weight', general.base_body_font_weight);
+      syncBodyTextSizeFieldFromSettings({ base_body_text_size: general.base_body_text_size });
+      applyWebsiteSizeField('content_max_width', general.content_max_width);
+      applyWebsiteSizeField('elementor_boxed_width', general.elementor_boxed_width);
+      $('[data-ecf-general-field="base_text_color"]').each(function() {
+        syncGeneralColorField($(this), general.base_text_color, { writeText: true });
+      });
+      $('[data-ecf-general-field="base_background_color"]').each(function() {
+        syncGeneralColorField($(this), general.base_background_color, { writeText: true });
+      });
+      $('[data-ecf-general-field="link_color"]').each(function() {
+        syncGeneralColorField($(this), general.link_color, { writeText: true });
+      });
+      $('[data-ecf-general-field="focus_color"]').each(function() {
+        syncGeneralColorField($(this), general.focus_color, { writeText: true });
+      });
+      applyColorTokenPreset((preset && preset.colors) || {});
+      applyRadiusPreset((preset && preset.radius) || {});
+      applyValueTokenPreset('shadows', (preset && preset.shadows) || {});
+      applyValueTokenPreset('typography_fonts', fonts);
+      applySpacingPreset((preset && preset.spacing) || {});
+      applyFontValueToField('base_font_family', general.base_font_family || 'var(--ecf-font-primary)');
+      applyFontValueToField('heading_font_family', general.heading_font_family || 'var(--ecf-font-secondary)');
+      renderTypePreview();
+      renderShadowPreview();
+      if (typeof renderRootFontImpact === 'function') {
+        renderRootFontImpact();
+      }
+      updateUnsavedBadge();
+    } catch (error) {
+      suppressSettingsAutosave = false;
+      if ($button && $button.length) {
+        $button.prop('disabled', false).removeClass('is-busy');
+      }
+      showAutosaveNotice((error && error.message) ? error.message : failedMessage, 'error');
+      return Promise.reject(error);
+    }
+
+    suppressSettingsAutosave = false;
+    scheduleSettingsAutosave({ delay: 250 });
+
+    return Promise.resolve().then(function() {
+      showAutosaveNotice(successMessage || '', 'success');
+    }).catch(function(error) {
+      showAutosaveNotice((error && error.message) ? error.message : failedMessage, 'error');
+      throw error;
+    }).finally(function() {
+      if ($button && $button.length) {
+        $button.prop('disabled', false).removeClass('is-busy');
+      }
+    });
+  }
+
+  function applyStylePresetSelection(preset, $button) {
+    return applySettingsPayload(preset, $button, {
+      running: 'style_preset_running',
+      success: 'style_preset_success',
+      failed: 'style_preset_failed'
+    });
+  }
+
+  function applySmartRecommendationSelection(preset, $button) {
+    return applySettingsPayload(preset, $button, {
+      running: 'smart_recommendation_running',
+      success: 'smart_recommendation_success',
+      failed: 'smart_recommendation_failed'
+    });
+  }
+
   function getTypePreviewConfig($preview) {
     var maxBase = parseFloat($('[name="ecf_framework_v50[typography][scale][max_base]"]').val());
     if (!maxBase) {
@@ -1720,6 +2058,8 @@ jQuery(function($){
   var panelStorageKey = 'ecfActivePanel';
   var generalTabStorageKey = 'ecfGeneralTab';
   var websiteTabStorageKey = 'ecfWebsiteTab';
+  var typographyTabStorageKey = 'ecfTypographyTab';
+  var startBannerStorageKey = (typeof i18n.start_banner_storage_key === 'string' && i18n.start_banner_storage_key) ? i18n.start_banner_storage_key : 'ecfStartBannerDismissed';
   var pageScrollStorageKey = 'ecfPageScrollTop';
   var pageFocusStorageKey = 'ecfPageFocusTarget';
   var whatsNewStorageKey = 'ecfWhatsNewState';
@@ -1738,8 +2078,11 @@ jQuery(function($){
   var lastElementorAutoSyncPayload = '';
   var pendingFontAutolinkField = '';
   var lastSavedSettingsPayload = '';
+  var lastSavedVariableSyncHash = '';
+  var lastSavedClassSelectionHash = '';
   var inFlightSettingsPayload = '';
   var queuedSettingsPayload = '';
+  var dismissedElementorSyncPromptHash = '';
 
   function parseFormFieldPath(name) {
     return String(name || '')
@@ -2042,8 +2385,32 @@ jQuery(function($){
     return value === true || value === 1 || value === '1' || value === 'on';
   }
 
+  function buildClassSelectionHash(settings) {
+    var source = settings || buildSettingsPayloadFromForm();
+    return stableStringify({
+      starter_classes: source.starter_classes || {},
+      utility_classes: source.utility_classes || {}
+    });
+  }
+
+  function buildVariableSyncHash(settings) {
+    var source = settings || buildSettingsPayloadFromForm();
+    return stableStringify({
+      colors: source.colors || [],
+      radius: source.radius || [],
+      shadows: source.shadows || [],
+      spacing: source.spacing || {},
+      typography: source.typography || {},
+      elementor_boxed_width: source.elementor_boxed_width || ''
+    });
+  }
+
   function isAutosaveEnabled() {
     return $('[name="ecf_framework_v50[autosave_enabled]"]').first().is(':checked');
+  }
+
+  function isAutoSyncEnabled() {
+    return $('[name="ecf_framework_v50[elementor_auto_sync_enabled]"]').first().is(':checked');
   }
 
   function topbarManagedSettingNames() {
@@ -2073,6 +2440,17 @@ jQuery(function($){
     if (!$pill.length) return;
     var active = isAutosaveEnabled();
     $pill.text(active ? (i18n.autosave_active || '') : (i18n.autosave_off || ''));
+    $toggle.toggleClass('is-disabled', !active).attr('aria-pressed', active ? 'true' : 'false');
+    syncTopbarAutosaveSettings();
+    updateAutoSyncPill();
+  }
+
+  function updateAutoSyncPill() {
+    var $pill = $('[data-ecf-autosync-pill]');
+    var $toggle = $('[data-ecf-autosync-toggle]');
+    if (!$pill.length) return;
+    var active = isAutoSyncEnabled();
+    $pill.text(active ? (i18n.autosync_active || '') : (i18n.autosync_off || ''));
     $toggle.toggleClass('is-disabled', !active).attr('aria-pressed', active ? 'true' : 'false');
     syncTopbarAutosaveSettings();
   }
@@ -2169,7 +2547,100 @@ jQuery(function($){
 
   function markCurrentStateAsSaved() {
     lastSavedSettingsPayload = stableStringify(buildSettingsPayloadFromForm());
+    lastSavedVariableSyncHash = buildVariableSyncHash();
+    lastSavedClassSelectionHash = buildClassSelectionHash();
     updateUnsavedBadge();
+  }
+
+  function closeClassSyncPromptModal() {
+    $('[data-ecf-class-sync-prompt-modal]').removeData('ecfSyncPromptPayload').prop('hidden', true).removeClass('is-open');
+    $('body').removeClass('ecf-modal-open');
+  }
+
+  function buildElementorSyncPromptPayload(savedSettings, previousVariableHash, currentVariableHash, previousClassHash, currentClassHash) {
+    var autoSyncPayload = buildElementorAutoSyncPayload(savedSettings);
+    var needsVariables = !!currentVariableHash && currentVariableHash !== previousVariableHash && !(autoSyncPayload.enabled && autoSyncPayload.variables);
+    var needsClasses = !!currentClassHash && currentClassHash !== previousClassHash && !(autoSyncPayload.enabled && autoSyncPayload.classes);
+    if (!needsVariables && !needsClasses) {
+      return null;
+    }
+
+    return {
+      variables: needsVariables,
+      classes: needsClasses,
+      hash: stableStringify({
+        variables: needsVariables ? currentVariableHash : '',
+        classes: needsClasses ? currentClassHash : ''
+      })
+    };
+  }
+
+  function openClassSyncPromptModal(promptPayload) {
+    var $modal = $('[data-ecf-class-sync-prompt-modal]');
+    if (!$modal.length || !promptPayload) return;
+
+    var subtitle = i18n.class_sync_prompt_subtitle || '';
+    var message = i18n.class_sync_prompt_message || '';
+    if (promptPayload.variables && promptPayload.classes) {
+      subtitle = i18n.elementor_sync_prompt_both_subtitle || subtitle;
+      message = i18n.elementor_sync_prompt_both_message || message;
+    } else if (promptPayload.variables) {
+      subtitle = i18n.elementor_sync_prompt_variables_subtitle || subtitle;
+      message = i18n.elementor_sync_prompt_variables_message || message;
+    } else if (promptPayload.classes) {
+      subtitle = i18n.elementor_sync_prompt_classes_subtitle || subtitle;
+      message = i18n.elementor_sync_prompt_classes_message || message;
+    }
+
+    $('[data-ecf-class-sync-prompt-title]').text(i18n.class_sync_prompt_title || '');
+    $('[data-ecf-class-sync-prompt-subtitle]').text(subtitle);
+    $('[data-ecf-class-sync-prompt-message]').text(message);
+    $('[data-ecf-class-sync-prompt-yes] span:last-child').text(i18n.class_sync_prompt_yes || '');
+    $('[data-ecf-class-sync-prompt-no] span:last-child').text(i18n.class_sync_prompt_no || '');
+
+    $modal.data('ecfSyncPromptPayload', promptPayload).prop('hidden', false).addClass('is-open');
+    $('body').addClass('ecf-modal-open');
+  }
+
+  function maybePromptForElementorSync(savedSettings, previousVariableHash, currentVariableHash, previousClassHash, currentClassHash) {
+    var promptPayload = buildElementorSyncPromptPayload(savedSettings, previousVariableHash, currentVariableHash, previousClassHash, currentClassHash);
+    if (!promptPayload) return;
+    if (promptPayload.hash === dismissedElementorSyncPromptHash) return;
+    openClassSyncPromptModal(promptPayload);
+  }
+
+  function runElementorSyncNow(options) {
+    var payload = options || {};
+    if (!syncRestUrl || !restNonce || (!payload.variables && !payload.classes)) {
+      return;
+    }
+
+    showAutosaveNotice(i18n.elementor_syncing || '', 'saving');
+
+    window.fetch(syncRestUrl, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-WP-Nonce': restNonce
+      },
+      body: JSON.stringify({
+        variables: !!payload.variables,
+        classes: !!payload.classes
+      })
+    }).then(function(response) {
+      if (!response.ok) {
+        throw new Error('elementor_sync_failed');
+      }
+      return response.json();
+    }).then(function(responseData) {
+      if (responseData && responseData.meta) {
+        updateSystemInfoCards(responseData.meta, buildSettingsPayloadFromForm());
+      }
+      showAutosaveNotice(i18n.elementor_synced || '', 'success');
+    }).catch(function() {
+      showAutosaveNotice(i18n.elementor_sync_failed || '', 'error');
+    });
   }
 
   function getPanelButtonLabel(panel) {
@@ -3041,6 +3512,10 @@ jQuery(function($){
 
     var payload = buildSettingsPayloadFromForm();
     var payloadHash = stableStringify(payload);
+    var previousVariableSyncHash = lastSavedVariableSyncHash;
+    var previousClassSelectionHash = lastSavedClassSelectionHash;
+    var currentVariableSyncHash = buildVariableSyncHash(payload);
+    var currentClassSelectionHash = buildClassSelectionHash(payload);
 
     if (lastSavedSettingsPayload && payloadHash === lastSavedSettingsPayload) {
       if (autosaveRecoveryNoticePending) {
@@ -3128,6 +3603,7 @@ jQuery(function($){
 
       showAutosaveNotice(i18n.autosave_saved || '', 'success');
       maybeRunElementorAutoSync(responseSettings);
+      maybePromptForElementorSync(responseSettings, previousVariableSyncHash, currentVariableSyncHash, previousClassSelectionHash, currentClassSelectionHash);
     }).catch(function() {
       autosaveInFlight = false;
       inFlightSettingsPayload = '';
@@ -3147,6 +3623,11 @@ jQuery(function($){
     if (!$settingsForm.length || !autosaveReady) return;
 
     var opts = options || {};
+    if (suppressSettingsAutosave) {
+      updateLayrixVariableCount();
+      updateUnsavedBadge();
+      return;
+    }
     updateAutosavePill();
     if (!opts.force && !isAutosaveEnabled()) {
       updateLayrixVariableCount();
@@ -3411,6 +3892,26 @@ jQuery(function($){
     } catch (err) {}
   }
 
+  function isStartBannerDismissed() {
+    try {
+      return window.localStorage.getItem(startBannerStorageKey) === '1';
+    } catch (err) {
+      return false;
+    }
+  }
+
+  function setStartBannerDismissed() {
+    try {
+      window.localStorage.setItem(startBannerStorageKey, '1');
+    } catch (err) {}
+  }
+
+  function refreshStartBanner() {
+    var $banner = $('[data-ecf-start-banner]');
+    if (!$banner.length) return;
+    $banner.prop('hidden', isStartBannerDismissed());
+  }
+
   function ensureWhatsNewEntry(state, key) {
     if (!key) return null;
     if (!state[key]) {
@@ -3493,14 +3994,14 @@ jQuery(function($){
   }
 
   $(document).on('click', '.ecf-nav-item', function(){
-    var panel = $(this).data('panel');
+    var panel = $(this).attr('data-panel');
     markWhatsNewSeen($(this).data('ecf-new-key'));
     switchPanel(panel);
     updateStickyTopbar(panel);
   });
 
   $(document).on('click', '.ecf-sidebar-link[data-panel]', function(){
-    var panel = $(this).data('panel');
+    var panel = $(this).attr('data-panel');
     switchPanel(panel);
     updateStickyTopbar(panel);
   });
@@ -3523,6 +4024,16 @@ jQuery(function($){
       return tab;
     }
     return 'type';
+  }
+
+  function normalizeTypographyTab(tab) {
+    if (tab === 'preview') {
+      return 'scale';
+    }
+    if (tab === 'fonts' || tab === 'scale') {
+      return tab;
+    }
+    return 'fonts';
   }
 
   function switchWebsiteTab(tab) {
@@ -3557,6 +4068,21 @@ jQuery(function($){
     scheduleMasonryLayouts();
   }
 
+  function switchTypographyTab(tab) {
+    var activeTab = normalizeTypographyTab(tab);
+    $('[data-ecf-typography-tab]').removeClass('is-active').attr('aria-pressed', 'false')
+      .filter('[data-ecf-typography-tab="' + activeTab + '"]').addClass('is-active').attr('aria-pressed', 'true');
+    $('[data-ecf-typography-section]').removeClass('is-active').prop('hidden', true)
+      .filter('[data-ecf-typography-section="' + activeTab + '"]').addClass('is-active').prop('hidden', false);
+
+    try {
+      window.sessionStorage.setItem(typographyTabStorageKey, activeTab);
+    } catch (err) {}
+
+    closeFontPicker($('[data-ecf-typography-section]').not('.is-active').find('[data-ecf-font-picker]'));
+    scheduleMasonryLayouts();
+  }
+
   $(document).on('click', '[data-ecf-general-tab]', function() {
     markWhatsNewSeen($(this).data('ecf-new-key'));
     switchGeneralTab($(this).data('ecf-general-tab'));
@@ -3564,6 +4090,29 @@ jQuery(function($){
 
   $(document).on('click', '[data-ecf-website-tab]', function() {
     switchWebsiteTab($(this).data('ecf-website-tab'));
+  });
+
+  $(document).on('click', '[data-ecf-typography-tab]', function() {
+    switchTypographyTab($(this).data('ecf-typography-tab'));
+  });
+
+  $(document).on('click', '[data-ecf-start-dismiss]', function() {
+    setStartBannerDismissed();
+    refreshStartBanner();
+  });
+
+  $(document).on('click', '[data-ecf-start-focus]', function() {
+    var target = String($(this).data('ecf-start-focus') || '');
+    if (target === 'style-presets') {
+      var $target = $('[data-ecf-layout-item="website-style-presets"]').first();
+      if ($target.length) {
+        setStartBannerDismissed();
+        refreshStartBanner();
+        window.setTimeout(function() {
+          $target.get(0).scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 20);
+      }
+    }
   });
 
   $(document).on('toggle', '.ecf-system-debug-card', function() {
@@ -3802,21 +4351,24 @@ jQuery(function($){
     });
   });
 
-  function closeAutosaveMenu() {
+  function closeTopbarMenus() {
     $('[data-ecf-autosave-control]').removeClass('is-open');
     $('[data-ecf-autosave-menu]').prop('hidden', true);
     $('[data-ecf-autosave-toggle]').attr('aria-expanded', 'false');
+    $('[data-ecf-autosync-control]').removeClass('is-open');
+    $('[data-ecf-autosync-menu]').prop('hidden', true);
+    $('[data-ecf-autosync-toggle]').attr('aria-expanded', 'false');
   }
 
-  function toggleAutosaveMenu() {
-    var $control = $('[data-ecf-autosave-control]').first();
+  function toggleTopbarMenu(type) {
+    var $control = $('[data-ecf-' + type + '-control]').first();
     if (!$control.length) return;
     var isOpen = $control.hasClass('is-open');
-    closeAutosaveMenu();
+    closeTopbarMenus();
     if (isOpen) return;
     $control.addClass('is-open');
-    $control.find('[data-ecf-autosave-menu]').prop('hidden', false);
-    $control.find('[data-ecf-autosave-toggle]').attr('aria-expanded', 'true');
+    $control.find('[data-ecf-' + type + '-menu]').prop('hidden', false);
+    $control.find('[data-ecf-' + type + '-toggle]').attr('aria-expanded', 'true');
   }
 
   function toggleTopbarSetting(key, checked) {
@@ -3831,17 +4383,23 @@ jQuery(function($){
   $(document).on('click', '[data-ecf-autosave-toggle]', function(event) {
     event.preventDefault();
     event.stopPropagation();
+    toggleTopbarSetting('autosave_enabled', !isAutosaveEnabled());
+  });
+
+  $(document).on('click', '[data-ecf-autosync-toggle]', function(event) {
+    event.preventDefault();
+    event.stopPropagation();
     var rect = this.getBoundingClientRect();
     var arrowZoneWidth = 48;
     var clickedArrowZone = event.clientX >= (rect.right - arrowZoneWidth);
 
     if (clickedArrowZone) {
-      toggleAutosaveMenu();
+      toggleTopbarMenu('autosync');
       return;
     }
 
-    closeAutosaveMenu();
-    toggleTopbarSetting('autosave_enabled', !isAutosaveEnabled());
+    closeTopbarMenus();
+    toggleTopbarSetting('elementor_auto_sync_enabled', !isAutoSyncEnabled());
   });
 
   $(document).on('change', '[data-ecf-topbar-setting]', function() {
@@ -3850,15 +4408,15 @@ jQuery(function($){
   });
 
   $(document).on('click', function(event) {
-    if ($(event.target).closest('[data-ecf-autosave-control]').length) {
+    if ($(event.target).closest('[data-ecf-autosave-control], [data-ecf-autosync-control]').length) {
       return;
     }
-    closeAutosaveMenu();
+    closeTopbarMenus();
   });
 
   $(document).on('keydown', function(event) {
     if (event.key === 'Escape') {
-      closeAutosaveMenu();
+      closeTopbarMenus();
     }
   });
 
@@ -4046,6 +4604,97 @@ jQuery(function($){
     importLibraryFontIntoField(fieldName, target, family, $button);
   });
 
+  $(document).on('click', '[data-ecf-font-pairing-apply]', function(e) {
+    e.preventDefault();
+    var $button = $(this);
+    applyFontPairingSelection({
+      bodyFamily: String($button.data('ecf-font-pairing-body') || ''),
+      headingFamily: String($button.data('ecf-font-pairing-heading') || '')
+    }, $button);
+  });
+
+  $(document).on('click', '[data-ecf-font-pairing-random]', function(e) {
+    e.preventDefault();
+    var $button = $(this);
+    var $card = $button.closest('[data-ecf-font-pairing-card]');
+    var rawOptions = String($button.attr('data-ecf-font-pairing-options') || '');
+    var options = [];
+    var currentSlug = String($card.attr('data-ecf-font-pairing-current') || '');
+
+    try {
+      options = rawOptions ? JSON.parse(rawOptions) : [];
+    } catch (error) {
+      options = [];
+    }
+
+    var pairing = pickRandomFontPairing(options, currentSlug);
+    if (!pairing) {
+      return;
+    }
+
+    updateFontPairingCard($card, pairing);
+  });
+
+  $(document).on('click', '[data-ecf-font-pairing-reset]', function(e) {
+    e.preventDefault();
+    var $button = $(this);
+    var $card = $button.closest('[data-ecf-font-pairing-card]');
+    var rawDefault = String($button.attr('data-ecf-font-pairing-default') || '');
+    var pairing = null;
+
+    try {
+      pairing = rawDefault ? JSON.parse(rawDefault) : null;
+    } catch (error) {
+      pairing = null;
+    }
+
+    if (!pairing) {
+      return;
+    }
+
+    updateFontPairingCard($card, pairing);
+  });
+
+  $(document).on('click', '[data-ecf-style-preset-apply]', function(e) {
+    e.preventDefault();
+    var $button = $(this);
+    var rawPreset = String($button.attr('data-ecf-style-preset') || '');
+    var preset = null;
+
+    try {
+      preset = rawPreset ? JSON.parse(rawPreset) : null;
+    } catch (error) {
+      preset = null;
+    }
+
+    if (!preset) {
+      showAutosaveNotice(i18n.style_preset_failed || '', 'error');
+      return;
+    }
+
+    applyStylePresetSelection(preset, $button);
+  });
+
+  $(document).on('click', '[data-ecf-smart-recommendation-apply]', function(e) {
+    e.preventDefault();
+    var $button = $(this);
+    var rawPreset = String($button.attr('data-ecf-smart-recommendation') || '');
+    var preset = null;
+
+    try {
+      preset = rawPreset ? JSON.parse(rawPreset) : null;
+    } catch (error) {
+      preset = null;
+    }
+
+    if (!preset) {
+      showAutosaveNotice(i18n.smart_recommendation_failed || '', 'error');
+      return;
+    }
+
+    applySmartRecommendationSelection(preset, $button);
+  });
+
   function openChangelogModal() {
     $('[data-ecf-changelog-modal]').prop('hidden', false).addClass('is-open');
     $('body').addClass('ecf-modal-open');
@@ -4079,9 +4728,14 @@ jQuery(function($){
       initialPanel = storedPanel;
     }
   } catch (err) {}
+  $('.ecf-wrap').addClass('ecf-js-ready');
   layoutOrders = normalizeLayoutOrders(layoutOrders);
   captureDefaultLayoutState();
-  switchPanel(initialPanel);
+  try {
+    switchPanel(initialPanel);
+  } catch (err) {
+    console.error('ECF switchPanel init error:', err);
+  }
   var initialGeneralTab = 'website';
   try {
     var storedGeneralTab = window.sessionStorage.getItem(generalTabStorageKey);
@@ -4089,7 +4743,11 @@ jQuery(function($){
       initialGeneralTab = normalizeGeneralTab(storedGeneralTab);
     }
   } catch (err) {}
-  switchGeneralTab(initialGeneralTab);
+  try {
+    switchGeneralTab(initialGeneralTab);
+  } catch (err) {
+    console.error('ECF switchGeneralTab init error:', err);
+  }
   var initialWebsiteTab = 'type';
   try {
     var storedWebsiteTab = window.sessionStorage.getItem(websiteTabStorageKey);
@@ -4097,7 +4755,23 @@ jQuery(function($){
       initialWebsiteTab = normalizeWebsiteTab(storedWebsiteTab);
     }
   } catch (err) {}
-  switchWebsiteTab(initialWebsiteTab);
+  try {
+    switchWebsiteTab(initialWebsiteTab);
+  } catch (err) {
+    console.error('ECF switchWebsiteTab init error:', err);
+  }
+  var initialTypographyTab = 'fonts';
+  try {
+    var storedTypographyTab = window.sessionStorage.getItem(typographyTabStorageKey);
+    if (storedTypographyTab) {
+      initialTypographyTab = normalizeTypographyTab(storedTypographyTab);
+    }
+  } catch (err) {}
+  try {
+    switchTypographyTab(initialTypographyTab);
+  } catch (err) {
+    console.error('ECF switchTypographyTab init error:', err);
+  }
   $('[data-ecf-base-font-preset]').trigger('change');
   updateLayrixVariableCount();
   updateAutosavePill();
@@ -4117,6 +4791,9 @@ jQuery(function($){
   });
   safeInitStep('refresh whats-new badges', function() {
     refreshWhatsNewBadges();
+  });
+  safeInitStep('refresh start banner', function() {
+    refreshStartBanner();
   });
   safeInitStep('restore scroll position', function() {
     restorePageScrollPosition();
@@ -4150,7 +4827,7 @@ jQuery(function($){
     if (!validateSettingsForSave()) {
       return false;
     }
-    var activePanel = $('.ecf-nav-item.is-active').data('panel') || 'tokens';
+    var activePanel = $('.ecf-nav-item.is-active').attr('data-panel') || 'tokens';
     try {
       window.sessionStorage.setItem(panelStorageKey, activePanel);
       var activeGeneralTab = $('[data-ecf-general-tab].is-active').data('ecf-general-tab') || 'system';
@@ -4958,7 +5635,8 @@ jQuery(function($){
       'existing-foreign': existingForeignNames.length
     };
     $.each(summaryCounts, function(key, count) {
-      $('[data-ecf-active-summary-item="' + key + '"]').prop('hidden', key !== 'total' && !count);
+      var shouldShow = key === 'total' || (key === 'existing-foreign' && count > 0);
+      $('[data-ecf-active-summary-item="' + key + '"]').prop('hidden', !shouldShow);
     });
     var parts = [];
     if (basicNames.length) parts.push(basicNames.length + ' basic');
@@ -5387,8 +6065,10 @@ jQuery(function($){
     var showStarterFilter = activeLibrary === 'starter' && activeTier !== 'custom';
     var showBemGenerator = activeLibrary === 'starter' && activeTier === 'custom';
     var showActiveSummary = activeTier === 'all';
-    var tierLabel = $.trim($('[data-ecf-class-tier="' + activeTier + '"]').clone().children().remove().end().text());
-    var starterCopy = $.trim($('.ecf-class-library-intro').first().text() || '');
+    var $activeTierButton = $('[data-ecf-class-tier="' + activeTier + '"]');
+    var tierLabel = $.trim($activeTierButton.clone().children().remove().end().text());
+    var tierTitle = $.trim($activeTierButton.attr('data-ecf-tier-title') || tierLabel || '');
+    var tierCopy = $.trim($activeTierButton.attr('data-ecf-tier-copy') || $('.ecf-class-library-intro').first().text() || '');
 
     showClassLibrarySection(activeLibrary);
     $('[data-ecf-active-class-summary__grid]').prop('hidden', !showActiveSummary);
@@ -5397,9 +6077,14 @@ jQuery(function($){
     $('[data-ecf-starter-filterbar]').prop('hidden', !showStarterFilter);
     $('[data-ecf-bem-generator]').prop('hidden', !showBemGenerator);
 
+    if (activeLibrary === 'active') {
+      $('[data-ecf-active-workspace-title]').text(tierTitle);
+      $('[data-ecf-active-workspace-copy]').text(tierCopy);
+    }
+
     if (activeLibrary === 'starter') {
-      $('[data-ecf-class-workspace-title]').text(tierLabel || '');
-      $('[data-ecf-class-workspace-copy]').text(starterCopy);
+      $('[data-ecf-class-workspace-title]').text(tierTitle);
+      $('[data-ecf-class-workspace-copy]').text(tierCopy);
     }
   }
 
@@ -6229,6 +6914,27 @@ jQuery(function($){
 
   $(document).on('click', '[data-ecf-class-delete-close]', function(){
     closeClassDeleteModal();
+  });
+
+  $(document).on('click', '[data-ecf-class-sync-prompt-close]', function(){
+    closeClassSyncPromptModal();
+  });
+
+  $(document).on('click', '[data-ecf-class-sync-prompt-no]', function(){
+    var payload = $('[data-ecf-class-sync-prompt-modal]').data('ecfSyncPromptPayload') || null;
+    dismissedElementorSyncPromptHash = payload && payload.hash ? String(payload.hash) : '';
+    closeClassSyncPromptModal();
+  });
+
+  $(document).on('click', '[data-ecf-class-sync-prompt-yes]', function(){
+    var payload = $('[data-ecf-class-sync-prompt-modal]').data('ecfSyncPromptPayload') || null;
+    dismissedElementorSyncPromptHash = '';
+    closeClassSyncPromptModal();
+    if (!payload) return;
+    runElementorSyncNow({
+      variables: !!payload.variables,
+      classes: !!payload.classes
+    });
   });
 
   $(document).on('click', '[data-ecf-class-delete-unused]', function(){

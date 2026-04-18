@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.3.13 (2026-04-18)
+
+### Fix
+- Typography and class tabs now share a cleaner attached tab/content layout with more consistent spacing and hierarchy.
+- Typografie- und Klassen-Tabs teilen jetzt ein saubereres verbundenes Tab-/Inhaltslayout mit konsistenteren Abständen und klarerer Hierarchie.
+- Class-library flows were refined with calmer active summaries, clearer tab-specific intros, and improved panel consistency.
+- Klassenbibliothek-Workflows wurden mit ruhigeren Aktiv-Zusammenfassungen, klareren tab-spezifischen Einleitungen und konsistenteren Panels verfeinert.
+- Admin UI polish continued across topbar, tabs, onboarding helpers, font pairing, presets, recommendations, recipes, and sync messaging.
+- Der Admin-Feinschliff wurde bei Topbar, Tabs, Onboarding-Hinweisen, Schriftpaaren, Presets, Empfehlungen, Rezepten und Sync-Meldungen weiter ausgebaut.
+
 ## 0.3.12 (2026-04-15)
 
 ### Fix

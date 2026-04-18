@@ -40,6 +40,9 @@ msgstr "%1$s / %2$s"
 msgid "%1$s classes / %2$s variables"
 msgstr "%1$s Klassen / %2$s Variablen"
 
+msgid "%1$s-%2$s ratio"
+msgstr "%1$s-%2$s Verhältnis"
+
 msgid "%1$s: %2$s."
 msgstr "%1$s: %2$s."
 
@@ -48,6 +51,18 @@ msgstr "%d Klasse hinzugefügt."
 
 msgid "%d classes added."
 msgstr "%d Klassen hinzugefügt."
+
+msgid "%d look good"
+msgstr "%d sehen gut aus"
+
+msgid "%d only in Elementor"
+msgstr "%d nur in Elementor"
+
+msgid "%d to fix"
+msgstr "%d zu beheben"
+
+msgid "%d to review"
+msgstr "%d prüfen"
 
 msgid "%s%% (%spx = 1rem)"
 msgstr "%s%% (%spx = 1rem)"
@@ -70,6 +85,39 @@ msgstr "3 Spalten"
 msgid "3 columns side by side"
 msgstr "3 Spalten nebeneinander"
 
+msgid "A balanced block for benefits, services or product highlights with clean cards and steady rhythm."
+msgstr "Ein ausgewogener Block für Vorteile, Leistungen oder Produkt-Highlights mit klaren Karten und ruhigem Rhythmus."
+
+msgid "A calm premium base when you want elegance, contrast and a little more depth."
+msgstr "Eine ruhige Premium-Basis, wenn du Eleganz, Kontrast und etwas mehr Tiefe möchtest."
+
+msgid "A clean first screen with headline, supporting copy, one main call to action and optional media."
+msgstr "Ein sauberer erster Screen mit Überschrift, unterstützendem Text, einer Haupt-Call-to-Action und optionalen Medien."
+
+msgid "A compact call-to-action block that closes a section with one message, one button and strong contrast."
+msgstr "Ein kompakter Call-to-Action-Block, der einen Bereich mit einer Botschaft, einem Button und starkem Kontrast abschließt."
+
+msgid "A contemporary sans headline with a neutral body font for product, SaaS, and interface-heavy sites."
+msgstr "Eine zeitgemäße Sans-Überschrift mit neutraler Body-Schrift für Produkt-, SaaS- und interface-lastige Websites."
+
+msgid "A crisp product look with cool indigo accents, airy neutrals and soft rounded surfaces."
+msgstr "Ein klarer Produkt-Look mit kühlen Indigo-Akzenten, luftigen Neutrals und weich gerundeten Flächen."
+
+msgid "A crisp system for modern product pages"
+msgstr "Ein klares System für moderne Produktseiten"
+
+msgid "A familiar reading-focused serif headline with a clean sans body for content-rich websites."
+msgstr "Eine vertraute, lesefreundliche Serif-Überschrift mit einer klaren Sans-Body-Schrift für inhaltsstarke Websites."
+
+msgid "A gentler direction for brands, magazines and long-form reading experiences."
+msgstr "Eine sanftere Richtung für Marken, Magazine und längere Leseerlebnisse."
+
+msgid "A quick review of readability, hierarchy, rhythm and cleanup signals before you refine the details."
+msgstr "Eine schnelle Prüfung von Lesbarkeit, Hierarchie, Rhythmus und Aufräum-Signalen, bevor du die Details verfeinerst."
+
+msgid "A timeless reading rhythm for thoughtful content"
+msgstr "Ein zeitloser Leserhythmus für durchdachte Inhalte"
+
 msgid "Accent variant for highlighted sections or content blocks."
 msgstr "Akzent-Variante für hervorgehobene Bereiche oder Content-Blöcke."
 
@@ -90,6 +138,9 @@ msgstr "Aktionen"
 
 msgid "Active"
 msgstr "Aktiv"
+
+msgid "Active classes"
+msgstr "Aktive Klassen"
 
 msgid "Active utility classes"
 msgstr "Aktive Utility-Klassen"
@@ -114,6 +165,9 @@ msgstr "Kleinere Stufe hinzufügen"
 
 msgid "Add to Favorites"
 msgstr "Zu Favoriten hinzufügen"
+
+msgid "Add your own semantic class names for project-specific naming that does not fit the predefined starter library."
+msgstr "Ergänze deine eigenen semantischen Klassennamen für projektspezifische Benennung, die nicht in die vordefinierte Starter-Bibliothek passt."
 
 msgid "Additional ECF classes separated by spaces."
 msgstr "Zusätzliche ECF-Klassen, durch Leerzeichen getrennt."
@@ -157,6 +211,9 @@ msgstr "Beeinflusst"
 msgid "After Layrix autosave, also sync the generated variables and classes to Elementor automatically. This can update Elementor data and clear Elementor caches."
 msgstr "Nach dem Layrix-Autosave werden die erzeugten Variablen und Klassen zusätzlich automatisch mit Elementor synchronisiert. Das kann Elementor-Daten aktualisieren und Elementor-Caches leeren."
 
+msgid "After sync"
+msgstr "Nach dem Sync"
+
 msgid "After sync:"
 msgstr "Nach Sync:"
 
@@ -199,11 +256,29 @@ msgstr "Wendet einen mittleren Heading-Stil für kleinere Abschnitte an."
 msgid "Applies a strong heading style for section titles."
 msgstr "Wendet einen starken Heading-Stil für Abschnittsüberschriften an."
 
+msgid "Applies softer values to the shadow tokens."
+msgstr "Wendet weichere Werte auf die Schatten-Tokens an."
+
 msgid "Applies the smallest heading style in the utility set."
 msgstr "Wendet den kleinsten Heading-Stil im Utility-Set an."
 
 msgid "Applies the strongest heading style for major titles."
 msgstr "Wendet den stärksten Heading-Stil für große Haupttitel an."
+
+msgid "Apply contrast fix"
+msgstr "Kontrast-Fix anwenden"
+
+msgid "Apply one complete visual direction when you want a faster start for type, colors, radii, shadows and website basics."
+msgstr "Wende eine komplette visuelle Richtung an, wenn du einen schnelleren Start für Typografie, Farben, Radien, Schatten und Website-Basics willst."
+
+msgid "Applying the font pairing…"
+msgstr "Schriftpaar wird angewendet…"
+
+msgid "Applying the recommendation…"
+msgstr "Empfehlung wird angewendet…"
+
+msgid "Applying the style preset…"
+msgstr "Stil-Preset wird angewendet…"
 
 msgid "Area"
 msgstr "Bereich"
@@ -214,8 +289,20 @@ msgstr "Aurora"
 msgid "Auto helper"
 msgstr "Auto-Helfer"
 
+msgid "Auto-Sync: off"
+msgstr "Auto-Sync: aus"
+
+msgid "Auto-Sync: on"
+msgstr "Auto-Sync: an"
+
+msgid "Auto-sync active"
+msgstr "Auto-Sync aktiv"
+
 msgid "Auto-sync classes"
 msgstr "Klassen automatisch synchronisieren"
+
+msgid "Auto-sync off"
+msgstr "Auto-Sync aus"
 
 msgid "Auto-sync variables"
 msgstr "Variablen automatisch synchronisieren"
@@ -247,11 +334,20 @@ msgstr "Autosave ist deaktiviert. Nutze den Speichern-Button, um Änderungen zu 
 msgid "Autosave off"
 msgstr "Autosave aus"
 
+msgid "Autosave: off"
+msgstr "Autosave: aus"
+
+msgid "Autosave: on"
+msgstr "Autosave: an"
+
 msgid "BEM class generator"
 msgstr "BEM-Klassengenerator"
 
 msgid "Balanced line breaks make longer headings feel calmer."
 msgstr "Ausbalancierte Zeilenumbrüche lassen längere Überschriften ruhiger wirken."
+
+msgid "Balanced proportions and strong readability make this pair easy to use across many sections."
+msgstr "Ausgewogene Proportionen und starke Lesbarkeit machen dieses Paar in vielen Bereichen leicht einsetzbar."
 
 msgid "Balances text wrapping for more even headline lines."
 msgstr "Balanciert den Zeilenumbruch für gleichmäßigere Überschriften."
@@ -274,11 +370,17 @@ msgstr "Basis-Schriftfamilie"
 msgid "Base Settings"
 msgstr "Basiseinstellungen"
 
+msgid "Base Settings control global basics like root font size, plugin language, container widths, base colors, body font, and editor helper behavior."
+msgstr "Basiseinstellungen steuern globale Grundlagen wie Root-Schriftgröße, Plugin-Sprache, Container-Breiten, Basisfarben, Body-Schrift und Editor-Helfer."
+
 msgid "Base Step"
 msgstr "Basis-Stufe"
 
 msgid "Base Text Color"
 msgstr "Basis-Textfarbe"
+
+msgid "Base contrast"
+msgstr "Basis-Kontrast"
 
 msgid "Base font stack for the whole site body and normal flowing text. Headings can keep using your separate Primary typography font."
 msgstr "Basis-Schriftfamilie für den gesamten Body und normalen Fließtext der Website. Überschriften können weiterhin deine separate Primärschrift aus der Typografie verwenden."
@@ -307,8 +409,14 @@ msgstr "Basis aktiv"
 msgid "Basic active classes"
 msgstr "Aktive Basis-Klassen"
 
+msgid "Basic classes"
+msgstr "Basis-Klassen"
+
 msgid "Behavior"
 msgstr "Verhalten"
+
+msgid "Body"
+msgstr "Fließtext"
 
 msgid "Body Font"
 msgstr "Body-Schrift"
@@ -322,8 +430,20 @@ msgstr "Body Medium"
 msgid "Body Small"
 msgstr "Body Small"
 
+msgid "Body and heading currently use the same font. That can work, but a stronger pairing often creates clearer hierarchy."
+msgstr "Fließtext und Überschriften verwenden aktuell dieselbe Schrift. Das kann funktionieren, aber ein stärkeres Pairing schafft oft eine klarere Hierarchie."
+
+msgid "Body and heading fonts are separated, which usually gives headings more presence and improves scanning."
+msgstr "Fließtext- und Überschriftenschrift sind getrennt, was Überschriften meist mehr Präsenz gibt und das Scannen verbessert."
+
+msgid "Body text size"
+msgstr "Fließtextgröße"
+
 msgid "Bold purple product UI inspired by modern component systems."
 msgstr "Kräftige violette Produktoberfläche, inspiriert von modernen Components-Systemen."
+
+msgid "Boutique Premium"
+msgstr "Boutique-Premium"
 
 msgid "Box Shadow - Vars"
 msgstr "Box Shadow - Variablen"
@@ -334,11 +454,23 @@ msgstr "Box-Shadow-Variablen & Klassen"
 msgid "Brand or logo area inside the header."
 msgstr "Brand- oder Logo-Bereich im Header."
 
+msgid "Bring the body text back into a safer default reading range before refining the smaller details."
+msgstr "Bring die Fließtextgröße zurück in einen sichereren Standard-Lesebereich, bevor du die kleineren Details verfeinerst."
+
+msgid "Bring the spacing scale back into a more balanced range so sections feel calmer and less jumpy."
+msgstr "Bring die Abstands-Skala zurück in einen ausgewogeneren Bereich, damit Bereiche ruhiger und weniger sprunghaft wirken."
+
+msgid "Browse extended starter classes for additional sections, forms, trust blocks, commerce patterns and richer page structures."
+msgstr "Durchsuche erweiterte Starter-Klassen für zusätzliche Bereiche, Formulare, Trust-Elemente, Commerce-Muster und reichhaltigere Seitenstrukturen."
+
 msgid "Build your tokens"
 msgstr "Erstelle deine Tokens"
 
 msgid "Build your type scale, assign body and heading fonts, and review the generated text tokens in one consistent typography workspace."
 msgstr "Baue deine Schrift-Skala auf, weise Body- und Überschriften-Schriften zu und prüfe die generierten Text-Tokens in einem konsistenten Typografie-Arbeitsbereich."
+
+msgid "Built for articles, stories, and long reads"
+msgstr "Gemacht für Artikel, Geschichten und lange Inhalte"
 
 msgid "Button"
 msgstr "Button"
@@ -351,6 +483,18 @@ msgstr "Button-Variante, die eher wie ein Textlink wirkt."
 
 msgid "Buttons"
 msgstr "Buttons"
+
+msgid "CTA"
+msgstr "CTA"
+
+msgid "CTA Band"
+msgstr "CTA-Band"
+
+msgid "Calm Premium"
+msgstr "Ruhiges Premium"
+
+msgid "Calm the spacing rhythm"
+msgstr "Abstands-Rhythmus beruhigen"
 
 msgid "Cancel"
 msgstr "Abbrechen"
@@ -412,6 +556,9 @@ msgstr "Prüft, ob das Elementor-Core-Plugin auf dieser Website geladen und für
 msgid "Choose Color for color values, Size for lengths like px/rem/clamp(...), and Text only for real text strings."
 msgstr "Wähle Farbe für Farbwerte, Größe für Längen wie px/rem/clamp(...) und Text nur für echte Textwerte."
 
+msgid "Choose a ready-made headline and body combination when you want a faster, more confident typography start."
+msgstr "Wähle eine fertige Kombination aus Überschrift und Fließtext, wenn du schneller und sicherer in die Typografie starten möchtest."
+
 msgid "Choose a section, add elements or modifiers, and generate clean ECF BEM names for your own classes."
 msgstr "Wähle einen Bereich, ergänze Elemente oder Modifier und erzeuge saubere ECF-BEM-Namen für eigene Klassen."
 
@@ -454,6 +601,9 @@ msgstr "Klasse"
 msgid "Class Name"
 msgstr "Klassenname"
 
+msgid "Class cleanup"
+msgstr "Klassen-Aufräumen"
+
 msgid "Class library"
 msgstr "Klassenbibliothek"
 
@@ -471,6 +621,12 @@ msgstr "Klassen, die bereits in Elementor existieren, aber nicht Teil deiner akt
 
 msgid "Classic"
 msgstr "Classic"
+
+msgid "Classic Journal"
+msgstr "Klassisches Journal"
+
+msgid "Classic Reader"
+msgstr "Klassischer Lesefluss"
 
 msgid "Clean slate interface with crisp contrast and restrained accents."
 msgstr "Klare Slate-Oberfläche mit prägnantem Kontrast und zurückhaltenden Akzenten."
@@ -589,6 +745,9 @@ msgstr "Kartenlayout konnte nicht gespeichert werden."
 msgid "Could not save settings automatically."
 msgstr "Einstellungen konnten nicht automatisch gespeichert werden."
 
+msgid "Creamy surfaces, elegant serif headlines and softer shadows for storytelling and premium content."
+msgstr "Cremige Flächen, elegante Serif-Überschriften und weichere Schatten für Storytelling und hochwertigen Content."
+
 msgid "Creates the CSS token --ecf-container-boxed and the helper class .ecf-container-boxed. Choose a format like px, %, rem or switch to f(x) for values like min(...), calc(...) or clamp(...)."
 msgstr "Erstellt das CSS-Token --ecf-container-boxed und die Helferklasse .ecf-container-boxed. Wähle ein Format wie px, %, rem oder wechsle zu f(x) für Werte wie min(...), calc(...) oder clamp(...)."
 
@@ -646,11 +805,17 @@ msgstr "Eigener Abschnitt"
 msgid "Custom stack"
 msgstr "Eigener Stack"
 
+msgid "Dark graphite text, rich plum accents and balanced rounding for a polished premium foundation."
+msgstr "Dunkler Graphittext, satte Pflaumen-Akzente und ausgewogene Rundungen für eine hochwertige Premium-Basis."
+
 msgid "Dark mode"
 msgstr "Dunkelmodus"
 
 msgid "Dark variant for sections with a darker surface."
 msgstr "Dunkle Variante für Bereiche mit dunkler Oberfläche."
+
+msgid "Darken or lighten the default text color so longer paragraphs feel clearer and safer to read."
+msgstr "Verdunkle oder erhelle die Standard-Textfarbe, damit längere Absätze klarer und sicherer lesbar wirken."
 
 msgid "Debug"
 msgstr "Debug"
@@ -697,6 +862,9 @@ msgstr "Auswahl aufheben"
 msgid "Design"
 msgstr "Design"
 
+msgid "Design Health Check"
+msgstr "Design-Health-Check"
+
 msgid "Design Mode"
 msgstr "Design-Modus"
 
@@ -705,6 +873,9 @@ msgstr "Design System Sync aktiv"
 
 msgid "Design Tokens"
 msgstr "Design-Tokens"
+
+msgid "Design that feels premium at first glance"
+msgstr "Design, das auf den ersten Blick hochwertig wirkt"
 
 msgid "Desktop stays in 2 or 3 columns. On smaller screens the cards stack automatically into one column."
 msgstr "Desktop bleibt bei 2 oder 3 Spalten. Auf kleineren Bildschirmen stapeln sich die Karten automatisch zu einer Spalte."
@@ -783,6 +954,18 @@ msgstr "Editor"
 
 msgid "Editor helpers and variable-filter behavior inside Elementor."
 msgstr "Editor-Helfer und das Filterverhalten der Variablen in Elementor."
+
+msgid "Editorial"
+msgstr "Editorial"
+
+msgid "Editorial Contrast"
+msgstr "Editorialer Kontrast"
+
+msgid "Elegant detail with clear modern support"
+msgstr "Elegante Details mit klar moderner Unterstützung"
+
+msgid "Elegant serif headlines paired with a modern sans for brands that should feel refined, soft, and trustworthy."
+msgstr "Elegante Serif-Überschriften mit einer modernen Sans für Marken, die verfeinert, weich und vertrauenswürdig wirken sollen."
 
 msgid "Element-based unit for focus styling that scales with the focused element."
 msgstr "Elementbasierte Einheit für Fokus-Styling, das mit dem fokussierten Element mitskaliert."
@@ -865,6 +1048,9 @@ msgstr "Automatische Aktualisierungen aktivieren"
 msgid "Enable only the starter classes and utility classes you really want to keep maintainable in Elementor."
 msgstr "Aktiviere nur die Starter- und Utility-Klassen, die du in Elementor wirklich pflegbar halten willst."
 
+msgid "Enable small helper classes for text, alignment, spacing and a few safe visual shortcuts without bloating your class system."
+msgstr "Aktiviere kleine Hilfsklassen für Text, Ausrichtung, Abstände und einige sichere visuelle Kurzbefehle, ohne dein Klassensystem aufzublähen."
+
 msgid "Enabled"
 msgstr "Aktiv"
 
@@ -910,6 +1096,9 @@ msgstr "Exportiert aus Plugin-Version: %s"
 msgid "Extra active classes"
 msgstr "Aktive Extras-Klassen"
 
+msgid "Extra classes"
+msgstr "Extra-Klassen"
+
 msgid "Extras"
 msgstr "Extras"
 
@@ -924,6 +1113,9 @@ msgstr "Favorit"
 
 msgid "Favorites"
 msgstr "Favoriten"
+
+msgid "Feature Grid"
+msgstr "Feature-Grid"
 
 msgid "File URL"
 msgstr "Datei-URL"
@@ -1000,6 +1192,9 @@ msgstr "Schriftarten"
 msgid "Font Weights"
 msgstr "Schriftstärken"
 
+msgid "Font hierarchy"
+msgstr "Schrifthierarchie"
+
 msgid "Font imported locally and activated."
 msgstr "Schrift lokal importiert und aktiviert."
 
@@ -1012,6 +1207,9 @@ msgstr "Schrift wird lokal importiert…"
 msgid "Font name: %s"
 msgstr "Schriftname: %s"
 
+msgid "Font pairing applied."
+msgstr "Schriftpaar wurde angewendet."
+
 msgid "Font size at the largest viewport (desktop). The base step gets this size."
 msgstr "Schriftgröße am größten Viewport (Desktop). Die Basisstufe erhält genau diese Größe."
 
@@ -1020,6 +1218,9 @@ msgstr "Schriftgröße am kleinsten Viewport (mobil). Die Basisstufe erhält gen
 
 msgid "Font size:"
 msgstr "Schriftgröße:"
+
+msgid "Fonts"
+msgstr "Schrift"
 
 msgid "Footer"
 msgstr "Footer"
@@ -1078,6 +1279,12 @@ msgstr "Format"
 msgid "Forms"
 msgstr "Formulare"
 
+msgid "Friendly Modern"
+msgstr "Freundlich modern"
+
+msgid "From Layrix"
+msgstr "Aus Layrix"
+
 msgid "Full CSS expression. Use values like clamp(16px, 1rem + 0.2vw, 18px)."
 msgstr "Voller CSS-Ausdruck. Nutze Werte wie clamp(16px, 1rem + 0.2vw, 18px)."
 
@@ -1129,6 +1336,9 @@ msgstr "GitHub-Update-Prüfungen sind in ECF Allgemeine Einstellungen > System d
 msgid "Glass"
 msgstr "Glass"
 
+msgid "Glass Product"
+msgstr "Glasiges Produkt"
+
 msgid "Global Class"
 msgstr "Globale Klasse"
 
@@ -1159,14 +1369,29 @@ msgstr "Faustregel: Nutze Starter-Klassen für Seitenstruktur und semantische Be
 msgid "Google Fonts library"
 msgstr "Google-Fonts-Bibliothek"
 
+msgid "Got it"
+msgstr "Verstanden"
+
 msgid "Graphite"
 msgstr "Graphit"
+
+msgid "Great for SaaS, product marketing and clean interface-driven brands."
+msgstr "Ideal für SaaS, Produktmarketing und klare interface-getriebene Marken."
+
+msgid "Great for three to six cards when you want a scannable section with one shared visual system."
+msgstr "Ideal für drei bis sechs Karten, wenn du einen gut scannbaren Bereich mit einem gemeinsamen visuellen System willst."
+
+msgid "Grid"
+msgstr "Grid"
 
 msgid "Groups items in a horizontal cluster with wrapping."
 msgstr "Gruppiert Elemente als horizontale, umbrechende Cluster-Reihe."
 
 msgid "Groups related fields or controls together."
 msgstr "Gruppiert zusammengehörige Felder oder Steuerelemente."
+
+msgid "Guide the next click clearly"
+msgstr "Führe den nächsten Klick klar an"
 
 msgid "Header"
 msgstr "Header"
@@ -1192,14 +1417,26 @@ msgstr "Überschriften-Schrift"
 msgid "Heading Font Family"
 msgstr "Überschriften-Schriftfamilie"
 
+msgid "Headings"
+msgstr "Überschriften"
+
+msgid "Healthy base"
+msgstr "Gesunde Basis"
+
 msgid "Help"
 msgstr "Hilfe"
 
 msgid "Help & Support"
 msgstr "Hilfe & Support"
 
+msgid "Helpful tokens"
+msgstr "Hilfreiche Tokens"
+
 msgid "Hero"
 msgstr "Hero"
+
+msgid "Hero Intro"
+msgstr "Hero-Intro"
 
 msgid "Hero section class for the main entry area of a page."
 msgstr "Hero-Klasse für den zentralen Einstiegsbereich einer Seite."
@@ -1213,8 +1450,17 @@ msgstr "Visuell verborgen, aber für Hilfstechnologien weiterhin lesbar."
 msgid "Hides the element visually."
 msgstr "Blendet das Element visuell aus."
 
+msgid "Hierarchy"
+msgstr "Hierarchie"
+
+msgid "High-contrast serif headlines with a quiet sans body font for polished marketing pages."
+msgstr "Kontrastreiche Serif-Überschriften mit einer ruhigen Sans-Body-Schrift für hochwertige Marketing-Seiten."
+
 msgid "Icon element inside the parent component."
 msgstr "Icon-Element innerhalb der übergeordneten Komponente."
+
+msgid "If something still looks outdated, clear Elementor caches once and reopen the editor."
+msgstr "Wenn etwas noch veraltet aussieht, leere einmal die Elementor-Caches und öffne den Editor erneut."
 
 msgid "Import"
 msgstr "Importieren"
@@ -1282,11 +1528,17 @@ msgstr "Ungültige Layout-Nutzlast."
 msgid "Invalid variable value."
 msgstr "Ungültiger Variablenwert."
 
+msgid "It feels familiar, trustworthy and calm, especially on editorial pages or structured long reads."
+msgstr "Es wirkt vertraut, vertrauenswürdig und ruhig, besonders auf redaktionellen Seiten oder strukturierten Longreads."
+
 msgid "Items stay inline with flexible spacing."
 msgstr "Elemente bleiben inline und haben flexible Abstände."
 
 msgid "Keep readable content widths and wider layout containers together in one place."
 msgstr "Bündele hier lesbare Inhaltsbreiten und breitere Layout-Container an einem Ort."
+
+msgid "Keep the final Elementor step simple so freshly synced variables and classes appear where you expect them."
+msgstr "Halte den letzten Elementor-Schritt bewusst einfach, damit neu synchronisierte Variablen und Klassen genau dort erscheinen, wo du sie erwartest."
 
 msgid "Keeps content accessible for screen readers while hiding it visually."
 msgstr "Lässt Inhalte für Screenreader zugänglich, blendet sie aber visuell aus."
@@ -1308,6 +1560,9 @@ msgstr "Größere Variante für mehr visuelle Betonung."
 
 msgid "Largest size of the clamp value, shown here in px for easier editing."
 msgstr "Größte Größe des Clamp-Werts, hier zur einfacheren Bearbeitung in px angezeigt."
+
+msgid "Launch with a clear promise"
+msgstr "Starte mit einem klaren Versprechen"
 
 msgid "Layout"
 msgstr "Layout"
@@ -1336,6 +1591,9 @@ msgstr "Links ausgerichteter Beispieltext in der Vorschau."
 msgid "Legacy export without metadata. Import is still possible."
 msgstr "Legacy-Export ohne Metadaten. Import ist trotzdem möglich."
 
+msgid "Let headings use the secondary font stack so the page scans more clearly without rebuilding the whole type system."
+msgstr "Lass Überschriften den sekundären Schrift-Stack nutzen, damit die Seite klarer scanbar wird, ohne das ganze Typografie-System neu aufzubauen."
+
 msgid "Letter Spacing"
 msgstr "Buchstabenabstand"
 
@@ -1360,10 +1618,16 @@ msgstr "Listen-Container für wiederholte Navigations- oder Inhaltselemente."
 msgid "Live Box Shadow Preview"
 msgstr "Live Box Shadow Vorschau"
 
+msgid "Live Preview"
+msgstr "Livevorschau"
+
 msgid "Live Spacing Preview"
 msgstr "Live-Abstandsvorschau"
 
 msgid "Live Type Preview"
+msgstr "Live-Schriftvorschau"
+
+msgid "Live Typography Preview"
 msgstr "Live-Schriftvorschau"
 
 msgid "Loading Elementor classes…"
@@ -1404,6 +1668,9 @@ msgstr "Verwalte die Schriften, die lokal aus der Bibliothek importiert wurden."
 
 msgid "Manage website basics, editor behavior and system settings from one shared control area."
 msgstr "Verwalte Website-Grundlagen, Editor-Verhalten und Systemeinstellungen in einem gemeinsamen Steuerbereich."
+
+msgid "Manual check"
+msgstr "Manuell prüfen"
 
 msgid "Manual or foreign Elementor classes"
 msgstr "Manuelle oder fremde Elementor-Klassen"
@@ -1485,6 +1752,18 @@ msgstr "Erforderliche Felder fehlen."
 
 msgid "Mode"
 msgstr "Modus"
+
+msgid "Modern"
+msgstr "Modern"
+
+msgid "Modern Editorial"
+msgstr "Modernes Editorial"
+
+msgid "Modern Systems"
+msgstr "Moderne Systeme"
+
+msgid "Modern without feeling cold or technical"
+msgstr "Modern, ohne kalt oder technisch zu wirken"
 
 msgid "Modifiers"
 msgstr "Modifier"
@@ -1585,6 +1864,9 @@ msgstr "Keine Einträge vorhanden."
 msgid "No entries selected."
 msgstr "Keine Einträge ausgewählt."
 
+msgid "No extra Elementor classes"
+msgstr "Keine zusätzlichen Elementor-Klassen"
+
 msgid "No favorites selected yet. Mark important settings with the heart icon."
 msgstr "Noch keine Favoriten ausgewählt. Markiere wichtige Einstellungen mit dem Herz-Symbol."
 
@@ -1599,6 +1881,15 @@ msgstr "Noch keine lokalen Schriften importiert. Importiere eine Schrift über d
 
 msgid "No matching fonts found."
 msgstr "Keine passenden Schriften gefunden."
+
+msgid "No quick fix needed at the moment."
+msgstr "Aktuell ist kein Schnell-Fix nötig."
+
+msgid "No, maybe later"
+msgstr "Nein, vielleicht später"
+
+msgid "Normalize body size"
+msgstr "Fließtextgröße normalisieren"
 
 msgid "Not in use"
 msgstr "Nicht in Benutzung"
@@ -1615,11 +1906,17 @@ msgstr "Alte Layrix-Klassen"
 msgid "One or more selected classes are still used on Elementor elements."
 msgstr "Eine oder mehrere ausgewählte Klassen werden noch auf Elementor-Elementen benutzt."
 
+msgid "One or more shadows are quite strong. If the UI starts to feel heavy, soften the larger shadow levels first."
+msgstr "Ein oder mehrere Schatten sind recht kräftig. Wenn die UI schwer wirkt, entschärfe zuerst die größeren Schattenstufen."
+
 msgid "Only in Elementor"
 msgstr "Nur in Elementor"
 
 msgid "Only values greater than 0 can be saved here."
 msgstr "Hier können nur Werte größer als 0 gespeichert werden."
+
+msgid "Open Base Settings and define root size, body text size, body font, heading font and the base colors of the site."
+msgstr "Öffne die Basiseinstellungen und definiere Root-Größe, Body-Textgröße, Body-Schrift, Überschriften-Schrift und die Basisfarben der Website."
 
 msgid "Open Elementor tabs should be reloaded once."
 msgstr "Offene Elementor-Tabs bitte einmal neu laden."
@@ -1650,6 +1947,12 @@ msgstr "Aktive eigene Klassen"
 
 msgid "Own block name"
 msgstr "Eigener Blockname"
+
+msgid "Own classes"
+msgstr "Eigene Klassen"
+
+msgid "Peak alpha %s"
+msgstr "Maximales Alpha %s"
 
 msgid "Percentage value if the content width should stay fluid."
 msgstr "Prozentwert, wenn die Inhaltsbreite fluid bleiben soll."
@@ -1729,11 +2032,20 @@ msgstr "Primäre Variante für die wichtigste Aktion oder den wichtigsten Akzent
 msgid "Privacy note: imported library fonts are downloaded into your own media library on the server and served locally, so the frontend does not need live requests to external font providers."
 msgstr "Datenschutzhinweis: Importierte Bibliotheksschriften werden in die eigene Mediathek auf dem Server geladen und lokal ausgeliefert, sodass das Frontend keine Live-Anfragen an externe Font-Anbieter braucht."
 
+msgid "Product pages that feel clear"
+msgstr "Produktseiten, die klar wirken"
+
 msgid "Quick help"
 msgstr "Schnellhilfe"
 
 msgid "Quick view of the latest documented plugin changes."
 msgstr "Schnellansicht der zuletzt dokumentierten Plugin-Änderungen."
+
+msgid "Quiet Luxury"
+msgstr "Leiser Luxus"
+
+msgid "Quiet luxury without feeling distant"
+msgstr "Leiser Luxus, ohne distanziert zu wirken"
 
 msgid "Radius"
 msgstr "Radius"
@@ -1741,20 +2053,53 @@ msgstr "Radius"
 msgid "Radius token"
 msgstr "Radius-Token"
 
+msgid "Random in this category"
+msgstr "Zufällig in dieser Kategorie"
+
+msgid "Readability"
+msgstr "Lesbarkeit"
+
+msgid "Readable body copy keeps longer pages calm while the headline brings character."
+msgstr "Gut lesbarer Fließtext hält längere Seiten ruhig, während die Überschrift Charakter hineinbringt."
+
 msgid "Readable width for text/content areas."
 msgstr "Lesbare Breite für Text-/Content-Bereiche."
 
 msgid "Reading text for the live preview directly in the class list."
 msgstr "Lesetext für die Live-Vorschau direkt in der Klassenliste."
 
+msgid "Ready for sync"
+msgstr "Bereit für den Sync"
+
+msgid "Ready from Layrix"
+msgstr "Aus Layrix bereit"
+
 msgid "Recent debug history"
 msgstr "Aktuelle Debug-Historie"
+
+msgid "Recommendation applied."
+msgstr "Empfehlung angewendet."
+
+msgid "Recommended Font Pairings"
+msgstr "Empfohlene Schriftpaare"
+
+msgid "Reduce the strongest shadow levels so cards and panels feel lighter, calmer and more premium."
+msgstr "Reduziere die stärksten Schattenstufen, damit Karten und Panels leichter, ruhiger und hochwertiger wirken."
 
 msgid "Reduced monochrome admin look with subtle borders and quiet emphasis."
 msgstr "Reduzierter monochromer Admin-Look mit subtilen Rahmen und ruhiger Betonung."
 
+msgid "Refined display headlines with a smooth sans body for premium brands, studios and service businesses."
+msgstr "Verfeinerte Display-Überschriften mit glatter Sans-Textschrift für Premium-Marken, Studios und Dienstleister."
+
+msgid "Refined without feeling loud"
+msgstr "Verfeinert, ohne laut zu wirken"
+
 msgid "Reload"
 msgstr "Neu einlesen"
+
+msgid "Reload open Elementor tabs once after a manual sync."
+msgstr "Lade offene Elementor-Tabs nach einem manuellen Sync einmal neu."
 
 msgid "Remote service"
 msgstr "Externer Dienst"
@@ -1789,14 +2134,32 @@ msgstr "Zurücksetzen"
 msgid "Reset layout"
 msgstr "Layout zurücksetzen"
 
+msgid "Reset to the default pairing"
+msgstr "Auf das Standard-Schriftpaar zurücksetzen"
+
+msgid "Resets the spacing ratios to a calmer baseline."
+msgstr "Setzt die Abstands-Verhältnisse auf eine ruhigere Basis zurück."
+
 msgid "Reusable typography stacks like Primary and Secondary."
 msgstr "Wiederverwendbare Typografie-Stacks wie Primary und Secondary."
 
 msgid "Reusable utility class for common styling helpers."
 msgstr "Wiederverwendbare Utility-Klasse für häufige Styling-Helfer."
 
+msgid "Review classes that already exist in Elementor but are not part of your current Layrix selection."
+msgstr "Prüfe Klassen, die bereits in Elementor existieren, aber nicht Teil deiner aktuellen Layrix-Auswahl sind."
+
 msgid "Review what goes into Elementor, run the sync safely, and export or import your current setup from one place."
 msgstr "Prüfe, was in Elementor landet, führe den Sync sicher aus und exportiere oder importiere dein aktuelles Setup an einer Stelle."
+
+msgid "Review which selected Layrix classes are currently part of your sync and what still only exists in Elementor."
+msgstr "Prüfe, welche ausgewählten Layrix-Klassen aktuell Teil deines Syncs sind und was noch nur in Elementor vorhanden ist."
+
+msgid "Review your type scale and generated text tokens in a live side-by-side preview while you fine-tune the reading rhythm."
+msgstr "Prüfe hier deine Schriftskala und die erzeugten Text-Tokens in einer direkten Livevorschau, während du den Leserhythmus feinjustierst."
+
+msgid "Rhythm"
+msgstr "Rhythmus"
 
 msgid "Right aligned sample text in the preview."
 msgstr "Rechts ausgerichteter Beispieltext in der Vorschau."
@@ -1840,6 +2203,9 @@ msgstr "Einstellungen speichern"
 msgid "Saving…"
 msgstr "Speichere…"
 
+msgid "Scale"
+msgstr "Skala"
+
 msgid "Scale Impact"
 msgstr "Skalenwirkung"
 
@@ -1875,6 +2241,9 @@ msgstr "Sekundäre Variante für ruhigere unterstützende Aktionen oder Elemente
 
 msgid "Section"
 msgstr "Sektion"
+
+msgid "Section Recipes"
+msgstr "Bereichs-Rezepte"
 
 msgid "Section label"
 msgstr "Sektion-Label"
@@ -1912,11 +2281,17 @@ msgstr "Separate Schriftfamilie für h1 bis h6 und überschriftenähnliche Eleme
 msgid "Separate heading font stack for h1 to h6. This lets you keep one font for the body text and another one for headings."
 msgstr "Separate Überschriften-Schriftfamilie für h1 bis h6. So kannst du eine Schrift für den Fließtext und eine andere für Überschriften verwenden."
 
+msgid "Separate headings from body copy"
+msgstr "Überschriften vom Fließtext trennen"
+
 msgid "Set the root rem size plus the default body type choices for your site."
 msgstr "Lege hier die Root-rem-Größe und die Standard-Typografie für den Fließtext deiner Website fest."
 
 msgid "Set the site basics"
 msgstr "Lege die Website-Grundlagen fest"
+
+msgid "Sets body text to %s."
+msgstr "Setzt den Fließtext auf %s."
 
 msgid "Sets the token <code>%1$s</code>. By default it follows the max value from <code>%2$s</code> (%3$s %4$s)."
 msgstr "Setzt das Token <code>%1$s</code>. Standardmäßig folgt es dem Maximalwert von <code>%2$s</code> (%3$s %4$s)."
@@ -1942,6 +2317,9 @@ msgstr "Einstellungen aktualisiert."
 msgid "Shadow"
 msgstr "Schatten"
 
+msgid "Shadow intensity"
+msgstr "Schattenintensität"
+
 msgid "Shadow token preview for this utility class."
 msgstr "Schatten-Token-Vorschau für diese Utility-Klasse."
 
@@ -1951,11 +2329,20 @@ msgstr "Schatten"
 msgid "Shape the reading rhythm here first. The preview on the right mirrors the generated text tokens live while you edit."
 msgstr "Lege hier zuerst den Leserhythmus fest. Die Vorschau rechts spiegelt deine erzeugten Text-Tokens live beim Bearbeiten."
 
+msgid "Sharp magazine-like headlines with a clean editorial body font for stories, launches and standout sections."
+msgstr "Prägnante Magazin-Überschriften mit klarer Editorial-Textschrift für Storys, Launches und auffällige Bereiche."
+
 msgid "Show clamp value"
 msgstr "Clamp-Wert anzeigen"
 
+msgid "Show presets"
+msgstr "Presets zeigen"
+
 msgid "Show status cards in Variables & Sync"
 msgstr "Statuskarten in Variablen & Sync anzeigen"
+
+msgid "Show the core strengths fast"
+msgstr "Zeige die Kernstärken schnell"
 
 msgid "Shows small overview cards in the Variables and Sync areas so you can see current Elementor usage and limits at a glance."
 msgstr "Zeigt kleine Uebersichtskarten in den Bereichen Variablen und Sync, damit du die aktuelle Elementor-Nutzung und Limits direkt im Blick hast."
@@ -1977,6 +2364,9 @@ msgstr "Einfacher Pixelwert. Gut für feste Inhaltsbreiten wie 720px."
 
 msgid "Single item inside a repeated list or navigation."
 msgstr "Ein einzelnes Element innerhalb einer Liste oder Navigation."
+
+msgid "Single-font system"
+msgstr "Ein-Schrift-System"
 
 msgid "Site Font Assignment"
 msgstr "Website-Schriftzuweisung"
@@ -2011,11 +2401,26 @@ msgstr "Kleinerer Fließtext-Stil für sekundäre Informationen."
 msgid "Smallest size of the clamp value, shown here in px for easier editing."
 msgstr "Kleinste Größe des Clamp-Werts, hier zur einfacheren Bearbeitung in px angezeigt."
 
+msgid "Smart Recommendations"
+msgstr "Smarte Empfehlungen"
+
+msgid "Soft contemporary headlines with an approachable body font for products, startups and service pages."
+msgstr "Sanfte zeitgemäße Überschriften mit zugänglicher Textschrift für Produkte, Startups und Service-Seiten."
+
 msgid "Soft editorial workspace with calm surfaces and gentle blue structure."
 msgstr "Sanfter editorialer Workspace mit ruhigen Flächen und sanfter blauer Struktur."
 
+msgid "Soften the shadow scale"
+msgstr "Schatten-Skala weicher machen"
+
+msgid "Some classes already exist only in Elementor and are not part of your current Layrix selection. Review them before they become stale."
+msgstr "Einige Klassen existieren bereits nur in Elementor und gehören nicht zu deiner aktuellen Layrix-Auswahl. Prüfe sie, bevor sie veralten."
+
 msgid "Some selected classes are still used on Elementor elements."
 msgstr "Einige ausgewählte Klassen werden noch auf Elementor-Elementen benutzt."
+
+msgid "Some updated Layrix data is not yet available in Elementor. Do you want to sync it now?"
+msgstr "Einige aktualisierte Layrix-Daten sind in Elementor noch nicht verfügbar. Möchtest du sie jetzt synchronisieren?"
 
 msgid "Source"
 msgstr "Quelle"
@@ -2024,13 +2429,22 @@ msgid "Source: classes via %1$s, variables via %2$s"
 msgstr "Quelle: Klassen über %1$s, Variablen über %2$s"
 
 msgid "Spacing"
-msgstr "Abstände"
+msgstr "Spacing"
+
+msgid "Spacing rhythm"
+msgstr "Abstands-Rhythmus"
 
 msgid "Spacing token"
 msgstr "Abstands-Token"
 
 msgid "Start the sync to apply the currently selected classes to Elementor."
 msgstr "Starte die Synchronisation, um die aktuell ausgewählten Klassen nach Elementor zu übernehmen."
+
+msgid "Start with a few proven section patterns when you want a faster structure instead of building every block from scratch."
+msgstr "Starte mit ein paar bewährten Bereichsmustern, wenn du schneller zu einer guten Struktur kommen willst, statt jeden Block neu aufzubauen."
+
+msgid "Start with website basics first: choose a style preset or font pairing, set colors and widths, then sync only the pieces you really want in Elementor."
+msgstr "Starte zuerst mit den Website-Grundlagen: Wähle ein Stil-Preset oder Schriftpaar, setze Farben und Breiten und synchronisiere dann nur die Teile, die du wirklich in Elementor brauchst."
 
 msgid "Starter class"
 msgstr "Starter-Klasse"
@@ -2047,6 +2461,15 @@ msgstr "Statisch"
 msgid "Status cards in Variables & Sync"
 msgstr "Statuskarten in Variablen & Sync"
 
+msgid "Stories with more atmosphere"
+msgstr "Geschichten mit mehr Atmosphäre"
+
+msgid "Story-first design with a modern edge"
+msgstr "Story-getriebenes Design mit moderner Kante"
+
+msgid "Strengthen body contrast"
+msgstr "Fließtext-Kontrast stärken"
+
 msgid "String"
 msgstr "Text"
 
@@ -2056,8 +2479,17 @@ msgstr "Strukturelle und inhaltsorientierte Klassen für Layout-Hüllen, Sektion
 msgid "Style"
 msgstr "Stil"
 
+msgid "Style Presets"
+msgstr "Stil-Presets"
+
+msgid "Style preset applied."
+msgstr "Stil-Preset wurde angewendet."
+
 msgid "Style: %s"
 msgstr "Stil: %s"
+
+msgid "Suggested classes"
+msgstr "Empfohlene Klassen"
 
 msgid "Suggestions for quick, clean custom names. Click a chip to insert it into a free row."
 msgstr "Vorschläge für schnelle, saubere eigene Namen. Klick auf einen Chip, um ihn in eine freie Zeile zu setzen."
@@ -2067,6 +2499,9 @@ msgstr "Zu 2 Spalten wechseln"
 
 msgid "Switch to 3 columns"
 msgstr "Zu 3 Spalten wechseln"
+
+msgid "Switches only the heading font family."
+msgstr "Wechselt nur die Überschriftenschrift."
 
 msgid "Sync"
 msgstr "Sync"
@@ -2082,6 +2517,9 @@ msgstr "Synchronisiere nur die Utility-Klassen, die hier aktuell aktiviert sind.
 
 msgid "Sync to Elementor (Merge)"
 msgstr "Mit Elementor synchronisieren (Merge)"
+
+msgid "Sync to Elementor?"
+msgstr "Nach Elementor synchronisieren?"
 
 msgid "Sync with Elementor"
 msgstr "Mit Elementor synchronisieren"
@@ -2146,8 +2584,23 @@ msgstr "Text-Utility für Ausrichtung oder Textfluss-Verhalten."
 msgid "The JSON file is empty or too large."
 msgstr "Die JSON-Datei ist leer oder zu groß."
 
+msgid "The body text size can work, but it is a little outside the most forgiving reading range."
+msgstr "Die Fließtextgröße kann funktionieren, liegt aber etwas außerhalb des tolerantesten Lesebereichs."
+
+msgid "The body text size looks unusually small or large for normal reading text. Review it before scaling the rest of the site."
+msgstr "Die Fließtextgröße wirkt ungewöhnlich klein oder groß für normalen Lesetext. Prüfe sie, bevor du den Rest der Website darauf aufbaust."
+
+msgid "The contrast feels luxurious, while the body font keeps the interface grounded and easy to scan."
+msgstr "Der Kontrast wirkt luxuriös, während die Textschrift die Oberfläche bodenständig und gut scanbar hält."
+
 msgid "The current Layrix look with the familiar dark admin styling and the existing panel rhythm."
 msgstr "Der aktuelle Layrix-Look mit dem vertrauten dunklen Admin-Stil und dem bestehenden Panel-Rhythmus."
+
+msgid "The current base text and background colors could not be evaluated automatically. Please check readability in the preview."
+msgstr "Die aktuellen Basisfarben für Text und Hintergrund konnten nicht automatisch ausgewertet werden. Bitte prüfe die Lesbarkeit in der Vorschau."
+
+msgid "The default text contrast is usable, but a little more contrast would feel safer for long reading text."
+msgstr "Der Standard-Textkontrast ist brauchbar, aber etwas mehr Kontrast wäre für längere Lesetexte sicherer."
 
 msgid "The fastest setup path for a fresh project: define the basics first, then sync only the parts you really want in Elementor."
 msgstr "Der schnellste Setup-Weg für ein neues Projekt: zuerst die Grundlagen festlegen, dann nur die Teile synchronisieren, die du wirklich in Elementor brauchst."
@@ -2161,6 +2614,12 @@ msgstr "Die Schriftbibliothek hat ein leeres Stylesheet zurückgegeben."
 msgid "The font library search could not be loaded right now."
 msgstr "Die Suche der Schriftbibliothek konnte gerade nicht geladen werden."
 
+msgid "The font pairing could not be applied."
+msgstr "Das Schriftpaar konnte nicht angewendet werden."
+
+msgid "The limit comes from your installed Elementor version. Layrix shows what is already there, what belongs to Layrix and what is still only stored in Elementor."
+msgstr "Das Limit kommt aus deiner installierten Elementor-Version. Layrix zeigt dir, was bereits da ist, was zu Layrix gehört und was noch nur in Elementor liegt."
+
 msgid "The most refined dark skin: ultra-clean, premium, cinematic and intentionally high-end."
 msgstr "Der edelste dunkle Skin: ultra-clean, premium, cineastisch und bewusst hochwertig."
 
@@ -2173,14 +2632,23 @@ msgstr "Die Vorschau aktualisiert sich live, während du die Skala bearbeitest."
 msgid "The quick fox jumps over the fence"
 msgstr "Der schnelle Fuchs springt über den Zaun"
 
+msgid "The recommendation could not be applied."
+msgstr "Die Empfehlung konnte nicht angewendet werden."
+
 msgid "The selected file is not a valid ECF JSON export."
 msgstr "Die ausgewählte Datei ist kein gültiger ECF-JSON-Export."
+
+msgid "The serif creates confidence in headings while the body font stays practical for longer text blocks."
+msgstr "Die Serif schafft Vertrauen in Überschriften, während die Body-Schrift für längere Textblöcke praktisch bleibt."
 
 msgid "The step that equals your base font size. Steps above are larger, steps below are smaller."
 msgstr "Die Stufe, die deiner Basis-Schriftgröße entspricht. Stufen darüber sind größer, Stufen darunter kleiner."
 
 msgid "The step that equals your base spacing size. Steps above are larger, steps below are smaller."
 msgstr "Die Stufe, die deiner Basis-Abstandsgröße entspricht. Stufen darüber sind größer, Stufen darunter kleiner."
+
+msgid "The style preset could not be applied."
+msgstr "Das Stil-Preset konnte nicht angewendet werden."
 
 msgid "The sync total currently also includes the automatic helper class ecf-container-boxed."
 msgstr "Die Sync-Gesamtzahl enthält aktuell zusätzlich die automatische Helfer-Klasse ecf-container-boxed."
@@ -2194,8 +2662,17 @@ msgstr "Die Sync-Gesamtzahl entspricht aktuell deinen aktivierten Basis-, Extras
 msgid "The sync total matches your currently selected starter, utility and own classes."
 msgstr "Die Sync-Gesamtzahl entspricht deinen aktuell ausgewählten Starter-, Utility- und eigenen Klassen."
 
+msgid "There is nothing urgent to fix here right now. You can keep refining style choices or move on to section building."
+msgstr "Hier gibt es aktuell nichts Dringendes zu beheben. Du kannst die Stilentscheidungen weiter verfeinern oder mit dem Aufbau der Bereiche weitermachen."
+
 msgid "These classes already exist in Elementor, but are not part of your current Layrix selection."
 msgstr "Diese Klassen existieren bereits in Elementor, sind aber nicht Teil deiner aktuellen Layrix-Auswahl."
+
+msgid "These classes already exist there, but they are not currently selected in Layrix."
+msgstr "Diese Klassen existieren dort bereits, sind in Layrix aktuell aber nicht ausgewählt."
+
+msgid "These classes are currently ready to come from Layrix into Elementor during the next sync."
+msgstr "Diese Klassen sind aktuell bereit, beim nächsten Sync aus Layrix nach Elementor zu kommen."
 
 msgid "These classes are still in use on Elementor elements:\n%s\n\nDo you really want to delete them?"
 msgstr "Diese Klassen sind noch auf Elementor-Elementen in Benutzung:\n%s\n\nMöchtest du sie wirklich löschen?"
@@ -2211,6 +2688,12 @@ msgstr "Diese Farben definieren die visuelle Standardbasis, bevor komponentenspe
 
 msgid "These colors define the visual starting point before component-specific styles take over."
 msgstr "Diese Farben definieren den visuellen Ausgangspunkt, bevor komponentenspezifische Styles übernehmen."
+
+msgid "These lists include the automatic helper class ecf-container-boxed because a boxed Elementor width is currently active."
+msgstr "Diese Listen enthalten auch die automatische Helfer-Klasse ecf-container-boxed, weil aktuell eine boxed Elementor-Breite aktiv ist."
+
+msgid "These lists show which selected Layrix classes are currently ready for sync and which classes only remain in Elementor."
+msgstr "Diese Listen zeigen, welche ausgewählten Layrix-Klassen aktuell bereit für den Sync sind und welche Klassen nur in Elementor verbleiben."
 
 msgid "These look like older Layrix or synced framework classes that still exist in Elementor."
 msgstr "Diese sehen nach älteren Layrix- oder synchronisierten Framework-Klassen aus, die in Elementor noch vorhanden sind."
@@ -2239,8 +2722,20 @@ msgstr "Diese Datei wurde aus einer anderen Plugin-Version exportiert. Bitte pr�
 msgid "This helper hides the element visually."
 msgstr "Dieser Helfer blendet das Element visuell aus."
 
+msgid "This pairing feels more cultured and expressive while the body copy stays crisp and contemporary."
+msgstr "Dieses Pairing wirkt kultivierter und expressiver, während der Fließtext klar und modern bleibt."
+
+msgid "This pairing gives headings warmth while keeping the reading experience contemporary and clear."
+msgstr "Dieses Pairing gibt Überschriften Wärme und hält das Lesen gleichzeitig modern und klar."
+
+msgid "This shows the total class load inside Elementor. Below you can decide which classes come from Layrix and which only remain inside Elementor."
+msgstr "Das zeigt die gesamte Klassenlast in Elementor. Darunter entscheidest du, welche Klassen aus Layrix kommen und welche nur in Elementor verbleiben."
+
 msgid "This value looks unusually large for rem/em body text. Did you mean px or the value from your active type scale token?"
 msgstr "Dieser Wert wirkt für rem/em-Fließtext ungewöhnlich groß. Meintest du vielleicht px oder den Wert aus deinem aktiven Schriftskalen-Token?"
+
+msgid "This version feels simpler and warmer while still working well for interfaces and long-form content."
+msgstr "Diese Version wirkt einfacher und wärmer und funktioniert trotzdem gut für Interfaces und längere Inhalte."
 
 msgid "Title element inside this component."
 msgstr "Titel-Element innerhalb dieser Komponente."
@@ -2269,11 +2764,17 @@ msgstr "Gesamtzahl der Klassen, die Layrix aus der aktuellen Auswahl synchronisi
 msgid "Tracking tokens for tighter headings or looser interface labels."
 msgstr "Tracking-Token für engere Überschriften oder luftigere Interface-Labels."
 
+msgid "Traditional literary headlines with a restrained body font for trusted, reading-heavy websites."
+msgstr "Traditionelle literarische Überschriften mit zurückhaltender Textschrift für vertrauenswürdige, leselastige Websites."
+
 msgid "Trust"
 msgstr "Vertrauen"
 
 msgid "Tune the global foundation here first: root size, default fonts, core widths and base colors. The rest of the plugin builds on these choices."
 msgstr "Lege hier zuerst das globale Fundament fest: Root-Größe, Standardschriften, Kernbreiten und Basisfarben. Der Rest des Plugins baut auf diesen Entscheidungen auf."
+
+msgid "Two-font system"
+msgstr "Zwei-Schrift-System"
 
 msgid "Type"
 msgstr "Typo"
@@ -2320,20 +2821,44 @@ msgstr "Updater & Datenschutz"
 msgid "Updates"
 msgstr "Updates"
 
+msgid "Updates only the base text color."
+msgstr "Aktualisiert nur die Basis-Textfarbe."
+
 msgid "Upload font files into the WordPress media library and then use their family names in your Primary, Secondary or Mono stacks."
 msgstr "Lade Schriftdateien in die WordPress-Mediathek hoch und nutze anschließend deren Familiennamen in deinen Primary-, Secondary- oder Mono-Stacks."
 
 msgid "Uploaded font"
 msgstr "Hochgeladene Schrift"
 
+msgid "Use Auto-Sync when you want Layrix to push changes right after autosave."
+msgstr "Nutze Auto-Sync, wenn Layrix Änderungen direkt nach dem Autosave nach Elementor übertragen soll."
+
 msgid "Use Content Max Width for readable text wrappers and Elementor Boxed Width for wider centered layout containers."
 msgstr "Nutze Content Max Width für lesbare Text-Wrapper und Elementor Boxed Width für breitere zentrierte Layout-Container."
+
+msgid "Use a few small one-click improvements when you want Layrix to smooth out the most common design friction for you."
+msgstr "Nutze ein paar kleine Ein-Klick-Verbesserungen, wenn Layrix die häufigsten Design-Reibungen für dich glätten soll."
+
+msgid "Use calmer spacing"
+msgstr "Ruhigeres Spacing verwenden"
+
+msgid "Use foundational starter classes for semantic page structure, layout wrappers and the core building blocks of your site."
+msgstr "Nutze grundlegende Starter-Klassen für semantische Seitenstruktur, Layout-Wrapper und die zentralen Bausteine deiner Website."
+
+msgid "Use it after content sections when you want one obvious next step instead of adding another long paragraph."
+msgstr "Nutze das nach Inhaltsbereichen, wenn du einen klaren nächsten Schritt willst statt noch eines langen Absatzes."
 
 msgid "Use it when you need field-level helpers while building directly in Elementor."
 msgstr "Nutze das, wenn du beim direkten Arbeiten in Elementor feldbezogene Helfer brauchst."
 
+msgid "Use softer shadows"
+msgstr "Weichere Schatten verwenden"
+
 msgid "Use starter classes for semantic naming and utility classes for a compact curated helper set. Both count toward Elementor’s 100-class limit."
 msgstr "Nutze Starter-Klassen für semantische Benennung und Utility-Klassen für ein kompaktes kuratiertes Helfer-Set. Beides zählt in Elementors 100er-Klassenlimit."
+
+msgid "Use the secondary heading font"
+msgstr "Sekundäre Überschriftenschrift verwenden"
 
 msgid "Use the star to pin this setting to Favorites or remove it from Favorites again."
 msgstr "Mit dem Stern kannst du diese Einstellung zu den Favoriten anheften oder wieder daraus entfernen."
@@ -2341,8 +2866,20 @@ msgstr "Mit dem Stern kannst du diese Einstellung zu den Favoriten anheften oder
 msgid "Use this as the global body font. Upload local fonts in Typography > Local Fonts and then select them here by name."
 msgstr "Nutze das als globale Body-Schrift. Lade lokale Schriften unter Typografie > Lokale Schriften hoch und wähle sie danach hier namentlich aus."
 
+msgid "Use this body size"
+msgstr "Diese Fließtextgröße verwenden"
+
 msgid "Use this file"
 msgstr "Diese Datei verwenden"
+
+msgid "Use this pairing"
+msgstr "Dieses Schriftpaar verwenden"
+
+msgid "Use this style preset"
+msgstr "Dieses Stil-Preset verwenden"
+
+msgid "Use this when the first section should explain the offer quickly and feel intentional, not crowded."
+msgstr "Nutze das, wenn der erste Bereich das Angebot schnell erklären und bewusst statt überladen wirken soll."
 
 msgid "Use this when your tokens and selected classes are ready. Layrix adds its data in merge mode without overwriting unrelated Elementor entries."
 msgstr "Nutze das, wenn deine Tokens und ausgewählten Klassen bereit sind. Layrix ergänzt seine Daten im Merge-Modus, ohne fremde Elementor-Einträge zu überschreiben."
@@ -2410,6 +2947,9 @@ msgstr "Variablen"
 msgid "Variables are reusable design tokens such as colors, spacing, radius, shadows, and text sizes. They help you keep Elementor and your CSS values consistent."
 msgstr "Variablen sind wiederverwendbare Design-Tokens wie Farben, Abstände, Radius, Schatten und Textgrößen. Sie helfen dir, Elementor und CSS-Werte konsistent zu halten."
 
+msgid "Variables currently available in Elementor"
+msgstr "Variablen aktuell in Elementor verfügbar"
+
 msgid "Variables module active"
 msgstr "Variables-Modul aktiv"
 
@@ -2452,6 +2992,9 @@ msgstr "Sichtbare Breite der Tastatur-Fokus-Kontur."
 msgid "Visually Hidden"
 msgstr "Visuell verborgen"
 
+msgid "Warm Editorial"
+msgstr "Warmes Editorial"
+
 msgid "Website"
 msgstr "Webseite"
 
@@ -2485,6 +3028,9 @@ msgstr "Was sind Utility-Klassen?"
 msgid "What counts against Elementor limits?"
 msgstr "Was zählt gegen die Elementor-Limits?"
 
+msgid "What do Base Settings do?"
+msgstr "Was machen die Basiseinstellungen?"
+
 msgid "What do General Settings do?"
 msgstr "Was machen die Allgemeinen Einstellungen?"
 
@@ -2496,6 +3042,9 @@ msgstr "Wenn aktiv, soll der Elementor-Editor später nur passende Variablen fü
 
 msgid "White mode"
 msgstr "Hellmodus"
+
+msgid "Why this helps"
+msgstr "Warum das hilft"
 
 msgid "Width and offset stay together so the keyboard focus ring is easier to tune as one setting."
 msgstr "Breite und Abstand bleiben zusammen, damit sich der Tastatur-Fokusring leichter als gemeinsame Einstellung abstimmen lässt."
@@ -2512,11 +3061,38 @@ msgstr "Arbeitet im <strong>Merge-Modus</strong> — ECF ergänzt bestehende Ele
 msgid "Yes"
 msgstr "Ja"
 
+msgid "Yes, sync now"
+msgstr "Ja, jetzt synchronisieren"
+
 msgid "You are not allowed to perform this action."
 msgstr "Du darfst diese Aktion nicht ausführen."
 
 msgid "You can edit the shadow value directly in the row below."
 msgstr "Du kannst den Schattenwert direkt in der Zeile darunter bearbeiten."
+
+msgid "Your changes were saved automatically."
+msgstr "Deine Änderungen wurden automatisch gespeichert."
+
+msgid "Your class changes were saved automatically."
+msgstr "Deine Klassenänderungen wurden automatisch gespeichert."
+
+msgid "Your current basics already look solid"
+msgstr "Deine aktuellen Grundlagen wirken bereits solide"
+
+msgid "Your current body text size sits in a comfortable reading range for most websites."
+msgstr "Deine aktuelle Fließtextgröße liegt in einem angenehmen Lesebereich für die meisten Websites."
+
+msgid "Your current class selection and Elementor class state look aligned."
+msgstr "Deine aktuelle Klassenauswahl und der Elementor-Klassenstand wirken aufeinander abgestimmt."
+
+msgid "Your current shadow tokens stay in a softer range that usually feels more premium and calm."
+msgstr "Deine aktuellen Schatten-Tokens bleiben in einem weicheren Bereich, der meist hochwertiger und ruhiger wirkt."
+
+msgid "Your default text and background colors have strong contrast for normal reading text."
+msgstr "Deine Standardfarben für Text und Hintergrund haben einen starken Kontrast für normalen Lesetext."
+
+msgid "Your default text and background colors look low in contrast. Increase readability before building more styles on top."
+msgstr "Deine Standardfarben für Text und Hintergrund wirken kontrastarm. Erhöhe die Lesbarkeit, bevor du weitere Styles darauf aufbaust."
 
 msgid "Your own custom class names that you added in Layrix."
 msgstr "Deine eigenen benutzerdefinierten Klassennamen, die du in Layrix angelegt hast."
@@ -2526,6 +3102,27 @@ msgstr "Deine eigenen semantischen Klassennamen. Nutze diesen Bereich für proje
 
 msgid "Your pinned quick settings. Use the star icon on any supported setting to add or remove it here."
 msgstr "Deine angehefteten Schnelleinstellungen. Nutze das Stern-Symbol an einer unterstützten Einstellung, um sie hier hinzuzufügen oder wieder zu entfernen."
+
+msgid "Your spacing ratios look balanced enough for a calm and coherent layout rhythm."
+msgstr "Deine Abstands-Verhältnisse wirken ausgewogen genug für einen ruhigen und kohärenten Layout-Rhythmus."
+
+msgid "Your spacing scale is quite contrast-heavy. That can feel expressive, but it may also make sections jump more than necessary."
+msgstr "Deine Abstands-Skala ist recht kontraststark. Das kann expressiv wirken, kann Sektionen aber auch unnötig sprunghaft erscheinen lassen."
+
+msgid "Your updated Layrix classes are not yet available in Elementor. Do you want to sync them now?"
+msgstr "Deine aktualisierten Layrix-Klassen sind in Elementor noch nicht verfügbar. Möchtest du sie jetzt synchronisieren?"
+
+msgid "Your updated Layrix variables and classes are not yet available in Elementor. Do you want to sync them now?"
+msgstr "Deine aktualisierten Layrix-Variablen und -Klassen sind in Elementor noch nicht verfügbar. Möchtest du sie jetzt synchronisieren?"
+
+msgid "Your updated Layrix variables are not yet available in Elementor. Do you want to sync them now?"
+msgstr "Deine aktualisierten Layrix-Variablen sind in Elementor noch nicht verfügbar. Möchtest du sie jetzt synchronisieren?"
+
+msgid "Your variable and class changes were saved automatically."
+msgstr "Deine Variablen- und Klassenänderungen wurden automatisch gespeichert."
+
+msgid "Your variable changes were saved automatically."
+msgstr "Deine Variablenänderungen wurden automatisch gespeichert."
 
 msgid "auto"
 msgstr "auto"

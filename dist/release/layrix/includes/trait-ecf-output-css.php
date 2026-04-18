@@ -198,6 +198,9 @@ trait ECF_Framework_Output_CSS_Trait {
             $css .= ".elementor .elementor-element.e-con.e-atomic-element.e-flexbox-base:has(> .elementor-element.ecf-container-boxed),.elementor .elementor-element.e-con.e-atomic-element.e-flexbox-base:has(> .elementor-element.cf-container-boxed){justify-content:center!important;}";
         }
         $css .= "body{font-family:var(--ecf-base-body-font-family,var(--ecf-base-font-family));font-size:var(--ecf-base-body-text-size);font-weight:var(--ecf-base-body-font-weight);color:var(--ecf-base-text-color);background-color:var(--ecf-base-background-color);}";
+        if (!array_key_exists('typography_browser_margin_reset', (array) $settings) || !empty($settings['typography_browser_margin_reset'])) {
+            $css .= "h1,h2,h3,h4,h5,h6,p{margin-block:0;}";
+        }
         $css .= "h1,h2,h3,h4,h5,h6{font-family:var(--ecf-heading-font-family,var(--ecf-font-primary));}";
         $css .= "a{color:var(--ecf-link-color);}";
         $css .= ":focus-visible{outline:var(--ecf-focus-outline-width) solid var(--ecf-focus-color);outline-offset:var(--ecf-focus-outline-offset);}";
