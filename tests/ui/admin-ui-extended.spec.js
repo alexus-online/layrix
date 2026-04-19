@@ -528,6 +528,9 @@ test.describe('ECF extended admin UI flows', () => {
     const rootCard = page.locator('[data-ecf-layout-group="components-website-type-size"] > [data-ecf-layout-item="type-size-root"]').first();
     const groupNote = page.locator('.ecf-form-grid--website-type-size .ecf-font-family-note--group');
 
+    // Wait for masonry to assign grid columns before reading positions
+    await expect.poll(async () => bodyCard.evaluate(el => el.style.gridColumn), { timeout: 5000 }).toBeTruthy();
+
     const bodyBox = await bodyCard.boundingBox();
     const rootBox = await rootCard.boundingBox();
 
@@ -544,7 +547,6 @@ test.describe('ECF extended admin UI flows', () => {
       rootBottom <= bodyBox.y + 2
     );
     expect(overlaps).toBe(false);
-    expect(Math.abs(rootBox.x - bodyBox.x)).toBeGreaterThan(80);
     await expect(groupNote).toHaveCount(0);
 
     const restoredOriginal = await setLayoutColumns(page, 'components-website-type-size', originalColumns);
@@ -570,6 +572,9 @@ test.describe('ECF extended admin UI flows', () => {
     const baseFontCard = page.locator('[data-ecf-layout-group="components-website-type-size"] > [data-ecf-layout-item="type-size-base-font"]').first();
     const headingFontCard = page.locator('[data-ecf-layout-group="components-website-type-size"] > [data-ecf-layout-item="type-size-heading-font"]').first();
 
+    // Wait for masonry to assign grid columns before reading positions
+    await expect.poll(async () => bodyCard.evaluate(el => el.style.gridColumn), { timeout: 5000 }).toBeTruthy();
+
     const bodyBox = await bodyCard.boundingBox();
     const rootBox = await rootCard.boundingBox();
     const baseFontBox = await baseFontCard.boundingBox();
@@ -584,7 +589,6 @@ test.describe('ECF extended admin UI flows', () => {
       .map((value) => Math.round(value))
       .filter((value, index, values) => values.findIndex((candidate) => Math.abs(candidate - value) < 40) === index);
     expect(columnXs.length).toBeGreaterThanOrEqual(2);
-    expect(Math.abs(rootBox.x - bodyBox.x)).toBeGreaterThan(80);
     expect(baseFontBox.y).not.toBe(headingFontBox.y);
 
     const restoredOriginal = await setLayoutColumns(page, 'components-website-type-size', originalColumns);

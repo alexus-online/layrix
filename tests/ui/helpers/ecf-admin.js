@@ -493,7 +493,7 @@ async function setGeneralColorValue(page, fieldName, value) {
 }
 
 async function getRootFontImpactSnapshot(page) {
-  const box = page.locator('[data-ecf-root-font-impact]').first();
+  const box = page.locator('[data-ecf-root-font-impact]').filter({ visible: true }).first();
   await expect(box).toBeVisible();
   return {
     currentBase: (await box.locator('[data-ecf-root-font-base]').first().textContent() || '').trim(),
@@ -568,15 +568,26 @@ async function fillColorRow(row, values) {
   }
 }
 
+async function ensureTypographyScaleTabActive(page) {
+  const scaleSection = page.locator('[data-ecf-typography-section="scale"]').first();
+  if (!(await scaleSection.isVisible())) {
+    await page.locator('[data-ecf-typography-tab="scale"]').first().evaluate((el) => el.click());
+    await expect(scaleSection).toBeVisible();
+  }
+}
+
 async function addTypographyStep(page, direction = 'larger') {
+  await ensureTypographyScaleTabActive(page);
   await page.locator(`.ecf-panel[data-panel="typography"] [data-ecf-add-step="${direction}"]`).click();
 }
 
 async function removeTypographyStep(page, direction = 'larger') {
+  await ensureTypographyScaleTabActive(page);
   await page.locator(`.ecf-panel[data-panel="typography"] [data-ecf-remove-step="${direction}"]`).click();
 }
 
 async function getTypographyStepCount(page) {
+  await ensureTypographyScaleTabActive(page);
   return page.locator('.ecf-panel[data-panel="typography"] .ecf-scale-step-input').count();
 }
 
@@ -605,6 +616,7 @@ async function switchInterfaceLanguage(page, language) {
 }
 
 async function setTypographyScaleMaxBase(page, value) {
+  await ensureTypographyScaleTabActive(page);
   const input = page.locator('[name="ecf_framework_v50[typography][scale][max_base]"]').first();
   await expect(input).toBeVisible();
   await input.fill(value);
@@ -612,6 +624,7 @@ async function setTypographyScaleMaxBase(page, value) {
 }
 
 async function setTypographyScaleMinBase(page, value) {
+  await ensureTypographyScaleTabActive(page);
   const input = page.locator('[name="ecf_framework_v50[typography][scale][min_base]"]').first();
   await expect(input).toBeVisible();
   await input.fill(value);
@@ -735,7 +748,8 @@ async function downloadExport(page) {
 }
 
 async function searchClasses(page, value) {
-  await page.locator('[data-ecf-class-tier="basic"]').click();
+  await page.locator('[data-ecf-class-tier="basic"]').first().evaluate((el) => el.click());
+  await expect(page.locator('[data-ecf-library-section="starter"]').first()).toBeVisible();
   const search = page.locator('[data-ecf-library-section="starter"] [data-ecf-class-search]').first();
   await search.fill(value);
   return search;
@@ -744,10 +758,11 @@ async function searchClasses(page, value) {
 async function openUtilityLibrary(page) {
   const tab = page.locator('.ecf-panel[data-panel="utilities"] [data-ecf-class-tier="utility"]').first();
   await tab.evaluate((element) => element.click());
+  await expect(page.locator('.ecf-panel[data-panel="utilities"] [data-ecf-library-section="utility"]').first()).toBeVisible();
 }
 
 function getUtilityLibrarySection(page) {
-  return page.locator('.ecf-panel[data-panel="utilities"] [data-ecf-library-section="utility"]:visible').first();
+  return page.locator('.ecf-panel[data-panel="utilities"] [data-ecf-library-section="utility"]').first();
 }
 
 async function toggleUtilityClass(page, className) {
@@ -758,7 +773,9 @@ async function toggleUtilityClass(page, className) {
 }
 
 async function openCustomStarterTier(page) {
-  await page.locator('[data-ecf-class-tier="custom"]').click();
+  const tab = page.locator('.ecf-panel[data-panel="utilities"] [data-ecf-class-tier="custom"]').first();
+  await tab.evaluate((element) => element.click());
+  await expect(page.locator('.ecf-panel[data-panel="utilities"] [data-ecf-starter-custom-section]').first()).toBeVisible();
 }
 
 async function getCustomStarterRows(page) {
@@ -1118,11 +1135,11 @@ async function getSiteOrigin(page) {
   return wpUrl;
 }
 
-async function waitForRestSetting(page, key, expectedValue) {
+async function waitForRestSetting(page, key, expectedValue, timeout = 15000) {
   await expect.poll(async () => {
     const settings = await fetchRestSettings(page);
     return settings[key];
-  }).toBe(expectedValue);
+  }, { timeout }).toBe(expectedValue);
 }
 
 async function updateRestSettings(page, settings) {
@@ -1167,6 +1184,7 @@ async function ensureUiFlowDefaults(page, overrides = {}) {
 }
 
 async function reorderLayoutGroup(page, groupName, sourceItemId, targetItemId) {
+  const group = page.locator(`[data-ecf-layout-group="${groupName}"]`).first();
   const sourceHandle = page.locator(
     `[data-ecf-layout-group="${groupName}"] [data-ecf-layout-item="${sourceItemId}"][data-ecf-layout-handle], ` +
     `[data-ecf-layout-group="${groupName}"] [data-ecf-layout-item="${sourceItemId}"] [data-ecf-layout-handle]`
@@ -1174,8 +1192,48 @@ async function reorderLayoutGroup(page, groupName, sourceItemId, targetItemId) {
   const targetItem = page.locator(
     `[data-ecf-layout-group="${groupName}"] [data-ecf-layout-item="${targetItemId}"]`
   ).first();
+
+  const isMasonry = await group.evaluate((el) => el.hasAttribute('data-ecf-masonry-layout'));
+
+  if (isMasonry) {
+    // Masonry groups use multi-column CSS grid. jQuery UI caches item positions at
+    // mousedown before the start callback switches to single-column, so the drag can
+    // fail to reorder when items are laid out horizontally (same row, different column).
+    // Fix: pre-switch to single-column BEFORE mousedown, then re-measure positions and
+    // drag with correct coordinates. Works for both same-row and different-row items.
+    await page.evaluate((gName) => {
+      const grid = document.querySelector(`[data-ecf-layout-group="${gName}"]`);
+      if (!grid) return;
+      grid.classList.add('ecf-layout-group--sorting');
+      [...grid.querySelectorAll('[data-ecf-layout-item]')].forEach((el) => {
+        el.style.setProperty('--ecf-masonry-span', '1');
+        el.style.removeProperty('grid-column');
+        el.style.removeProperty('grid-row');
+      });
+    }, groupName);
+    await page.waitForTimeout(80);
+
+    // Scroll source handle into the viewport before measuring and dragging.
+    // In 1-col layout, items stack taller and the source may be off-screen.
+    await sourceHandle.scrollIntoViewIfNeeded();
+
+    const sourceBoxAfter = await sourceHandle.boundingBox();
+    const targetBoxAfter = await targetItem.boundingBox();
+    const sx = sourceBoxAfter.x + sourceBoxAfter.width / 2;
+    const sy = sourceBoxAfter.y + sourceBoxAfter.height / 2;
+    const tx = targetBoxAfter.x + targetBoxAfter.width / 2;
+    const ty = targetBoxAfter.y + Math.max(5, targetBoxAfter.height * 0.1);
+
+    await page.mouse.move(sx, sy);
+    await page.mouse.down();
+    await page.mouse.move(tx, ty, { steps: 20 });
+    await page.mouse.up();
+    return;
+  }
+
   await sourceHandle.dragTo(targetItem, {
     targetPosition: { x: 24, y: 24 },
+    steps: 20,
   });
 }
 

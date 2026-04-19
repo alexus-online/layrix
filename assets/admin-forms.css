@@ -1754,6 +1754,12 @@
   width: 100%;
   max-width: none;
 }
+.ecf-typography-font-card__content [data-ecf-font-family-search] {
+  width: min(100%, 400px);
+}
+.ecf-typography-font-card__content [data-ecf-font-picker-panel] {
+  max-width: 400px;
+}
 .ecf-font-pairings-card {
   padding: 16px;
 }

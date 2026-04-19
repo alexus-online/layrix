@@ -85,6 +85,7 @@ test.describe('ECF cross-panel UI flows', () => {
       await waitForAutosaveIdle(page);
 
       await setTypographyScaleMaxBase(page, '21');
+      await waitForSuccessNotice(page);
       await waitForRestSetting(page, 'base_body_text_size', '21px');
 
       await openGeneralTab(page, 'website');

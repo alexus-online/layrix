@@ -316,7 +316,7 @@ test.describe('ECF additional linked UI flows', () => {
     await openPluginPage(page);
     await openWebsiteTab(page, 'advanced');
 
-    const details = page.locator('[data-ecf-layout-item="website-scale-impact"]').first();
+    const details = page.locator('.ecf-panel[data-panel="components"] [data-ecf-layout-item="website-scale-impact"]').first();
     await details.evaluate((element) => {
       element.open = true;
       element.dispatchEvent(new Event('toggle'));

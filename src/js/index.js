@@ -1877,7 +1877,7 @@ jQuery(function($){
     $preview.css('--ecf-preview-weight', getPreviewWeight());
     $preview.attr('data-active-step', activeStep);
     $preview.attr('data-preview-view', viewMode);
-    $preview.find('[data-ecf-type-scale-preview-list]').html(html);
+    $preview.siblings('[data-ecf-type-scale-preview-list]').add($preview.find('[data-ecf-type-scale-preview-list]')).html(html);
     $preview.find('[data-ecf-preview-mode]').html(modeLabel());
     $preview.find('[data-ecf-focus-token]').text(activeItem ? activeItem.token : '');
     $preview.find('[data-ecf-focus-helper]').text(helperText);
@@ -3811,6 +3811,12 @@ jQuery(function($){
             $group.addClass('ecf-layout-group--sorting');
             clearMasonryLayoutToGroup($group);
             ui.placeholder.height(ui.item.outerHeight());
+            // Refresh cached item positions after masonry reflow and force vertical sort
+            $group.sortable('refreshPositions');
+            var sortableInstance = $group.data('ui-sortable');
+            if (sortableInstance) {
+              sortableInstance.floating = false;
+            }
           }
         },
         stop: function(event, ui) {
@@ -3867,10 +3873,8 @@ jQuery(function($){
     var currentClassSelectionHash = buildClassSelectionHash(payload);
 
     if (lastSavedSettingsPayload && payloadHash === lastSavedSettingsPayload) {
-      if (autosaveRecoveryNoticePending) {
-        autosaveRecoveryNoticePending = false;
-        showAutosaveNotice(i18n.autosave_saved || '', 'success');
-      }
+      autosaveRecoveryNoticePending = false;
+      showAutosaveNotice(i18n.autosave_saved || '', 'success');
       autosaveQueued = false;
       queuedSettingsPayload = '';
       return;
@@ -4450,6 +4454,9 @@ jQuery(function($){
     } catch (err) {}
 
     closeFontPicker($('[data-ecf-typography-section]').not('.is-active').find('[data-ecf-font-picker]'));
+    if (activeTab === 'scale') {
+      renderTypePreview();
+    }
     scheduleMasonryLayouts();
     syncTypographySubnavActive(activeTab);
   }
@@ -6167,11 +6174,13 @@ jQuery(function($){
     var visibility = counts || {};
     var currentTier = $('[data-ecf-class-tier].is-active').data('ecf-class-tier') || 'all';
     $.each(visibility, function(tier, count) {
-      $('[data-ecf-class-tier="' + tier + '"]').prop('hidden', !count);
+      var $btn = $('[data-ecf-class-tier="' + tier + '"]');
+      if (tier === currentTier) {
+        $btn.prop('hidden', false);
+        return;
+      }
+      $btn.prop('hidden', !count);
     });
-    if (currentTier !== 'all' && $('[data-ecf-class-tier="' + currentTier + '"]').prop('hidden')) {
-      applyClassTierFilter('all');
-    }
   }
 
   function updateStarterClassesState() {
@@ -6860,8 +6869,14 @@ jQuery(function($){
   });
 
   $(document).on('click', '[data-ecf-starter-custom-add]', function() {
+    var previousTier = $('[data-ecf-class-tier].is-active').data('ecf-class-tier') || 'all';
     appendCustomStarterRow({ enabled: true, category: 'custom' });
     updateStarterClassesState();
+    if (previousTier === 'custom') {
+      applyClassTierFilter('custom');
+    } else {
+      refreshStarterClassVisibility();
+    }
     scheduleSettingsAutosave({ delay: 250 });
   });
 
