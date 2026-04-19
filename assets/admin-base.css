@@ -26,6 +26,7 @@
   --ecf-sidebar:   220px;
 
   /* Spacing scale */
+  --ecf-space-0:   2px;
   --ecf-space-1:   4px;
   --ecf-space-2:   6px;
   --ecf-space-3:   8px;
@@ -41,9 +42,22 @@
   --ecf-shadow-sm: 0 1px 3px rgba(0,0,0,.18), 0 1px 2px rgba(0,0,0,.12);
   --ecf-shadow-md: 0 4px 12px rgba(0,0,0,.22), 0 2px 4px rgba(0,0,0,.12);
   --ecf-shadow-lg: 0 10px 24px rgba(0,0,0,.28), 0 4px 8px rgba(0,0,0,.12);
-  --ecf-admin-content-font-size: 16px;
+
+  /* Font-size scale */
+  --ecf-fs-2xs:  9px;
+  --ecf-fs-xs:   10px;
+  --ecf-fs-11:   11px;
+  --ecf-fs-sm:   12px;
+  --ecf-fs-md:   13px;
+  --ecf-fs-base: 14px;
+  --ecf-fs-lg:   15px;
+  --ecf-fs-xl:   16px;
+  --ecf-fs-2xl:  18px;
+  --ecf-fs-3xl:  20px;
+
+  --ecf-admin-content-font-size: var(--ecf-fs-xl);
   --ecf-admin-content-heading-font-size: calc(var(--ecf-admin-content-font-size, 16px) + 2px);
-  --ecf-admin-menu-font-size: 14px;
+  --ecf-admin-menu-font-size: var(--ecf-fs-base);
 }
 
 .ecf-wrap[data-ecf-admin-design="hero"] {
