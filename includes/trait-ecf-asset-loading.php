@@ -140,7 +140,6 @@ trait ECF_Framework_Asset_Loading_Trait {
         $admin_css_ver = [
             'base'         => $this->asset_version('assets/admin-base.css', '0.1.5'),
             'layout'       => $this->asset_version('assets/admin-layout.css', '0.1.5'),
-            'components'   => $this->asset_version('assets/admin-components.css', '0.1.5'),
             'forms'        => $this->asset_version('assets/admin-forms.css', '0.1.5'),
             'panels'       => $this->asset_version('assets/admin-panels.css', '0.1.5'),
             'ui'           => $this->asset_version('assets/admin-ui.css', '0.1.5'),
@@ -149,10 +148,9 @@ trait ECF_Framework_Asset_Loading_Trait {
         $admin_js_ver  = $this->asset_version('assets/admin.js', '0.1.5');
 
         wp_enqueue_style('wp-color-picker');
-        wp_enqueue_style('ecf-admin-base',       plugins_url('assets/admin-base.css',       ECF_FRAMEWORK_FILE), [],                    $admin_css_ver['base']);
+        wp_enqueue_style('ecf-admin-base',       plugins_url('assets/admin-base.css',       ECF_FRAMEWORK_FILE), [],                $admin_css_ver['base']);
         wp_enqueue_style('ecf-admin-layout',     plugins_url('assets/admin-layout.css',     ECF_FRAMEWORK_FILE), ['ecf-admin-base'],     $admin_css_ver['layout']);
-        wp_enqueue_style('ecf-admin-components', plugins_url('assets/admin-components.css', ECF_FRAMEWORK_FILE), ['ecf-admin-layout'],   $admin_css_ver['components']);
-        wp_enqueue_style('ecf-admin-forms',      plugins_url('assets/admin-forms.css',      ECF_FRAMEWORK_FILE), ['ecf-admin-components'], $admin_css_ver['forms']);
+        wp_enqueue_style('ecf-admin-forms',      plugins_url('assets/admin-forms.css',      ECF_FRAMEWORK_FILE), ['ecf-admin-layout'],   $admin_css_ver['forms']);
         wp_enqueue_style('ecf-admin-panels',     plugins_url('assets/admin-panels.css',     ECF_FRAMEWORK_FILE), ['ecf-admin-forms'],    $admin_css_ver['panels']);
         wp_enqueue_style('ecf-admin-ui',         plugins_url('assets/admin-ui.css',         ECF_FRAMEWORK_FILE), ['ecf-admin-panels'],   $admin_css_ver['ui']);
         wp_enqueue_style('ecf-admin-responsive', plugins_url('assets/admin-responsive.css', ECF_FRAMEWORK_FILE), ['ecf-admin-ui'],       $admin_css_ver['responsive']);
