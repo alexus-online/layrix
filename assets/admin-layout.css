@@ -637,8 +637,8 @@
 }
 .ecf-autosave-pill.is-disabled {
   background: rgba(148, 163, 184, .08);
-  border-color: rgba(148, 163, 184, .18);
-  color: rgba(203, 213, 225, .55);
+  border-color: rgba(148, 163, 184, .22);
+  color: rgba(203, 213, 225, .75);
 }
 
 /* Merged sync button icon + label */
@@ -671,10 +671,17 @@
 /* Save button saved/flash state */
 .ecf-sticky-topbar__save.is-saved,
 .ecf-sticky-topbar__save.is-saved.button.button-primary {
-  background: rgba(74, 222, 128, 0.12) !important;
-  border-color: rgba(74, 222, 128, 0.28) !important;
+  background: rgba(74, 222, 128, 0.14) !important;
+  border-color: rgba(74, 222, 128, 0.42) !important;
   color: #86efac !important;
-  box-shadow: none !important;
+  box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.1) !important;
+  animation: ecf-saved-pulse .55s ease-out forwards;
+}
+
+@keyframes ecf-saved-pulse {
+  0%   { box-shadow: 0 0 0 0   rgba(74, 222, 128, 0.30); }
+  60%  { box-shadow: 0 0 0 6px rgba(74, 222, 128, 0.08); }
+  100% { box-shadow: 0 0 0 4px rgba(74, 222, 128, 0.06); }
 }
 
 .ecf-sticky-topbar__save.button.button-primary,
@@ -740,30 +747,30 @@
   animation: ecf-save-entrance 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
-/* Shrink save button slightly — it no longer needs to dominate when hidden */
+/* Save button — primary CTA */
 .ecf-sticky-topbar__save.button.button-primary,
 .ecf-sticky-topbar__save {
   min-width: 0 !important;
-  height: 40px !important;
-  min-height: 40px !important;
+  height: 38px !important;
+  min-height: 38px !important;
   padding: 0 22px !important;
   font-size: 13px !important;
   font-weight: 700 !important;
 }
 
-/* Reduce pill heights to feel secondary */
+/* Secondary pills — one step below save */
 .ecf-autosave-pill,
 .ecf-sticky-topbar__autosave-toggle {
-  min-height: 34px !important;
-  height: 34px !important;
+  min-height: 36px !important;
+  height: 36px !important;
   padding: 0 14px !important;
-  font-size: 11.5px !important;
+  font-size: 12px !important;
 }
 
-/* Reset layout: icon + hide text to save space */
+/* Reset layout button */
 .ecf-sticky-topbar__reset-layout {
-  min-height: 34px !important;
-  height: 34px !important;
+  min-height: 36px !important;
+  height: 36px !important;
   padding: 0 12px !important;
   font-size: 12px !important;
   gap: 6px !important;

@@ -19,8 +19,8 @@
   --ecf-danger:    #ef4444;
   --ecf-warn:      #f59e0b;
   --ecf-text:      #e2e8f0;
-  --ecf-muted:     #64748b;
-  --ecf-muted-2:   #94a3b8;
+  --ecf-muted:     #7b8faa;
+  --ecf-muted-2:   #a0b0c8;
   --font-mono:     var(--ecf-font-mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace);
   --ecf-radius:    10px;
   --ecf-sidebar:   220px;
