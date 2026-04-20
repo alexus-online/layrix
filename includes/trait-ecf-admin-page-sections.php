@@ -2765,9 +2765,14 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                                     </div>
                                     <div class="ecf-font-pairing__footer">
                                         <div class="ecf-font-pairing__names">
-                                            <span class="ecf-font-pairing__name-head"><?php echo esc_html($pairing['heading_family']); ?></span>
-                                            <span class="ecf-font-pairing__sep" aria-hidden="true">·</span>
-                                            <span class="ecf-font-pairing__name-body"><?php echo esc_html($pairing['body_family']); ?></span>
+                                            <span class="ecf-font-pairing__name-row">
+                                                <span class="ecf-font-pairing__name-label"><?php echo esc_html__('Heading', 'ecf-framework'); ?></span>
+                                                <span class="ecf-font-pairing__name-head"><?php echo esc_html($pairing['heading_family']); ?></span>
+                                            </span>
+                                            <span class="ecf-font-pairing__name-row">
+                                                <span class="ecf-font-pairing__name-label"><?php echo esc_html__('Body', 'ecf-framework'); ?></span>
+                                                <span class="ecf-font-pairing__name-body"><?php echo esc_html($pairing['body_family']); ?></span>
+                                            </span>
                                         </div>
                                         <div class="ecf-font-pairing__footer-row">
                                             <span class="ecf-preview-pill ecf-font-pairing__tone-pill"><?php echo esc_html($pairing['tone']); ?></span>

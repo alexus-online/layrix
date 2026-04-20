@@ -610,6 +610,7 @@ return [
     'Reusable typography stacks like Primary and Secondary.' => 'Wiederverwendbare Typografie-Stacks wie Primary und Secondary.',
     'Manage the fonts that were imported locally from the library.' => 'Verwalte die Schriften, die lokal aus der Bibliothek importiert wurden.',
     'Body' => 'Fließtext',
+    'Heading' => 'Überschrift',
     'Recommended Font Pairings' => 'Empfohlene Schriftpaare',
     'Style Presets' => 'Stil-Presets',
     'Apply one complete visual direction when you want a faster start for type, colors, radii, shadows and website basics.' => 'Wende eine komplette visuelle Richtung an, wenn du einen schnelleren Start für Typografie, Farben, Radien, Schatten und Website-Basics willst.',

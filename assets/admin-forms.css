@@ -2933,9 +2933,22 @@
 }
 .ecf-font-pairing__names {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 3px;
+}
+.ecf-font-pairing__name-row {
+  display: flex;
+  align-items: baseline;
   gap: var(--ecf-space-2);
-  flex-wrap: wrap;
+}
+.ecf-font-pairing__name-label {
+  font-size: var(--ecf-fs-2xs);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--ecf-muted);
+  min-width: 46px;
+  flex-shrink: 0;
 }
 .ecf-font-pairing__name-head {
   font-size: var(--ecf-fs-sm);
@@ -2945,10 +2958,6 @@
 .ecf-font-pairing__name-body {
   font-size: var(--ecf-fs-sm);
   color: var(--ecf-muted-2);
-}
-.ecf-font-pairing__sep {
-  color: var(--ecf-muted);
-  font-size: var(--ecf-fs-sm);
 }
 .ecf-font-pairing__footer-row {
   display: flex;
