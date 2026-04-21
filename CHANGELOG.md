@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.2 (2026-04-21)
+
+### Neu
+- UI v2 Toggle im Topbar: neues Interface-Design per Klick aktivierbar, Auswahl wird gespeichert.
+
 ## 0.4.1 (2026-04-21)
 
 ### Neu

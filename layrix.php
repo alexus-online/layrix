@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Layrix
  * Description: Core-Framework-style tokens, editor panel, and native Elementor variable/class sync.
- * Version: 0.4.1
+ * Version: 0.4.2
  * Author: Alexander Kaiser
  * Update URI: https://github.com/alexus-online/layrix
  * Text Domain: ecf-framework
@@ -298,6 +298,10 @@ class ECF_Framework {
                         <h2 class="ecf-sticky-topbar__title" data-ecf-active-panel-title><?php echo esc_html__('Colors & Radius', 'ecf-framework'); ?></h2>
                     </div>
                     <div class="ecf-sticky-topbar__actions">
+                        <button type="button" class="ecf-ui-toggle-btn" data-ecf-ui-toggle title="<?php echo esc_attr__('Switch UI design', 'ecf-framework'); ?>">
+                            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2 6h8M6 2l4 4-4 4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                            <span data-ecf-ui-toggle-label><?php echo esc_html__('New design', 'ecf-framework'); ?></span>
+                        </button>
                         <button type="button" class="ecf-btn ecf-btn--ghost ecf-sticky-topbar__reset-layout" data-ecf-reset-layout>
                             <span class="dashicons dashicons-image-rotate" aria-hidden="true"></span>
                             <span><?php echo esc_html__('Reset layout', 'ecf-framework'); ?></span>
