@@ -1,5 +1,26 @@
 # Changelog
 
+## 0.4.1 (2026-04-21)
+
+### Neu
+- UI v2 Toggle: Neues Design-Theme per Klick aktivierbar — Vergleich zwischen aktuellem und neuem Interface direkt im Plugin möglich.
+- JS-Module: `utils.js` und `color-utils.js` als eigenständige ES-Module ausgelagert.
+- `apiFetch()` Wrapper und `debounce()` Helper für alle REST-Aufrufe.
+
+### Verbesserungen
+- CSS Design-Token erweitert: Line-Height-Skala (`--ecf-lh-*`), Transition-Dauern (`--ecf-dur-*`), Border-Radius-Tokens, Font-Size-Skala (`--ecf-fs-*`), Spacing-Skala (`--ecf-space-*`), Shadow-Skala (`--ecf-shadow-*`).
+- 290+ hardkodierte Font-Size-, 280+ Gap-, 64+ Border-Radius-Werte durch CSS-Variablen ersetzt.
+- `admin-components.css` in `admin-forms.css` zusammengeführt.
+- PHP-Trait `trait-ecf-admin-page-sections.php` aufgeteilt in Helper-Methoden und neuen `trait-ecf-admin-panel-renderers.php`.
+- Font-Pairings: kompaktes 4-Spalten-Grid, Kategorie-Filter-Tabs, 20 Paarungen insgesamt.
+- Button-Text: „Schriftpaar verwenden" (kürzer).
+- $dom-Cache-Objekt für häufig verwendete jQuery-Selektoren.
+
+### Sicherheit
+- XSS-Fix: `res.data` in AJAX-Fehlermeldungen wird jetzt korrekt escaped (`.html()`-Injection).
+- XSS-Fix: `v.label` und `v.id` in `buildVarTable()` werden escaped.
+- Font-Suchanfragen auf max. 200 Zeichen begrenzt.
+
 ## 0.3.13 (2026-04-18)
 
 ### Fix
