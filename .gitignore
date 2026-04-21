@@ -9,3 +9,15 @@ playwright-report/
 test-results/
 website-quality-check/
 .worktrees/
+.agents/
+skills-lock.json
+docs/
+dist/
+src/
+tests/
+scripts/
+build.js
+package.json
+package-lock.json
+playwright.config.js
+assets/admin.js.map
