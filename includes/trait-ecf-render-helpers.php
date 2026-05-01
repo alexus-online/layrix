@@ -120,6 +120,7 @@ trait ECF_Framework_Render_Helpers_Trait {
                 echo '<input type="text" class="ecf-color-field" value="' . esc_attr($picker_hex) . '" placeholder="#000000" />';
                 echo '<input type="hidden" class="ecf-color-value-input" name="' . $input_key . '[' . $i . '][value]" value="' . esc_attr($row['value']) . '" />';
                 echo '<input type="text" data-ecf-slug-field="token" name="' . $input_key . '[' . $i . '][name]" value="' . esc_attr($row['name']) . '" placeholder="' . esc_attr__('name', 'ecf-framework') . '" />';
+                echo '<code class="ecf-color-varname">--ecf-color-<span>' . esc_html($row['name'] ?? '') . '</span></code>';
                 echo '<input type="text" class="ecf-color-value-display" value="' . esc_attr($row['value']) . '" spellcheck="false" autocomplete="off" />';
                 echo '<select class="ecf-color-format-select" name="' . $input_key . '[' . $i . '][format]">';
                 echo '<option value="hex"' . selected($format, 'hex', false) . '>HEX</option>';

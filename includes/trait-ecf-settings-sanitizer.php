@@ -348,6 +348,14 @@ trait ECF_Framework_Settings_Sanitizer_Trait {
         }
         if (empty($output['typography']['local_fonts'])) $output['typography']['local_fonts'] = $typo_defaults['local_fonts'];
 
+        $output['typography']['font_favorites'] = [];
+        if (!empty($input['typography']['font_favorites']) && is_array($input['typography']['font_favorites'])) {
+            foreach ($input['typography']['font_favorites'] as $fav) {
+                $fav = sanitize_text_field((string) $fav);
+                if ($fav !== '') $output['typography']['font_favorites'][] = $fav;
+            }
+        }
+
         if (!empty($input['typography']['scale']) && is_array($input['typography']['scale'])) {
             $sc = $input['typography']['scale'];
             $all_allowed_steps = ['6xs','5xs','4xs','3xs','2xs','xs','s','m','l','xl','2xl','3xl','4xl','5xl','6xl','7xl','8xl','9xl'];

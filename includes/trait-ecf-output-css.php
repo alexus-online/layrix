@@ -24,7 +24,7 @@ trait ECF_Framework_Output_CSS_Trait {
         $css = '';
 
         foreach ($this->get_selected_utility_class_names($settings) as $class_name) {
-            $props = $this->utility_class_props($class_name);
+            $props = $this->utility_class_props($class_name, $settings);
             if (!is_array($props) || empty($props)) {
                 continue;
             }
@@ -117,7 +117,7 @@ trait ECF_Framework_Output_CSS_Trait {
             $base_body_font_weight = $this->typography_row_value('weights', 'normal', '400');
         }
         $css = ":root{font-size:" . esc_attr($root_font_css) . ";";
-        foreach ($settings['colors'] as $row) {
+        foreach ($settings['colors'] ?? [] as $row) {
             $n = sanitize_key($row['name']);
             $v = esc_attr($this->sanitize_css_color_value($row['value'], $row['format'] ?? ''));
             if ($v === '') {
@@ -134,13 +134,13 @@ trait ECF_Framework_Output_CSS_Trait {
         foreach ($spacing_scale as $name => $value) {
             $css .= "--ecf-space-$name:$value;";
         }
-        foreach ($settings['radius'] as $row) {
+        foreach ($settings['radius'] ?? [] as $row) {
             $name = sanitize_key($row['name']);
             $value = $this->radius_css_value($row, 375, 1280, $root_base_px);
             $css .= "--ecf-radius-$name:$value;";
         }
         foreach (['sm', 'md', 'lg', 'xl'] as $size) {
-            $value = esc_attr($settings['container'][$size]);
+            $value = esc_attr($settings['container'][$size] ?? '');
             $css .= "--ecf-container-$size:$value;";
         }
         $css .= "--ecf-container-boxed:" . esc_attr($settings['elementor_boxed_width'] ?? '1140px') . ";";
@@ -158,7 +158,7 @@ trait ECF_Framework_Output_CSS_Trait {
         $css .= "--ecf-heading-font-family:" . $this->css_font_value_for_output($resolved_heading_font_family) . ";";
         $css .= "--ecf-base-body-text-size:" . esc_attr($base_body_text_size) . ";";
         $css .= "--ecf-base-body-font-weight:" . esc_attr($base_body_font_weight) . ";";
-        foreach ($settings['typography']['fonts'] as $row) {
+        foreach ($settings['typography']['fonts'] ?? [] as $row) {
             $name = sanitize_key($row['name']);
             $value = $this->css_font_value_for_output($row['value'] ?? '');
             if ($value === '') {
@@ -169,22 +169,22 @@ trait ECF_Framework_Output_CSS_Trait {
         foreach ($type_scale as $name => $value) {
             $css .= "--ecf-text-$name:$value;";
         }
-        foreach ($settings['typography']['weights'] as $row) {
+        foreach ($settings['typography']['weights'] ?? [] as $row) {
             $name = sanitize_key($row['name']);
             $value = esc_attr($row['value']);
             $css .= "--ecf-weight-$name:$value;";
         }
-        foreach ($settings['typography']['leading'] as $row) {
+        foreach ($settings['typography']['leading'] ?? [] as $row) {
             $name = sanitize_key($row['name']);
             $value = esc_attr($row['value']);
             $css .= "--ecf-leading-$name:$value;";
         }
-        foreach ($settings['typography']['tracking'] as $row) {
+        foreach ($settings['typography']['tracking'] ?? [] as $row) {
             $name = sanitize_key($row['name']);
             $value = esc_attr($row['value']);
             $css .= "--ecf-tracking-$name:$value;";
         }
-        foreach ($settings['shadows'] as $row) {
+        foreach ($settings['shadows'] ?? [] as $row) {
             $name = sanitize_key($row['name']);
             $value = esc_attr($row['value']);
             $css .= "--ecf-shadow-$name:$value;";
@@ -227,6 +227,18 @@ trait ECF_Framework_Output_CSS_Trait {
         $css .= $this->build_selected_utility_class_css($settings);
         $css .= ".ecf-container-boxed,.cf-container-boxed,.elementor .ecf-container-boxed,.elementor .cf-container-boxed{max-width:min(calc(100% - 2rem), var(--ecf-container-boxed))!important;margin-inline:auto!important;margin-left:auto!important;margin-right:auto!important;width:100%!important;}";
 
+        /* Dark Mode overrides */
+        $dark_vars = '';
+        foreach ($settings['colors'] ?? [] as $row) {
+            if (empty($row['dark_enabled']) || empty($row['dark_value'])) continue;
+            $n  = sanitize_key($row['name'] ?? '');
+            $dv = esc_attr($this->sanitize_css_color_value($row['dark_value'], 'hex'));
+            if ($n && $dv) $dark_vars .= "--ecf-color-$n:$dv;";
+        }
+        if ($dark_vars) {
+            $css .= "@media(prefers-color-scheme:dark){:root{{$dark_vars}}}";
+        }
+
         return $pretty ? $this->format_generated_css($css) : $css;
     }
 
@@ -241,9 +253,20 @@ trait ECF_Framework_Output_CSS_Trait {
         return trim($css) . "\n";
     }
 
+    private function css_transient_key(): string {
+        return 'ecf_generated_css_v1';
+    }
+
+    public function clear_css_cache(): void {
+        delete_transient($this->css_transient_key());
+    }
+
     public function output_css() {
-        echo "<style id='ecf-framework-v010'>";
-        echo $this->build_generated_css();
-        echo "</style>";
+        $css = get_transient($this->css_transient_key());
+        if ($css === false) {
+            $css = $this->build_generated_css();
+            set_transient($this->css_transient_key(), $css, DAY_IN_SECONDS);
+        }
+        echo "<style id='ecf-framework-v010'>" . $css . "</style>";
     }
 }

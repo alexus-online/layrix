@@ -1,7 +1,7 @@
 <?php
 
 trait ECF_Framework_Config_Trait {
-    private function defaults() {
+    protected function defaults() {
         return [
             'root_font_size' => '62.5',
             'interface_language' => $this->wordpress_default_interface_language(),
@@ -63,12 +63,12 @@ trait ECF_Framework_Config_Trait {
             ],
             'spacing' => $this->default_spacing_settings(),
             'shadows' => [
-                ['name' => 'xs', 'value' => '0 1px 2px rgba(0,0,0,0.05)'],
-                ['name' => 's', 'value' => '0 2px 6px rgba(0,0,0,0.08)'],
-                ['name' => 'm', 'value' => '0 4px 16px rgba(0,0,0,0.10)'],
-                ['name' => 'l', 'value' => '0 8px 30px rgba(0,0,0,0.12)'],
-                ['name' => 'xl', 'value' => '0 20px 60px rgba(0,0,0,0.15)'],
-                ['name' => 'inner', 'value' => 'inset 0 2px 6px rgba(0,0,0,0.08)'],
+                ['name' => 'xs',    'value' => '0 1px 2px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04)'],
+                ['name' => 's',     'value' => '0 2px 4px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.06)'],
+                ['name' => 'm',     'value' => '0 4px 8px rgba(0,0,0,.09), 0 8px 24px rgba(0,0,0,.08)'],
+                ['name' => 'l',     'value' => '0 8px 16px rgba(0,0,0,.10), 0 16px 40px rgba(0,0,0,.10)'],
+                ['name' => 'xl',    'value' => '0 16px 32px rgba(0,0,0,.12), 0 32px 64px rgba(0,0,0,.14)'],
+                ['name' => 'inner', 'value' => 'inset 0 2px 4px rgba(0,0,0,.06)'],
             ],
             'container' => [
                 'sm' => '640px',
@@ -274,11 +274,19 @@ trait ECF_Framework_Config_Trait {
         );
     }
 
+    private function clear_settings_cache(): void {
+        $this->settings_cache = null;
+    }
+
     public function get_settings() {
+        if ($this->settings_cache !== null) {
+            return $this->settings_cache;
+        }
         $saved = get_option($this->option_name);
         if (!$saved || !is_array($saved)) {
             $defaults = $this->defaults();
             $defaults['base_body_text_size'] = $this->derived_base_body_text_size($defaults);
+            $this->settings_cache = $defaults;
             return $defaults;
         }
 
@@ -386,6 +394,7 @@ trait ECF_Framework_Config_Trait {
             update_option($this->option_name, $saved);
         }
 
+        $this->settings_cache = $settings;
         return $settings;
     }
 
@@ -679,8 +688,10 @@ trait ECF_Framework_Config_Trait {
         ];
     }
 
-    private function typography_row_value($group, $name, $fallback = '') {
-        $settings = $this->get_settings();
+    private function typography_row_value($group, $name, $fallback = '', $settings = null) {
+        if ($settings === null) {
+            $settings = $this->get_settings();
+        }
         foreach ((array) ($settings['typography'][$group] ?? []) as $row) {
             if (sanitize_key($row['name'] ?? '') === sanitize_key($name)) {
                 $value = (string) ($row['value'] ?? '');
@@ -692,8 +703,10 @@ trait ECF_Framework_Config_Trait {
         return $fallback;
     }
 
-    private function utility_type_size_prop($step) {
-        $settings = $this->get_settings();
+    private function utility_type_size_prop($step, $settings = null) {
+        if ($settings === null) {
+            $settings = $this->get_settings();
+        }
         $root_base_px = $this->get_root_font_base_px($settings);
         foreach ($this->build_type_scale_preview($settings['typography']['scale'], $root_base_px) as $item) {
             if (($item['step'] ?? '') === $step) {
@@ -708,59 +721,62 @@ trait ECF_Framework_Config_Trait {
         return null;
     }
 
-    private function utility_class_props($name) {
-        $leading_tight = $this->typography_row_value('leading', 'tight', '1.2');
-        $leading_snug = $this->typography_row_value('leading', 'snug', '1.375');
-        $leading_normal = $this->typography_row_value('leading', 'normal', '1.5');
-        $leading_relaxed = $this->typography_row_value('leading', 'relaxed', '1.625');
-        $weight_bold = $this->typography_row_value('weights', 'bold', '700');
-        $weight_semibold = $this->typography_row_value('weights', 'semibold', '600');
-        $tracking_widest = $this->typography_row_value('tracking', 'widest', '0.1em');
+    private function utility_class_props($name, $settings = null) {
+        if ($settings === null) {
+            $settings = $this->get_settings();
+        }
+        $leading_tight    = $this->typography_row_value('leading', 'tight',   '1.2',    $settings);
+        $leading_snug     = $this->typography_row_value('leading', 'snug',    '1.375',  $settings);
+        $leading_normal   = $this->typography_row_value('leading', 'normal',  '1.5',    $settings);
+        $leading_relaxed  = $this->typography_row_value('leading', 'relaxed', '1.625',  $settings);
+        $weight_bold      = $this->typography_row_value('weights', 'bold',    '700',    $settings);
+        $weight_semibold  = $this->typography_row_value('weights', 'semibold','600',    $settings);
+        $tracking_widest  = $this->typography_row_value('tracking', 'widest', '0.1em', $settings);
 
         $map = [
             'ecf-heading-1' => [
-                'font-size' => $this->utility_type_size_prop('4xl') ?? $this->string_prop('var(--ecf-text-4xl)'),
+                'font-size' => $this->utility_type_size_prop('4xl', $settings) ?? $this->string_prop('var(--ecf-text-4xl)'),
                 'line-height' => $this->string_prop($leading_tight),
                 'font-weight' => $this->string_prop($weight_bold),
             ],
             'ecf-heading-2' => [
-                'font-size' => $this->utility_type_size_prop('3xl') ?? $this->string_prop('var(--ecf-text-3xl)'),
+                'font-size' => $this->utility_type_size_prop('3xl', $settings) ?? $this->string_prop('var(--ecf-text-3xl)'),
                 'line-height' => $this->string_prop($leading_tight),
                 'font-weight' => $this->string_prop($weight_bold),
             ],
             'ecf-heading-3' => [
-                'font-size' => $this->utility_type_size_prop('2xl') ?? $this->string_prop('var(--ecf-text-2xl)'),
+                'font-size' => $this->utility_type_size_prop('2xl', $settings) ?? $this->string_prop('var(--ecf-text-2xl)'),
                 'line-height' => $this->string_prop($leading_snug),
                 'font-weight' => $this->string_prop($weight_semibold),
             ],
             'ecf-heading-4' => [
-                'font-size' => $this->utility_type_size_prop('xl') ?? $this->string_prop('var(--ecf-text-xl)'),
+                'font-size' => $this->utility_type_size_prop('xl', $settings) ?? $this->string_prop('var(--ecf-text-xl)'),
                 'line-height' => $this->string_prop($leading_snug),
                 'font-weight' => $this->string_prop($weight_semibold),
             ],
             'ecf-heading-5' => [
-                'font-size' => $this->utility_type_size_prop('l') ?? $this->string_prop('var(--ecf-text-l)'),
+                'font-size' => $this->utility_type_size_prop('l', $settings) ?? $this->string_prop('var(--ecf-text-l)'),
                 'line-height' => $this->string_prop($leading_normal),
                 'font-weight' => $this->string_prop($weight_semibold),
             ],
             'ecf-body-l' => [
-                'font-size' => $this->utility_type_size_prop('l') ?? $this->string_prop('var(--ecf-text-l)'),
+                'font-size' => $this->utility_type_size_prop('l', $settings) ?? $this->string_prop('var(--ecf-text-l)'),
                 'line-height' => $this->string_prop($leading_relaxed),
             ],
             'ecf-body-m' => [
-                'font-size' => $this->utility_type_size_prop('m') ?? $this->string_prop('var(--ecf-text-m)'),
+                'font-size' => $this->utility_type_size_prop('m', $settings) ?? $this->string_prop('var(--ecf-text-m)'),
                 'line-height' => $this->string_prop($leading_normal),
             ],
             'ecf-body-s' => [
-                'font-size' => $this->utility_type_size_prop('s') ?? $this->string_prop('var(--ecf-text-s)'),
+                'font-size' => $this->utility_type_size_prop('s', $settings) ?? $this->string_prop('var(--ecf-text-s)'),
                 'line-height' => $this->string_prop($leading_normal),
             ],
             'ecf-caption' => [
-                'font-size' => $this->utility_type_size_prop('xs') ?? $this->string_prop('var(--ecf-text-xs)'),
+                'font-size' => $this->utility_type_size_prop('xs', $settings) ?? $this->string_prop('var(--ecf-text-xs)'),
                 'line-height' => $this->string_prop($leading_snug),
             ],
             'ecf-overline' => [
-                'font-size' => $this->utility_type_size_prop('xs') ?? $this->string_prop('var(--ecf-text-xs)'),
+                'font-size' => $this->utility_type_size_prop('xs', $settings) ?? $this->string_prop('var(--ecf-text-xs)'),
                 'line-height' => $this->string_prop($leading_snug),
                 'font-weight' => $this->string_prop($weight_semibold),
                 'letter-spacing' => $this->string_prop($tracking_widest),

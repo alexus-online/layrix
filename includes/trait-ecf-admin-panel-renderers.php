@@ -326,6 +326,33 @@ trait ECF_Framework_Admin_Panel_Renderers_Trait {
                         <h2><?php echo esc_html__('Colors', 'ecf-framework'); ?></h2>
                         <?php $this->render_rows('colors', $settings['colors']); ?>
                     </div>
+                    <div class="ecf-card" data-ecf-layout-item="tokens-contrast-checker">
+                        <h2><?php echo esc_html__('Kontrast-Checker', 'ecf-framework'); ?></h2>
+                        <p class="ecf-muted-copy" style="margin-bottom:14px"><?php echo esc_html__('WCAG-Kontrastverhältnis zwischen zwei Farben prüfen.', 'ecf-framework'); ?></p>
+                        <div class="ecf-cc-wrap" id="ecf-contrast-checker">
+                            <div class="ecf-cc-row">
+                                <label class="ecf-cc-label"><?php echo esc_html__('Vordergrund', 'ecf-framework'); ?></label>
+                                <select class="ecf-cc-select" id="ecf-cc-fg" data-ecf-cc-fg>
+                                    <option value=""><?php echo esc_html__('— Farbe wählen —', 'ecf-framework'); ?></option>
+                                </select>
+                                <input type="color" class="ecf-cc-swatch" id="ecf-cc-fg-custom" data-ecf-cc-fg-custom value="#ffffff">
+                            </div>
+                            <div class="ecf-cc-row">
+                                <label class="ecf-cc-label"><?php echo esc_html__('Hintergrund', 'ecf-framework'); ?></label>
+                                <select class="ecf-cc-select" id="ecf-cc-bg" data-ecf-cc-bg>
+                                    <option value=""><?php echo esc_html__('— Farbe wählen —', 'ecf-framework'); ?></option>
+                                </select>
+                                <input type="color" class="ecf-cc-swatch" id="ecf-cc-bg-custom" data-ecf-cc-bg-custom value="#09090b">
+                            </div>
+                            <div class="ecf-cc-result" id="ecf-cc-result" hidden>
+                                <div class="ecf-cc-preview" id="ecf-cc-preview">Aa</div>
+                                <div class="ecf-cc-stats">
+                                    <span class="ecf-cc-ratio" id="ecf-cc-ratio"></span>
+                                    <span class="ecf-cc-badge" id="ecf-cc-badge"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="ecf-card" data-ecf-layout-item="tokens-radius">
                         <h2><?php echo esc_html__('Radius', 'ecf-framework'); ?></h2>
                         <?php $this->render_root_font_size_select($settings, false); ?>
@@ -515,6 +542,27 @@ trait ECF_Framework_Admin_Panel_Renderers_Trait {
                 'elements' => ['inner', 'brand', 'nav', 'meta', 'actions'],
                 'modifiers' => ['dark', 'minimal', 'split'],
             ],
+            'testimonial' => [
+                'label' => __('Testimonial', 'ecf-framework'),
+                'category' => 'social-proof',
+                'help' => __('For quotes, reviews and customer statements with avatar and rating.', 'ecf-framework'),
+                'elements' => ['quote', 'avatar', 'author', 'role', 'rating'],
+                'modifiers' => ['featured', 'compact', 'dark'],
+            ],
+            'pricing' => [
+                'label' => __('Pricing', 'ecf-framework'),
+                'category' => 'conversion',
+                'help' => __('For pricing plans with feature lists, price display and CTA.', 'ecf-framework'),
+                'elements' => ['plan', 'price', 'period', 'features', 'item', 'cta'],
+                'modifiers' => ['featured', 'popular', 'dark'],
+            ],
+            'team' => [
+                'label' => __('Team', 'ecf-framework'),
+                'category' => 'about',
+                'help' => __('For team member cards with portrait, name, role and social links.', 'ecf-framework'),
+                'elements' => ['portrait', 'name', 'role', 'bio', 'social'],
+                'modifiers' => ['compact', 'horizontal', 'dark'],
+            ],
             'custom' => [
                 'label' => __('Custom section', 'ecf-framework'),
                 'category' => 'custom',
@@ -590,6 +638,9 @@ trait ECF_Framework_Admin_Panel_Renderers_Trait {
                         <button type="button" class="ecf-var-tab" data-ecf-class-tier="custom" data-ecf-tier-title="<?php echo esc_attr__('Own classes', 'ecf-framework'); ?>" data-ecf-tier-copy="<?php echo esc_attr__('Add your own semantic class names for project-specific naming that does not fit the predefined starter library.', 'ecf-framework'); ?>" <?php echo empty($active_custom_classes) ? 'hidden' : ''; ?>>
                             <?php echo esc_html__('Custom', 'ecf-framework'); ?>
                             <span class="ecf-var-tab__count" data-ecf-starter-custom-count><?php echo esc_html(count($active_custom_classes) . '/' . $custom_total); ?></span>
+                        </button>
+                        <button type="button" class="ecf-var-tab" data-ecf-class-tier="generator" data-ecf-tier-title="<?php echo esc_attr__('BEM Generator', 'ecf-framework'); ?>" data-ecf-tier-copy="<?php echo esc_attr__('Choose a section, add elements or modifiers, and generate clean ECF BEM names for your own classes.', 'ecf-framework'); ?>">
+                            <?php echo esc_html__('Generator', 'ecf-framework'); ?>
                         </button>
                         <button type="button" class="ecf-var-tab" data-ecf-class-tier="existing-foreign" data-ecf-tier-title="<?php echo esc_attr__('Only in Elementor', 'ecf-framework'); ?>" data-ecf-tier-copy="<?php echo esc_attr__('Review classes that already exist in Elementor but are not part of your current Layrix selection.', 'ecf-framework'); ?>" <?php echo ($elementor_class_total_count - count($active_sync_payload_classes)) <= 0 ? 'hidden' : ''; ?>>
                             <?php echo esc_html__('Only in Elementor', 'ecf-framework'); ?>
@@ -725,60 +776,6 @@ trait ECF_Framework_Admin_Panel_Renderers_Trait {
                             <input type="search" data-ecf-class-search placeholder="<?php echo esc_attr__('Search classes…', 'ecf-framework'); ?>" autocomplete="off">
                         </label>
                     </div>
-                    <div class="ecf-bem-generator" data-ecf-bem-generator data-ecf-bem-presets="<?php echo esc_attr(wp_json_encode($bem_generator_presets)); ?>">
-                        <div class="ecf-vargroup-header">
-                            <h3><?php echo esc_html__('BEM class generator', 'ecf-framework'); ?></h3>
-                        </div>
-                        <p class="ecf-muted-copy"><?php echo esc_html__('Choose a section, add elements or modifiers, and generate clean ECF BEM names for your own classes.', 'ecf-framework'); ?></p>
-                        <div class="ecf-bem-generator__grid">
-                            <label class="ecf-class-filterbar__field">
-                                <span class="ecf-class-filterbar__label"><?php echo esc_html__('Area', 'ecf-framework'); ?></span>
-                                <select data-ecf-bem-preset>
-                                    <?php foreach ($bem_generator_presets as $preset_key => $preset): ?>
-                                        <option value="<?php echo esc_attr($preset_key); ?>"><?php echo esc_html($preset['label']); ?></option>
-                                    <?php endforeach; ?>
-                                </select>
-                            </label>
-                            <label class="ecf-class-filterbar__field" data-ecf-bem-block-field>
-                                <span class="ecf-class-filterbar__label"><?php echo esc_html__('Own block name', 'ecf-framework'); ?></span>
-                                <input type="text" class="ecf-input" data-ecf-bem-block placeholder="<?php echo esc_attr__('optional, e.g. testimonials', 'ecf-framework'); ?>">
-                            </label>
-                            <label class="ecf-class-filterbar__field">
-                                <span class="ecf-class-filterbar__label"><?php echo esc_html__('Additional elements', 'ecf-framework'); ?></span>
-                                <input type="text" class="ecf-input" data-ecf-bem-extra-elements placeholder="<?php echo esc_attr__('e.g. subtitle, badge', 'ecf-framework'); ?>">
-                            </label>
-                            <label class="ecf-class-filterbar__field">
-                                <span class="ecf-class-filterbar__label"><?php echo esc_html__('Additional modifiers', 'ecf-framework'); ?></span>
-                                <input type="text" class="ecf-input" data-ecf-bem-extra-modifiers placeholder="<?php echo esc_attr__('e.g. dark, compact', 'ecf-framework'); ?>">
-                            </label>
-                        </div>
-                        <p class="ecf-class-library-actions__hint" data-ecf-bem-help></p>
-                        <div class="ecf-bem-generator__pickers">
-                            <div class="ecf-bem-generator__picker">
-                                <strong><?php echo esc_html__('Elements', 'ecf-framework'); ?></strong>
-                                <div class="ecf-bem-generator__options" data-ecf-bem-elements></div>
-                            </div>
-                            <div class="ecf-bem-generator__picker">
-                                <strong><?php echo esc_html__('Modifiers', 'ecf-framework'); ?></strong>
-                                <div class="ecf-bem-generator__options" data-ecf-bem-modifiers></div>
-                            </div>
-                        </div>
-                        <div class="ecf-bem-generator__preview">
-                            <strong><?php echo esc_html__('Preview', 'ecf-framework'); ?></strong>
-                            <div class="ecf-bem-generator__preview-list" data-ecf-bem-preview></div>
-                        </div>
-                        <div class="ecf-class-library-actions ecf-class-library-actions--generator">
-                            <button type="button" class="ecf-btn ecf-btn--secondary" data-ecf-bem-reset>
-                                <span class="dashicons dashicons-image-rotate" aria-hidden="true"></span>
-                                <span><?php echo esc_html__('Reset', 'ecf-framework'); ?></span>
-                            </button>
-                            <button type="button" class="ecf-btn ecf-btn--primary" data-ecf-bem-add>
-                                <span class="dashicons dashicons-plus-alt2" aria-hidden="true"></span>
-                                <span><?php echo esc_html__('Add as custom classes', 'ecf-framework'); ?></span>
-                            </button>
-                        </div>
-                        <p class="ecf-class-library-actions__hint" data-ecf-bem-feedback></p>
-                    </div>
                     <div class="ecf-starter-class-list">
                         <?php foreach ($starter_class_library as $tier => $classes): ?>
                             <?php foreach ($classes as $class): ?>
@@ -845,6 +842,62 @@ trait ECF_Framework_Admin_Panel_Renderers_Trait {
                         </div>
                     </div>
                     </div>
+                    </div>
+                    <div class="ecf-library-section" data-ecf-library-section="generator" hidden>
+                        <div class="ecf-bem-generator" data-ecf-bem-generator data-ecf-bem-presets="<?php echo esc_attr(wp_json_encode($bem_generator_presets)); ?>">
+                            <div class="ecf-vargroup-header">
+                                <h3><?php echo esc_html__('BEM class generator', 'ecf-framework'); ?></h3>
+                            </div>
+                            <p class="ecf-muted-copy"><?php echo esc_html__('Choose a section, add elements or modifiers, and generate clean ECF BEM names for your own classes.', 'ecf-framework'); ?></p>
+                            <div class="ecf-bem-generator__grid">
+                                <label class="ecf-class-filterbar__field">
+                                    <span class="ecf-class-filterbar__label"><?php echo esc_html__('Area', 'ecf-framework'); ?></span>
+                                    <select data-ecf-bem-preset>
+                                        <?php foreach ($bem_generator_presets as $preset_key => $preset): ?>
+                                            <option value="<?php echo esc_attr($preset_key); ?>"><?php echo esc_html($preset['label']); ?></option>
+                                        <?php endforeach; ?>
+                                    </select>
+                                </label>
+                                <label class="ecf-class-filterbar__field" data-ecf-bem-block-field>
+                                    <span class="ecf-class-filterbar__label"><?php echo esc_html__('Own block name', 'ecf-framework'); ?></span>
+                                    <input type="text" class="ecf-input" data-ecf-bem-block placeholder="<?php echo esc_attr__('optional, e.g. testimonials', 'ecf-framework'); ?>">
+                                </label>
+                                <label class="ecf-class-filterbar__field">
+                                    <span class="ecf-class-filterbar__label"><?php echo esc_html__('Additional elements', 'ecf-framework'); ?></span>
+                                    <input type="text" class="ecf-input" data-ecf-bem-extra-elements placeholder="<?php echo esc_attr__('e.g. subtitle, badge', 'ecf-framework'); ?>">
+                                </label>
+                                <label class="ecf-class-filterbar__field">
+                                    <span class="ecf-class-filterbar__label"><?php echo esc_html__('Additional modifiers', 'ecf-framework'); ?></span>
+                                    <input type="text" class="ecf-input" data-ecf-bem-extra-modifiers placeholder="<?php echo esc_attr__('e.g. dark, compact', 'ecf-framework'); ?>">
+                                </label>
+                            </div>
+                            <p class="ecf-class-library-actions__hint" data-ecf-bem-help></p>
+                            <div class="ecf-bem-generator__pickers">
+                                <div class="ecf-bem-generator__picker">
+                                    <strong><?php echo esc_html__('Elements', 'ecf-framework'); ?></strong>
+                                    <div class="ecf-bem-generator__options" data-ecf-bem-elements></div>
+                                </div>
+                                <div class="ecf-bem-generator__picker">
+                                    <strong><?php echo esc_html__('Modifiers', 'ecf-framework'); ?></strong>
+                                    <div class="ecf-bem-generator__options" data-ecf-bem-modifiers></div>
+                                </div>
+                            </div>
+                            <div class="ecf-bem-generator__preview">
+                                <strong><?php echo esc_html__('Preview', 'ecf-framework'); ?></strong>
+                                <div class="ecf-bem-generator__preview-list" data-ecf-bem-preview></div>
+                            </div>
+                            <div class="ecf-class-library-actions ecf-class-library-actions--generator">
+                                <button type="button" class="ecf-btn ecf-btn--secondary" data-ecf-bem-reset>
+                                    <span class="dashicons dashicons-image-rotate" aria-hidden="true"></span>
+                                    <span><?php echo esc_html__('Reset', 'ecf-framework'); ?></span>
+                                </button>
+                                <button type="button" class="ecf-btn ecf-btn--primary" data-ecf-bem-add>
+                                    <span class="dashicons dashicons-plus-alt2" aria-hidden="true"></span>
+                                    <span><?php echo esc_html__('Add as custom classes', 'ecf-framework'); ?></span>
+                                </button>
+                            </div>
+                            <p class="ecf-class-library-actions__hint" data-ecf-bem-feedback></p>
+                        </div>
                     </div>
                     <div class="ecf-library-section" data-ecf-library-section="utility" hidden>
                         <div class="ecf-class-workspace ecf-class-workspace--utility">
@@ -1055,12 +1108,12 @@ trait ECF_Framework_Admin_Panel_Renderers_Trait {
                         'full' => ['min' => '999px', 'max' => '999px'],
                     ],
                     'shadows' => [
-                        'xs' => '0 1px 2px rgba(15,23,42,0.06)',
-                        's' => '0 10px 24px rgba(15,23,42,0.08)',
-                        'm' => '0 20px 44px rgba(15,23,42,0.10)',
-                        'l' => '0 30px 70px rgba(15,23,42,0.12)',
-                        'xl' => '0 44px 96px rgba(15,23,42,0.14)',
-                        'inner' => 'inset 0 1px 0 rgba(255,255,255,0.55), inset 0 -1px 0 rgba(15,23,42,0.05)',
+                        'xs' => '0 1px 2px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04)',
+                        's' => '0 2px 4px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.06)',
+                        'm' => '0 4px 8px rgba(0,0,0,.09), 0 8px 24px rgba(0,0,0,.08)',
+                        'l' => '0 8px 16px rgba(0,0,0,.10), 0 16px 40px rgba(0,0,0,.10)',
+                        'xl' => '0 16px 32px rgba(0,0,0,.12), 0 32px 64px rgba(0,0,0,.14)',
+                        'inner' => 'inset 0 2px 4px rgba(0,0,0,.06)',
                     ],
                     'spacing' => [
                         'min_base' => '16',
@@ -1124,12 +1177,12 @@ trait ECF_Framework_Admin_Panel_Renderers_Trait {
                         'full' => ['min' => '999px', 'max' => '999px'],
                     ],
                     'shadows' => [
-                        'xs' => '0 1px 2px rgba(31,41,55,0.05)',
-                        's' => '0 6px 16px rgba(31,41,55,0.08)',
-                        'm' => '0 12px 28px rgba(31,41,55,0.10)',
-                        'l' => '0 20px 46px rgba(31,41,55,0.12)',
-                        'xl' => '0 32px 72px rgba(31,41,55,0.14)',
-                        'inner' => 'inset 0 2px 8px rgba(31,41,55,0.07)',
+                        'xs' => '0 1px 2px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04)',
+                        's' => '0 2px 4px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.06)',
+                        'm' => '0 4px 8px rgba(0,0,0,.09), 0 8px 24px rgba(0,0,0,.08)',
+                        'l' => '0 8px 16px rgba(0,0,0,.10), 0 16px 40px rgba(0,0,0,.10)',
+                        'xl' => '0 16px 32px rgba(0,0,0,.12), 0 32px 64px rgba(0,0,0,.14)',
+                        'inner' => 'inset 0 2px 4px rgba(0,0,0,.06)',
                     ],
                     'spacing' => [
                         'min_base' => '17',
@@ -1193,12 +1246,12 @@ trait ECF_Framework_Admin_Panel_Renderers_Trait {
                         'full' => ['min' => '999px', 'max' => '999px'],
                     ],
                     'shadows' => [
-                        'xs' => '0 1px 2px rgba(17,24,39,0.05)',
-                        's' => '0 8px 18px rgba(17,24,39,0.07)',
-                        'm' => '0 18px 38px rgba(17,24,39,0.10)',
-                        'l' => '0 28px 62px rgba(17,24,39,0.12)',
-                        'xl' => '0 40px 86px rgba(17,24,39,0.14)',
-                        'inner' => 'inset 0 1px 0 rgba(255,255,255,0.65), inset 0 -1px 0 rgba(17,24,39,0.04)',
+                        'xs' => '0 1px 2px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04)',
+                        's' => '0 2px 4px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.06)',
+                        'm' => '0 4px 8px rgba(0,0,0,.09), 0 8px 24px rgba(0,0,0,.08)',
+                        'l' => '0 8px 16px rgba(0,0,0,.10), 0 16px 40px rgba(0,0,0,.10)',
+                        'xl' => '0 16px 32px rgba(0,0,0,.12), 0 32px 64px rgba(0,0,0,.14)',
+                        'inner' => 'inset 0 2px 4px rgba(0,0,0,.06)',
                     ],
                     'spacing' => [
                         'min_base' => '16',
@@ -1314,7 +1367,9 @@ trait ECF_Framework_Admin_Panel_Renderers_Trait {
                                         <button type="button"
                                                 class="ecf-btn ecf-btn--secondary ecf-style-preset__apply"
                                                 data-ecf-style-preset-apply
-                                                data-ecf-style-preset="<?php echo esc_attr(wp_json_encode($preset['preset'])); ?>">
+                                                data-ecf-style-preset="<?php echo esc_attr(wp_json_encode($preset['preset'])); ?>"
+                                                data-ecf-preset-title="<?php echo esc_attr($preset['title']); ?>"
+                                                data-ecf-preset-description="<?php echo esc_attr($preset['description']); ?>">
                                             <?php echo esc_html__('Use this style preset', 'ecf-framework'); ?>
                                         </button>
                                     </article>
@@ -2571,9 +2626,9 @@ trait ECF_Framework_Admin_Panel_Renderers_Trait {
         $design_health_counts   = $design_health_snapshot['counts'] ?? ['good' => 0, 'notice' => 0, 'warn' => 0];
         $smart_recommendations  = $this->website_smart_recommendations($settings, $design_health_snapshot);
         $style_presets = [
-            ['slug'=>'glass-product','tone'=>__('Modern','ecf-framework'),'title'=>__('Glass Product','ecf-framework'),'description'=>__('A crisp product look with cool indigo accents, airy neutrals and soft rounded surfaces.','ecf-framework'),'heading_sample'=>__('Product pages that feel clear','ecf-framework'),'body_sample'=>__('Great for SaaS, product marketing and clean interface-driven brands.','ecf-framework'),'heading_font_stack'=>'Avenir Next, Avenir, "Helvetica Neue", Arial, sans-serif','body_font_stack'=>'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif','preview'=>['background'=>'#f8fafc','surface'=>'#ffffff','primary'=>'#4f46e5','accent'=>'#14b8a6','text'=>'#0f172a'],'preset'=>['general'=>['root_font_size'=>'62.5','base_body_text_size'=>'16px','base_body_font_weight'=>'400','base_font_family'=>'var(--ecf-font-primary)','heading_font_family'=>'var(--ecf-font-secondary)','content_max_width'=>['value'=>'72','format'=>'ch'],'elementor_boxed_width'=>['value'=>'1240','format'=>'px'],'base_text_color'=>'#0f172a','base_background_color'=>'#f8fafc','link_color'=>'#4f46e5','focus_color'=>'#0ea5e9'],'colors'=>['primary'=>'#4f46e5','secondary'=>'#64748b','accent'=>'#14b8a6','surface'=>'#ffffff','text'=>'#0f172a'],'radius'=>['xs'=>['min'=>'6px','max'=>'6px'],'s'=>['min'=>'10px','max'=>'12px'],'m'=>['min'=>'14px','max'=>'16px'],'l'=>['min'=>'20px','max'=>'24px'],'xl'=>['min'=>'30px','max'=>'36px'],'full'=>['min'=>'999px','max'=>'999px']],'shadows'=>['xs'=>'0 1px 2px rgba(15,23,42,0.06)','s'=>'0 10px 24px rgba(15,23,42,0.08)','m'=>'0 20px 44px rgba(15,23,42,0.10)','l'=>'0 30px 70px rgba(15,23,42,0.12)','xl'=>'0 44px 96px rgba(15,23,42,0.14)','inner'=>'inset 0 1px 0 rgba(255,255,255,0.55), inset 0 -1px 0 rgba(15,23,42,0.05)'],'spacing'=>['min_base'=>'16','max_base'=>'28','min_ratio'=>'1.25','max_ratio'=>'1.414','base_index'=>'m','fluid'=>true,'min_vw'=>'375','max_vw'=>'1280'],'fonts'=>['primary'=>'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif','secondary'=>'Avenir Next, Avenir, "Helvetica Neue", Arial, sans-serif']]],
-            ['slug'=>'warm-editorial','tone'=>__('Editorial','ecf-framework'),'title'=>__('Warm Editorial','ecf-framework'),'description'=>__('Creamy surfaces, elegant serif headlines and softer shadows for storytelling and premium content.','ecf-framework'),'heading_sample'=>__('Stories with more atmosphere','ecf-framework'),'body_sample'=>__('A gentler direction for brands, magazines and long-form reading experiences.','ecf-framework'),'heading_font_stack'=>'Iowan Old Style, "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif','body_font_stack'=>'Avenir Next, Avenir, "Helvetica Neue", Arial, sans-serif','preview'=>['background'=>'#f5efe7','surface'=>'#fffaf3','primary'=>'#7c3aed','accent'=>'#c2410c','text'=>'#1f2937'],'preset'=>['general'=>['root_font_size'=>'62.5','base_body_text_size'=>'17px','base_body_font_weight'=>'400','base_font_family'=>'var(--ecf-font-primary)','heading_font_family'=>'var(--ecf-font-secondary)','content_max_width'=>['value'=>'68','format'=>'ch'],'elementor_boxed_width'=>['value'=>'1180','format'=>'px'],'base_text_color'=>'#1f2937','base_background_color'=>'#f5efe7','link_color'=>'#7c3aed','focus_color'=>'#c2410c'],'colors'=>['primary'=>'#7c3aed','secondary'=>'#6b7280','accent'=>'#c2410c','surface'=>'#fffaf3','text'=>'#1f2937'],'radius'=>['xs'=>['min'=>'4px','max'=>'4px'],'s'=>['min'=>'8px','max'=>'10px'],'m'=>['min'=>'12px','max'=>'14px'],'l'=>['min'=>'18px','max'=>'22px'],'xl'=>['min'=>'28px','max'=>'34px'],'full'=>['min'=>'999px','max'=>'999px']],'shadows'=>['xs'=>'0 1px 2px rgba(31,41,55,0.05)','s'=>'0 6px 16px rgba(31,41,55,0.08)','m'=>'0 12px 28px rgba(31,41,55,0.10)','l'=>'0 20px 46px rgba(31,41,55,0.12)','xl'=>'0 32px 72px rgba(31,41,55,0.14)','inner'=>'inset 0 2px 8px rgba(31,41,55,0.07)'],'spacing'=>['min_base'=>'17','max_base'=>'30','min_ratio'=>'1.2','max_ratio'=>'1.333','base_index'=>'m','fluid'=>true,'min_vw'=>'375','max_vw'=>'1280'],'fonts'=>['primary'=>'Avenir Next, Avenir, "Helvetica Neue", Arial, sans-serif','secondary'=>'Iowan Old Style, "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif']]],
-            ['slug'=>'quiet-luxury','tone'=>__('Premium','ecf-framework'),'title'=>__('Quiet Luxury','ecf-framework'),'description'=>__('Dark graphite text, rich plum accents and balanced rounding for a polished premium foundation.','ecf-framework'),'heading_sample'=>__('Refined without feeling loud','ecf-framework'),'body_sample'=>__('A calm premium base when you want elegance, contrast and a little more depth.','ecf-framework'),'heading_font_stack'=>'Georgia, "Times New Roman", serif','body_font_stack'=>'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif','preview'=>['background'=>'#faf7fb','surface'=>'#ffffff','primary'=>'#6d28d9','accent'=>'#0f766e','text'=>'#111827'],'preset'=>['general'=>['root_font_size'=>'62.5','base_body_text_size'=>'16px','base_body_font_weight'=>'500','base_font_family'=>'var(--ecf-font-primary)','heading_font_family'=>'var(--ecf-font-secondary)','content_max_width'=>['value'=>'70','format'=>'ch'],'elementor_boxed_width'=>['value'=>'1200','format'=>'px'],'base_text_color'=>'#111827','base_background_color'=>'#faf7fb','link_color'=>'#6d28d9','focus_color'=>'#0f766e'],'colors'=>['primary'=>'#6d28d9','secondary'=>'#475569','accent'=>'#0f766e','surface'=>'#ffffff','text'=>'#111827'],'radius'=>['xs'=>['min'=>'5px','max'=>'5px'],'s'=>['min'=>'9px','max'=>'11px'],'m'=>['min'=>'13px','max'=>'16px'],'l'=>['min'=>'20px','max'=>'24px'],'xl'=>['min'=>'32px','max'=>'38px'],'full'=>['min'=>'999px','max'=>'999px']],'shadows'=>['xs'=>'0 1px 2px rgba(17,24,39,0.05)','s'=>'0 8px 18px rgba(17,24,39,0.07)','m'=>'0 18px 38px rgba(17,24,39,0.10)','l'=>'0 28px 62px rgba(17,24,39,0.12)','xl'=>'0 40px 86px rgba(17,24,39,0.14)','inner'=>'inset 0 1px 0 rgba(255,255,255,0.65), inset 0 -1px 0 rgba(17,24,39,0.04)'],'spacing'=>['min_base'=>'16','max_base'=>'26','min_ratio'=>'1.2','max_ratio'=>'1.333','base_index'=>'m','fluid'=>true,'min_vw'=>'375','max_vw'=>'1280'],'fonts'=>['primary'=>'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif','secondary'=>'Georgia, "Times New Roman", serif']]],
+            ['slug'=>'glass-product','tone'=>__('Modern','ecf-framework'),'title'=>__('Glass Product','ecf-framework'),'description'=>__('A crisp product look with cool indigo accents, airy neutrals and soft rounded surfaces.','ecf-framework'),'heading_sample'=>__('Product pages that feel clear','ecf-framework'),'body_sample'=>__('Great for SaaS, product marketing and clean interface-driven brands.','ecf-framework'),'heading_font_stack'=>'Avenir Next, Avenir, "Helvetica Neue", Arial, sans-serif','body_font_stack'=>'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif','preview'=>['background'=>'#f8fafc','surface'=>'#ffffff','primary'=>'#4f46e5','accent'=>'#14b8a6','text'=>'#0f172a'],'preset'=>['general'=>['root_font_size'=>'62.5','base_body_text_size'=>'16px','base_body_font_weight'=>'400','base_font_family'=>'var(--ecf-font-primary)','heading_font_family'=>'var(--ecf-font-secondary)','content_max_width'=>['value'=>'72','format'=>'ch'],'elementor_boxed_width'=>['value'=>'1240','format'=>'px'],'base_text_color'=>'#0f172a','base_background_color'=>'#f8fafc','link_color'=>'#4f46e5','focus_color'=>'#0ea5e9'],'colors'=>['primary'=>'#4f46e5','secondary'=>'#64748b','accent'=>'#14b8a6','surface'=>'#ffffff','text'=>'#0f172a'],'radius'=>['xs'=>['min'=>'6px','max'=>'6px'],'s'=>['min'=>'10px','max'=>'12px'],'m'=>['min'=>'14px','max'=>'16px'],'l'=>['min'=>'20px','max'=>'24px'],'xl'=>['min'=>'30px','max'=>'36px'],'full'=>['min'=>'999px','max'=>'999px']],'shadows'=>['xs'=>'0 1px 2px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04)','s'=>'0 2px 4px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.06)','m'=>'0 4px 8px rgba(0,0,0,.09), 0 8px 24px rgba(0,0,0,.08)','l'=>'0 8px 16px rgba(0,0,0,.10), 0 16px 40px rgba(0,0,0,.10)','xl'=>'0 16px 32px rgba(0,0,0,.12), 0 32px 64px rgba(0,0,0,.14)','inner'=>'inset 0 2px 4px rgba(0,0,0,.06)'],'spacing'=>['min_base'=>'16','max_base'=>'28','min_ratio'=>'1.25','max_ratio'=>'1.414','base_index'=>'m','fluid'=>true,'min_vw'=>'375','max_vw'=>'1280'],'fonts'=>['primary'=>'Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif','secondary'=>'Avenir Next, Avenir, "Helvetica Neue", Arial, sans-serif']]],
+            ['slug'=>'warm-editorial','tone'=>__('Editorial','ecf-framework'),'title'=>__('Warm Editorial','ecf-framework'),'description'=>__('Creamy surfaces, elegant serif headlines and softer shadows for storytelling and premium content.','ecf-framework'),'heading_sample'=>__('Stories with more atmosphere','ecf-framework'),'body_sample'=>__('A gentler direction for brands, magazines and long-form reading experiences.','ecf-framework'),'heading_font_stack'=>'Iowan Old Style, "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif','body_font_stack'=>'Avenir Next, Avenir, "Helvetica Neue", Arial, sans-serif','preview'=>['background'=>'#f5efe7','surface'=>'#fffaf3','primary'=>'#7c3aed','accent'=>'#c2410c','text'=>'#1f2937'],'preset'=>['general'=>['root_font_size'=>'62.5','base_body_text_size'=>'17px','base_body_font_weight'=>'400','base_font_family'=>'var(--ecf-font-primary)','heading_font_family'=>'var(--ecf-font-secondary)','content_max_width'=>['value'=>'68','format'=>'ch'],'elementor_boxed_width'=>['value'=>'1180','format'=>'px'],'base_text_color'=>'#1f2937','base_background_color'=>'#f5efe7','link_color'=>'#7c3aed','focus_color'=>'#c2410c'],'colors'=>['primary'=>'#7c3aed','secondary'=>'#6b7280','accent'=>'#c2410c','surface'=>'#fffaf3','text'=>'#1f2937'],'radius'=>['xs'=>['min'=>'4px','max'=>'4px'],'s'=>['min'=>'8px','max'=>'10px'],'m'=>['min'=>'12px','max'=>'14px'],'l'=>['min'=>'18px','max'=>'22px'],'xl'=>['min'=>'28px','max'=>'34px'],'full'=>['min'=>'999px','max'=>'999px']],'shadows'=>['xs'=>'0 1px 2px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04)','s'=>'0 2px 4px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.06)','m'=>'0 4px 8px rgba(0,0,0,.09), 0 8px 24px rgba(0,0,0,.08)','l'=>'0 8px 16px rgba(0,0,0,.10), 0 16px 40px rgba(0,0,0,.10)','xl'=>'0 16px 32px rgba(0,0,0,.12), 0 32px 64px rgba(0,0,0,.14)','inner'=>'inset 0 2px 4px rgba(0,0,0,.06)'],'spacing'=>['min_base'=>'17','max_base'=>'30','min_ratio'=>'1.2','max_ratio'=>'1.333','base_index'=>'m','fluid'=>true,'min_vw'=>'375','max_vw'=>'1280'],'fonts'=>['primary'=>'Avenir Next, Avenir, "Helvetica Neue", Arial, sans-serif','secondary'=>'Iowan Old Style, "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif']]],
+            ['slug'=>'quiet-luxury','tone'=>__('Premium','ecf-framework'),'title'=>__('Quiet Luxury','ecf-framework'),'description'=>__('Dark graphite text, rich plum accents and balanced rounding for a polished premium foundation.','ecf-framework'),'heading_sample'=>__('Refined without feeling loud','ecf-framework'),'body_sample'=>__('A calm premium base when you want elegance, contrast and a little more depth.','ecf-framework'),'heading_font_stack'=>'Georgia, "Times New Roman", serif','body_font_stack'=>'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif','preview'=>['background'=>'#faf7fb','surface'=>'#ffffff','primary'=>'#6d28d9','accent'=>'#0f766e','text'=>'#111827'],'preset'=>['general'=>['root_font_size'=>'62.5','base_body_text_size'=>'16px','base_body_font_weight'=>'500','base_font_family'=>'var(--ecf-font-primary)','heading_font_family'=>'var(--ecf-font-secondary)','content_max_width'=>['value'=>'70','format'=>'ch'],'elementor_boxed_width'=>['value'=>'1200','format'=>'px'],'base_text_color'=>'#111827','base_background_color'=>'#faf7fb','link_color'=>'#6d28d9','focus_color'=>'#0f766e'],'colors'=>['primary'=>'#6d28d9','secondary'=>'#475569','accent'=>'#0f766e','surface'=>'#ffffff','text'=>'#111827'],'radius'=>['xs'=>['min'=>'5px','max'=>'5px'],'s'=>['min'=>'9px','max'=>'11px'],'m'=>['min'=>'13px','max'=>'16px'],'l'=>['min'=>'20px','max'=>'24px'],'xl'=>['min'=>'32px','max'=>'38px'],'full'=>['min'=>'999px','max'=>'999px']],'shadows'=>['xs'=>'0 1px 2px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04)','s'=>'0 2px 4px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.06)','m'=>'0 4px 8px rgba(0,0,0,.09), 0 8px 24px rgba(0,0,0,.08)','l'=>'0 8px 16px rgba(0,0,0,.10), 0 16px 40px rgba(0,0,0,.10)','xl'=>'0 16px 32px rgba(0,0,0,.12), 0 32px 64px rgba(0,0,0,.14)','inner'=>'inset 0 2px 4px rgba(0,0,0,.06)'],'spacing'=>['min_base'=>'16','max_base'=>'26','min_ratio'=>'1.2','max_ratio'=>'1.333','base_index'=>'m','fluid'=>true,'min_vw'=>'375','max_vw'=>'1280'],'fonts'=>['primary'=>'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif','secondary'=>'Georgia, "Times New Roman", serif']]],
         ];
         ?>
         <div class="ecf-panel" data-panel="starthilfe">
@@ -2928,9 +2983,12 @@ trait ECF_Framework_Admin_Panel_Renderers_Trait {
                                         <div class="ecf-changelog-section">
                                             <strong class="ecf-changelog-badge ecf-changelog-badge--<?php echo esc_attr($this->changelog_section_badge_type($section_title)); ?>"><?php echo esc_html($section_title); ?></strong>
                                             <ul>
-                                                <?php foreach ($items as $item): ?>
+                                                <?php $visible_items = array_slice($items, 0, 3); foreach ($visible_items as $item): ?>
                                                     <li><?php echo esc_html($item); ?></li>
                                                 <?php endforeach; ?>
+                                                <?php if (count($items) > 3): ?>
+                                                    <li style="opacity:.5;list-style:none;padding-left:0;font-size:11px">+ <?php echo (count($items) - 3); ?> <?php esc_html_e( 'weitere', 'ecf-framework' ); ?></li>
+                                                <?php endif; ?>
                                             </ul>
                                         </div>
                                     <?php endforeach; ?>

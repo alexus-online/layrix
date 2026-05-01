@@ -61,6 +61,37 @@ trait ECF_Framework_REST_API_Trait {
             'permission_callback' => [$this, 'rest_manage_options_permission'],
         ]);
 
+        register_rest_route('ecf-framework/v1', '/elementor-values', [
+            'methods'             => \WP_REST_Server::READABLE,
+            'callback'            => [$this, 'rest_get_elementor_values'],
+            'permission_callback' => [$this, 'rest_manage_options_permission'],
+        ]);
+
+        register_rest_route('ecf-framework/v1', '/custom-presets', [
+            [
+                'methods'             => \WP_REST_Server::READABLE,
+                'callback'            => [$this, 'rest_get_custom_presets'],
+                'permission_callback' => [$this, 'rest_manage_options_permission'],
+            ],
+            [
+                'methods'             => \WP_REST_Server::CREATABLE,
+                'callback'            => [$this, 'rest_save_custom_preset'],
+                'permission_callback' => [$this, 'rest_manage_options_permission'],
+            ],
+        ]);
+
+        register_rest_route('ecf-framework/v1', '/custom-presets/(?P<id>[a-zA-Z0-9_-]+)', [
+            'methods'             => \WP_REST_Server::DELETABLE,
+            'callback'            => [$this, 'rest_delete_custom_preset'],
+            'permission_callback' => [$this, 'rest_manage_options_permission'],
+        ]);
+
+        register_rest_route('ecf-framework/v1', '/reset-defaults', [
+            'methods'             => \WP_REST_Server::CREATABLE,
+            'callback'            => [$this, 'rest_reset_defaults'],
+            'permission_callback' => [$this, 'rest_manage_options_permission'],
+        ]);
+
     }
 
     public function rest_manage_options_permission() {
@@ -89,8 +120,30 @@ trait ECF_Framework_REST_API_Trait {
         $settings = isset($data['settings']) && is_array($data['settings']) ? $data['settings'] : $data;
         $sanitized = $this->sanitize_settings($settings);
         update_option($this->option_name, $sanitized);
+        $this->settings_cache = $sanitized;
+        $this->clear_css_cache();
         if (method_exists($this, 'clear_elementor_sync_caches')) {
             $this->clear_elementor_sync_caches();
+        }
+
+        $auto_sync = !empty($sanitized['elementor_auto_sync_enabled']);
+        if ($auto_sync && method_exists($this, 'sync_native_variables_merge')) {
+            $plugin_ref = $this;
+            $sync_classes = !empty($sanitized['elementor_auto_sync_classes']);
+            add_action('shutdown', static function () use ($plugin_ref, $sync_classes) {
+                // Flush response to client first so the save feels instant
+                if (function_exists('fastcgi_finish_request')) {
+                    fastcgi_finish_request();
+                }
+                try {
+                    $plugin_ref->sync_native_variables_merge();
+                    if ($sync_classes && method_exists($plugin_ref, 'sync_native_classes_merge')) {
+                        $plugin_ref->sync_native_classes_merge();
+                    }
+                } catch (\Throwable $e) {
+                    error_log( 'ECF autosave sync failed: ' . $e->getMessage() );
+                }
+            }, 99);
         }
 
         return rest_ensure_response([
@@ -99,6 +152,30 @@ trait ECF_Framework_REST_API_Trait {
             'settings' => $this->get_settings(),
             'meta' => $this->rest_admin_meta(),
         ]);
+    }
+
+    public function rest_get_elementor_values(\WP_REST_Request $request) {
+        if (!class_exists('\Elementor\Plugin') || !class_exists('\Elementor\Modules\Variables\Storage\Variables_Repository')) {
+            return rest_ensure_response(['success' => true, 'values' => [], 'available' => false]);
+        }
+        try {
+            $kit = \Elementor\Plugin::$instance->kits_manager->get_active_kit();
+            if (!$kit) {
+                return rest_ensure_response(['success' => true, 'values' => [], 'available' => false]);
+            }
+            $repo = new \Elementor\Modules\Variables\Storage\Variables_Repository($kit);
+            $collection = $repo->load();
+            $values = [];
+            foreach ($collection->all() as $variable) {
+                if (!$variable->is_deleted()) {
+                    $values[strtolower($variable->label())] = $variable->value();
+                }
+            }
+            return rest_ensure_response(['success' => true, 'values' => $values, 'available' => true]);
+        } catch (\Throwable $e) {
+            error_log( 'ECF get_elementor_values failed: ' . $e->getMessage() );
+            return rest_ensure_response(['success' => true, 'values' => [], 'available' => false]);
+        }
     }
 
     public function rest_get_layout_orders(\WP_REST_Request $request) {
@@ -275,6 +352,10 @@ trait ECF_Framework_REST_API_Trait {
             if ($query === '') {
                 return true;
             }
+            // Single char or short query: prefix match (starts with)
+            if (strlen($query) <= 2) {
+                return stripos((string) $value, $query) === 0;
+            }
             return stripos((string) $value, $query) !== false;
         };
 
@@ -410,6 +491,8 @@ trait ECF_Framework_REST_API_Trait {
 
         $sanitized = $this->sanitize_settings($settings);
         update_option($this->option_name, $sanitized);
+        $this->clear_settings_cache();
+        $this->clear_css_cache();
 
         return rest_ensure_response([
             'success' => true,
@@ -431,5 +514,120 @@ trait ECF_Framework_REST_API_Trait {
             'success' => true,
             'groups' => $this->search_font_library_groups($query, $settings, $limit),
         ]);
+    }
+
+    /* ── Custom Presets ─────────────────────────────────────────────────── */
+
+    private function get_custom_presets() {
+        return get_option('ecf_custom_presets', []);
+    }
+
+    public function rest_get_custom_presets(\WP_REST_Request $request) {
+        return rest_ensure_response(['success' => true, 'presets' => $this->get_custom_presets()]);
+    }
+
+    public function rest_save_custom_preset(\WP_REST_Request $request) {
+        $data = $request->get_json_params();
+        $name = sanitize_text_field(substr($data['name'] ?? '', 0, 60));
+        if ($name === '') {
+            return $this->rest_error('ecf_preset_name_missing', __('Name fehlt.', 'ecf-framework'), 400);
+        }
+
+        $snapshot = $data['snapshot'] ?? [];
+        if (empty($snapshot) || !is_array($snapshot)) {
+            return $this->rest_error('ecf_preset_empty', __('Keine Daten.', 'ecf-framework'), 400);
+        }
+        $snapshot = $this->sanitize_settings($snapshot);
+
+        $presets = $this->get_custom_presets();
+        $id = 'cp_' . uniqid();
+        $presets[] = [
+            'id'       => $id,
+            'name'     => $name,
+            'created'  => wp_date('Y-m-d H:i'),
+            'snapshot' => $snapshot,
+        ];
+        update_option('ecf_custom_presets', $presets);
+
+        return rest_ensure_response(['success' => true, 'id' => $id, 'name' => $name, 'created' => end($presets)['created']]);
+    }
+
+    public function rest_delete_custom_preset(\WP_REST_Request $request) {
+        $id = sanitize_key($request->get_param('id'));
+        $presets = $this->get_custom_presets();
+        $presets = array_values(array_filter($presets, fn($p) => ($p['id'] ?? '') !== $id));
+        update_option('ecf_custom_presets', $presets);
+        return rest_ensure_response(['success' => true]);
+    }
+
+    public function rest_reset_defaults(\WP_REST_Request $request) {
+        $sections = $request->get_param('sections');
+
+        if (empty($sections) || !is_array($sections)) {
+            // Alles zurücksetzen
+            delete_option($this->option_name);
+            $this->clear_settings_cache();
+            $this->clear_css_cache();
+            $defaults  = $this->get_settings();
+            $sanitized = $this->sanitize_settings($defaults);
+            update_option($this->option_name, $sanitized);
+            $this->settings_cache = $sanitized;
+            return rest_ensure_response(['success' => true]);
+        }
+
+        // Partielles Reset: nur ausgewählte Bereiche
+        $current  = get_option($this->option_name, []);
+        $defaults = $this->defaults();
+
+        $general_keys = [
+            'root_font_size', 'interface_language', 'admin_design_preset', 'admin_design_mode',
+            'ui_btn_font_size', 'ui_base_font_size', 'ui_nav_font_size', 'ui_font_family',
+            'admin_content_font_size', 'admin_menu_font_size', 'autosave_enabled',
+            'elementor_auto_sync_enabled', 'elementor_auto_sync_variables', 'elementor_auto_sync_classes',
+            'github_update_checks_enabled', 'elementor_boxed_width', 'content_max_width',
+            'base_font_family', 'heading_font_family', 'base_body_text_size', 'base_body_font_weight',
+            'typography_browser_margin_reset', 'base_text_color', 'base_background_color',
+            'link_color', 'focus_color', 'focus_outline_width', 'focus_outline_offset',
+            'show_elementor_status_cards', 'elementor_variable_type_filter',
+            'elementor_variable_type_filter_scopes', 'general_setting_favorites',
+        ];
+
+        foreach ($sections as $section) {
+            $section = sanitize_key((string) $section);
+            switch ($section) {
+                case 'colors':
+                    $current['colors'] = $defaults['colors'];
+                    break;
+                case 'radius':
+                    $current['radius'] = $defaults['radius'];
+                    break;
+                case 'typography':
+                    $current['typography'] = $defaults['typography'];
+                    break;
+                case 'spacing':
+                    $current['spacing'] = $defaults['spacing'];
+                    break;
+                case 'shadows':
+                    $current['shadows'] = $defaults['shadows'];
+                    break;
+                case 'general':
+                    foreach ($general_keys as $key) {
+                        if (array_key_exists($key, $defaults)) {
+                            $current[$key] = $defaults[$key];
+                        }
+                    }
+                    break;
+                case 'utility_classes':
+                    $current['utility_classes'] = $defaults['utility_classes'];
+                    $current['starter_classes']  = $defaults['starter_classes'];
+                    break;
+            }
+        }
+
+        $sanitized = $this->sanitize_settings($current);
+        update_option($this->option_name, $sanitized);
+        $this->settings_cache = $sanitized;
+        $this->clear_css_cache();
+        return rest_ensure_response(['success' => true]);
     }
 }

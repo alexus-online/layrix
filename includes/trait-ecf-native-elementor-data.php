@@ -100,6 +100,28 @@ trait ECF_Framework_Native_Elementor_Data_Trait {
             ];
         }
 
+        foreach (($settings['typography']['leading'] ?? []) as $row) {
+            $name = sanitize_key($row['name'] ?? '');
+            $value = trim((string) ($row['value'] ?? ''));
+            if ($name !== '' && $value !== '') {
+                $payloads['ecf-leading-' . $name] = [
+                    'type' => 'global-string-variable',
+                    'value' => $value,
+                ];
+            }
+        }
+
+        foreach (($settings['typography']['tracking'] ?? []) as $row) {
+            $name = sanitize_key($row['name'] ?? '');
+            $value = trim((string) ($row['value'] ?? ''));
+            if ($name !== '' && $value !== '') {
+                $payloads['ecf-tracking-' . $name] = [
+                    'type' => 'global-string-variable',
+                    'value' => $value,
+                ];
+            }
+        }
+
         foreach ($settings['shadows'] as $row) {
             $payloads['ecf-shadow-' . sanitize_key($row['name'])] = [
                 'type' => 'global-string-variable',

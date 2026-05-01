@@ -20,9 +20,7 @@ trait ECF_Framework_Hook_Registration_Trait {
 
     private function register_native_elementor_hooks() {
         add_action('admin_post_ecf_native_sync', [$this, 'handle_native_sync']);
-        add_action('admin_post_nopriv_ecf_native_sync', [$this, 'handle_native_sync']);
         add_action('admin_post_ecf_class_library_sync', [$this, 'handle_class_library_sync']);
-        add_action('admin_post_nopriv_ecf_class_library_sync', [$this, 'handle_class_library_sync']);
         add_action('admin_post_ecf_native_cleanup', [$this, 'handle_native_cleanup']);
         add_action('admin_post_ecf_class_cleanup', [$this, 'handle_class_cleanup']);
         add_action('admin_post_ecf_export', [$this, 'handle_export']);

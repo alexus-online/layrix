@@ -518,12 +518,12 @@ trait ECF_Framework_Admin_Page_Sections_Trait {
                 'apply_label' => __('Use softer shadows', 'ecf-framework'),
                 'payload' => [
                     'shadows' => [
-                        'xs' => '0 1px 2px rgba(15,23,42,0.05)',
-                        's' => '0 6px 16px rgba(15,23,42,0.08)',
-                        'm' => '0 12px 28px rgba(15,23,42,0.10)',
-                        'l' => '0 20px 44px rgba(15,23,42,0.12)',
-                        'xl' => '0 32px 72px rgba(15,23,42,0.14)',
-                        'inner' => 'inset 0 2px 8px rgba(15,23,42,0.07)',
+                        'xs' => '0 1px 2px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04)',
+                        's' => '0 2px 4px rgba(0,0,0,.08), 0 4px 12px rgba(0,0,0,.06)',
+                        'm' => '0 4px 8px rgba(0,0,0,.09), 0 8px 24px rgba(0,0,0,.08)',
+                        'l' => '0 8px 16px rgba(0,0,0,.10), 0 16px 40px rgba(0,0,0,.10)',
+                        'xl' => '0 16px 32px rgba(0,0,0,.12), 0 32px 64px rgba(0,0,0,.14)',
+                        'inner' => 'inset 0 2px 4px rgba(0,0,0,.06)',
                     ],
                 ],
             ];

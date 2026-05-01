@@ -232,6 +232,27 @@ msgstr "Alle Klassen"
 msgid "All generated classes already exist."
 msgstr "Alle generierten Klassen existieren bereits."
 
+msgid "Font previews require a connection to Google Fonts."
+msgstr "Für Schriftvorschauen wird eine Verbindung zu Google Fonts aufgebaut."
+
+msgid "Enable previews"
+msgstr "Vorschauen aktivieren"
+
+msgid "Delete font \"%s\"? This removes it from local fonts."
+msgstr "Schrift \"%s\" löschen? Sie wird aus den lokalen Schriften entfernt."
+
+msgid "Font added successfully."
+msgstr "Schrift erfolgreich hinzugefügt."
+
+msgid "primary font"
+msgstr "primäre Schrift"
+
+msgid "secondary font"
+msgstr "sekundäre Schrift"
+
+msgid "saved as"
+msgstr "als"
+
 msgid "All relevant plugin changes are documented here in the current backend language."
 msgstr "Alle relevanten Plugin-Änderungen werden hier in der aktuellen Backend-Sprache dokumentiert."
 
@@ -342,6 +363,9 @@ msgstr "Autosave: an"
 
 msgid "BEM class generator"
 msgstr "BEM-Klassengenerator"
+
+msgid "Generator"
+msgstr "Generator"
 
 msgid "Balanced line breaks make longer headings feel calmer."
 msgstr "Ausbalancierte Zeilenumbrüche lassen längere Überschriften ruhiger wirken."
@@ -1369,6 +1393,18 @@ msgstr "Faustregel: Nutze Starter-Klassen für Seitenstruktur und semantische Be
 msgid "Google Fonts library"
 msgstr "Google-Fonts-Bibliothek"
 
+msgid "Popular"
+msgstr "Beliebt"
+
+msgid "My Favorites"
+msgstr "Meine Favoriten"
+
+msgid "Add to favorites"
+msgstr "Zu Favoriten hinzufügen"
+
+msgid "Remove from favorites"
+msgstr "Aus Favoriten entfernen"
+
 msgid "Got it"
 msgstr "Verstanden"
 
@@ -2106,9 +2142,6 @@ msgstr "Externer Dienst"
 
 msgid "Remove"
 msgstr "Entfernen"
-
-msgid "Remove from favorites"
-msgstr "Aus Favoriten entfernen"
 
 msgid "Remove largest step"
 msgstr "Größte Stufe entfernen"
@@ -2887,6 +2920,24 @@ msgstr "Nutze das, wenn deine Tokens und ausgewählten Klassen bereit sind. Layr
 msgid "Use your own block name and build a small BEM family around it."
 msgstr "Nutze deinen eigenen Blocknamen und baue darum eine kleine BEM-Familie auf."
 
+msgid "Testimonial"
+msgstr "Testimonial"
+
+msgid "For quotes, reviews and customer statements with avatar and rating."
+msgstr "Für Zitate, Bewertungen und Kundenstimmen mit Avatar und Bewertung."
+
+msgid "Pricing"
+msgstr "Preise"
+
+msgid "For pricing plans with feature lists, price display and CTA."
+msgstr "Für Preispläne mit Feature-Listen, Preisanzeige und CTA."
+
+msgid "Team"
+msgstr "Team"
+
+msgid "For team member cards with portrait, name, role and social links."
+msgstr "Für Team-Karten mit Portrait, Name, Rolle und Social-Links."
+
 msgid "Used classes"
 msgstr "Benutzte Klassen"
 
@@ -3237,3 +3288,576 @@ msgstr "Variablen aktuell in Elementor gefunden"
 
 msgid "⚠ Sync actions change your Elementor data. Please create a backup first."
 msgstr "⚠ Sync-Aktionen ändern deine Elementor-Daten. Bitte vorher ein Backup erstellen."
+
+msgid "10-step fluid scale from 3xs to 4xl — scales between 375px and 1280px viewport."
+msgstr "10-stufige fluid Scale von 3xs bis 4xl – skaliert zwischen 375px und 1280px Viewport."
+
+msgid "62.5% = 10px base, 100% = 16px base"
+msgstr "62,5 % = 10px Basis, 100 % = 16px Basis"
+
+msgid "Add Color"
+msgstr "Farbe hinzufügen"
+
+msgid "Add Custom Class"
+msgstr "Custom-Klasse hinzufügen"
+
+msgid "Add Radius Token"
+msgstr "Radius-Token hinzufügen"
+
+msgid "Add Shadow"
+msgstr "Schatten hinzufügen"
+
+msgid "Add to Custom Classes"
+msgstr "Zu Custom-Klassen hinzufügen"
+
+msgid "Advanced (extras)"
+msgstr "Erweitert (Extras)"
+
+msgid "All Colors"
+msgstr "Alle Farben"
+
+msgid "All settings as structured JSON for versioning and rollback."
+msgstr "Alle Einstellungen als strukturiertes JSON für Versionierung und Rollback."
+
+msgid "All synchronized design tokens as global CSS variables — filterable by type."
+msgstr "Alle synchronisierten Design-Tokens als globale CSS-Variablen – filterbar nach Typ."
+
+msgid "Apply as Body"
+msgstr "Als Body-Font anwenden"
+
+msgid "Apply as Heading"
+msgstr "Als Heading-Font anwenden"
+
+msgid "Apply"
+msgstr "Anwenden"
+
+msgid "Auto-Sync"
+msgstr "Auto-Sync"
+
+msgid "Autosave"
+msgstr "Autospeichern"
+
+msgid "BEM Generator"
+msgstr "BEM-Generator"
+
+msgid "BODY"
+msgstr "BODY"
+
+msgid "Background Color"
+msgstr "Hintergrundfarbe"
+
+msgid "Basic (recommended)"
+msgstr "Grundlegend (empfohlen)"
+
+msgid "Basiseinstellungen"
+msgstr "Basiseinstellungen"
+
+msgid "Body Font Weight"
+msgstr "Body-Schriftstärke"
+
+msgid "Body Text Size"
+msgstr "Body-Textgröße"
+
+msgid "Body text preview for the primary font family. This is how paragraphs will look on the finished website."
+msgstr "Body-Vorschau der primären Schriftfamilie. So sehen Absätze auf der fertigen Website aus."
+
+msgid "Build tokens"
+msgstr "Tokens konfigurieren"
+
+msgid "Choose File"
+msgstr "Datei auswählen"
+
+msgid "Classes Overview"
+msgstr "Klassen-Übersicht"
+
+msgid "Clean Up"
+msgstr "Bereinigen"
+
+msgid "Color Tokens"
+msgstr "Farb-Tokens"
+
+msgid "Container Width"
+msgstr "Container-Breite"
+
+msgid "Copy CSS"
+msgstr "CSS kopieren"
+
+msgid "Core design tokens for color palettes and border radius — click a row to edit."
+msgstr "Zentrale Design-Tokens für Farbpaletten und Randradius – Zeile anklicken zum Bearbeiten."
+
+msgid "Current Scale"
+msgstr "Aktuelle Scale"
+
+msgid "Custom Classes"
+msgstr "Custom-Klassen"
+
+msgid "Customize colors, radius, spacing, shadows, and typography tokens until the preview looks right."
+msgstr "Farben, Radius, Abstände, Schatten und Typografie-Tokens anpassen, bis die Vorschau stimmt."
+
+msgid "Define base settings"
+msgstr "Basiseinstellungen festlegen"
+
+msgid "Einstellungen"
+msgstr "Einstellungen"
+
+msgid "Enable Auto-Sync"
+msgstr "Auto-Sync aktivieren"
+
+msgid "Font Library (Google Fonts)"
+msgstr "Font-Bibliothek (Google Fonts)"
+
+msgid "Font families, fluid type scale, weights, and line heights as design tokens."
+msgstr "Schriftfamilien, fluid Typografie-Scale, Gewichte und Zeilenhöhen als Design-Tokens."
+
+msgid "Full Cleanup"
+msgstr "Vollständige Bereinigung"
+
+msgid "Getting Started"
+msgstr "Erste Schritte"
+
+msgid "Global base values for the design system — affect all tokens and generated CSS."
+msgstr "Globale Basiswerte für das Design-System – wirken auf alle Tokens und das generierte CSS."
+
+msgid "HEADING"
+msgstr "HEADING"
+
+msgid "If something still looks outdated, clear Elementor caches and reopen the editor."
+msgstr "Falls etwas noch veraltet aussieht, Elementor-Caches leeren und den Editor neu öffnen."
+
+msgid "Import JSON"
+msgstr "JSON importieren"
+
+msgid "Language"
+msgstr "Sprache"
+
+msgid "Larger"
+msgstr "Größer"
+
+msgid "Layout & Container"
+msgstr "Layout & Container"
+
+msgid "Maintenance"
+msgstr "Wartung"
+
+msgid "Max Base (px)"
+msgstr "Max. Basis (px)"
+
+msgid "Max Ratio"
+msgstr "Max. Verhältnis"
+
+msgid "Max Text Width"
+msgstr "Max. Textbreite"
+
+msgid "Max width for Elementor boxed layout"
+msgstr "Maximale Breite für Elementor Boxed-Layout"
+
+msgid "Min Base (px)"
+msgstr "Min. Basis (px)"
+
+msgid "Min Ratio"
+msgstr "Min. Verhältnis"
+
+msgid "Open Settings and set root size, base text size, body font, heading font, and base colors."
+msgstr "Einstellungen öffnen und Root-Größe, Basis-Textgröße, Body-Schrift, Heading-Schrift und Basisfarben festlegen."
+
+msgid "Open Settings"
+msgstr "Einstellungen öffnen"
+
+msgid "Optimal reading width for body text"
+msgstr "Optimale Lesebreite für Fließtext"
+
+msgid "Overview"
+msgstr "Übersicht"
+
+msgid "Pairings"
+msgstr "Schriftkombinationen"
+
+msgid "Quick Links"
+msgstr "Schnellzugriff"
+
+msgid "Radius Tokens"
+msgstr "Radius-Tokens"
+
+msgid "Remove All Layrix Data from Elementor"
+msgstr "Alle Layrix-Daten aus Elementor entfernen"
+
+msgid "Remove Layrix classes from Elementor so they can be re-synced cleanly."
+msgstr "Layrix-Klassen aus Elementor entfernen, damit sie sauber neu synchronisiert werden können."
+
+msgid "Removes all ECF variables and classes from Elementor — cannot be undone."
+msgstr "Entfernt alle ECF-Variablen und -Klassen aus Elementor – kann nicht rückgängig gemacht werden."
+
+msgid "Reset Classes in Elementor"
+msgstr "Klassen in Elementor zurücksetzen"
+
+msgid "Restore a previously exported settings file."
+msgstr "Eine zuvor exportierte Einstellungsdatei wiederherstellen."
+
+msgid "Run Sync & Export, then reload open Elementor tabs so the new variables and classes appear."
+msgstr "Sync & Export ausführen, dann offene Elementor-Tabs neu laden, damit neue Variablen und Klassen erscheinen."
+
+msgid "Run sync and check"
+msgstr "Sync ausführen und prüfen"
+
+msgid "Scale Overview"
+msgstr "Scale-Übersicht"
+
+msgid "Scale Parameters"
+msgstr "Scale-Parameter"
+
+msgid "Scale Preview"
+msgstr "Scale-Vorschau"
+
+msgid "Scale Steps"
+msgstr "Scale-Stufen"
+
+msgid "Search Google Fonts, import one file to your media library and apply it as body or heading font."
+msgstr "Google Fonts durchsuchen, eine Datei in die Mediathek importieren und als Body- oder Heading-Schrift anwenden."
+
+msgid "Search"
+msgstr "Suchen"
+
+msgid "Secondary: for quotes and editorial accents."
+msgstr "Sekundär: für Zitate und redaktionelle Akzente."
+
+msgid "Selected Color"
+msgstr "Ausgewählte Farbe"
+
+msgid "Set class selection"
+msgstr "Klassenauswahl festlegen"
+
+msgid "Shadow Scale"
+msgstr "Schatten-Scale"
+
+msgid "Show Variables"
+msgstr "Variablen anzeigen"
+
+msgid "Six shadow tokens — available as CSS variable and utility class. Click a row to preview, edit to change the value."
+msgstr "Sechs Schatten-Tokens – als CSS-Variable und Utility-Klasse verfügbar. Zeile anklicken zur Vorschau, bearbeiten zum Ändern."
+
+msgid "Smaller"
+msgstr "Kleiner"
+
+msgid "Starter and utility classes for semantic structure — activate what you need, then sync to Elementor."
+msgstr "Starter- und Utility-Klassen für semantische Struktur – aktivieren was benötigt wird, dann mit Elementor synchronisieren."
+
+msgid "Starter"
+msgstr "Starter"
+
+msgid "Starthilfe"
+msgstr "Starthilfe"
+
+msgid "Step by step to a finished design system — from basic settings to first sync."
+msgstr "Schritt für Schritt zum fertigen Design-System – von den Basiseinstellungen bis zum ersten Sync."
+
+msgid "Sync Status"
+msgstr "Sync-Status"
+
+msgid "Synchronize all tokens and classes with Elementor or export them for versioning."
+msgstr "Alle Tokens und Klassen mit Elementor synchronisieren oder für die Versionierung exportieren."
+
+msgid "Text Color"
+msgstr "Textfarbe"
+
+msgid "The quick fox jumps"
+msgstr "Zwölf Boxkämpfer jagen"
+
+msgid "The quick fox"
+msgstr "Typografie-Vorschau"
+
+msgid "Total synced"
+msgstr "Gesamt synchronisiert"
+
+msgid "Typography Base"
+msgstr "Typografie-Basis"
+
+msgid "Usage Guide"
+msgstr "Verwendungshinweise"
+
+msgid "Use Auto-Sync if you want Layrix to push changes right after autosave."
+msgstr "Auto-Sync aktivieren, wenn Layrix Änderungen direkt nach dem Autospeichern übertragen soll."
+
+msgid "Utility Classes"
+msgstr "Utility-Klassen"
+
+msgid "Weights"
+msgstr "Schriftstärke"
+
+msgid "What will be synced"
+msgstr "Was synchronisiert wird"
+
+msgid "active"
+msgstr "aktiv"
+
+msgid "block for external projects."
+msgstr "Block für externe Projekte."
+
+msgid "spacing variables (3xs–4xl) as fluid clamp() values."
+msgstr "Abstands-Variablen (3xs–4xl) als fluid clamp()-Werte."
+
+msgid "steps"
+msgstr "Stufen"
+
+msgid "text size variables (xs–4xl) as fluid clamp() values."
+msgstr "Textgrößen-Variablen (xs–4xl) als fluid clamp()-Werte."
+
+msgid "variables total"
+msgstr "Variablen gesamt"
+
+msgid "variables"
+msgstr "Variablen"
+
+msgid "Wizard starten"
+msgstr "Wizard starten"
+
+msgid "Minor Second (1.067)"
+msgstr "Kleine Sekunde (1.067)"
+
+msgid "Major Second (1.125)"
+msgstr "Große Sekunde (1.125)"
+
+msgid "Minor Third (1.2)"
+msgstr "Kleine Terz (1.2)"
+
+msgid "Major Third (1.25)"
+msgstr "Große Terz (1.25)"
+
+msgid "Perfect Fourth (1.333)"
+msgstr "Reine Quarte (1.333)"
+
+msgid "Augmented Fourth (1.414)"
+msgstr "Übermäßige Quarte (1.414)"
+
+msgid "Perfect Fifth (1.5)"
+msgstr "Reine Quinte (1.5)"
+
+msgid "Minor Sixth (1.6)"
+msgstr "Kleine Sexte (1.6)"
+
+msgid "Golden Ratio (1.618)"
+msgstr "Goldener Schnitt (1.618)"
+
+msgid "Major Sixth (1.667)"
+msgstr "Große Sexte (1.667)"
+
+msgid "Minor Seventh (1.778)"
+msgstr "Kleine Septime (1.778)"
+
+msgid "Major Seventh (1.875)"
+msgstr "Große Septime (1.875)"
+
+msgid "Octave (2)"
+msgstr "Oktave (2)"
+
+msgid "Min. Verhältnis"
+msgstr "Min. Verhältnis"
+
+msgid "Max. Verhältnis"
+msgstr "Max. Verhältnis"
+
+msgid "Min. Basis (px)"
+msgstr "Min. Basis (px)"
+
+msgid "Max. Basis (px)"
+msgstr "Max. Basis (px)"
+
+msgid "Min. Viewport (px)"
+msgstr "Min. Viewport (px)"
+
+msgid "Max. Viewport (px)"
+msgstr "Max. Viewport (px)"
+
+msgid "Syncing…"
+msgstr "Synchronisiert…"
+
+msgid "Sync endpoint not available."
+msgstr "Sync-Endpunkt nicht verfügbar."
+
+msgid "Network error during sync."
+msgstr "Netzwerkfehler beim Sync."
+
+msgid "%d variables"
+msgstr "%d Variablen"
+
+msgid "%d classes"
+msgstr "%d Klassen"
+
+msgid "Sync:"
+msgstr "Sync:"
+
+msgid "Saved — syncing…"
+msgstr "Gespeichert — Sync läuft…"
+
+msgid "Could not save settings."
+msgstr "Einstellungen konnten nicht gespeichert werden."
+
+msgid "Apply preset"
+msgstr "Preset anwenden"
+
+msgid "Applying…"
+msgstr "Wird angewendet…"
+
+msgid "Custom preset"
+msgstr "Eigenes Preset"
+
+msgid "Name for the preset (max. 60 characters):"
+msgstr "Name für das Preset (max. 60 Zeichen):"
+
+msgid "Preset saved."
+msgstr "Preset gespeichert."
+
+msgid "Could not save preset."
+msgstr "Preset konnte nicht gespeichert werden."
+
+msgid "Network error while saving preset."
+msgstr "Netzwerkfehler beim Speichern des Presets."
+
+msgid "+ Save current state"
+msgstr "+ Aktuellen Stand speichern"
+
+msgid "Delete preset?"
+msgstr "Preset löschen?"
+
+msgid "Preset deleted."
+msgstr "Preset gelöscht."
+
+msgid "Could not delete preset."
+msgstr "Preset konnte nicht gelöscht werden."
+
+msgid "Network error."
+msgstr "Netzwerkfehler."
+
+msgid "Importing…"
+msgstr "Importiert…"
+
+msgid "Import saved — syncing…"
+msgstr "Import gespeichert — Sync läuft…"
+
+msgid "Import failed."
+msgstr "Import fehlgeschlagen."
+
+msgid "Import completed"
+msgstr "Import abgeschlossen"
+
+msgid "%s synchronized"
+msgstr "%s synchronisiert"
+
+msgid "Page is reloading"
+msgstr "Seite wird neu geladen"
+
+msgid "Network error during import."
+msgstr "Netzwerkfehler beim Import."
+
+msgid "REST API not available."
+msgstr "REST API nicht verfügbar."
+
+msgid "JSON loaded"
+msgstr "JSON geladen"
+
+msgid "%d colors"
+msgstr "%d Farben"
+
+msgid "%d radius tokens"
+msgstr "%d Radius-Tokens"
+
+msgid "%d shadows"
+msgstr "%d Schatten"
+
+msgid "Choose file"
+msgstr "Datei wählen"
+
+msgid "Select sections →"
+msgstr "Abschnitte wählen →"
+
+msgid "Generate shades"
+msgstr "Schattierungen erzeugen"
+
+msgid "Generate tints"
+msgstr "Aufhellungen erzeugen"
+
+msgid "Changes pending"
+msgstr "Änderungen ausstehend"
+
+msgid "Network error"
+msgstr "Netzwerkfehler"
+
+msgid "Discard unsaved changes? Saved data will be kept."
+msgstr "Nicht gespeicherte Änderungen verwerfen? Gespeicherte Daten bleiben erhalten."
+
+msgid "Reset to defaults"
+msgstr "Auf Grundeinstellungen zurücksetzen"
+
+msgid "Reset ALL settings to plugin defaults? This cannot be undone."
+msgstr "ALLE Einstellungen auf Plugin-Standardwerte zurücksetzen? Dies kann nicht rückgängig gemacht werden."
+
+msgid "Resetting…"
+msgstr "Wird zurückgesetzt…"
+
+msgid "Reset ALL settings to plugin defaults"
+msgstr "ALLE Einstellungen auf Plugin-Standardwerte zurücksetzen"
+
+msgid "Apply preset? All current design settings will be overwritten."
+msgstr "Preset anwenden? Alle aktuellen Design-Einstellungen werden überschrieben."
+
+msgid "Skipped — name already used by an unsaved row: %s"
+msgstr "Übersprungen — Name wird bereits von einer nicht gespeicherten Zeile verwendet: %s"
+
+msgid "Heading font"
+msgstr "Überschrift-Font"
+
+msgid "Body font"
+msgstr "Fließtext-Font"
+
+msgid "Show details"
+msgstr "Details anzeigen"
+
+msgid "Preset anwenden"
+msgstr "Preset anwenden"
+
+msgid "Wähle aus, was du übernehmen möchtest:"
+msgstr "Wähle aus, was du übernehmen möchtest:"
+
+msgid "Anwenden"
+msgstr "Anwenden"
+
+msgid "Abbrechen"
+msgstr "Abbrechen"
+
+msgid "Farben"
+msgstr "Farben"
+
+msgid "Überschrift-Schrift"
+msgstr "Überschrift-Schrift"
+
+msgid "Fließtext-Schrift"
+msgstr "Fließtext-Schrift"
+
+msgid "Fließtext-Größe"
+msgstr "Fließtext-Größe"
+
+msgid "Basis-Farben"
+msgstr "Basis-Farben"
+
+msgid "Hintergrund, Text, Links"
+msgstr "Hintergrund, Text, Links"
+
+msgid "Website-Breite"
+msgstr "Website-Breite"
+
+msgid "Eckenradien"
+msgstr "Eckenradien"
+
+msgid "Schatten"
+msgstr "Schatten"
+
+msgid "Abstände"
+msgstr "Abstände"
+
+msgid "Fluid-Abstands-Skala"
+msgstr "Fluid-Abstands-Skala"
+
+msgid "Token"
+msgstr "Token"
+
+msgid "Nur a-z, 0-9, - und _ erlaubt. Sonderzeichen werden beim Speichern entfernt."
+msgstr "Nur a-z, 0-9, - und _ erlaubt. Sonderzeichen werden beim Speichern entfernt."

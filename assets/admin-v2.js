@@ -4840,4 +4840,29 @@
     if (cLimit > 0 && cTotal >= cLimit) ecfV2ShowClassLimitWarning(cTotal, cLimit);
   }());
 
+  /* Live UI font settings preview */
+  (function() {
+    var wrapper = document.getElementById('ecf-v2-wrapper');
+    if (!wrapper) return;
+
+    var fontHint = document.getElementById('v2-ui-font-hint');
+
+    function bindLive(selector, cssVar, transform) {
+      var el = document.querySelector(selector);
+      if (!el) return;
+      el.addEventListener('input', function() {
+        var val = transform ? transform(el.value) : el.value;
+        if (val) wrapper.style.setProperty(cssVar, val);
+      });
+    }
+
+    bindLive('[name$="[ui_font_family]"]',    '--v2-font',        function(v) {
+      if (fontHint) fontHint.textContent = v || 'Plus Jakarta Sans';
+      return v || "'Plus Jakarta Sans', system-ui, sans-serif";
+    });
+    bindLive('[name$="[ui_base_font_size]"]', '--v2-ui-base-fs',  function(v) { return parseInt(v, 10) + 'px'; });
+    bindLive('[name$="[ui_nav_font_size]"]',  '--v2-ui-nav-fs',   function(v) { return parseInt(v, 10) + 'px'; });
+    bindLive('[name$="[ui_btn_font_size]"]',  '--v2-btn-fs',      function(v) { return parseInt(v, 10) + 'px'; });
+  }());
+
 }());
