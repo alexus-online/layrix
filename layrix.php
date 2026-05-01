@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Layrix
  * Description: Core-Framework-style tokens, editor panel, and native Elementor variable/class sync.
- * Version: 0.4.2
+ * Version: 0.5.0
  * Author: Alexander Kaiser
  * Update URI: https://github.com/alexus-online/layrix
  * Text Domain: ecf-framework
@@ -37,6 +37,7 @@ require_once __DIR__ . '/includes/trait-ecf-design-math.php';
 require_once __DIR__ . '/includes/trait-ecf-asset-loading.php';
 require_once __DIR__ . '/includes/trait-ecf-core-admin.php';
 require_once __DIR__ . '/includes/trait-ecf-rest-api.php';
+require_once __DIR__ . '/includes/trait-ecf-admin-v2-view.php';
 
 if (!class_exists('ECF_Framework')) {
 class ECF_Framework {
@@ -58,12 +59,14 @@ class ECF_Framework {
     use ECF_Framework_Asset_Loading_Trait;
     use ECF_Framework_Core_Admin_Trait;
     use ECF_Framework_REST_API_Trait;
+    use ECF_Framework_Admin_V2_View_Trait;
 
     private $option_name = 'ecf_framework_v50';
     private $github_repo = 'alexus-online/layrix';
     private $github_branch = 'master';
     private $update_cache_key = 'ecf_framework_github_update';
     private $canonical_plugin_slug = 'layrix';
+    private $settings_cache = null;
 
     public function __construct() {
         $this->register_hooks();
@@ -239,7 +242,7 @@ class ECF_Framework {
                     </button>
                 </div>
                 <nav class="ecf-nav">
-                    <div class="ecf-nav-section"><?php echo esc_html__('Design', 'ecf-framework'); ?></div>
+                    <div class="ecf-nav-section"><?php echo esc_html__('Tokens', 'ecf-framework'); ?></div>
                     <button class="ecf-nav-item is-active" data-panel="tokens" data-ecf-has-subnav="tokens"><span class="dashicons dashicons-art"></span><?php echo esc_html__('Colors & Radius', 'ecf-framework'); ?></button>
                     <div class="ecf-nav-subnav" data-ecf-subnav="tokens" hidden></div>
                     <button class="ecf-nav-item" data-panel="typography" data-ecf-has-subnav="typography"><span class="dashicons dashicons-editor-textcolor"></span><?php echo esc_html__('Typography', 'ecf-framework'); ?></button>
@@ -249,12 +252,12 @@ class ECF_Framework {
                     <button class="ecf-nav-item" data-panel="shadows" data-ecf-has-subnav="shadows"><span class="dashicons dashicons-admin-appearance"></span><?php echo esc_html__('Shadows', 'ecf-framework'); ?></button>
                     <div class="ecf-nav-subnav" data-ecf-subnav="shadows" hidden></div>
 
-                    <div class="ecf-nav-section"><?php echo esc_html__('Elementor', 'ecf-framework'); ?></div>
+                    <div class="ecf-nav-section"><?php echo esc_html__('Classes', 'ecf-framework'); ?></div>
                     <button class="ecf-nav-item" data-panel="variables"><span class="dashicons dashicons-list-view"></span><?php echo esc_html__('Variables', 'ecf-framework'); ?></button>
                     <button class="ecf-nav-item" data-panel="utilities"><span class="dashicons dashicons-code-standards"></span><?php echo esc_html__('Classes', 'ecf-framework'); ?></button>
-                    <button class="ecf-nav-item" data-panel="sync"><span class="dashicons dashicons-update"></span><?php echo esc_html__('Sync & Export', 'ecf-framework'); ?><span class="ecf-sync-dot" data-ecf-sync-dot="unknown" aria-hidden="true"></span></button>
 
-                    <div class="ecf-nav-section"><?php echo esc_html__('Settings', 'ecf-framework'); ?></div>
+                    <div class="ecf-nav-section"><?php echo esc_html__('Workflow', 'ecf-framework'); ?></div>
+                    <button class="ecf-nav-item" data-panel="sync"><span class="dashicons dashicons-update"></span><?php echo esc_html__('Sync & Export', 'ecf-framework'); ?><span class="ecf-sync-dot" data-ecf-sync-dot="unknown" aria-hidden="true"></span></button>
                     <button class="ecf-nav-item" data-panel="starthilfe" data-ecf-has-subnav="starthilfe"><span class="dashicons dashicons-superhero-alt"></span><?php echo esc_html__('Starthilfe', 'ecf-framework'); ?></button>
                     <div class="ecf-nav-subnav" data-ecf-subnav="starthilfe" hidden>
                         <button type="button" class="ecf-nav-subnav__item" data-ecf-starthilfe-jump="presets">
@@ -290,6 +293,18 @@ class ECF_Framework {
 
             <?php settings_errors('ecf_group'); ?>
             <?php $this->render_consumed_admin_notices('ecf_group', 'ecf-panel-notice'); ?>
+
+            <?php
+            $_ecf_cl = $this->get_native_global_class_limit();
+            if ($_ecf_cl > 100):
+            ?>
+            <div class="ecf-panel-notice ecf-class-limit-notice" style="margin-bottom:16px">
+                <p><?php printf(
+                    esc_html__('Your Elementor installation allows up to %d Global Classes (above the standard 100).', 'ecf-framework'),
+                    $_ecf_cl
+                ); ?></p>
+            </div>
+            <?php endif; ?>
 
             <form method="post" action="options.php">
                 <?php settings_fields('ecf_group'); ?>
@@ -421,6 +436,7 @@ class ECF_Framework {
                 $this->render_row_templates($starter_class_categories);
                 ?>
             </main>
+            <?php $this->render_v2_wrapper($settings); ?>
         </div>
         <?php
     }
