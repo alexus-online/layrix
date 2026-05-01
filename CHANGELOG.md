@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.4 (2026-05-01)
+
+### Sicherheit
+- DOM-XSS in `assets/admin-v2.js` behoben: alle `innerHTML`-Stellen mit benutzergesteuerten oder lokalisierten Werten werden jetzt über `escapeHtml()` escaped (Custom-Class-Eingabe, i18n-Strings in Auto-Sync-Prompt, BEM-Builder, Lokale-Schriften-Liste).
+
 ## 0.5.3 (2026-05-01)
 
 ### Neu

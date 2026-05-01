@@ -235,9 +235,9 @@
     bar.id = 'ecf-v2-autosync-prompt';
     bar.className = 'v2-autosync-prompt';
     bar.innerHTML =
-      '<span class="v2-autosync-prompt__msg">' + (i18n.autosync_prompt_msg || '') + '</span>' +
-      '<button type="button" class="v2-autosync-prompt__yes">' + (i18n.yes || '') + '</button>' +
-      '<button type="button" class="v2-autosync-prompt__no">' + (i18n.no || '') + '</button>';
+      '<span class="v2-autosync-prompt__msg">' + escapeHtml(i18n.autosync_prompt_msg || '') + '</span>' +
+      '<button type="button" class="v2-autosync-prompt__yes">' + escapeHtml(i18n.yes || '') + '</button>' +
+      '<button type="button" class="v2-autosync-prompt__no">' + escapeHtml(i18n.no || '') + '</button>';
     document.body.appendChild(bar);
     setTimeout(function() { bar.classList.add('is-visible'); }, 10);
     bar.querySelector('.v2-autosync-prompt__yes').addEventListener('click', function() {
@@ -1603,7 +1603,7 @@
     var res   = document.getElementById('v2-bem-result');
     if (!res) return;
     if (!block) {
-      res.innerHTML = '<span style="opacity:.35">' + ((ecfAdmin.i18n && ecfAdmin.i18n.bem_fill_block) || '← Fill block') + '</span>';
+      res.innerHTML = '<span style="opacity:.35">' + escapeHtml((ecfAdmin.i18n && ecfAdmin.i18n.bem_fill_block) || '← Fill block') + '</span>';
       return;
     }
     var lines = [block];
@@ -1648,8 +1648,8 @@
       var row = document.createElement('div');
       row.className = 'v2-tr v2-tr-main';
       row.style.cssText = 'gap:6px';
-      row.innerHTML = '<input type="hidden" name="' + opt + '[starter_classes][custom][' + idx + '][enabled]" value="1">'
-        + '<input type="text" class="v2-si" style="flex:1" name="' + opt + '[starter_classes][custom][' + idx + '][name]" value="' + cls + '" placeholder="my-custom-class">'
+      row.innerHTML = '<input type="hidden" name="' + escapeHtml(opt) + '[starter_classes][custom][' + idx + '][enabled]" value="1">'
+        + '<input type="text" class="v2-si" style="flex:1" name="' + escapeHtml(opt) + '[starter_classes][custom][' + idx + '][name]" value="' + escapeHtml(cls) + '" placeholder="my-custom-class">'
         + '<button type="button" class="v2-edit-btn" data-v2-remove-custom-class title="Remove">✕</button>';
       list.appendChild(row);
     });
@@ -2428,7 +2428,7 @@
     var section = document.getElementById('v2-lf-section');
     if (!list) return;
     if (!_localFonts.length) {
-      list.innerHTML = '<p class="v2-lf-empty">' + ((ecfAdmin.i18n && ecfAdmin.i18n.no_local_fonts) || 'Noch keine eigenen Schriften hochgeladen.') + '</p>';
+      list.innerHTML = '<p class="v2-lf-empty">' + escapeHtml((ecfAdmin.i18n && ecfAdmin.i18n.no_local_fonts) || 'Noch keine eigenen Schriften hochgeladen.') + '</p>';
       if (section) section.style.display = 'none';
       return;
     }
