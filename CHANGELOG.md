@@ -1,5 +1,57 @@
 # Changelog
 
+## 0.5.3 (2026-05-01)
+
+### Neu
+- Einstellungen-Seite: zwei Icon-Tabs **⌂ Webseite** und **⚙ Plugin** mit Sub-Tabs (Typografie / Farben / Layout bzw. Allgemein / Schriften).
+- Webseite-Tab: Direktzugriff auf Fließtext- und Überschriften-Schrift, Primär- und Akzentfarbe, Basisabstände.
+- Plugin-Tab → Schriften: Schriftfamilie, Fließtext-Größe, Navigation-Größe und Button-Größe einstellbar — Änderungen wirken live via CSS-Variablen.
+- Elementor-Limits-Panel im Plugin-Tab: Klassen- und Variablen-Auslastung mit Fortschrittsbalken (grün/gelb/rot).
+- CSS-Vorschau-Drawer im Sync-Panel: generiertes CSS scrollbar anzeigbar, kopierbar und herunterladbar. Hinweis für Plugin-Deaktivierung.
+
+### Verbesserungen
+- Sidebar-Footer-Bug behoben: „Einstellungen"-Button war bei kleinen Bildschirmen nicht klickbar (`min-height: 0` auf Nav).
+- WordPress-Footer auf der Plugin-Seite ausgeblendet; dunkler Hintergrund verhindert weißen Streifen.
+- Schatten-Copy-Pills als echte `<button>`-Elemente.
+- GitHub-Token-Zeile aus der UI entfernt.
+- Alle Button-Schriftgrößen über `--v2-btn-fs` steuerbar; keine hardkodierten 10/11px auf interaktiven Elementen mehr.
+- Eigener Bestätigungs-Dialog (`ecfV2Confirm`) ersetzt Browser-`confirm()` beim Preset-Löschen.
+
+## 0.5.2 (2026-04-20)
+
+### Neu
+- v2: Basisfarben-Sektion (Textfarbe, Hintergrundfarbe, Link-Farbe, Fokus-Farbe).
+- v2: CSS-Download-Button im Sync-Panel.
+- v2: Schatten-Copy-Pills zum Kopieren des CSS-Variablennamens.
+- v2: Root Font Impact Panel in den Einstellungen mit Navigation zu Typografie/Abstände/Radius.
+- v2: Plugin-Updates-Panel von Sync nach Einstellungen verschoben.
+- v2: Font-Pairings mit Kategorie-Filter (All / Modern / Editorial / …) und 20 Paarungen.
+
+### Verbesserungen
+- Wording-Überarbeitung: „Starthilfe" → „Erste Schritte", „Interface" → „Allgemein", „Maintenance" → „Wartung" u.v.m.
+- Alle UI-Texte über PO/MO-Übersetzungssystem; keine hardkodierten deutschen Strings.
+
+## 0.5.1 (2026-04-19)
+
+### Neu
+- v2: i18n-Komplett-Überarbeitung — alle UI-Texte übersetzbar.
+- v2: XSS-Fix bei REST-API-Fehlerausgaben.
+- v2: GitHub-Update-Panel im v2 Interface.
+
+### Verbesserungen
+- Refactoring: 28 globale JS-Variablen in `autosave{}` und `storageKeys{}`-Objekte gruppiert.
+- JS: `copyToClipboard()`-Helper ersetzt 7 duplizierte Clipboard-Handler.
+- JS: jQuery-Utilities (`$.trim`, `$.isArray`, `$.extend`, `$.each`) durch native Äquivalente ersetzt.
+
+## 0.5.0 (2026-04-19)
+
+### Neu
+- v2 Interface: vollständige Typografie-Vorschau mit Schriftpaar-Live-Preview.
+- v2: Font-Rollen-Labels (HEADING / BODY) in der Schriftpaar-Anzeige.
+- v2: Tooltip-System für kontextsensitive Hinweise.
+- v2: Autosave mit „Saving…"-Pulsanimation am Speichern-Button.
+- v2: Responsive Breakpoint 769–1200px (Sidebar 190px, Haupt-Padding 24px).
+
 ## 0.4.2 (2026-04-21)
 
 ### Neu
