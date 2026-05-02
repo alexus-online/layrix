@@ -520,9 +520,18 @@ trait ECF_Framework_Admin_V2_View_Trait {
               <svg viewBox="0 0 20 20" fill="none" width="13" height="13"><path d="M3 6h10M3 14h10M13 3l4 3-4 3M13 11l4 3-4 3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
               <?php esc_html_e( 'Zufall', 'ecf-framework' ); ?>
             </button>
-            <button type="button" class="v2-btn v2-btn--primary v2-btn--sm" id="v2-hg-apply"><?php esc_html_e( 'In Palette übernehmen', 'ecf-framework' ); ?></button>
           </div>
         </div>
+
+        <!-- Prominenter Apply-CTA — oben, zentriert -->
+        <div class="v2-hg-apply-bar">
+          <div class="v2-hg-apply-hint"><?php esc_html_e( 'Zufrieden mit der Palette?', 'ecf-framework' ); ?></div>
+          <button type="button" class="v2-btn v2-btn--primary v2-hg-apply-cta" id="v2-hg-apply">
+            <svg viewBox="0 0 20 20" fill="none" width="14" height="14" style="margin-right:6px"><path d="M5 10l3.5 3.5L15 7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <?php esc_html_e( 'In Palette übernehmen', 'ecf-framework' ); ?>
+          </button>
+        </div>
+
         <div class="v2-hg-swatches" id="v2-hg-swatches">
           <?php
           $hg_labels = [
@@ -589,23 +598,6 @@ trait ECF_Framework_Admin_V2_View_Trait {
           <?php endforeach; ?>
         </div>
 
-        <!-- Live-Vorschau -->
-        <div class="v2-hg-preview" id="v2-hg-preview">
-          <div class="v2-hg-pv-card">
-            <div class="v2-hg-pv-header">
-              <span class="v2-hg-pv-dot"></span><span class="v2-hg-pv-dot"></span><span class="v2-hg-pv-dot"></span>
-            </div>
-            <div class="v2-hg-pv-body">
-              <div class="v2-hg-pv-badge"><?php esc_html_e( 'Accent', 'ecf-framework' ); ?></div>
-              <div class="v2-hg-pv-heading"><?php esc_html_e( 'Heading Text', 'ecf-framework' ); ?></div>
-              <div class="v2-hg-pv-copy"><?php esc_html_e( 'Body copy that shows how readable your text color looks on the surface background.', 'ecf-framework' ); ?></div>
-              <div class="v2-hg-pv-actions">
-                <button type="button" class="v2-hg-pv-btn-primary"><?php esc_html_e( 'Primary', 'ecf-framework' ); ?></button>
-                <button type="button" class="v2-hg-pv-btn-secondary"><?php esc_html_e( 'Secondary', 'ecf-framework' ); ?></button>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
 
       <div class="v2-sec">
@@ -751,7 +743,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
                     <div style="display:flex;align-items:center;gap:8px">
                       <input type="color" class="v2-color-native" value="<?php echo esc_attr( $dark_val ?: $chex ); ?>" data-v2-dark-color-id="<?php echo esc_attr( $cname ); ?>" style="width:36px;height:28px">
                       <input type="text" class="v2-si v2-color-hex-inp" name="<?php echo esc_attr( $opt ); ?>[colors][<?php echo $i; ?>][dark_value]" value="<?php echo esc_attr( $dark_val ); ?>" placeholder="#000000" maxlength="7" data-v2-dark-hex-id="<?php echo esc_attr( $cname ); ?>" style="width:90px">
-                      <span style="font-size:11px;color:var(--v2-text3)">@media (prefers-color-scheme: dark)</span>
+                      <span style="font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text3)">@media (prefers-color-scheme: dark)</span>
                     </div>
                   </div>
                 </details>
@@ -786,7 +778,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
           <span class="v2-as-k"><?php echo esc_html( $color_de_labels[ $cname ] ?? $cname ); ?></span>
           <span class="v2-as-v" style="display:flex;align-items:center;gap:5px">
             <span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:<?php echo esc_attr( $chex ); ?>"></span>
-            <code style="font-size:10px"><?php echo esc_html( $chex ); ?></code>
+            <code style="font-size:var(--v2-btn-fs, 12px)"><?php echo esc_html( $chex ); ?></code>
           </span>
         </div>
         <?php endforeach; ?>
@@ -840,7 +832,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
   </div>
   <div class="v2-page-body">
     <div class="v2-content">
-      <div class="v2-ph"><h1><?php esc_html_e( 'Radius', 'ecf-framework' ); ?></h1><p><?php esc_html_e( 'Wie rund sind die Ecken von Buttons, Karten und Feldern? Kleine Werte = spitze Ecken, große Werte = runde Ecken.', 'ecf-framework' ); ?> <span title="<?php esc_attr_e( 'clamp(MIN, FLUID, MAX) ist eine CSS-Funktion die einen Wert zwischen Minimum und Maximum fließend skaliert — abhängig von der Viewport-Breite. So bleibt der Radius auf kleinen Screens kompakter und wächst proportional auf großen Screens.', 'ecf-framework' ); ?>" style="font-size:10px;color:var(--v2-text3);border:1px solid var(--v2-border);border-radius:50%;padding:0 4px;cursor:help;vertical-align:middle">?</span></p></div>
+      <div class="v2-ph"><h1><?php esc_html_e( 'Radius', 'ecf-framework' ); ?></h1><p><?php esc_html_e( 'Wie rund sind die Ecken von Buttons, Karten und Feldern? Kleine Werte = spitze Ecken, große Werte = runde Ecken.', 'ecf-framework' ); ?> <span title="<?php esc_attr_e( 'clamp(MIN, FLUID, MAX) ist eine CSS-Funktion die einen Wert zwischen Minimum und Maximum fließend skaliert — abhängig von der Viewport-Breite. So bleibt der Radius auf kleinen Screens kompakter und wächst proportional auf großen Screens.', 'ecf-framework' ); ?>" style="font-size:var(--v2-btn-fs, 12px);color:var(--v2-text3);border:1px solid var(--v2-border);border-radius:50%;padding:0 4px;cursor:help;vertical-align:middle">?</span></p></div>
 
       <div class="v2-sec">
         <div class="v2-sh"><?php esc_html_e( 'Abrundungen', 'ecf-framework' ); ?></div>
@@ -1071,7 +1063,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
           <!-- Or pick from Media Library -->
           <div style="display:flex;align-items:center;gap:8px;margin:8px 0">
             <div style="flex:1;height:1px;background:var(--v2-border)"></div>
-            <span style="font-size:11px;color:var(--v2-text3)"><?php esc_html_e( 'oder aus Mediathek', 'ecf-framework' ); ?></span>
+            <span style="font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text3)"><?php esc_html_e( 'oder aus Mediathek', 'ecf-framework' ); ?></span>
             <div style="flex:1;height:1px;background:var(--v2-border)"></div>
           </div>
           <div style="display:flex;gap:8px;align-items:center;margin-bottom:8px">
@@ -1175,7 +1167,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
         <div class="v2-sec">
           <div class="v2-sh" style="display:flex;align-items:center;justify-content:space-between">
             <?php esc_html_e( 'Skalenstufen', 'ecf-framework' ); ?>
-            <span id="v2-ty-step-count-badge" style="font-size:11px;font-weight:400;color:var(--v2-text3)"><?php echo esc_html( $typo_steps ); ?> <?php esc_html_e( 'Stufen', 'ecf-framework' ); ?></span>
+            <span id="v2-ty-step-count-badge" style="font-size:var(--v2-ui-base-fs, 13px);font-weight:400;color:var(--v2-text3)"><?php echo esc_html( $typo_steps ); ?> <?php esc_html_e( 'Stufen', 'ecf-framework' ); ?></span>
           </div>
           <div id="v2-ty-steps-wrap">
             <?php
@@ -1190,7 +1182,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
             <button type="button" class="v2-btn v2-btn--ghost" data-v2-step-add="ty-smaller" title="<?php esc_attr_e( 'Stufe unterhalb der kleinsten Größe einfügen', 'ecf-framework' ); ?>">+ <?php esc_html_e( 'Stufe darunter', 'ecf-framework' ); ?></button>
             <div id="v2-ty-steps-list" style="display:flex;gap:4px;flex-wrap:wrap;flex:1">
               <?php foreach ( $ty_steps_arr as $ts ) : ?>
-              <span class="v2-step-chip" data-step-group="ty" data-step-val="<?php echo esc_attr( $ts ); ?>" style="display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:999px;font-size:11px;background:rgba(255,255,255,.07);cursor:pointer" onclick="ecfV2RemoveStep('ty','<?php echo esc_js( $ts ); ?>')" title="<?php esc_attr_e( 'Remove', 'ecf-framework' ); ?>"><?php echo esc_html( $ts ); ?> <span style="opacity:.5">×</span></span>
+              <span class="v2-step-chip" data-step-group="ty" data-step-val="<?php echo esc_attr( $ts ); ?>" style="display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:999px;font-size:var(--v2-ui-base-fs, 13px);background:rgba(255,255,255,.07);cursor:pointer" onclick="ecfV2RemoveStep('ty','<?php echo esc_js( $ts ); ?>')" title="<?php esc_attr_e( 'Remove', 'ecf-framework' ); ?>"><?php echo esc_html( $ts ); ?> <span style="opacity:.5">×</span></span>
               <?php endforeach; ?>
             </div>
             <button type="button" class="v2-btn v2-btn--ghost" data-v2-step-add="ty-larger" title="<?php esc_attr_e( 'Stufe oberhalb der größten Größe einfügen', 'ecf-framework' ); ?>">+ <?php esc_html_e( 'Stufe darüber', 'ecf-framework' ); ?></button>
@@ -1363,7 +1355,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
       <div class="v2-sec">
         <div class="v2-sh" style="display:flex;align-items:center;justify-content:space-between">
           <?php esc_html_e( 'Scale Steps', 'ecf-framework' ); ?>
-          <span style="font-size:11px;font-weight:400;color:var(--v2-text3)"><?php echo esc_html( $spacing_steps ); ?> <?php esc_html_e( 'Stufen', 'ecf-framework' ); ?></span>
+          <span style="font-size:var(--v2-ui-base-fs, 13px);font-weight:400;color:var(--v2-text3)"><?php echo esc_html( $spacing_steps ); ?> <?php esc_html_e( 'Stufen', 'ecf-framework' ); ?></span>
         </div>
         <div id="v2-sp-steps-wrap">
           <?php
@@ -1378,7 +1370,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
           <button type="button" class="v2-btn v2-btn--ghost" data-v2-step-add="sp-smaller" title="<?php esc_attr_e( 'Stufe unterhalb des kleinsten Abstands einfügen', 'ecf-framework' ); ?>">+ <?php esc_html_e( 'Stufe darunter', 'ecf-framework' ); ?></button>
           <div id="v2-sp-steps-list" style="display:flex;gap:4px;flex-wrap:wrap;flex:1">
             <?php foreach ( $sp_steps_arr as $ss ) : ?>
-            <span class="v2-step-chip" data-step-group="sp" data-step-val="<?php echo esc_attr( $ss ); ?>" style="display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:999px;font-size:11px;background:rgba(255,255,255,.07);cursor:pointer" onclick="ecfV2RemoveStep('sp','<?php echo esc_js( $ss ); ?>')" title="<?php esc_attr_e( 'Remove', 'ecf-framework' ); ?>"><?php echo esc_html( $ss ); ?> <span style="opacity:.5">×</span></span>
+            <span class="v2-step-chip" data-step-group="sp" data-step-val="<?php echo esc_attr( $ss ); ?>" style="display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:999px;font-size:var(--v2-ui-base-fs, 13px);background:rgba(255,255,255,.07);cursor:pointer" onclick="ecfV2RemoveStep('sp','<?php echo esc_js( $ss ); ?>')" title="<?php esc_attr_e( 'Remove', 'ecf-framework' ); ?>"><?php echo esc_html( $ss ); ?> <span style="opacity:.5">×</span></span>
             <?php endforeach; ?>
           </div>
           <button type="button" class="v2-btn v2-btn--ghost" data-v2-step-add="sp-larger" title="<?php esc_attr_e( 'Stufe oberhalb des größten Abstands einfügen', 'ecf-framework' ); ?>">+ <?php esc_html_e( 'Stufe darüber', 'ecf-framework' ); ?></button>
@@ -1457,7 +1449,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
           <div class="v2-tr" id="v2-tr-sh-<?php echo esc_attr( $sname ); ?>">
             <div class="v2-sh-row<?php echo $idx === 0 ? ' v2-sh-row--active' : ''; ?>"
                  onclick="ecfV2PickShadow('<?php echo esc_js( $sname ); ?>','<?php echo esc_js( $sval ); ?>','<?php echo esc_js( $sval ); ?>')">
-              <div class="v2-sh-prev"><div style="width:40px;height:40px;border-radius:6px;background:var(--v2-s3, #e2e8f0);box-shadow:<?php echo esc_attr( $sval ); ?>"></div></div>
+              <div class="v2-sh-prev v2-sh-prev--light"><div class="v2-sh-prev-inner" style="box-shadow:<?php echo esc_attr( $sval ); ?>"></div></div>
               <div style="flex:1;min-width:0">
                 <div class="v2-sh-name"><?php echo esc_html( $sname ); ?></div>
                 <div class="v2-sh-css"><?php echo esc_html( $sval ); ?></div>
@@ -1569,7 +1561,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
               $cval  = $row['value'] ?? '';
               if ( ! $cname ) continue;
             ?>
-            <tr data-varname="--ecf-color-<?php echo esc_attr( $cname ); ?>"><td><span class="v2-vn">--ecf-color-<?php echo esc_html( $cname ); ?></span></td><td><span class="v2-tb v2-tb-c"><?php esc_html_e( 'Color', 'ecf-framework' ); ?></span></td><td class="v2-vval" style="font-family:var(--v2-mono);font-size:11px;color:var(--v2-text2)"><?php echo esc_html( $cval ); ?></td><td><button type="button" class="v2-edit-btn v2-var-edit-btn" data-var-type="color" data-var-name="<?php echo esc_attr( $cname ); ?>" data-var-value="<?php echo esc_attr( $cval ); ?>" title="<?php esc_attr_e( 'Bearbeiten', 'ecf-framework' ); ?>">✎</button></td></tr>
+            <tr data-varname="--ecf-color-<?php echo esc_attr( $cname ); ?>"><td><span class="v2-vn">--ecf-color-<?php echo esc_html( $cname ); ?></span></td><td><span class="v2-tb v2-tb-c"><?php esc_html_e( 'Color', 'ecf-framework' ); ?></span></td><td class="v2-vval" style="font-family:var(--v2-mono);font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text2)"><?php echo esc_html( $cval ); ?></td><td><button type="button" class="v2-edit-btn v2-var-edit-btn" data-var-type="color" data-var-name="<?php echo esc_attr( $cname ); ?>" data-var-value="<?php echo esc_attr( $cval ); ?>" title="<?php esc_attr_e( 'Bearbeiten', 'ecf-framework' ); ?>">✎</button></td></tr>
             <?php endforeach; ?>
             <tr class="v2-vt-group"><td colspan="4"><?php esc_html_e( 'Radius', 'ecf-framework' ); ?></td></tr>
             <?php foreach ( $radius_arr as $rrow ) :
@@ -1577,7 +1569,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
               if ( ! $rname ) continue;
               $rmin = $rrow['min'] ?? '';
             ?>
-            <tr data-varname="--ecf-radius-<?php echo esc_attr( $rname ); ?>"><td><span class="v2-vn">--ecf-radius-<?php echo esc_html( $rname ); ?></span></td><td><span class="v2-tb v2-tb-r"><?php esc_html_e( 'Radius', 'ecf-framework' ); ?></span></td><td class="v2-vval" style="font-family:var(--v2-mono);font-size:11px;color:var(--v2-text2)"><?php echo esc_html( $rmin . ( $rmin !== ( $rrow['max'] ?? '' ) ? '–' . $rrow['max'] : '' ) ); ?></td><td><button type="button" class="v2-edit-btn v2-var-edit-btn" data-var-type="radius" data-var-name="<?php echo esc_attr( $rname ); ?>" data-var-value="<?php echo esc_attr( $rmin ); ?>" data-var-max="<?php echo esc_attr( $rrow['max'] ?? $rmin ); ?>" title="<?php esc_attr_e( 'Bearbeiten', 'ecf-framework' ); ?>">✎</button></td></tr>
+            <tr data-varname="--ecf-radius-<?php echo esc_attr( $rname ); ?>"><td><span class="v2-vn">--ecf-radius-<?php echo esc_html( $rname ); ?></span></td><td><span class="v2-tb v2-tb-r"><?php esc_html_e( 'Radius', 'ecf-framework' ); ?></span></td><td class="v2-vval" style="font-family:var(--v2-mono);font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text2)"><?php echo esc_html( $rmin . ( $rmin !== ( $rrow['max'] ?? '' ) ? '–' . $rrow['max'] : '' ) ); ?></td><td><button type="button" class="v2-edit-btn v2-var-edit-btn" data-var-type="radius" data-var-name="<?php echo esc_attr( $rname ); ?>" data-var-value="<?php echo esc_attr( $rmin ); ?>" data-var-max="<?php echo esc_attr( $rrow['max'] ?? $rmin ); ?>" title="<?php esc_attr_e( 'Bearbeiten', 'ecf-framework' ); ?>">✎</button></td></tr>
             <?php endforeach; ?>
             <tr class="v2-vt-group"><td colspan="4"><?php esc_html_e( 'Schatten', 'ecf-framework' ); ?></td></tr>
             <?php foreach ( $shadows_arr as $srow ) :
@@ -1585,7 +1577,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
               $sval  = $srow['value'] ?? '';
               if ( ! $sname ) continue;
             ?>
-            <tr data-varname="--ecf-shadow-<?php echo esc_attr( $sname ); ?>"><td><span class="v2-vn">--ecf-shadow-<?php echo esc_html( $sname ); ?></span></td><td><span class="v2-tb v2-tb-sh"><?php esc_html_e( 'Shadow', 'ecf-framework' ); ?></span></td><td class="v2-vval" style="font-family:var(--v2-mono);font-size:11px;color:var(--v2-text2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo esc_html( $sval ); ?></td><td><button type="button" class="v2-edit-btn v2-var-edit-btn" data-var-type="shadow" data-var-name="<?php echo esc_attr( $sname ); ?>" data-var-value="<?php echo esc_attr( $sval ); ?>" title="<?php esc_attr_e( 'Bearbeiten', 'ecf-framework' ); ?>">✎</button></td></tr>
+            <tr data-varname="--ecf-shadow-<?php echo esc_attr( $sname ); ?>"><td><span class="v2-vn">--ecf-shadow-<?php echo esc_html( $sname ); ?></span></td><td><span class="v2-tb v2-tb-sh"><?php esc_html_e( 'Shadow', 'ecf-framework' ); ?></span></td><td class="v2-vval" style="font-family:var(--v2-mono);font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text2);max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo esc_html( $sval ); ?></td><td><button type="button" class="v2-edit-btn v2-var-edit-btn" data-var-type="shadow" data-var-name="<?php echo esc_attr( $sname ); ?>" data-var-value="<?php echo esc_attr( $sval ); ?>" title="<?php esc_attr_e( 'Bearbeiten', 'ecf-framework' ); ?>">✎</button></td></tr>
             <?php endforeach; ?>
           </tbody>
         </table>
@@ -1599,7 +1591,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
               if ( ! $cname ) continue;
               $chex  = $c[ $cname ] ?? $crow['value'] ?? '';
             ?>
-            <tr><td><span class="v2-vn">--ecf-color-<?php echo esc_html( $cname ); ?></span></td><td style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:<?php echo esc_attr( $chex ); ?>"></span><code style="font-size:10px"><?php echo esc_html( $crow['value'] ?? '' ); ?></code></td></tr>
+            <tr><td><span class="v2-vn">--ecf-color-<?php echo esc_html( $cname ); ?></span></td><td style="display:flex;align-items:center;gap:6px"><span style="display:inline-block;width:12px;height:12px;border-radius:3px;background:<?php echo esc_attr( $chex ); ?>"></span><code style="font-size:var(--v2-btn-fs, 12px)"><?php echo esc_html( $crow['value'] ?? '' ); ?></code></td></tr>
             <?php endforeach; ?>
           </tbody>
         </table>
@@ -1614,7 +1606,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
               $rname = sanitize_key( $rrow['name'] ?? '' );
               if ( ! $rname ) continue;
             ?>
-            <tr><td><span class="v2-vn">--ecf-radius-<?php echo esc_html( $rname ); ?></span></td><td style="font-size:11px;font-family:var(--v2-mono)"><?php echo esc_html( $rrow['min'] ?? '' ); ?></td><td style="font-size:11px;font-family:var(--v2-mono)"><?php echo esc_html( $rrow['max'] ?? '' ); ?></td></tr>
+            <tr><td><span class="v2-vn">--ecf-radius-<?php echo esc_html( $rname ); ?></span></td><td style="font-size:var(--v2-ui-base-fs, 13px);font-family:var(--v2-mono)"><?php echo esc_html( $rrow['min'] ?? '' ); ?></td><td style="font-size:var(--v2-ui-base-fs, 13px);font-family:var(--v2-mono)"><?php echo esc_html( $rrow['max'] ?? '' ); ?></td></tr>
             <?php endforeach; ?>
           </tbody>
         </table>
@@ -1627,7 +1619,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
               $sname = sanitize_key( $srow['name'] ?? '' );
               if ( ! $sname ) continue;
             ?>
-            <tr><td><span class="v2-vn">--ecf-shadow-<?php echo esc_html( $sname ); ?></span></td><td style="font-size:10px;font-family:var(--v2-mono);color:var(--v2-text2);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo esc_html( $srow['value'] ?? '' ); ?></td></tr>
+            <tr><td><span class="v2-vn">--ecf-shadow-<?php echo esc_html( $sname ); ?></span></td><td style="font-size:var(--v2-btn-fs, 12px);font-family:var(--v2-mono);color:var(--v2-text2);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"><?php echo esc_html( $srow['value'] ?? '' ); ?></td></tr>
             <?php endforeach; ?>
           </tbody>
         </table>
@@ -1646,8 +1638,8 @@ trait ECF_Framework_Admin_V2_View_Trait {
             ?>
             <div style="display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--v2-surface2,rgba(255,255,255,.04));border:1px solid var(--v2-border);border-radius:8px;padding:10px 14px;min-width:80px">
               <span style="font-size:22px;font-weight:<?php echo esc_attr( $wval ); ?>;color:var(--v2-text);line-height:1">Ag</span>
-              <span style="font-size:11px;color:var(--v2-text2);margin-top:2px"><?php echo esc_html( $wname ); ?></span>
-              <span style="font-size:11px;font-family:var(--v2-mono);color:var(--v2-text3);margin-top:2px"><?php echo esc_html( $wval ); ?></span>
+              <span style="font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text2);margin-top:2px"><?php echo esc_html( $wname ); ?></span>
+              <span style="font-size:var(--v2-ui-base-fs, 13px);font-family:var(--v2-mono);color:var(--v2-text3);margin-top:2px"><?php echo esc_html( $wval ); ?></span>
             </div>
             <?php endforeach; ?>
           </div>
@@ -1657,7 +1649,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
       <!-- Zeilenhöhen (bearbeitbar) -->
       <div id="v2-vr-lh" class="v2-tp">
         <div class="v2-sec">
-          <div class="v2-sh"><?php esc_html_e( 'Zeilenhöhen', 'ecf-framework' ); ?> <span title="<?php esc_attr_e( 'Leading = Zeilenhöhe (line-height). Steuert den Abstand zwischen Textzeilen. Unitloser Wert empfohlen (z. B. 1.5 = 1,5-fache Schriftgröße). Enge Werte (1.1–1.3) für Überschriften, weite (1.5–1.7) für Fließtext.', 'ecf-framework' ); ?>" style="font-size:10px;font-weight:400;color:var(--v2-text3);border:1px solid var(--v2-border);border-radius:50%;padding:0 4px;cursor:help;vertical-align:middle">?</span></div>
+          <div class="v2-sh"><?php esc_html_e( 'Zeilenhöhen', 'ecf-framework' ); ?> <span title="<?php esc_attr_e( 'Leading = Zeilenhöhe (line-height). Steuert den Abstand zwischen Textzeilen. Unitloser Wert empfohlen (z. B. 1.5 = 1,5-fache Schriftgröße). Enge Werte (1.1–1.3) für Überschriften, weite (1.5–1.7) für Fließtext.', 'ecf-framework' ); ?>" style="font-size:var(--v2-btn-fs, 12px);font-weight:400;color:var(--v2-text3);border:1px solid var(--v2-border);border-radius:50%;padding:0 4px;cursor:help;vertical-align:middle">?</span></div>
           <p style="font-size:12px;color:var(--v2-text2);margin:0 0 12px"><?php esc_html_e( 'Wiederverwendbare Zeilenhöhen als --ecf-leading-* Tokens für Überschriften, Fließtext und UI-Elemente.', 'ecf-framework' ); ?></p>
           <div class="v2-tl v2-tl--ty" id="v2-lh-list">
             <?php
@@ -1702,7 +1694,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
       <!-- Buchstabenabstand (bearbeitbar) -->
       <div id="v2-vr-ls" class="v2-tp">
         <div class="v2-sec">
-          <div class="v2-sh"><?php esc_html_e( 'Buchstabenabstand', 'ecf-framework' ); ?> <span title="<?php esc_attr_e( 'Tracking = Buchstabenabstand (letter-spacing). Negative Werte rücken Buchstaben enger zusammen, positive weiter auseinander. Einheit em empfohlen (relativ zur Schriftgröße).', 'ecf-framework' ); ?>" style="font-size:10px;font-weight:400;color:var(--v2-text3);border:1px solid var(--v2-border);border-radius:50%;padding:0 4px;cursor:help;vertical-align:middle">?</span></div>
+          <div class="v2-sh"><?php esc_html_e( 'Buchstabenabstand', 'ecf-framework' ); ?> <span title="<?php esc_attr_e( 'Tracking = Buchstabenabstand (letter-spacing). Negative Werte rücken Buchstaben enger zusammen, positive weiter auseinander. Einheit em empfohlen (relativ zur Schriftgröße).', 'ecf-framework' ); ?>" style="font-size:var(--v2-btn-fs, 12px);font-weight:400;color:var(--v2-text3);border:1px solid var(--v2-border);border-radius:50%;padding:0 4px;cursor:help;vertical-align:middle">?</span></div>
           <p style="font-size:12px;color:var(--v2-text2);margin:0 0 12px"><?php esc_html_e( 'Wiederverwendbare Buchstabenabstand-Werte als --ecf-tracking-* Tokens (em-Einheiten empfohlen, z. B. 0.02em).', 'ecf-framework' ); ?></p>
           <div class="v2-tl v2-tl--ty" id="v2-ls-list">
             <?php
@@ -1780,7 +1772,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
     <div class="v2-crumb"><span class="v2-crumb-cur"><?php esc_html_e( 'Vorschau', 'ecf-framework' ); ?></span></div>
     <div class="v2-topbar-r">
       <div class="v2-tog-label" style="gap:6px">
-        <span style="font-size:11px;color:var(--v2-text3)"><?php esc_html_e( 'Dark Mode', 'ecf-framework' ); ?></span>
+        <span style="font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text3)"><?php esc_html_e( 'Dark Mode', 'ecf-framework' ); ?></span>
         <span class="v2-tog v2-tog--off" id="v2-pv-dark-tog"></span>
         <input type="checkbox" class="v2-tog-cb" id="v2-pv-dark-cb" style="display:none">
       </div>
@@ -2055,7 +2047,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
           </div>
         </div>
         <div id="v2-bem-output" style="margin-top:10px;padding:12px;background:rgba(255,255,255,.03);border:1px solid var(--v2-border);border-radius:7px">
-          <div style="font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--v2-text3);margin-bottom:6px"><?php esc_html_e( 'Ergebnis', 'ecf-framework' ); ?></div>
+          <div style="font-size:var(--v2-btn-fs, 12px);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--v2-text3);margin-bottom:6px"><?php esc_html_e( 'Ergebnis', 'ecf-framework' ); ?></div>
           <div id="v2-bem-result" style="font-family:var(--v2-mono);font-size:12px;color:var(--v2-accent2);min-height:18px"><?php esc_html_e( '← Block ausfüllen', 'ecf-framework' ); ?></div>
           <div style="display:flex;gap:6px;margin-top:8px">
             <button type="button" class="v2-btn v2-btn--primary" onclick="ecfV2AddBEMToCustom()"><?php esc_html_e( '+ Zu eigenen Klassen hinzufügen', 'ecf-framework' ); ?></button>
@@ -2365,7 +2357,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
                   <div class="v2-cb-card-real__body">
                     <div class="v2-cb-card-real__title"><?php esc_html_e( 'Karten-Titel', 'ecf-framework' ); ?></div>
                     <div class="v2-cb-card-real__desc"><?php esc_html_e( 'Kurze Beschreibung des Karteninhalts.', 'ecf-framework' ); ?></div>
-                    <span class="v2-cb-btn-real v2-cb-btn-real--ghost" style="font-size:11px;padding:4px 10px"><?php esc_html_e( 'Mehr', 'ecf-framework' ); ?></span>
+                    <span class="v2-cb-btn-real v2-cb-btn-real--ghost" style="font-size:var(--v2-ui-base-fs, 13px);padding:4px 10px"><?php esc_html_e( 'Mehr', 'ecf-framework' ); ?></span>
                   </div>
                 </div>
               </div>
@@ -2519,7 +2511,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
             <div>
               <div class="v2-exp-name"><?php esc_html_e( 'JSON importieren', 'ecf-framework' ); ?></div>
               <div class="v2-exp-desc"><?php esc_html_e( 'Zuvor exportierte Einstellungsdatei wiederherstellen.', 'ecf-framework' ); ?></div>
-              <div id="v2-import-preview" style="display:none;margin-top:6px;font-size:11px;color:var(--v2-text2);font-family:var(--v2-mono)"></div>
+              <div id="v2-import-preview" style="display:none;margin-top:6px;font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text2);font-family:var(--v2-mono)"></div>
             </div>
             <label for="v2-import-file" class="v2-btn v2-btn--ghost" style="cursor:pointer">
                 ↑ <?php esc_html_e( 'Choose file', 'ecf-framework' ); ?>
@@ -2563,7 +2555,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
           <div style="display:flex;align-items:center;justify-content:space-between;padding:14px 18px;border-bottom:1px solid var(--v2-border)">
             <div>
               <span style="font-size:13px;font-weight:600;color:var(--v2-text)"><?php esc_html_e( 'Generiertes CSS', 'ecf-framework' ); ?></span>
-              <span style="font-size:11px;color:var(--v2-text3);margin-left:8px"><?php esc_html_e( 'Diesen Code brauchst du, wenn du das Plugin deaktivierst — in WordPress unter Design → Zusätzliches CSS einfügen.', 'ecf-framework' ); ?></span>
+              <span style="font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text3);margin-left:8px"><?php esc_html_e( 'Diesen Code brauchst du, wenn du das Plugin deaktivierst — in WordPress unter Design → Zusätzliches CSS einfügen.', 'ecf-framework' ); ?></span>
             </div>
             <div style="display:flex;gap:8px;align-items:center">
               <button type="button" class="v2-btn v2-btn--ghost" data-v2-export-css>↓ <?php esc_html_e( 'Kopieren', 'ecf-framework' ); ?></button>
@@ -2584,7 +2576,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
       <div class="v2-as-row"><span class="v2-as-k">Plugin</span><span class="v2-as-v">v<?php echo esc_html( $ver ); ?></span></div>
       <div class="v2-as-block">
         <div class="v2-as-head"><?php esc_html_e( 'Aktuell in Elementor', 'ecf-framework' ); ?></div>
-        <p style="font-size:11px;color:var(--v2-text3);margin:0 0 6px"><?php esc_html_e( 'Stand vor dem letzten Sync', 'ecf-framework' ); ?></p>
+        <p style="font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text3);margin:0 0 6px"><?php esc_html_e( 'Stand vor dem letzten Sync', 'ecf-framework' ); ?></p>
         <?php
         $vars_pct = $limit_snap['variables_limit'] > 0 ? $limit_snap['variables_total'] / $limit_snap['variables_limit'] : 0;
         $cls_pct  = $limit_snap['classes_limit']   > 0 ? $limit_snap['classes_total']   / $limit_snap['classes_limit']   : 0;
@@ -2673,7 +2665,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
                   <span style="width:14px;height:14px;border-radius:3px;background:<?php echo esc_attr( $preset['preview']['accent'] ); ?>" title="Accent: <?php echo esc_attr( $preset['preview']['accent'] ); ?>"></span>
                 </div>
                 <div style="font-family:<?php echo esc_attr( $preset['heading_font_stack'] ); ?>;font-size:13px;font-weight:700;line-height:1.3;color:#111"><?php echo esc_html( $preset['heading_sample'] ); ?></div>
-                <div style="font-family:<?php echo esc_attr( $preset['body_font_stack'] ); ?>;font-size:10px;margin-top:3px;color:#555;line-height:1.4"><?php echo esc_html( $preset['body_sample'] ); ?></div>
+                <div style="font-family:<?php echo esc_attr( $preset['body_font_stack'] ); ?>;font-size:var(--v2-btn-fs, 12px);margin-top:3px;color:#555;line-height:1.4"><?php echo esc_html( $preset['body_sample'] ); ?></div>
               </div>
               <div class="v2-preset-body">
                 <div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">
@@ -2711,9 +2703,9 @@ trait ECF_Framework_Admin_V2_View_Trait {
             ?>
             <div class="v2-preset-card v2-preset-card--custom" data-category="eigene" data-cp-id="<?php echo $cp_id; ?>">
               <div class="v2-preset-swatch v2-preset-swatch--custom">
-                <div style="font-size:11px;font-weight:600;color:var(--v2-text2);letter-spacing:.03em"><?php esc_html_e( 'Eigenes Preset', 'ecf-framework' ); ?></div>
+                <div style="font-size:var(--v2-ui-base-fs, 13px);font-weight:600;color:var(--v2-text2);letter-spacing:.03em"><?php esc_html_e( 'Eigenes Preset', 'ecf-framework' ); ?></div>
                 <div style="font-size:13px;font-weight:700;color:var(--v2-text);margin-top:4px"><?php echo $cp_name; ?></div>
-                <div style="font-size:10px;color:var(--v2-text3);margin-top:4px"><?php echo $cp_created; ?></div>
+                <div style="font-size:var(--v2-btn-fs, 12px);color:var(--v2-text3);margin-top:4px"><?php echo $cp_created; ?></div>
               </div>
               <div class="v2-preset-body">
                 <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
@@ -2771,22 +2763,126 @@ trait ECF_Framework_Admin_V2_View_Trait {
       <!-- Tab: Erste Schritte -->
       <div id="v2-hl-start" class="v2-tp">
         <div class="v2-sec">
-          <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:12px">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:10px">
+            <div style="font-size:var(--v2-ui-base-fs,13px);color:var(--v2-text2)">
+              <?php esc_html_e( 'Schritt-für-Schritt von leer bis live. Status wird live aus deinen Einstellungen erkannt.', 'ecf-framework' ); ?>
+            </div>
             <button type="button" class="v2-btn v2-btn--primary" data-v2-wizard-start>
-              <?php esc_html_e( 'Wizard starten', 'ecf-framework' ); ?>
+              <?php esc_html_e( '🚀 Wizard starten', 'ecf-framework' ); ?>
             </button>
           </div>
+
           <?php
+          // Status-Detection für jeden Schritt.
+          $synced_class_labels = get_option( $this->synced_class_labels_option_name(), [] );
+          $synced_var_labels   = get_option( $this->synced_variable_labels_option_name(), [] );
+          $has_classes_synced  = is_array( $synced_class_labels ) && count( $synced_class_labels ) > 0;
+          $has_vars_synced     = is_array( $synced_var_labels ) && count( $synced_var_labels ) > 0;
+
+          $is_seeded           = ! empty( $settings['starter_classes']['seeded'] );
+          $has_layrix_defaults = ! empty( $settings['layrix_class_defaults'] ) && is_array( $settings['layrix_class_defaults'] ) && count( $settings['layrix_class_defaults'] ) > 0;
+          $has_auto_classes    = ! empty( $settings['auto_classes_enabled'] );
+
+          $custom_text_color = isset( $settings['base_text_color'] ) && $settings['base_text_color'] !== '' && $settings['base_text_color'] !== '#0f172a';
+          $custom_bg_color   = isset( $settings['base_background_color'] ) && $settings['base_background_color'] !== '' && $settings['base_background_color'] !== '#f8fafc';
+          $has_base_setup    = $is_seeded && ( $custom_text_color || $custom_bg_color );
+
           $steps = [
-              [ '1', __( 'Basiseinstellungen festlegen', 'ecf-framework' ),   __( 'Einstellungen öffnen und Root-Größe, Schriftgröße, Body-Schrift, Überschrift-Schrift und Basisfarben festlegen.', 'ecf-framework' ) ],
-              [ '2', __( 'Tokens aufbauen', 'ecf-framework' ),                __( 'Farben, Radius, Abstände, Schatten und Typografie-Tokens anpassen, bis die Vorschau stimmt.', 'ecf-framework' ) ],
-              [ '3', __( 'Klassen-Auswahl festlegen', 'ecf-framework' ),      __( 'Nur die Starter- und Utility-Klassen aktivieren, die wirklich gebraucht werden — jede Klasse zählt gegen das Elementor-Limit.', 'ecf-framework' ) ],
-              [ '4', __( 'Sync ausführen und prüfen', 'ecf-framework' ),      __( 'Sync & Export ausführen, dann offene Elementor-Tabs neu laden, damit die neuen Variablen und Klassen erscheinen.', 'ecf-framework' ) ],
+              [
+                  'num'   => '1',
+                  'title' => __( 'Basiseinstellungen', 'ecf-framework' ),
+                  'desc'  => __( 'Root-Größe, Schriftfamilien, Basisfarben (Text, Hintergrund, Link, Fokus) festlegen — bestimmen den Look der gesamten Site.', 'ecf-framework' ),
+                  'done'  => $has_base_setup,
+                  'page'  => 'settings',
+                  'cta'   => __( 'Zu Einstellungen', 'ecf-framework' ),
+              ],
+              [
+                  'num'   => '2',
+                  'title' => __( 'Design-Tokens aufbauen', 'ecf-framework' ),
+                  'desc'  => __( 'Farben, Abstände, Radien, Schatten und Typografie anpassen — Layrix generiert daraus die CSS-Variablen.', 'ecf-framework' ),
+                  'done'  => $is_seeded,
+                  'page'  => 'colors',
+                  'cta'   => __( 'Zu Farben', 'ecf-framework' ),
+              ],
+              [
+                  'num'   => '3',
+                  'title' => __( 'Klassen-Defaults konfigurieren', 'ecf-framework' ),
+                  'desc'  => __( 'Settings → Plugin → Klassen-Defaults: Layrix-Werte für Button, Heading, Section, Container feinabstimmen — bestimmt was die Layrix-Klassen automatisch tun.', 'ecf-framework' ),
+                  'done'  => $has_layrix_defaults,
+                  'page'  => 'settings',
+                  'cta'   => __( 'Zu Klassen-Defaults', 'ecf-framework' ),
+              ],
+              [
+                  'num'   => '4',
+                  'title' => __( 'Auto-Klassen aktivieren', 'ecf-framework' ),
+                  'desc'  => __( 'Settings → Plugin → Allgemein: Toggle „Auto-Klassen aktiviert" einschalten — Headings (h1–h5), Buttons und Text-Links bekommen automatisch ihre Layrix-Klasse, sobald sie in Elementor eingefügt werden.', 'ecf-framework' ),
+                  'done'  => $has_auto_classes,
+                  'page'  => 'settings',
+                  'cta'   => __( 'Zu Auto-Klassen', 'ecf-framework' ),
+              ],
+              [
+                  'num'   => '5',
+                  'title' => __( 'Sync ausführen', 'ecf-framework' ),
+                  'desc'  => __( 'Sync & Export ausführen — Variablen und Klassen landen in Elementor\'s Global-Registry. Offene Editor-Tabs danach neu laden.', 'ecf-framework' ),
+                  'done'  => $has_classes_synced && $has_vars_synced,
+                  'page'  => 'sync',
+                  'cta'   => __( 'Zu Sync & Export', 'ecf-framework' ),
+              ],
+              [
+                  'num'   => '6',
+                  'title' => __( 'In Elementor bauen', 'ecf-framework' ),
+                  'desc'  => __( 'Layrix Section aus dem Widget-Panel ziehen, Headings und Buttons reinwerfen — Padding, Schriftgröße, Border-Radius greifen automatisch aus deinen Token-Defaults. Anwendung-Tab in Layrix für Klassen-Übersicht.', 'ecf-framework' ),
+                  'done'  => false,
+                  'page'  => 'cookbook',
+                  'cta'   => __( 'Zur Anwendung', 'ecf-framework' ),
+              ],
           ];
-          foreach ( $steps as $s ) : ?>
-          <div class="v2-hc">
-            <div class="v2-hc-head"><div class="v2-hn"><?php echo esc_html( $s[0] ); ?></div><div style="font-size:13px;font-weight:500;color:var(--v2-text)"><?php echo esc_html( $s[1] ); ?></div></div>
-            <div class="v2-hc-body"><?php echo esc_html( $s[2] ); ?></div>
+
+          $done_count = 0;
+          foreach ( $steps as $s ) {
+              if ( ! empty( $s['done'] ) ) $done_count++;
+          }
+          $total = count( $steps );
+          $pct   = $total > 0 ? (int) round( $done_count / $total * 100 ) : 0;
+          ?>
+
+          <!-- Progress bar -->
+          <div style="margin-bottom:18px">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <span style="font-size:var(--v2-ui-base-fs,13px);color:var(--v2-text2)"><?php
+                  /* translators: %1$d: completed steps, %2$d: total steps */
+                  printf( esc_html__( 'Fortschritt: %1$d / %2$d Schritte', 'ecf-framework' ), $done_count, $total );
+              ?></span>
+              <span style="font-size:var(--v2-btn-fs,12px);color:var(--v2-accent2,#a5b4fc);font-weight:600"><?php echo esc_html( $pct ); ?>%</span>
+            </div>
+            <div style="height:6px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden">
+              <div style="height:100%;width:<?php echo esc_attr( $pct ); ?>%;background:linear-gradient(90deg,var(--v2-accent),var(--v2-accent2,#a5b4fc));transition:width .4s ease"></div>
+            </div>
+          </div>
+
+          <?php foreach ( $steps as $s ) :
+              $is_done = ! empty( $s['done'] );
+          ?>
+          <div class="v2-hc v2-hc--step<?php echo $is_done ? ' is-done' : ''; ?>" style="display:flex;gap:14px;align-items:flex-start;padding:14px;border:1px solid var(--v2-border);border-radius:8px;margin-bottom:10px;background:<?php echo $is_done ? 'rgba(16,185,129,.04)' : 'rgba(255,255,255,.02)'; ?>">
+            <div style="flex-shrink:0;display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:<?php echo $is_done ? '#10b981' : 'rgba(99,102,241,.2)'; ?>;color:<?php echo $is_done ? '#fff' : 'var(--v2-accent2,#a5b4fc)'; ?>;font-weight:700;font-size:var(--v2-ui-base-fs,13px)">
+              <?php if ( $is_done ) : ?>
+                <svg width="14" height="14" viewBox="0 0 13 13" fill="none" aria-hidden="true"><path d="M2.5 6.5L5 9l5.5-5.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <?php else : ?>
+                <?php echo esc_html( $s['num'] ); ?>
+              <?php endif; ?>
+            </div>
+            <div style="flex:1;min-width:0">
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px">
+                <strong style="font-size:var(--v2-ui-base-fs,13px);color:var(--v2-text1)"><?php echo esc_html( $s['title'] ); ?></strong>
+                <?php if ( $is_done ) : ?>
+                  <span style="font-size:var(--v2-ui-base-fs, 13px);color:#10b981;font-weight:600;letter-spacing:.04em;text-transform:uppercase"><?php esc_html_e( '✓ Erledigt', 'ecf-framework' ); ?></span>
+                <?php else : ?>
+                  <span style="font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text3);font-weight:500;letter-spacing:.04em;text-transform:uppercase"><?php esc_html_e( '⏳ Offen', 'ecf-framework' ); ?></span>
+                <?php endif; ?>
+              </div>
+              <div style="font-size:var(--v2-ui-base-fs,13px);color:var(--v2-text3);line-height:1.5;margin-bottom:8px"><?php echo esc_html( $s['desc'] ); ?></div>
+              <button type="button" class="v2-btn v2-btn--ghost" onclick="ecfV2Go('<?php echo esc_js( $s['page'] ); ?>')" style="padding:5px 12px"><?php echo esc_html( $s['cta'] ); ?> →</button>
+            </div>
           </div>
           <?php endforeach; ?>
         </div>
@@ -2846,7 +2942,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
           [ '6', __( 'Sync & Export', 'ecf-framework' ), 'sync' ],
         ] as [$num, $label, $page] ) : ?>
         <div class="v2-as-row" style="cursor:pointer;gap:8px" onclick="ecfV2Go('<?php echo esc_js( $page ); ?>')">
-          <span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.07);font-size:10px;font-weight:700;flex-shrink:0"><?php echo esc_html( $num ); ?></span>
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.07);font-size:var(--v2-btn-fs, 12px);font-weight:700;flex-shrink:0"><?php echo esc_html( $num ); ?></span>
           <span class="v2-as-k"><?php echo esc_html( $label ); ?></span>
         </div>
         <?php endforeach; ?>
@@ -2965,7 +3061,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
                 <option value="62.5" <?php selected( $root_size, '62.5' ); ?>>62.5% (10px)</option>
                 <option value="100"  <?php selected( $root_size, '100' ); ?>>100% (16px)</option>
               </select>
-              <button type="button" id="v2-rfi-btn" title="<?php esc_attr_e( 'rem → px Referenz', 'ecf-framework' ); ?>" style="background:none;border:1px solid var(--v2-border);border-radius:50%;width:22px;height:22px;font-size:11px;color:var(--v2-text3);cursor:pointer;flex-shrink:0;line-height:1">?</button>
+              <button type="button" id="v2-rfi-btn" title="<?php esc_attr_e( 'rem → px Referenz', 'ecf-framework' ); ?>" style="background:none;border:1px solid var(--v2-border);border-radius:50%;width:22px;height:22px;font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text3);cursor:pointer;flex-shrink:0;line-height:1">?</button>
             </div>
           </div>
           <div class="v2-sr">
@@ -2973,7 +3069,22 @@ trait ECF_Framework_Admin_V2_View_Trait {
               <div class="v2-sl"><?php esc_html_e( 'Body Text Size', 'ecf-framework' ); ?></div>
               <?php $tok( [ '--ecf-base-body-text-size' ] ); ?>
             </div>
-            <input type="text" class="v2-si" name="<?php echo esc_attr( $opt ); ?>[base_body_text_size]" value="<?php echo esc_attr( $settings['base_body_text_size'] ?? '16px' ); ?>" style="max-width:110px">
+            <?php
+              $btss = $settings['base_body_text_size'] ?? '16px';
+              preg_match( '/^\s*([\d.\-]+)\s*([a-z%]+)?\s*$/i', (string) $btss, $bm );
+              $bts_num  = $bm[1] ?? '16';
+              $bts_unit = $bm[2] ?? 'px';
+              $rem_base = ( $root_size === '62.5' ) ? 10 : 16;
+            ?>
+            <div class="v2-unit-input" data-rem-base="<?php echo esc_attr( (string) $rem_base ); ?>">
+              <input type="number" class="v2-si v2-unit-num" value="<?php echo esc_attr( $bts_num ); ?>" step="any" style="max-width:70px">
+              <select class="v2-si v2-unit-sel" style="max-width:64px">
+                <?php foreach ( [ 'px', 'rem', 'em', '%', 'vw' ] as $u ) : ?>
+                  <option value="<?php echo esc_attr( $u ); ?>" <?php selected( $bts_unit, $u ); ?>><?php echo esc_html( $u ); ?></option>
+                <?php endforeach; ?>
+              </select>
+              <input type="hidden" name="<?php echo esc_attr( $opt ); ?>[base_body_text_size]" class="v2-unit-hidden" value="<?php echo esc_attr( $btss ); ?>">
+            </div>
           </div>
           <div class="v2-sr">
             <div>
@@ -3128,26 +3239,26 @@ trait ECF_Framework_Admin_V2_View_Trait {
         <div class="v2-sg v2-sg--compact2">
           <div class="v2-sr">
             <div>
-              <div class="v2-sl"><code style="font-family:var(--v2-mono);font-size:10px">--ecf-text-<?php echo esc_html( $rfi_type_step ); ?></code></div>
+              <div class="v2-sl"><code style="font-family:var(--v2-mono);font-size:var(--v2-btn-fs, 12px)">--ecf-text-<?php echo esc_html( $rfi_type_step ); ?></code></div>
               <div class="v2-sh2"><?php esc_html_e( 'Schriftgröße (Fließtext)', 'ecf-framework' ); ?></div>
             </div>
             <div style="display:flex;align-items:center;gap:12px">
-              <div style="display:flex;gap:10px;font-size:11px;color:var(--v2-text2)">
-                <span><?php echo esc_html( ( $rfi_type['min_px'] ?? $rfi_type['minPx'] ?? '?' ) . 'px' ); ?> <span style="color:var(--v2-text3);font-size:10px">min</span></span>
-                <span><?php echo esc_html( ( $rfi_type['max_px'] ?? $rfi_type['maxPx'] ?? '?' ) . 'px' ); ?> <span style="color:var(--v2-text3);font-size:10px">max</span></span>
+              <div style="display:flex;gap:10px;font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text2)">
+                <span><?php echo esc_html( ( $rfi_type['min_px'] ?? $rfi_type['minPx'] ?? '?' ) . 'px' ); ?> <span style="color:var(--v2-text3);font-size:var(--v2-btn-fs, 12px)">min</span></span>
+                <span><?php echo esc_html( ( $rfi_type['max_px'] ?? $rfi_type['maxPx'] ?? '?' ) . 'px' ); ?> <span style="color:var(--v2-text3);font-size:var(--v2-btn-fs, 12px)">max</span></span>
               </div>
               <button type="button" class="v2-btn v2-btn--ghost" style="padding:2px 8px" onclick="document.querySelector('[data-v2-page=typography]').click()" title="<?php esc_attr_e( 'Zur Typografie-Seite', 'ecf-framework' ); ?>">→ <?php esc_html_e( 'Typografie', 'ecf-framework' ); ?></button>
             </div>
           </div>
           <div class="v2-sr">
             <div>
-              <div class="v2-sl"><code style="font-family:var(--v2-mono);font-size:10px">--ecf-space-<?php echo esc_html( $rfi_sp_step ); ?></code></div>
+              <div class="v2-sl"><code style="font-family:var(--v2-mono);font-size:var(--v2-btn-fs, 12px)">--ecf-space-<?php echo esc_html( $rfi_sp_step ); ?></code></div>
               <div class="v2-sh2"><?php esc_html_e( 'Abstand (Basis)', 'ecf-framework' ); ?></div>
             </div>
             <div style="display:flex;align-items:center;gap:12px">
-              <div style="display:flex;gap:10px;font-size:11px;color:var(--v2-text2)">
-                <span><?php echo esc_html( ( $rfi_spacing['min_px'] ?? $rfi_spacing['minPx'] ?? '?' ) . 'px' ); ?> <span style="color:var(--v2-text3);font-size:10px">min</span></span>
-                <span><?php echo esc_html( ( $rfi_spacing['max_px'] ?? $rfi_spacing['maxPx'] ?? '?' ) . 'px' ); ?> <span style="color:var(--v2-text3);font-size:10px">max</span></span>
+              <div style="display:flex;gap:10px;font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text2)">
+                <span><?php echo esc_html( ( $rfi_spacing['min_px'] ?? $rfi_spacing['minPx'] ?? '?' ) . 'px' ); ?> <span style="color:var(--v2-text3);font-size:var(--v2-btn-fs, 12px)">min</span></span>
+                <span><?php echo esc_html( ( $rfi_spacing['max_px'] ?? $rfi_spacing['maxPx'] ?? '?' ) . 'px' ); ?> <span style="color:var(--v2-text3);font-size:var(--v2-btn-fs, 12px)">max</span></span>
               </div>
               <button type="button" class="v2-btn v2-btn--ghost" style="padding:2px 8px" onclick="document.querySelector('[data-v2-page=spacing]').click()" title="<?php esc_attr_e( 'Zur Abstände-Seite', 'ecf-framework' ); ?>">→ <?php esc_html_e( 'Abstände', 'ecf-framework' ); ?></button>
             </div>
@@ -3155,13 +3266,13 @@ trait ECF_Framework_Admin_V2_View_Trait {
           <?php if ( ! empty( $rfi_r_name ) ) : ?>
           <div class="v2-sr">
             <div>
-              <div class="v2-sl"><code style="font-family:var(--v2-mono);font-size:10px">--ecf-radius-<?php echo esc_html( $rfi_r_name ); ?></code></div>
+              <div class="v2-sl"><code style="font-family:var(--v2-mono);font-size:var(--v2-btn-fs, 12px)">--ecf-radius-<?php echo esc_html( $rfi_r_name ); ?></code></div>
               <div class="v2-sh2"><?php esc_html_e( 'Eckenrundung (Basis)', 'ecf-framework' ); ?></div>
             </div>
             <div style="display:flex;align-items:center;gap:12px">
-              <div style="display:flex;gap:10px;font-size:11px;color:var(--v2-text2)">
-                <span><?php echo esc_html( $rfi_radius['min'] ?? '?' ); ?> <span style="color:var(--v2-text3);font-size:10px">min</span></span>
-                <span><?php echo esc_html( $rfi_radius['max'] ?? $rfi_radius['min'] ?? '?' ); ?> <span style="color:var(--v2-text3);font-size:10px">max</span></span>
+              <div style="display:flex;gap:10px;font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text2)">
+                <span><?php echo esc_html( $rfi_radius['min'] ?? '?' ); ?> <span style="color:var(--v2-text3);font-size:var(--v2-btn-fs, 12px)">min</span></span>
+                <span><?php echo esc_html( $rfi_radius['max'] ?? $rfi_radius['min'] ?? '?' ); ?> <span style="color:var(--v2-text3);font-size:var(--v2-btn-fs, 12px)">max</span></span>
               </div>
               <button type="button" class="v2-btn v2-btn--ghost" style="padding:2px 8px" onclick="document.querySelector('[data-v2-page=radius]').click()" title="<?php esc_attr_e( 'Zur Radius-Seite', 'ecf-framework' ); ?>">→ <?php esc_html_e( 'Radius', 'ecf-framework' ); ?></button>
             </div>
@@ -3180,6 +3291,7 @@ trait ECF_Framework_Admin_V2_View_Trait {
       <!-- Plugin sub-tabs -->
       <div class="v2-tabs v2-tabs--sub">
         <button type="button" class="v2-tab v2-tab--on" data-v2-tab-group="pl" data-v2-tab="general"><?php esc_html_e( 'Allgemein', 'ecf-framework' ); ?></button>
+        <button type="button" class="v2-tab" data-v2-tab-group="pl" data-v2-tab="classes"><?php esc_html_e( 'Klassen-Defaults', 'ecf-framework' ); ?></button>
         <button type="button" class="v2-tab" data-v2-tab-group="pl" data-v2-tab="fonts"><?php esc_html_e( 'Schriften', 'ecf-framework' ); ?></button>
       </div>
 
@@ -3210,6 +3322,66 @@ trait ECF_Framework_Admin_V2_View_Trait {
       </div><!-- /v2-pl-general -->
 
       <!-- SUB-TAB: Schriften -->
+      <!-- SUB-TAB: Klassen-Defaults -->
+      <div id="v2-pl-classes" class="v2-tp">
+        <div class="v2-sec">
+          <div class="v2-sh"><?php esc_html_e( 'Klassen-Defaults', 'ecf-framework' ); ?></div>
+          <div class="v2-sh2" style="margin-bottom:14px"><?php esc_html_e( 'Bestimme welche Variablen Layrix in seinen Standard-Klassen verwendet. Änderungen werden beim Speichern in Elementor\'s Global-Classes-Registry geschrieben.', 'ecf-framework' ); ?></div>
+
+          <?php
+          $cls_schema = method_exists( $this, 'layrix_class_defaults_schema' ) ? $this->layrix_class_defaults_schema() : [];
+          $cls_options = method_exists( $this, 'layrix_size_variable_options' ) ? $this->layrix_size_variable_options() : [];
+          $cls_defaults = $settings['layrix_class_defaults'] ?? [];
+
+          $render_cls_select = function ( $class_name, $prop_key, $current_value, $schema_default ) use ( $opt, $cls_options ) {
+              $name_attr = esc_attr( $opt ) . '[layrix_class_defaults][' . esc_attr( $class_name ) . '][' . esc_attr( $prop_key ) . ']';
+              $value     = $current_value !== '' ? $current_value : $schema_default;
+              ?>
+              <select class="v2-si" name="<?php echo $name_attr; ?>" style="max-width:240px">
+                  <option value=""><?php
+                      printf(
+                          /* translators: %s: variable name */
+                          esc_html__( 'Default (%s)', 'ecf-framework' ),
+                          esc_html( $schema_default )
+                      );
+                  ?></option>
+                  <?php foreach ( $cls_options as $group_label => $vars ) : ?>
+                      <optgroup label="<?php echo esc_attr( $group_label ); ?>">
+                          <?php foreach ( $vars as $var ) : ?>
+                              <option value="<?php echo esc_attr( $var ); ?>" <?php selected( $value, $var ); ?>><?php echo esc_html( $var ); ?></option>
+                          <?php endforeach; ?>
+                      </optgroup>
+                  <?php endforeach; ?>
+              </select>
+              <?php
+          };
+          ?>
+
+          <?php foreach ( $cls_schema as $class_name => $cls_def ) : ?>
+            <div class="v2-sec" style="margin-bottom:16px;border:1px solid var(--v2-border);border-radius:8px;padding:12px 14px;background:rgba(255,255,255,.02)">
+              <div class="v2-sh" style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+                <span><?php echo esc_html( $cls_def['label'] ); ?></span>
+                <code style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:var(--v2-btn-fs,12px);background:rgba(0,0,0,.3);padding:2px 8px;border-radius:4px;color:var(--v2-text2);font-weight:400">.<?php echo esc_html( $class_name ); ?></code>
+              </div>
+              <div class="v2-sg">
+                <?php foreach ( $cls_def['props'] as $prop_key => $prop_def ) :
+                  $current = $cls_defaults[ $class_name ][ $prop_key ] ?? '';
+                  $sch_def = $prop_def['default'] ?? '';
+                ?>
+                <div class="v2-sr">
+                  <div>
+                    <div class="v2-sl"><?php echo esc_html( $prop_def['label'] ); ?></div>
+                    <div class="v2-sh2"><code style="font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:var(--v2-btn-fs,12px);color:var(--v2-text3)"><?php echo esc_html( $prop_key ); ?></code></div>
+                  </div>
+                  <?php $render_cls_select( $class_name, $prop_key, $current, $sch_def ); ?>
+                </div>
+                <?php endforeach; ?>
+              </div>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      </div>
+
       <?php
         $v2_base_fs = (int) ( $settings['ui_base_font_size'] ?? 13 );
         $v2_nav_fs  = (int) ( $settings['ui_nav_font_size']  ?? 13 );
@@ -3448,9 +3620,9 @@ trait ECF_Framework_Admin_V2_View_Trait {
             </div>
             <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
               <span class="v2-badge">v<?php echo esc_html( $ver ); ?></span>
-              <span style="font-size:11px;color:var(--v2-text3)">Root: <strong style="color:var(--v2-text2)"><?php echo esc_html( $root_size . '%' ); ?></strong></span>
-              <span style="font-size:11px;color:var(--v2-text3)">Container: <strong style="color:var(--v2-text2)"><?php echo esc_html( $container_w ); ?></strong></span>
-              <span style="font-size:11px;color:var(--v2-text3)">Text max: <strong style="color:var(--v2-text2)"><?php echo esc_html( $text_max_w ); ?></strong></span>
+              <span style="font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text3)">Root: <strong style="color:var(--v2-text2)"><?php echo esc_html( $root_size . '%' ); ?></strong></span>
+              <span style="font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text3)">Container: <strong style="color:var(--v2-text2)"><?php echo esc_html( $container_w ); ?></strong></span>
+              <span style="font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text3)">Text max: <strong style="color:var(--v2-text2)"><?php echo esc_html( $text_max_w ); ?></strong></span>
             </div>
           </div>
         </div>
@@ -3489,11 +3661,11 @@ trait ECF_Framework_Admin_V2_View_Trait {
 <!-- REM→PX Popover -->
 <div id="v2-rfi-popover" style="display:none;position:fixed;z-index:99999;background:var(--v2-surface2);border:1px solid var(--v2-border);border-radius:8px;padding:14px 16px;width:200px;box-shadow:0 6px 20px rgba(0,0,0,.3)">
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-    <span style="font-size:11px;font-weight:600;color:var(--v2-text1)"><?php esc_html_e( 'rem → px Referenz', 'ecf-framework' ); ?></span>
+    <span style="font-size:var(--v2-ui-base-fs, 13px);font-weight:600;color:var(--v2-text1)"><?php esc_html_e( 'rem → px Referenz', 'ecf-framework' ); ?></span>
     <button type="button" id="v2-rfi-close" style="background:none;border:none;color:var(--v2-text3);cursor:pointer;font-size:13px;padding:0;line-height:1">✕</button>
   </div>
   <div id="v2-rfi-list"></div>
-  <p style="font-size:10px;color:var(--v2-text3);margin:8px 0 0;line-height:1.4"><?php esc_html_e( 'Ändert sich wenn Root Font Size wechselt.', 'ecf-framework' ); ?></p>
+  <p style="font-size:var(--v2-btn-fs, 12px);color:var(--v2-text3);margin:8px 0 0;line-height:1.4"><?php esc_html_e( 'Ändert sich wenn Root Font Size wechselt.', 'ecf-framework' ); ?></p>
 </div>
 
 <!-- Konflikt-Modal -->

@@ -586,6 +586,7 @@ trait ECF_Framework_REST_API_Trait {
             'elementor_auto_sync_enabled', 'elementor_auto_sync_variables', 'elementor_auto_sync_classes',
             'auto_classes_enabled', 'auto_classes_headings', 'auto_classes_buttons',
             'auto_classes_text_link', 'auto_classes_form',
+            'layrix_class_defaults',
             'github_update_checks_enabled', 'elementor_boxed_width', 'content_max_width',
             'base_font_family', 'heading_font_family', 'base_body_text_size', 'base_body_font_weight',
             'typography_browser_margin_reset', 'base_text_color', 'base_background_color',

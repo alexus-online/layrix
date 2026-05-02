@@ -126,7 +126,7 @@ if ( ! class_exists( 'ECF_Atomic_Section' ) ) {
                 'class' => [
                     'e-con',
                     'e-atomic-element',
-                    'ecf-section',
+                    'ecf-layrix-section',
                     $base_style_class,
                     ...( $settings['classes'] ?? [] ),
                 ],

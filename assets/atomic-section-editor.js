@@ -58,6 +58,7 @@
   }
   function isHeading(c) { return getElementKey(c) === 'e-heading'; }
   function isButton(c)  { return getElementKey(c) === 'e-button'; }
+  function isLayrixSection(c) { return getElementKey(c) === 'e-layrix-section'; }
 
   function getCurrentClassValues(container) {
     if (!container || !container.settings || !container.settings.toJSON) return [];
@@ -107,6 +108,11 @@
   }
 
   function applyAutoClassIfApplicable(container) {
+    /* Layrix Section always gets its own class chip — independent of the
+       auto-classes toggle (it identifies the widget). */
+    if (isLayrixSection(container) && auto && auto.layrixSectionClassId) {
+      ensureClassPresent(container, auto.layrixSectionClassId);
+    }
     if (!auto || !auto.masterEnabled) return;
     if (isHeading(container)) {
       var headingId = getHeadingClassId(container);

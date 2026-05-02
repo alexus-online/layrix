@@ -586,10 +586,10 @@ trait ECF_Framework_Asset_Loading_Trait {
             }
         }
         wp_localize_script('ecf-atomic-section-editor', 'ecfAutoClasses', [
-            'masterEnabled'    => !empty($settings['auto_classes_enabled']),
-            'headingsEnabled'  => $auto_default_on('auto_classes_headings'),
-            'buttonsEnabled'   => $auto_default_on('auto_classes_buttons'),
-            'headingClassIds'  => [
+            'masterEnabled'      => !empty($settings['auto_classes_enabled']),
+            'headingsEnabled'    => $auto_default_on('auto_classes_headings'),
+            'buttonsEnabled'     => $auto_default_on('auto_classes_buttons'),
+            'headingClassIds'    => [
                 'h1' => $cls_id('ecf-heading-1'),
                 'h2' => $cls_id('ecf-heading-2'),
                 'h3' => $cls_id('ecf-heading-3'),
@@ -597,7 +597,8 @@ trait ECF_Framework_Asset_Loading_Trait {
                 'h5' => $cls_id('ecf-heading-5'),
                 'h6' => $cls_id('ecf-heading-5'),
             ],
-            'buttonClassId'    => $cls_id('ecf-button'),
+            'buttonClassId'      => $cls_id('ecf-button'),
+            'layrixSectionClassId' => $cls_id('ecf-layrix-section'),
             'variableIds'      => $variable_ids,
             'headingTypography' => [
                 'h1' => [ 'size' => 'ecf-text-4xl', 'leading' => 'ecf-leading-tight' ],

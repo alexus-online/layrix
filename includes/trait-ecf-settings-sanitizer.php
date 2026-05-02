@@ -55,6 +55,23 @@ trait ECF_Framework_Settings_Sanitizer_Trait {
         $output['admin_menu_font_size'] = (string) min(20, max(12, $admin_menu_font_size ?: (int) $defaults['admin_menu_font_size']));
         $output['autosave_enabled'] = !empty($input['autosave_enabled']) ? '1' : '0';
         $output['elementor_auto_sync_enabled'] = !empty($input['elementor_auto_sync_enabled']) ? '1' : '0';
+        // Layrix-Class-Defaults: nested array [class_name][prop_key] = variable_label
+        $output['layrix_class_defaults'] = [];
+        if (isset($input['layrix_class_defaults']) && is_array($input['layrix_class_defaults'])) {
+            $schema = method_exists($this, 'layrix_class_defaults_schema') ? $this->layrix_class_defaults_schema() : [];
+            foreach ($input['layrix_class_defaults'] as $cls => $props) {
+                if (!is_string($cls) || !isset($schema[$cls]) || !is_array($props)) continue;
+                $allowed_props = array_keys($schema[$cls]['props'] ?? []);
+                foreach ($props as $prop_key => $value) {
+                    if (!in_array($prop_key, $allowed_props, true)) continue;
+                    $value = sanitize_text_field((string) $value);
+                    if ($value === '') continue;
+                    if (!preg_match('/^[a-z][a-z0-9_-]*$/i', $value)) continue;
+                    $output['layrix_class_defaults'][$cls][$prop_key] = $value;
+                }
+            }
+        }
+
         $output['auto_classes_enabled']    = !empty($input['auto_classes_enabled'])    ? '1' : '0';
         $output['auto_classes_headings']   = !empty($input['auto_classes_headings'])   ? '1' : '0';
         $output['auto_classes_buttons']    = !empty($input['auto_classes_buttons'])    ? '1' : '0';

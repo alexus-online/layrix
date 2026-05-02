@@ -524,7 +524,7 @@
     remVals.forEach(function(r) {
       var px = Math.round(r * basePx * 10) / 10;
       html += '<div class="v2-as-row">'
-        + '<span class="v2-as-k" style="font-family:var(--v2-mono);font-size:11px">' + r + 'rem</span>'
+        + '<span class="v2-as-k" style="font-family:var(--v2-mono);font-size:var(--v2-ui-base-fs, 13px)">' + r + 'rem</span>'
         + '<span class="v2-as-v" style="font-family:var(--v2-mono)">' + px + 'px</span>'
         + '</div>';
     });
@@ -1024,16 +1024,38 @@
       var picker = slot.querySelector('.v2-hg-slot-picker');
       var hexInp = slot.querySelector('.v2-hg-slot-hex');
 
-      /* Swatch oder Fußzeile klicken → Popover + Hex-Input öffnen */
-      slot.querySelector('.v2-hg-sw-block').addEventListener('click', function(e) {
-        if (e.target.closest('.v2-hg-popover')) return;
-        if (slot.classList.contains('is-open')) closePopover(slot);
-        else openPopover(slot);
-      });
-      slot.querySelector('.v2-hg-sw-foot').addEventListener('click', function() {
-        if (slot.classList.contains('is-open')) closePopover(slot);
-        else openPopover(slot);
-      });
+      /* Swatch klicken → nativen Color-Picker IMMER öffnen + Popover öffnen.
+         Kein Toggle, weil der OS-Picker den 2. Klick absorbiert (zum
+         Selbst-Schließen) und dann der State out-of-sync wäre. Schließen
+         passiert via Klick außerhalb (siehe document-click listener) oder ESC.
+         Wir klicken das Label (.v2-hg-picker-btn), das den nativen Picker
+         zuverlässig auslöst — robuster als showPicker(). */
+      var pickerLabel = slot.querySelector('.v2-hg-picker-btn');
+      function triggerNativePicker() {
+        if (pickerLabel) { pickerLabel.click(); return; }
+        try {
+          if (typeof picker.showPicker === 'function') { picker.showPicker(); return; }
+        } catch(ex) {}
+        picker.click();
+      }
+      /* Popover hat inset:0 + z-index:6 → überdeckt den ganzen Swatch.
+         Wir überspringen daher nur Klicks auf interaktive Popover-Elemente
+         (Tabs, Inputs, Picker-Button), damit der Klick aufs Popover-Hintergrund
+         als Toggle-Schließen wirkt. */
+      function isInteractivePopoverEl(target) {
+        return !!target.closest('.v2-hg-fmt, .v2-hg-picker-btn, .v2-hg-fmt-panel, input, button, label, select, textarea');
+      }
+      function toggleSlot(e) {
+        if (e && isInteractivePopoverEl(e.target)) return;
+        if (slot.classList.contains('is-open')) {
+          closePopover(slot);
+        } else {
+          openPopover(slot);
+          triggerNativePicker();
+        }
+      }
+      slot.querySelector('.v2-hg-sw-block').addEventListener('click', toggleSlot);
+      slot.querySelector('.v2-hg-sw-foot').addEventListener('click', toggleSlot);
 
       /* Format-Tabs */
       slot.querySelectorAll('.v2-hg-fmt').forEach(function(tab) {
@@ -1138,20 +1160,24 @@
       });
     });
 
-    /* ── Zufall-Button ── */
-    var shuffleBtn = document.getElementById('v2-hg-shuffle');
-    if (shuffleBtn) {
-      shuffleBtn.addEventListener('click', function() {
-        var h = Math.floor(Math.random() * 360);
-        var s = Math.floor(Math.random() * 30) + 55;  /* 55–85% */
-        var l = Math.floor(Math.random() * 22) + 38;  /* 38–60% */
-        var randomHex = hslToHex(h, s, l);
-        /* Ersten nicht-gesperrten Slot als Basis setzen */
-        var baseSlot = _slots.find(function(sl) { return !isLocked(sl); }) || _slots[0];
-        setSlotHex(baseSlot, randomHex);
-        regenerate();
-      });
-    }
+    /* ── Zufall-Button ── (delegated so re-renders / wizard overlays don't break it) */
+    document.addEventListener('click', function(e) {
+      var btn = e.target.closest('#v2-hg-shuffle');
+      if (!btn) return;
+      e.preventDefault();
+      e.stopPropagation();
+      /* Re-query slots at click time — _slots cache could be stale after re-renders. */
+      var slots = Array.from(container.querySelectorAll('.v2-hg-slot'));
+      if (!slots.length) return;
+      var h = Math.floor(Math.random() * 360);
+      var s = Math.floor(Math.random() * 30) + 55;  /* 55–85% */
+      var l = Math.floor(Math.random() * 22) + 38;  /* 38–60% */
+      var randomHex = hslToHex(h, s, l);
+      var baseSlot = slots.find(function(sl) { return !isLocked(sl); }) || slots[0];
+      if (!baseSlot) return;
+      setSlotHex(baseSlot, randomHex);
+      regenerate();
+    });
 
     /* ── "In Palette übernehmen" ── */
     var applyBtn = document.getElementById('v2-hg-apply');
@@ -1744,7 +1770,7 @@
     inp.dataset.stepGroup = group;
     inp.value = newVal;
     var chip = '<span class="v2-step-chip" data-step-group="' + group + '" data-step-val="' + newVal + '" '
-      + 'style="display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:999px;font-size:11px;background:rgba(255,255,255,.07);cursor:pointer" '
+      + 'style="display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:999px;font-size:var(--v2-ui-base-fs, 13px);background:rgba(255,255,255,.07);cursor:pointer" '
       + 'onclick="ecfV2RemoveStep(\'' + group + '\',\'' + newVal + '\')" title="Remove">' + newVal + ' <span style="opacity:.5">×</span></span>';
     if (dir === 'smaller') {
       wrapEl.insertBefore(inp, wrapEl.firstChild);
@@ -1819,6 +1845,53 @@
   /* ── Import file preview ─────────────────────────────────────────────── */
   var _importedJson = null;
 
+  /* ── Unit-aware Inputs ─────────────────────────────────────────────── */
+  function ecfV2InitUnitInputs() {
+    var w = wrap();
+    if (!w) return;
+    w.querySelectorAll('.v2-unit-input').forEach(function(box) {
+      if (box.dataset.unitInit) return;
+      box.dataset.unitInit = '1';
+      var num = box.querySelector('.v2-unit-num');
+      var sel = box.querySelector('.v2-unit-sel');
+      var hid = box.querySelector('.v2-unit-hidden');
+      if (!num || !sel || !hid) return;
+      var remBase = parseFloat(box.dataset.remBase) || 16;
+      var vwBase  = 1920; /* Annahme: Desktop-Standard */
+      function toPx(val, unit) {
+        var v = parseFloat(val) || 0;
+        if (unit === 'px')  return v;
+        if (unit === 'rem' || unit === 'em') return v * remBase;
+        if (unit === '%')   return v / 100 * remBase;
+        if (unit === 'vw')  return v / 100 * vwBase;
+        return v;
+      }
+      function fromPx(px, unit) {
+        if (unit === 'px')  return px;
+        if (unit === 'rem' || unit === 'em') return px / remBase;
+        if (unit === '%')   return px / remBase * 100;
+        if (unit === 'vw')  return px / vwBase * 100;
+        return px;
+      }
+      function round(v) { return Math.round(v * 10000) / 10000; }
+      var lastUnit = sel.value;
+      sel.addEventListener('change', function() {
+        var px   = toPx(num.value, lastUnit);
+        var conv = fromPx(px, sel.value);
+        num.value = round(conv);
+        lastUnit = sel.value;
+        sync();
+      });
+      num.addEventListener('input', sync);
+      function sync() {
+        var v = (num.value === '' ? '0' : num.value);
+        hid.value = v + sel.value;
+        if (typeof ecfV2ScheduleAutosave === 'function') ecfV2ScheduleAutosave();
+      }
+    });
+  }
+  window.ecfV2InitUnitInputs = ecfV2InitUnitInputs;
+
   function ecfV2InitImportPreview() {
     var i18n    = (window.ecfAdmin && ecfAdmin.i18n) || {};
     var fileInp = document.getElementById('v2-import-file');
@@ -1868,7 +1941,7 @@
     if (!window.ecfAdmin || !ecfAdmin.fontSearchRestUrl) return;
     var results = document.getElementById('v2-font-search-results');
     if (!results) return;
-    results.innerHTML = '<div style="padding:8px 12px;font-size:11px;color:var(--v2-text3)">Searching…</div>';
+    results.innerHTML = '<div style="padding:8px 12px;font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text3)">Searching…</div>';
     results.style.display = '';
     var url = ecfAdmin.fontSearchRestUrl + '?q=' + encodeURIComponent(q) + '&limit=30';
     fetch(url, { headers: { 'X-WP-Nonce': ecfAdmin.restNonce } })
@@ -1876,12 +1949,12 @@
       .then(function(data) {
         results.innerHTML = '';
         if (!data || !data.groups || !data.groups.length) {
-          results.innerHTML = '<div style="padding:8px 12px;font-size:11px;color:var(--v2-text3)">No results</div>';
+          results.innerHTML = '<div style="padding:8px 12px;font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text3)">No results</div>';
           return;
         }
         data.groups.forEach(function(grp) {
           var gh = document.createElement('div');
-          gh.style.cssText = 'padding:4px 10px 2px;font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--v2-text3);border-bottom:1px solid var(--v2-border)';
+          gh.style.cssText = 'padding:4px 10px 2px;font-size:var(--v2-btn-fs, 12px);text-transform:uppercase;letter-spacing:.06em;color:var(--v2-text3);border-bottom:1px solid var(--v2-border)';
           gh.textContent = grp.label;
           results.appendChild(gh);
           (grp.options || []).forEach(function(opt) {
@@ -1905,7 +1978,7 @@
         });
       })
       .catch(function() {
-        results.innerHTML = '<div style="padding:8px 12px;font-size:11px;color:var(--v2-text3)">Search error</div>';
+        results.innerHTML = '<div style="padding:8px 12px;font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text3)">Search error</div>';
       });
   }
 
@@ -2070,7 +2143,7 @@
           }
           function makeGroupLabel(text) {
             var div = document.createElement('div');
-            div.style.cssText = 'padding:5px 12px 4px;font-size:10px;text-transform:uppercase;letter-spacing:.07em;color:var(--v2-text3);background:var(--v2-surface2,rgba(255,255,255,.03));border-bottom:1px solid var(--v2-border)';
+            div.style.cssText = 'padding:5px 12px 4px;font-size:var(--v2-btn-fs, 12px);text-transform:uppercase;letter-spacing:.07em;color:var(--v2-text3);background:var(--v2-surface2,rgba(255,255,255,.03));border-bottom:1px solid var(--v2-border)';
             div.textContent = text;
             return div;
           }
@@ -2125,14 +2198,14 @@
               loadFontPreviews(libraryFamilies);
             } else {
               var banner = document.createElement('div');
-              banner.style.cssText = 'padding:10px 12px;font-size:11px;line-height:1.5;color:var(--v2-text2);border-bottom:1px solid var(--v2-border);display:flex;flex-direction:column;gap:6px';
+              banner.style.cssText = 'padding:10px 12px;font-size:var(--v2-ui-base-fs, 13px);line-height:1.5;color:var(--v2-text2);border-bottom:1px solid var(--v2-border);display:flex;flex-direction:column;gap:6px';
               var bannerText = document.createElement('span');
               bannerText.textContent = ecfAdmin.i18n && ecfAdmin.i18n.fontPreviewConsent
                 ? ecfAdmin.i18n.fontPreviewConsent
                 : 'Font previews connect to Google Fonts.';
               var bannerBtn = document.createElement('button');
               bannerBtn.type = 'button';
-              bannerBtn.style.cssText = 'align-self:flex-start;padding:4px 10px;font-size:11px;border:1px solid var(--v2-border);border-radius:4px;background:var(--v2-surface2,rgba(255,255,255,.06));color:var(--v2-text);cursor:pointer';
+              bannerBtn.style.cssText = 'align-self:flex-start;padding:4px 10px;font-size:var(--v2-ui-base-fs, 13px);border:1px solid var(--v2-border);border-radius:4px;background:var(--v2-surface2,rgba(255,255,255,.06));color:var(--v2-text);cursor:pointer';
               bannerBtn.textContent = ecfAdmin.i18n && ecfAdmin.i18n.fontPreviewEnable
                 ? ecfAdmin.i18n.fontPreviewEnable
                 : 'Vorschauen aktivieren';
@@ -2699,15 +2772,18 @@
   var _wizardNavPulse = null;
   var _wi = (ecfAdmin && ecfAdmin.i18n) ? ecfAdmin.i18n : {};
   var _wizardSteps = [
-    { mode: 'modal',   page: null,         title: _wi.wiz_title_welcome  || 'Welcome to Layrix',          body: _wi.wiz_body_welcome  || 'Layrix manages your design tokens centrally and syncs them to Elementor in one click. This short guide shows all areas.', next: _wi.wiz_next_start || 'Get started' },
-    { mode: 'callout', page: 'colors',     title: _wi.wiz_title_colors   || 'Colors & Radius',            body: _wi.wiz_body_colors   || 'Define your brand colors and border radii. Apply a <strong>style preset</strong> to get started quickly.', next: _wi.wiz_next || 'Next' },
-    { mode: 'callout', page: 'typography', title: _wi.wiz_title_typo     || 'Typography',                 body: _wi.wiz_body_typo     || 'Font families, sizes and the type scale. Set which fonts are used on the website.', next: _wi.wiz_next || 'Next' },
-    { mode: 'callout', page: 'spacing',    title: _wi.wiz_title_spacing  || 'Spacing',                    body: _wi.wiz_body_spacing  || 'Define your spacing system — base distances and rhythm between elements. Layrix generates a complete scale.', next: _wi.wiz_next || 'Next' },
-    { mode: 'callout', page: 'shadows',    title: _wi.wiz_title_shadows  || 'Shadows',                    body: _wi.wiz_body_shadows  || 'Create reusable shadow tokens. From subtle elevation effects to prominent drop shadows.', next: _wi.wiz_next || 'Next' },
-    { mode: 'callout', page: 'variables',  title: _wi.wiz_title_vars     || 'Variables',                  body: _wi.wiz_body_vars     || 'Custom CSS variables beyond Elementor — e.g. animation durations, z-index levels or other design values.', next: _wi.wiz_next || 'Next' },
-    { mode: 'callout', page: 'classes',    title: _wi.wiz_title_classes  || 'Classes',                    body: _wi.wiz_body_classes  || 'Global Elementor classes for recurring styles. Pick from the library or create custom classes available in every widget.', next: _wi.wiz_next_sync || 'Next: Sync' },
-    { mode: 'callout', page: 'sync',       title: _wi.wiz_title_sync     || 'Sync with Elementor',        body: _wi.wiz_body_sync     || 'When all tokens are set up, click <strong>Sync with Elementor</strong>. All tokens will be available as CSS variables in the Elementor editor.', next: _wi.wiz_next_done || 'Done' },
-    { mode: 'toast',   page: null,         title: _wi.wiz_title_ready    || 'You\'re all set!',           body: _wi.wiz_body_ready    || 'All areas explored, Elementor synced — you\'re good to go.' }
+    { mode: 'modal',   page: null,         title: _wi.wiz_title_welcome  || 'Willkommen bei Layrix',      body: _wi.wiz_body_welcome  || 'Layrix verwaltet dein Design-System zentral und synct es zu Elementor. Diese Tour zeigt alle Bereiche — von den Tokens bis zum fertigen Widget im Editor.', next: _wi.wiz_next_start || 'Los geht\'s' },
+    { mode: 'callout', page: 'colors',     title: _wi.wiz_title_colors   || 'Farben & Radius',            body: _wi.wiz_body_colors   || 'Markenfarben und Eckenradien definieren. Schnellstart: ein <strong>Stil-Preset</strong> anwenden.', next: _wi.wiz_next || 'Weiter' },
+    { mode: 'callout', page: 'typography', title: _wi.wiz_title_typo     || 'Typografie',                 body: _wi.wiz_body_typo     || 'Schriftfamilien, Schriftgrößen-Skala und Zeilenhöhen festlegen.', next: _wi.wiz_next || 'Weiter' },
+    { mode: 'callout', page: 'spacing',    title: _wi.wiz_title_spacing  || 'Abstände',                   body: _wi.wiz_body_spacing  || 'Spacing-System definieren — Basis-Abstände und Rhythmus. Layrix generiert die komplette Skala.', next: _wi.wiz_next || 'Weiter' },
+    { mode: 'callout', page: 'shadows',    title: _wi.wiz_title_shadows  || 'Schatten',                   body: _wi.wiz_body_shadows  || 'Wiederverwendbare Schatten-Tokens — von dezent bis prominent.', next: _wi.wiz_next || 'Weiter' },
+    { mode: 'callout', page: 'variables',  title: _wi.wiz_title_vars     || 'Variablen',                  body: _wi.wiz_body_vars     || 'Eigene CSS-Variablen für alles was nicht von Layrix abgedeckt ist (Animation-Dauern, z-Index etc.).', next: _wi.wiz_next || 'Weiter' },
+    { mode: 'callout', page: 'classes',    title: _wi.wiz_title_classes  || 'Klassen-Auswahl',            body: _wi.wiz_body_classes  || 'Globale Elementor-Klassen für wiederkehrende Styles. Aus der Library wählen oder eigene erzeugen.', next: _wi.wiz_next || 'Weiter' },
+    { mode: 'callout', page: 'settings',   title: 'Klassen-Defaults',                                     body: '<strong>Plugin → Klassen-Defaults</strong>: Layrix-Werte für Button, Heading, Section und Container feinabstimmen — bestimmt was die Klassen automatisch tun (Padding, Schriftgröße, Eckenradius).',  next: _wi.wiz_next || 'Weiter' },
+    { mode: 'callout', page: 'settings',   title: 'Auto-Klassen',                                         body: '<strong>Plugin → Allgemein → Auto-Klassen</strong>: Toggle aktivieren — neu eingefügte h1-h5, Buttons und Text-Links bekommen automatisch ihre Layrix-Klasse, sobald sie in Elementor reinkommen.', next: _wi.wiz_next || 'Weiter' },
+    { mode: 'callout', page: 'sync',       title: _wi.wiz_title_sync     || 'Sync mit Elementor',         body: _wi.wiz_body_sync     || 'Alle Tokens und Klassen zu Elementor übertragen. Ab jetzt im Editor als globale Variablen und Klassen verfügbar.',                                                                  next: _wi.wiz_next || 'Weiter' },
+    { mode: 'callout', page: 'cookbook',   title: 'Anwendung',                                            body: 'Karten-Übersicht aller Layrix-Klassen pro Kategorie. Klick auf eine Karte kopiert die Klasse — im Elementor-Editor ins CSS-Klassen-Feld einfügen.',                                                       next: _wi.wiz_next_done || 'Fertig' },
+    { mode: 'toast',   page: null,         title: _wi.wiz_title_ready    || 'Du bist startklar!',        body: _wi.wiz_body_ready    || 'Alle Bereiche durch — Tokens definiert, Klassen gesynct, Auto-Klassen aktiv. Jetzt im Elementor-Editor bauen.' }
   ];
 
   function _wizardDots(activeIdx) {
@@ -2733,10 +2809,60 @@
     }
   }
 
+  function _wizardEnableDrag(callout) {
+    var handle = callout.querySelector('.v2-wiz-callout__drag');
+    if (!handle) return;
+    var dragging = false, startX = 0, startY = 0, origLeft = 0, origTop = 0;
+    handle.addEventListener('mousedown', function(e) {
+      e.preventDefault();
+      dragging = true;
+      var rect = callout.getBoundingClientRect();
+      startX = e.clientX; startY = e.clientY;
+      origLeft = rect.left; origTop = rect.top;
+      callout.style.transform = 'none';
+      callout.dataset.dragged = '1';
+      document.body.style.userSelect = 'none';
+    });
+    document.addEventListener('mousemove', function(e) {
+      if (!dragging) return;
+      var nx = origLeft + (e.clientX - startX);
+      var ny = origTop  + (e.clientY - startY);
+      /* Im Viewport halten (kleiner Rand) */
+      var w = callout.offsetWidth, h = callout.offsetHeight;
+      nx = Math.max(8, Math.min(window.innerWidth  - w - 8, nx));
+      ny = Math.max(8, Math.min(window.innerHeight - h - 8, ny));
+      callout.style.left = nx + 'px';
+      callout.style.top  = ny + 'px';
+      /* Pfeil ausblenden, sobald manuell verschoben — er zeigt sonst irgendwohin */
+      var arrow = callout.querySelector('.v2-wiz-callout__arrow');
+      if (arrow) arrow.style.display = 'none';
+    });
+    document.addEventListener('mouseup', function() {
+      if (!dragging) return;
+      dragging = false;
+      document.body.style.userSelect = '';
+    });
+  }
+
   function _wizardPositionCallout(callout, anchor) {
+    /* Callout immer oben im Topbar-Bereich, rechts neben der Nav. So
+       überdeckt es nie die Page-Überschrift oder den Content. Der Pfeil
+       zeigt nach links unten zum gepulsten Nav-Item. */
     var rect = anchor.getBoundingClientRect();
-    callout.style.top  = (rect.top + rect.height / 2) + 'px';
-    callout.style.left = (rect.right + 14) + 'px';
+    var left = rect.right + 14;
+    var top  = 16;
+    callout.style.transform = 'none';
+    callout.style.top  = top + 'px';
+    callout.style.left = left + 'px';
+    /* Pfeil dynamisch positionieren: vertikal so, dass er auf das Nav-Item zeigt. */
+    var arrow = callout.querySelector('.v2-wiz-callout__arrow');
+    if (arrow) {
+      var ch = callout.offsetHeight || 200;
+      var navCenter = rect.top + rect.height / 2;
+      var arrowOffset = Math.max(16, Math.min(navCenter - top, ch - 20));
+      arrow.style.top = arrowOffset + 'px';
+      arrow.style.transform = 'rotate(45deg)';
+    }
   }
 
   function _wizardShowStep(idx) {
@@ -2780,27 +2906,39 @@
       var cl = document.createElement('div');
       cl.className = 'v2-wiz-callout';
       cl.setAttribute('role', 'dialog');
+      var hasBack = idx > 0;
       cl.innerHTML = '<div class="v2-wiz-callout__arrow"></div>'
+        + '<div class="v2-wiz-callout__drag" title="' + (_wi.wiz_drag || 'Zum Verschieben ziehen') + '">'
+        + '<svg viewBox="0 0 16 16" width="14" height="14" fill="currentColor"><circle cx="5" cy="4" r="1.2"/><circle cx="11" cy="4" r="1.2"/><circle cx="5" cy="8" r="1.2"/><circle cx="11" cy="8" r="1.2"/><circle cx="5" cy="12" r="1.2"/><circle cx="11" cy="12" r="1.2"/></svg>'
+        + '</div>'
         + '<div class="v2-wiz-callout__steps">' + _wizardDots(idx) + '</div>'
         + '<strong class="v2-wiz-callout__title"></strong>'
         + '<p class="v2-wiz-callout__body"></p>'
         + '<div class="v2-wiz-callout__footer">'
-        + '<button type="button" class="v2-btn v2-btn--ghost v2-wiz-callout__skip">Überspringen</button>'
+        + (hasBack ? '<button type="button" class="v2-btn v2-btn--ghost v2-wiz-callout__back">' + (_wi.wiz_back || 'Zurück') + '</button>' : '')
+        + '<span class="v2-wiz-callout__spacer"></span>'
+        + '<button type="button" class="v2-btn v2-btn--ghost v2-wiz-callout__skip">' + (_wi.wiz_skip || 'Überspringen') + '</button>'
         + '<button type="button" class="v2-btn v2-btn--primary v2-wiz-callout__next"></button>'
         + '</div>';
       cl.querySelector('.v2-wiz-callout__title').textContent = step.title;
-      cl.querySelector('.v2-wiz-callout__body').textContent  = step.body;
+      cl.querySelector('.v2-wiz-callout__body').innerHTML    = step.body;
       cl.querySelector('.v2-wiz-callout__next').textContent  = step.next;
       document.body.appendChild(cl);
       _wizardCallout = cl;
       _wizardPositionCallout(cl, anchor);
-      window.addEventListener('resize', function() { if (_wizardCallout) _wizardPositionCallout(cl, anchor); });
+      window.addEventListener('resize', function() {
+        if (_wizardCallout && !_wizardCallout.dataset.dragged) _wizardPositionCallout(cl, anchor);
+      });
       document.addEventListener('keydown', _wizardEsc);
       cl.querySelector('.v2-wiz-callout__next').addEventListener('click', function() { _wizardShowStep(idx + 1); });
       cl.querySelector('.v2-wiz-callout__skip').addEventListener('click', function() {
         try { sessionStorage.setItem(_wizardKey, '1'); } catch(ex) {}
         _wizardCloseCallout();
       });
+      if (hasBack) {
+        cl.querySelector('.v2-wiz-callout__back').addEventListener('click', function() { _wizardShowStep(idx - 1); });
+      }
+      _wizardEnableDrag(cl);
 
     } else if (step.mode === 'toast') {
       _wizardCloseCallout();
@@ -3201,6 +3339,33 @@
           });
         });
       }
+    }
+
+    /* Apply auto-classes toggles + layrix-class-defaults (custom presets carry
+       the full sanitized settings — pick out keys that aren't covered by the
+       built-in preset mapping above). */
+    var autoKeys = ['auto_classes_enabled','auto_classes_headings','auto_classes_buttons','auto_classes_text_link','auto_classes_form'];
+    autoKeys.forEach(function(key) {
+      if (payload[key] === undefined) return;
+      var cb = w.querySelector('input[type="checkbox"][name*="[' + key + ']"]');
+      if (!cb) return;
+      cb.checked = !!parseInt(payload[key], 10);
+      var tog = cb.nextElementSibling;
+      if (tog && tog.classList) {
+        tog.classList.toggle('v2-tog--on',  cb.checked);
+        tog.classList.toggle('v2-tog--off', !cb.checked);
+      }
+      cb.dispatchEvent(new Event('change', { bubbles: true }));
+    });
+    if (payload.layrix_class_defaults && typeof payload.layrix_class_defaults === 'object') {
+      Object.keys(payload.layrix_class_defaults).forEach(function(cls) {
+        var props = payload.layrix_class_defaults[cls];
+        if (!props || typeof props !== 'object') return;
+        Object.keys(props).forEach(function(propKey) {
+          var sel = w.querySelector('select[name*="[layrix_class_defaults][' + cls + '][' + propKey + ']"]');
+          if (sel) sel.value = props[propKey] || '';
+        });
+      });
     }
 
     /* Save + Sync after preset apply */
@@ -3678,22 +3843,34 @@
       });
     }
 
-    /* Color swatch click → open edit panel + immediately open native color picker */
-    w.addEventListener('click', function(e) {
-      var sw = e.target.closest('.v2-tr-sw');
-      if (!sw || sw.classList.contains('v2-tr-sw--font') || sw.classList.contains('v2-tr-sw--radius') || sw.classList.contains('v2-tr-sw--lh')) return;
-      var tr = sw.closest('.v2-tr');
-      if (!tr) return;
+    /* Bind click directly on each color row's main area → open edit panel +
+       native color picker. Only for color rows (skip font / radius / lh). */
+    w.querySelectorAll('.v2-tr[id^="v2-tr-"]').forEach(function(tr) {
+      if (tr.id.indexOf('v2-tr-font-') === 0) return;
+      var sw = tr.querySelector('.v2-tr-sw');
+      if (!sw) return;
+      if (sw.classList.contains('v2-tr-sw--font')   ||
+          sw.classList.contains('v2-tr-sw--radius') ||
+          sw.classList.contains('v2-tr-sw--lh')) return;
+      var main = tr.querySelector('.v2-tr-main');
+      if (!main) return;
       var id = tr.id.replace('v2-tr-', '');
-      if (!id) return;
-      var editPanel = document.getElementById('v2-edit-' + id);
-      var alreadyOpen = editPanel && editPanel.classList.contains('v2-tr-edit--open');
-      if (!alreadyOpen) ecfV2ToggleEdit(id);
-      /* Trigger native color picker after panel is visible */
-      setTimeout(function() {
-        var cp = document.getElementById('v2-cp-' + id);
-        if (cp) cp.click();
-      }, 30);
+      main.style.cursor = 'pointer';
+      main.addEventListener('click', function(e) {
+        if (e.target.closest('.v2-tr-meta')) return;
+        if (e.target.closest('input, select, textarea, button, label, a')) return;
+        var editPanel = document.getElementById('v2-edit-' + id);
+        var alreadyOpen = editPanel && editPanel.classList.contains('v2-tr-edit--open');
+        if (!alreadyOpen) ecfV2ToggleEdit(id);
+        var openPicker = function() {
+          var cp = document.getElementById('v2-cp-' + id);
+          if (!cp) return;
+          try { if (typeof cp.showPicker === 'function') { cp.showPicker(); return; } } catch(ex) {}
+          cp.click();
+        };
+        if (alreadyOpen) openPicker();
+        else setTimeout(openPicker, 60);
+      });
     });
 
     /* Shadow utility row click → update preview */
@@ -3899,6 +4076,9 @@
     /* Import file preview */
     ecfV2InitImportPreview();
 
+    /* Unit-aware inputs (px/rem/em/%/vw mit Auto-Konvertierung) */
+    ecfV2InitUnitInputs();
+
     /* Init aside with first color */
     var firstSw = w.querySelector('.v2-tr-sw');
     if (firstSw && firstSw.style.background) {
@@ -3983,18 +4163,18 @@
             container.insertAdjacentHTML('beforeend',
               '<div class="v2-preset-card v2-preset-card--custom" data-category="eigene" data-cp-id="' + cpId + '">'
               + '<div class="v2-preset-swatch v2-preset-swatch--custom">'
-              + '<div style="font-size:11px;font-weight:600;color:var(--v2-text2);letter-spacing:.03em">' + (_cpI18n.custom_preset_label || '') + '</div>'
+              + '<div style="font-size:var(--v2-ui-base-fs, 13px);font-weight:600;color:var(--v2-text2);letter-spacing:.03em">' + (_cpI18n.custom_preset_label || '') + '</div>'
               + '<div style="font-size:13px;font-weight:700;color:var(--v2-text);margin-top:4px">' + cpName + '</div>'
-              + '<div style="font-size:10px;color:var(--v2-text3);margin-top:4px">' + cpCreated + '</div>'
+              + '<div style="font-size:var(--v2-btn-fs, 12px);color:var(--v2-text3);margin-top:4px">' + cpCreated + '</div>'
               + '</div>'
               + '<div class="v2-preset-body">'
               + '<div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">'
               + '<span class="v2-preset-tone">' + (_cpI18n.custom_preset_category || '') + '</span>'
               + '<span class="v2-preset-title">' + cpName + '</span>'
               + '</div>'
-              + '<button type="button" class="v2-btn v2-btn--primary" style="width:100%;font-size:11px;padding:5px 8px"'
+              + '<button type="button" class="v2-btn v2-btn--primary" style="width:100%;font-size:var(--v2-ui-base-fs, 13px);padding:5px 8px"'
               + ' data-v2-apply-preset="' + cpId + '" data-v2-preset-payload="' + payloadStr + '">' + (_cpI18n.preset_apply_btn || '') + '</button>'
-              + '<button type="button" class="v2-btn v2-btn--ghost" style="width:100%;font-size:11px;padding:4px 8px;margin-top:4px;color:var(--v2-text3)"'
+              + '<button type="button" class="v2-btn v2-btn--ghost" style="width:100%;font-size:var(--v2-ui-base-fs, 13px);padding:4px 8px;margin-top:4px;color:var(--v2-text3)"'
               + ' data-v2-delete-custom-preset="' + cpId + '">' + (_cpI18n.delete || '') + '</button>'
               + '</div></div>'
             );
@@ -4402,7 +4582,7 @@
       list.innerHTML = '<div style="padding:16px;text-align:center">'
         + '<div style="font-size:22px;margin-bottom:8px;opacity:.3">🕐</div>'
         + '<div style="color:var(--v2-text2);font-size:12px;font-weight:600;margin-bottom:6px">' + ((_wi.history_empty) || 'No entries yet') + '</div>'
-        + '<div style="color:var(--v2-text3);font-size:11px;line-height:1.5">' + ((_wi.history_hint) || 'Every time you save, a snapshot is created. You can restore up to 8 versions.') + '</div>'
+        + '<div style="color:var(--v2-text3);font-size:var(--v2-ui-base-fs, 13px);line-height:1.5">' + ((_wi.history_hint) || 'Every time you save, a snapshot is created. You can restore up to 8 versions.') + '</div>'
         + '</div>';
       return;
     }

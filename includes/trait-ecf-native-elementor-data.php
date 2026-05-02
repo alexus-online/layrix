@@ -1,6 +1,101 @@
 <?php
 
 trait ECF_Framework_Native_Elementor_Data_Trait {
+    /**
+     * Schema describing which Layrix-managed classes have which editable
+     * default props. Used both by build_native_class_payloads (to construct
+     * the variants) and by the admin UI (to render the editor).
+     */
+    public function layrix_class_defaults_schema() {
+        return [
+            'ecf-layrix-section' => [
+                'label'    => __('Layrix Section', 'ecf-framework'),
+                'category' => 'sections',
+                'props'    => [
+                    'padding-block'  => [ 'label' => __('Padding (oben/unten)',  'ecf-framework'), 'type' => 'size', 'default' => 'ecf-space-2xl' ],
+                    'padding-inline' => [ 'label' => __('Padding (links/rechts)','ecf-framework'), 'type' => 'size', 'default' => 'ecf-space-m'   ],
+                ],
+            ],
+            'ecf-container-boxed' => [
+                'label'    => __('Container (Boxed)', 'ecf-framework'),
+                'category' => 'sections',
+                'props'    => [
+                    'max-width' => [ 'label' => __('Max-Breite', 'ecf-framework'), 'type' => 'size', 'default' => 'ecf-container-boxed' ],
+                ],
+            ],
+            'ecf-heading-1' => [
+                'label' => __('H1 Überschrift', 'ecf-framework'), 'category' => 'typography',
+                'props' => [ 'font-size' => [ 'label' => __('Schriftgröße', 'ecf-framework'), 'type' => 'size', 'default' => 'ecf-text-4xl' ] ],
+            ],
+            'ecf-heading-2' => [
+                'label' => __('H2 Überschrift', 'ecf-framework'), 'category' => 'typography',
+                'props' => [ 'font-size' => [ 'label' => __('Schriftgröße', 'ecf-framework'), 'type' => 'size', 'default' => 'ecf-text-3xl' ] ],
+            ],
+            'ecf-heading-3' => [
+                'label' => __('H3 Überschrift', 'ecf-framework'), 'category' => 'typography',
+                'props' => [ 'font-size' => [ 'label' => __('Schriftgröße', 'ecf-framework'), 'type' => 'size', 'default' => 'ecf-text-2xl' ] ],
+            ],
+            'ecf-heading-4' => [
+                'label' => __('H4 Überschrift', 'ecf-framework'), 'category' => 'typography',
+                'props' => [ 'font-size' => [ 'label' => __('Schriftgröße', 'ecf-framework'), 'type' => 'size', 'default' => 'ecf-text-xl' ] ],
+            ],
+            'ecf-heading-5' => [
+                'label' => __('H5 Überschrift', 'ecf-framework'), 'category' => 'typography',
+                'props' => [ 'font-size' => [ 'label' => __('Schriftgröße', 'ecf-framework'), 'type' => 'size', 'default' => 'ecf-text-l' ] ],
+            ],
+            'ecf-button' => [
+                'label'    => __('Button (Basis)', 'ecf-framework'),
+                'category' => 'components',
+                'props'    => [
+                    'padding-block'  => [ 'label' => __('Padding (oben/unten)',   'ecf-framework'), 'type' => 'size', 'default' => 'ecf-space-s'  ],
+                    'padding-inline' => [ 'label' => __('Padding (links/rechts)', 'ecf-framework'), 'type' => 'size', 'default' => 'ecf-space-m'  ],
+                    'border-radius'  => [ 'label' => __('Eckenradius',            'ecf-framework'), 'type' => 'size', 'default' => 'ecf-radius-m' ],
+                    'font-size'      => [ 'label' => __('Schriftgröße',           'ecf-framework'), 'type' => 'size', 'default' => 'ecf-text-m'   ],
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Resolve the variable label that should be used for a given class+prop —
+     * user setting wins, schema default as fallback.
+     */
+    public function resolve_layrix_class_default($class_name, $prop_key, $settings = null) {
+        $settings = is_array($settings) ? $settings : $this->get_settings();
+        $user_value = $settings['layrix_class_defaults'][$class_name][$prop_key] ?? '';
+        if ($user_value !== '') {
+            return $user_value;
+        }
+        $schema = $this->layrix_class_defaults_schema();
+        return $schema[$class_name]['props'][$prop_key]['default'] ?? '';
+    }
+
+    /**
+     * Available size variable labels for the UI dropdown, grouped by family.
+     */
+    public function layrix_size_variable_options() {
+        return [
+            __('Schriftgrößen', 'ecf-framework') => [
+                'ecf-text-5xs', 'ecf-text-4xs', 'ecf-text-3xs', 'ecf-text-2xs',
+                'ecf-text-xs', 'ecf-text-s', 'ecf-text-m', 'ecf-text-l',
+                'ecf-text-xl', 'ecf-text-2xl', 'ecf-text-3xl', 'ecf-text-4xl',
+                'ecf-text-5xl', 'ecf-text-6xl', 'ecf-text-7xl',
+            ],
+            __('Abstände', 'ecf-framework') => [
+                'ecf-space-2xs', 'ecf-space-xs', 'ecf-space-s', 'ecf-space-m',
+                'ecf-space-l', 'ecf-space-xl', 'ecf-space-2xl', 'ecf-space-3xl',
+                'ecf-space-4xl', 'ecf-space-5xl',
+            ],
+            __('Radien', 'ecf-framework') => [
+                'ecf-radius-xs', 'ecf-radius-s', 'ecf-radius-m', 'ecf-radius-l',
+                'ecf-radius-xl', 'ecf-radius-full',
+            ],
+            __('Container & Lese-Maximum', 'ecf-framework') => [
+                'ecf-container-boxed', 'ecf-content-max-width',
+            ],
+        ];
+    }
+
     private function build_native_class_payloads() {
         $settings = $this->get_settings();
         $items = [];
@@ -65,23 +160,42 @@ trait ECF_Framework_Native_Elementor_Data_Trait {
             !array_key_exists('auto_classes_headings', $settings) || !empty($settings['auto_classes_headings'])
         );
 
-        // Base button defaults: padding (block-s/inline-m), border-radius-m, font-size-m.
-        $button_props = [
-            'padding'       => $padding_dimensions('ecf-space-s', 'ecf-space-m'),
-            'border-radius' => $size_var_ref('ecf-radius-m'),
-            'font-size'     => $size_var_ref('ecf-text-m'),
-        ];
+        /**
+         * Build the variant props array for a Layrix-managed class by reading
+         * its schema entry and resolving each prop to either the user override
+         * or the schema default. Padding-block / padding-inline are merged
+         * into a single Dimensions prop.
+         */
+        $build_class_props = function ($class_name) use ($size_var_ref, $padding_dimensions, $settings) {
+            $schema = $this->layrix_class_defaults_schema();
+            if (!isset($schema[$class_name]['props'])) return [];
+            $props_schema = $schema[$class_name]['props'];
+            $resolve = function ($prop_key) use ($class_name, $settings) {
+                return $this->resolve_layrix_class_default($class_name, $prop_key, $settings);
+            };
+
+            $out = [];
+            $padding_block  = isset($props_schema['padding-block'])  ? $resolve('padding-block')  : null;
+            $padding_inline = isset($props_schema['padding-inline']) ? $resolve('padding-inline') : null;
+            if ($padding_block && $padding_inline) {
+                $out['padding'] = $padding_dimensions($padding_block, $padding_inline);
+            }
+            foreach (['border-radius', 'font-size', 'max-width'] as $simple_prop) {
+                if (isset($props_schema[$simple_prop])) {
+                    $var_label = $resolve($simple_prop);
+                    if ($var_label) {
+                        $out[$simple_prop] = $size_var_ref($var_label);
+                    }
+                }
+            }
+            return $out;
+        };
 
         foreach ($this->get_selected_starter_class_names($settings) as $starter_label) {
             if (isset($items[$starter_label])) {
                 continue;
             }
-            $props = [];
-            if (isset($heading_size[$starter_label])) {
-                $props['font-size'] = $size_var_ref($heading_size[$starter_label]);
-            } elseif ($starter_label === 'ecf-button') {
-                $props = $button_props;
-            }
+            $props = $build_class_props($starter_label);
             $items[$starter_label] = [
                 'type' => 'class',
                 'label' => $starter_label,
@@ -91,7 +205,7 @@ trait ECF_Framework_Native_Elementor_Data_Trait {
         }
 
         if ($auto_headings_on) {
-            foreach ($heading_size as $h_label => $h_var) {
+            foreach (array_keys($heading_size) as $h_label) {
                 if (isset($items[$h_label])) {
                     continue;
                 }
@@ -99,11 +213,21 @@ trait ECF_Framework_Native_Elementor_Data_Trait {
                     'type' => 'class',
                     'label' => $h_label,
                     'sync_to_v3' => false,
-                    'variants' => $with_props([
-                        'font-size' => $size_var_ref($h_var),
-                    ]),
+                    'variants' => $with_props($build_class_props($h_label)),
                 ];
             }
+        }
+
+        // Layrix Section atomic widget identifier class — always sync it so
+        // the Klassen chip renders for the widget even on existing installs
+        // where the user's starter_classes settings predate this class.
+        if (!isset($items['ecf-layrix-section'])) {
+            $items['ecf-layrix-section'] = [
+                'type' => 'class',
+                'label' => 'ecf-layrix-section',
+                'sync_to_v3' => false,
+                'variants' => $with_props($build_class_props('ecf-layrix-section')),
+            ];
         }
 
         foreach ($this->get_selected_utility_class_names($settings) as $utility_label) {

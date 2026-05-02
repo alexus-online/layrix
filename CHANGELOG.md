@@ -1,5 +1,28 @@
 # Changelog
 
+## 0.5.7 (2026-05-02)
+
+### Neu
+- **Hero-Grid Color-Picker als sauberer Toggle**: Klick auf das Farb-Quadrat öffnet/schließt Popover + nativen OS-Color-Picker zuverlässig. Vorher war der Picker schwer zu öffnen, weil das Popover (mit `inset:0; z-index:6`) den ganzen Swatch überdeckt hat — Klicks landeten auf dem Popover und wurden verschluckt. Jetzt zählen Klicks auf die Popover-Backdrop-Fläche als Toggle-Schließen, Klicks auf interaktive Elemente (Tabs, Inputs, Picker-Button) bleiben unberührt.
+- **Apply-CTA für Hero-Grid prominent oben statt klein rechts**: Eigene Aktionszeile mit Hint-Text „Zufrieden mit der Palette?" und großem Button mit Häkchen-Icon, zwischen Generator-Header und Swatches platziert.
+- **Wizard-Verbesserungen**:
+  - Callout sitzt fix oben (`top: 16px`) rechts neben der Nav, überdeckt nie mehr Page-Inhalte
+  - Breite 260 → 360px, mehr Platz für Text
+  - **Zurück-Button** ab Step 1 (links im Footer)
+  - **Drag-Handle** (6-Punkte-Icon oben rechts): Karte verschiebbar — bleibt im Viewport
+  - Body rendert jetzt HTML (`<strong>` etc.) statt Plaintext
+- **Schatten-Vorschau** auf hellem Hintergrund (`#e2e8f0`) mit weißem Inner-Quadrat, Größe verdoppelt+ (160×120, Inner 80×80) — Schatten endlich sichtbar.
+- **Unit-aware Body-Textgröße**: Zahleneingabe + Einheits-Dropdown (px/rem/em/%/vw) mit Auto-Konvertierung beim Wechsel. 18px → rem ergibt 1.8rem (62.5% Root) bzw. 1.125rem (100% Root) — beide ergeben dieselben 18px in CSS.
+
+### Entfernt
+- Live-Vorschau-Karte unter dem Hero-Grid (irreführend, weil dort gezeigte Buttons nicht direkt editierbar waren).
+
+### Aufräumen
+- Globaler Font-Size-Cleanup: alle hardgecodeten 10/11px in CSS, PHP-View und JS durch `var(--v2-btn-fs, 12px)` bzw. `var(--v2-ui-base-fs, 13px)` ersetzt — UI-Skala greift jetzt überall.
+
+### Backend
+- `layrix_class_defaults` jetzt persistent: Sanitizer validiert Schema (Schlüssel via `layrix_class_defaults_schema`, Werte als kleinbuchstabige Token-Labels) und speichert nested `[class][prop] => label`. REST-API-Whitelist erweitert.
+
 ## 0.5.6 (2026-05-02)
 
 ### Neu
