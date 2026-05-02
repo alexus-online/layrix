@@ -2118,15 +2118,55 @@ trait ECF_Framework_Admin_V2_View_Trait {
       </div>
 
       <?php
+      // Helper: Map a Layrix token name to a short human description (for tooltips).
+      $token_label = function ( $var ) {
+          $var = (string) $var;
+          if ( strpos( $var, '--ecf-text-' )    === 0 ) return __( 'Schriftgröße',         'ecf-framework' );
+          if ( strpos( $var, '--ecf-leading-' ) === 0 ) return __( 'Zeilenhöhe (Leading)', 'ecf-framework' );
+          if ( strpos( $var, '--ecf-weight-' )  === 0 ) return __( 'Schriftstärke',        'ecf-framework' );
+          if ( strpos( $var, '--ecf-tracking-' )=== 0 ) return __( 'Buchstabenabstand',    'ecf-framework' );
+          if ( strpos( $var, '--ecf-space-' )   === 0 ) return __( 'Abstand',              'ecf-framework' );
+          if ( strpos( $var, '--ecf-radius-' )  === 0 ) return __( 'Eckenradius',          'ecf-framework' );
+          if ( strpos( $var, '--ecf-shadow-' )  === 0 ) return __( 'Schatten',             'ecf-framework' );
+          if ( strpos( $var, '--ecf-color-' )   === 0 ) return __( 'Farbe',                'ecf-framework' );
+          $map = [
+              '--ecf-base-text-color'        => __( 'Basis-Textfarbe',           'ecf-framework' ),
+              '--ecf-base-background-color'  => __( 'Basis-Hintergrundfarbe',    'ecf-framework' ),
+              '--ecf-link-color'             => __( 'Link-Farbe',                'ecf-framework' ),
+              '--ecf-focus-color'            => __( 'Fokus-Farbe',               'ecf-framework' ),
+              '--ecf-focus-outline-width'    => __( 'Fokus-Rahmen-Breite',       'ecf-framework' ),
+              '--ecf-focus-outline-offset'   => __( 'Fokus-Rahmen-Abstand',      'ecf-framework' ),
+              '--ecf-container-boxed'        => __( 'Container-Breite (boxed)',  'ecf-framework' ),
+              '--ecf-content-max-width'      => __( 'Lese-Maximum (Textbreite)', 'ecf-framework' ),
+              '--ecf-base-body-text-size'    => __( 'Schriftgröße Fließtext',    'ecf-framework' ),
+              '--ecf-base-body-font-weight'  => __( 'Schriftstärke Fließtext',   'ecf-framework' ),
+              '--ecf-base-font-family'       => __( 'Schriftfamilie',            'ecf-framework' ),
+              '--ecf-base-body-font-family'  => __( 'Schriftfamilie Fließtext',  'ecf-framework' ),
+              '--ecf-heading-font-family'    => __( 'Schriftfamilie Überschriften', 'ecf-framework' ),
+              'uppercase'                    => __( 'CSS text-transform: uppercase', 'ecf-framework' ),
+          ];
+          return $map[ $var ] ?? '';
+      };
+
       // Helper: Render an Elementor recipe as a clickable card.
       // The whole card copies the class string when clicked.
-      $render_ele = function( $title, $desc, $widget, $classes ) {
+      // Optional $tokens shows the CSS tokens the class maps to (mono line).
+      $render_ele = function( $title, $desc, $widget, $classes, $tokens = [] ) use ( $token_label ) {
           unset( $widget );
           $cls = esc_attr( $classes );
+          $tokens = array_filter( (array) $tokens );
           ?>
           <button type="button" class="v2-recipe v2-recipe--ele" data-v2-copy="<?php echo $cls; ?>">
             <span class="v2-recipe-title"><?php echo esc_html( $title ); ?></span>
             <?php if ( $desc ) : ?><span class="v2-recipe-desc"><?php echo esc_html( $desc ); ?></span><?php endif; ?>
+            <?php if ( $tokens ) : ?>
+              <span class="v2-recipe-tokens">
+                <?php foreach ( $tokens as $i => $t ) :
+                  if ( $i > 0 ) echo ' · ';
+                  $label = $token_label( $t );
+                ?><span<?php if ( $label ) : ?> data-v2-tip="<?php echo esc_attr( $label ); ?>"<?php endif; ?>><?php echo esc_html( $t ); ?></span><?php endforeach; ?>
+              </span>
+            <?php endif; ?>
             <span class="v2-recipe-chip">
               <code><?php echo esc_html( $classes ); ?></code>
               <svg class="v2-recipe-chip-i" width="12" height="12" viewBox="0 0 13 13" fill="none" aria-hidden="true"><rect x="3" y="3" width="7.5" height="8" rx="1" stroke="currentColor" stroke-width="1.1"/><path d="M5 3V2h5v6.5h-1" stroke="currentColor" stroke-width="1.1"/></svg>
@@ -2169,14 +2209,14 @@ trait ECF_Framework_Admin_V2_View_Trait {
         <div class="v2-sec">
           <div class="v2-sh"><?php esc_html_e( 'Überschriften & Text-Stile', 'ecf-framework' ); ?></div>
           <div class="v2-recipe-grid">
-            <?php $render_ele( __( 'H1 Hero', 'ecf-framework' ),       __( 'Größte Überschrift, einmal pro Seite', 'ecf-framework' ), __( 'Heading-Widget', 'ecf-framework' ), 'ecf-heading-1' ); ?>
-            <?php $render_ele( __( 'H2 Abschnitt', 'ecf-framework' ),  __( 'Hauptüberschrift einer Section', 'ecf-framework' ),       __( 'Heading-Widget', 'ecf-framework' ), 'ecf-heading-2' ); ?>
-            <?php $render_ele( __( 'H3 Unterabschnitt', 'ecf-framework' ), __( 'Untergeordnete Überschrift', 'ecf-framework' ),       __( 'Heading-Widget', 'ecf-framework' ), 'ecf-heading-3' ); ?>
-            <?php $render_ele( __( 'H4 Detail', 'ecf-framework' ),     __( 'Kleinere Überschrift, z. B. in Cards', 'ecf-framework' ), __( 'Heading-Widget', 'ecf-framework' ), 'ecf-heading-4' ); ?>
-            <?php $render_ele( __( 'H5 Klein', 'ecf-framework' ),      __( 'Kleinste Überschrift', 'ecf-framework' ),                  __( 'Heading-Widget', 'ecf-framework' ), 'ecf-heading-5' ); ?>
-            <?php $render_ele( __( 'Eyebrow / Overline', 'ecf-framework' ), __( 'Kleiner Label-Text über einer Überschrift', 'ecf-framework' ), __( 'Text-Widget', 'ecf-framework' ), 'ecf-overline' ); ?>
-            <?php $render_ele( __( 'Großer Fließtext', 'ecf-framework' ), __( 'Lead-Absatz, etwas größer als normaler Text', 'ecf-framework' ), __( 'Text-Editor-Widget', 'ecf-framework' ), 'ecf-body-l' ); ?>
-            <?php $render_ele( __( 'Caption / Bildunterschrift', 'ecf-framework' ), __( 'Klein und unauffällig', 'ecf-framework' ), __( 'Text-Widget', 'ecf-framework' ), 'ecf-caption' ); ?>
+            <?php $render_ele( __( 'H1 Hero', 'ecf-framework' ),       __( 'Größte Überschrift, einmal pro Seite', 'ecf-framework' ), __( 'Heading-Widget', 'ecf-framework' ), 'ecf-heading-1', [ '--ecf-text-4xl', '--ecf-leading-tight', '--ecf-weight-bold' ] ); ?>
+            <?php $render_ele( __( 'H2 Abschnitt', 'ecf-framework' ),  __( 'Hauptüberschrift einer Section', 'ecf-framework' ),       __( 'Heading-Widget', 'ecf-framework' ), 'ecf-heading-2', [ '--ecf-text-3xl', '--ecf-leading-tight', '--ecf-weight-bold' ] ); ?>
+            <?php $render_ele( __( 'H3 Unterabschnitt', 'ecf-framework' ), __( 'Untergeordnete Überschrift', 'ecf-framework' ),       __( 'Heading-Widget', 'ecf-framework' ), 'ecf-heading-3', [ '--ecf-text-2xl', '--ecf-leading-snug', '--ecf-weight-semibold' ] ); ?>
+            <?php $render_ele( __( 'H4 Detail', 'ecf-framework' ),     __( 'Kleinere Überschrift, z. B. in Cards', 'ecf-framework' ), __( 'Heading-Widget', 'ecf-framework' ), 'ecf-heading-4', [ '--ecf-text-xl', '--ecf-leading-snug', '--ecf-weight-semibold' ] ); ?>
+            <?php $render_ele( __( 'H5 Klein', 'ecf-framework' ),      __( 'Kleinste Überschrift', 'ecf-framework' ),                  __( 'Heading-Widget', 'ecf-framework' ), 'ecf-heading-5', [ '--ecf-text-l', '--ecf-leading-normal', '--ecf-weight-semibold' ] ); ?>
+            <?php $render_ele( __( 'Eyebrow / Overline', 'ecf-framework' ), __( 'Kleiner Label-Text über einer Überschrift', 'ecf-framework' ), __( 'Text-Widget', 'ecf-framework' ), 'ecf-overline', [ '--ecf-text-xs', '--ecf-tracking-widest', 'uppercase' ] ); ?>
+            <?php $render_ele( __( 'Großer Fließtext', 'ecf-framework' ), __( 'Lead-Absatz, etwas größer als normaler Text', 'ecf-framework' ), __( 'Text-Editor-Widget', 'ecf-framework' ), 'ecf-body-l', [ '--ecf-text-l', '--ecf-leading-relaxed' ] ); ?>
+            <?php $render_ele( __( 'Caption / Bildunterschrift', 'ecf-framework' ), __( 'Klein und unauffällig', 'ecf-framework' ), __( 'Text-Widget', 'ecf-framework' ), 'ecf-caption', [ '--ecf-text-xs', '--ecf-leading-snug' ] ); ?>
           </div>
         </div>
 
@@ -2837,7 +2877,8 @@ trait ECF_Framework_Admin_V2_View_Trait {
 
       <?php
       // Helper: Render small token info (CSS variable / class name) under a setting row.
-      $tok = function ( $vars = [], $classes = [] ) {
+      // Reuses $token_label defined earlier in the cookbook block (same function scope).
+      $tok = function ( $vars = [], $classes = [] ) use ( $token_label ) {
           $vars = array_filter( (array) $vars );
           $classes = array_filter( (array) $classes );
           if ( ! $vars && ! $classes ) {
@@ -2847,11 +2888,13 @@ trait ECF_Framework_Admin_V2_View_Trait {
           <div class="v2-tok">
               <?php if ( $vars ) : ?>
                   <span class="v2-tok-l"><?php esc_html_e( 'VAR', 'ecf-framework' ); ?></span>
-                  <?php foreach ( $vars as $v ) : ?><code><?php echo esc_html( $v ); ?></code><?php endforeach; ?>
+                  <?php foreach ( $vars as $v ) :
+                      $label = $token_label( $v );
+                  ?><code<?php if ( $label ) : ?> data-v2-tip="<?php echo esc_attr( $label ); ?>"<?php endif; ?>><?php echo esc_html( $v ); ?></code><?php endforeach; ?>
               <?php endif; ?>
               <?php if ( $classes ) : ?>
                   <span class="v2-tok-l"><?php esc_html_e( 'CLASS', 'ecf-framework' ); ?></span>
-                  <?php foreach ( $classes as $c ) : ?><code><?php echo esc_html( $c ); ?></code><?php endforeach; ?>
+                  <?php foreach ( $classes as $c ) : ?><code data-v2-tip="<?php esc_attr_e( 'CSS-Klasse', 'ecf-framework' ); ?>"><?php echo esc_html( $c ); ?></code><?php endforeach; ?>
               <?php endif; ?>
           </div>
           <?php

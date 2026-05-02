@@ -206,6 +206,11 @@ trait ECF_Framework_Config_Trait {
             'ecf-button--primary',
             'ecf-button--secondary',
             'ecf-text-link',
+            'ecf-heading-1',
+            'ecf-heading-2',
+            'ecf-heading-3',
+            'ecf-heading-4',
+            'ecf-heading-5',
             'ecf-footer',
             'ecf-footer__inner',
         ];

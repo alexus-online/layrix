@@ -818,6 +818,51 @@ body.toplevel_page_ecf-framework #wpcontent { background: #09090b !important; }
 .ecf-v2-wrapper .v2-tog--on::after  { left: 16px; }
 .ecf-v2-wrapper .v2-tog--off::after { left: 2px; }
 
+/* ── Tooltip system (data-v2-tip) ───────────────────────────────── */
+.ecf-v2-wrapper [data-v2-tip] {
+  position: relative;
+}
+.ecf-v2-wrapper [data-v2-tip]:hover::after,
+.ecf-v2-wrapper [data-v2-tip]:focus-visible::after {
+  content: attr(data-v2-tip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 8px 12px;
+  background: rgba(12, 12, 15, .98);
+  color: #f8fafc;
+  border: 1px solid rgba(99, 102, 241, .45);
+  border-radius: 6px;
+  font-family: ui-sans-serif, -apple-system, system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.35;
+  white-space: nowrap;
+  z-index: 99999;
+  pointer-events: none;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .6);
+  animation: v2-tip-in .12s ease-out;
+}
+.ecf-v2-wrapper [data-v2-tip]:hover::before,
+.ecf-v2-wrapper [data-v2-tip]:focus-visible::before {
+  content: '';
+  position: absolute;
+  bottom: calc(100% + 3px);
+  left: 50%;
+  transform: translateX(-50%);
+  border: 5px solid transparent;
+  border-top-color: rgba(99, 102, 241, .35);
+  z-index: 99999;
+  pointer-events: none;
+}
+@keyframes v2-tip-in {
+  from { opacity: 0; transform: translateX(-50%) translateY(2px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
 /* ── Token-Info unter Settings-Inputs ──────────────────────────── */
 .ecf-v2-wrapper .v2-tok {
   display: flex;
@@ -829,21 +874,21 @@ body.toplevel_page_ecf-framework #wpcontent { background: #09090b !important; }
 }
 .ecf-v2-wrapper .v2-tok-l {
   display: inline-block;
-  padding: 2px 6px;
+  padding: 2px 7px;
   border-radius: 4px;
   background: rgba(99, 102, 241, .14);
   color: rgba(199, 210, 254, .9);
   font-weight: 600;
   letter-spacing: .05em;
   text-transform: uppercase;
-  font-size: 10px;
+  font-size: var(--v2-btn-fs, 12px);
 }
 .ecf-v2-wrapper .v2-tok code {
   background: rgba(0, 0, 0, .3);
-  padding: 2px 7px;
+  padding: 2px 8px;
   border-radius: 4px;
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
-  font-size: 11px;
+  font-size: var(--v2-btn-fs, 12px);
   color: var(--v2-text2);
   border: 1px solid rgba(255,255,255,.05);
 }
@@ -1018,6 +1063,13 @@ body.toplevel_page_ecf-framework #wpcontent { background: #09090b !important; }
   color: var(--v2-text3);
   line-height: 1.4;
   flex: 1;
+}
+.ecf-v2-wrapper .v2-recipe-tokens {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: var(--v2-btn-fs, 12px);
+  color: rgba(165, 180, 252, .75);
+  line-height: 1.5;
+  word-break: break-word;
 }
 .ecf-v2-wrapper .v2-recipe-chip {
   display: inline-flex;

@@ -92,20 +92,11 @@ if ( ! class_exists( 'ECF_Atomic_Section' ) ) {
          * The user can drop content into the inner block; it cannot be deleted.
          */
         protected function define_default_children() {
-            $log = dirname( __DIR__ ) . '/atomic-debug.log';
-            $write = function ( $msg ) use ( $log ) {
-                @file_put_contents( $log, '[' . gmdate( 'Y-m-d H:i:s' ) . '] [default_children] ' . $msg . "\n", FILE_APPEND );
-            };
-            $write( 'method called' );
             if ( ! class_exists( '\Elementor\Modules\AtomicWidgets\Elements\Div_Block\Div_Block' ) ) {
-                $write( 'Div_Block NOT loaded — returning empty' );
                 return [];
             }
-            $write( 'Div_Block IS loaded' );
             // Layrix syncs starter classes to Elementor's Global Classes registry
             // with deterministic IDs ('g-ecf-' . substr(md5(label), 0, 10)).
-            // The Klassen chip UI displays classes by ID, not by raw class name —
-            // so we pass the synced ID to make the chip render properly.
             $inner_class_id = 'g-ecf-' . substr( md5( 'ecf-container-boxed' ), 0, 10 );
             $inner_settings = [
                 'classes' => \Elementor\Modules\AtomicWidgets\PropTypes\Classes_Prop_Type::generate( [ $inner_class_id ] ),
@@ -116,7 +107,12 @@ if ( ! class_exists( 'ECF_Atomic_Section' ) ) {
                     'title' => __( 'Section Inner', 'ecf-framework' ),
                 ] )
                 ->build();
-            $write( 'returning inner: ' . wp_json_encode( $inner ) );
+
+            // The per-widget max-width var-ref is applied via JS after creation
+            // (atomic-section-editor.js) — Elementor's JS-side buildElement()
+            // strips the `styles` key from default_children output, so setting
+            // styles here in PHP would not persist.
+
             return [ $inner ];
         }
 

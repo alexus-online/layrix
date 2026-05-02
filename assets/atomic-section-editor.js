@@ -120,7 +120,8 @@
     }
   }
 
-  /* When the heading tag changes, swap the matching ecf-heading-N class. */
+  /* When the heading tag changes, swap the matching ecf-heading-N class.
+     The class itself carries the typography props (synced via Layrix). */
   function syncHeadingClassOnTagChange(container) {
     if (!auto || !auto.masterEnabled || !auto.headingsEnabled) return;
     if (!isHeading(container)) return;
@@ -135,7 +136,9 @@
     if (!same) setClassValues(container, next);
   }
 
-  /* Recursively walk the document tree, applying auto-class + tag watcher. */
+  /* Recursively walk the document tree, applying auto-class + tag watcher.
+     Typography/width values come from the synced global classes themselves
+     (ecf-heading-N, ecf-container-boxed) — no local style injection here. */
   function visit(container) {
     if (!container) return;
     applyAutoClassIfApplicable(container);

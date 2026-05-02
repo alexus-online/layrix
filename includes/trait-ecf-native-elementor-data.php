@@ -5,29 +5,105 @@ trait ECF_Framework_Native_Elementor_Data_Trait {
         $settings = $this->get_settings();
         $items = [];
 
+        $size_var_ref = function ($var_label) {
+            $var_id = $this->lookup_synced_variable_id($var_label);
+            return $var_id ? ['$$type' => 'global-size-variable', 'value' => $var_id] : null;
+        };
+        $padding_dimensions = function ($block_var, $inline_var) use ($size_var_ref) {
+            $block = $size_var_ref($block_var);
+            $inline = $size_var_ref($inline_var);
+            if (!$block || !$inline) return null;
+            return [
+                '$$type' => 'dimensions',
+                'value' => [
+                    'block-start'  => $block,
+                    'inline-end'   => $inline,
+                    'block-end'    => $block,
+                    'inline-start' => $inline,
+                ],
+            ];
+        };
+        $with_props = function ($props) {
+            $clean = [];
+            foreach ($props as $key => $value) {
+                if ($value !== null) {
+                    $clean[$key] = $value;
+                }
+            }
+            return $this->class_variant($clean);
+        };
+
         $boxed_width = trim((string) ($settings['elementor_boxed_width'] ?? ''));
         if ($boxed_width !== '') {
             $items['ecf-container-boxed'] = [
                 'type' => 'class',
                 'label' => 'ecf-container-boxed',
                 'sync_to_v3' => false,
-                // Keep the helper class empty in Elementor. The actual boxed-width
-                // behavior is provided by the frontend CSS output below, which avoids
-                // invalid free-form width payloads in Elementor's Global Classes API.
-                'variants' => $this->class_variant([]),
+                // Populate ecf-container-boxed with max-width referencing the
+                // synced --ecf-container-boxed variable so the Stil panel and
+                // class editor visibly show the rule.
+                'variants' => $with_props([
+                    'max-width' => $size_var_ref('ecf-container-boxed'),
+                ]),
             ];
         }
+
+        // Heading classes — populate font-size with the matching --ecf-text-N
+        // variable. Headings live in the utility library (not default starters);
+        // we always sync them when the auto-classes-headings toggle is on so the
+        // chip renders for headings even if the user hasn't enabled them under
+        // Klassen-Auswahl.
+        $heading_size = [
+            'ecf-heading-1' => 'ecf-text-4xl',
+            'ecf-heading-2' => 'ecf-text-3xl',
+            'ecf-heading-3' => 'ecf-text-2xl',
+            'ecf-heading-4' => 'ecf-text-xl',
+            'ecf-heading-5' => 'ecf-text-l',
+        ];
+        $auto_master = !empty($settings['auto_classes_enabled']);
+        $auto_headings_on = $auto_master && (
+            !array_key_exists('auto_classes_headings', $settings) || !empty($settings['auto_classes_headings'])
+        );
+
+        // Base button defaults: padding (block-s/inline-m), border-radius-m, font-size-m.
+        $button_props = [
+            'padding'       => $padding_dimensions('ecf-space-s', 'ecf-space-m'),
+            'border-radius' => $size_var_ref('ecf-radius-m'),
+            'font-size'     => $size_var_ref('ecf-text-m'),
+        ];
 
         foreach ($this->get_selected_starter_class_names($settings) as $starter_label) {
             if (isset($items[$starter_label])) {
                 continue;
             }
+            $props = [];
+            if (isset($heading_size[$starter_label])) {
+                $props['font-size'] = $size_var_ref($heading_size[$starter_label]);
+            } elseif ($starter_label === 'ecf-button') {
+                $props = $button_props;
+            }
             $items[$starter_label] = [
                 'type' => 'class',
                 'label' => $starter_label,
                 'sync_to_v3' => false,
-                'variants' => $this->class_variant([]),
+                'variants' => $with_props($props),
             ];
+        }
+
+        if ($auto_headings_on) {
+            foreach ($heading_size as $h_label => $h_var) {
+                if (isset($items[$h_label])) {
+                    continue;
+                }
+                $items[$h_label] = [
+                    'type' => 'class',
+                    'label' => $h_label,
+                    'sync_to_v3' => false,
+                    'variants' => $with_props([
+                        'font-size' => $size_var_ref($h_var),
+                    ]),
+                ];
+            }
         }
 
         foreach ($this->get_selected_utility_class_names($settings) as $utility_label) {
@@ -43,6 +119,35 @@ trait ECF_Framework_Native_Elementor_Data_Trait {
         }
 
         return $items;
+    }
+
+    /**
+     * Look up a synced Elementor variable ID by its label (e.g. 'ecf-text-4xl').
+     * Returns the ID like 'e-gv-xxxxxx' or null if not found.
+     */
+    private function lookup_synced_variable_id($label) {
+        if (!class_exists('\Elementor\Plugin')) {
+            return null;
+        }
+        if (!class_exists('\Elementor\Modules\Variables\Storage\Variables_Repository')) {
+            return null;
+        }
+        try {
+            $kit = \Elementor\Plugin::$instance->kits_manager->get_active_kit();
+            if (!$kit) {
+                return null;
+            }
+            $repo = new \Elementor\Modules\Variables\Storage\Variables_Repository($kit);
+            $collection = $repo->load();
+            foreach ($collection->all() as $id => $variable) {
+                if (method_exists($variable, 'label') && (string) $variable->label() === $label) {
+                    return (string) $id;
+                }
+            }
+        } catch (\Throwable $e) {
+            // ignore
+        }
+        return null;
     }
 
     private function build_native_variable_payloads($settings = null) {
@@ -326,7 +431,24 @@ trait ECF_Framework_Native_Elementor_Data_Trait {
             $key = strtolower($label);
             if (isset($label_to_id[$key])) {
                 $id = $label_to_id[$key];
-                $items[$id] = array_merge(['id' => $id], $payload, $items[$id]);
+                // Existing-wins merge for backward compat (preserves any user
+                // customization on the class). EXCEPTION: when Layrix has
+                // meaningful variant props in the payload, those override the
+                // existing variants — so Layrix-managed defaults (font-size,
+                // line-height, max-width references) flow through to Elementor.
+                $merged = array_merge(['id' => $id], $payload, $items[$id]);
+                $payload_variants = $payload['variants'] ?? [];
+                $payload_has_props = false;
+                foreach ($payload_variants as $variant) {
+                    if (!empty($variant['props']) && is_array($variant['props'])) {
+                        $payload_has_props = true;
+                        break;
+                    }
+                }
+                if ($payload_has_props) {
+                    $merged['variants'] = $payload_variants;
+                }
+                $items[$id] = $merged;
                 if (!in_array($id, $order, true)) {
                     $order[] = $id;
                     $updated++;

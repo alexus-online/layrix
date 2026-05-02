@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.5.6 (2026-05-02)
+
+### Neu
+- **Layrix-Klassen tragen ihre Token-Defaults jetzt direkt in Elementor's Global-Classes-Registry**: Beim Class-Sync werden für `ecf-container-boxed`, `ecf-heading-1`–`5` und `ecf-button` die zugehörigen Style-Properties als Variable-Referenzen in die Klassen-Variants geschrieben. Im Elementor Klassen-Editor sind die Layrix-Defaults damit sichtbar und editierbar.
+  - `ecf-container-boxed` → `max-width: var(--ecf-container-boxed)`
+  - `ecf-heading-1` … `ecf-heading-5` → `font-size: var(--ecf-text-4xl)` … `var(--ecf-text-l)`
+  - `ecf-button` → `padding` (block: `--ecf-space-s`, inline: `--ecf-space-m`), `border-radius: var(--ecf-radius-m)`, `font-size: var(--ecf-text-m)`
+- Default-Starter-Classes erweitert um `ecf-heading-1` bis `ecf-heading-5` — neue Installs haben sie standardmäßig aktiv.
+- Wenn Auto-Klassen-Toggle „Headings" an ist, werden die Heading-Klassen zwingend mit-synct (auch ohne explizite Aktivierung in der Klassen-Auswahl).
+
+### Fix
+- Class-Sync-Merge-Reihenfolge: Bisher hat das Existing-Item beim Update über das Layrix-Payload gewonnen, also gingen die neuen Variants verloren. Jetzt überschreibt das Payload die Variants, wenn es sinnvolle Props enthält — User-Customizations auf Klassen ohne Layrix-Defaults bleiben unberührt.
+
 ## 0.5.5 (2026-05-02)
 
 ### Neu

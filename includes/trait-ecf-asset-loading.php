@@ -562,6 +562,29 @@ trait ECF_Framework_Asset_Loading_Trait {
         $auto_default_on = function ($key) use ($settings) {
             return !array_key_exists($key, $settings) || !empty($settings[$key]);
         };
+        // Read Elementor-synced variable IDs (label → e-gv-xxx). Used by the
+        // editor JS to pre-fill heading typography with Layrix variable refs.
+        $variable_ids = [];
+        if (
+            class_exists('\Elementor\Plugin')
+            && class_exists('\Elementor\Modules\Variables\Storage\Variables_Repository')
+        ) {
+            try {
+                $kit = \Elementor\Plugin::$instance->kits_manager->get_active_kit();
+                if ($kit) {
+                    $repo = new \Elementor\Modules\Variables\Storage\Variables_Repository($kit);
+                    $collection = $repo->load();
+                    foreach ($collection->all() as $var_id => $variable) {
+                        $label = method_exists($variable, 'label') ? (string) $variable->label() : '';
+                        if ($label !== '') {
+                            $variable_ids[$label] = (string) $var_id;
+                        }
+                    }
+                }
+            } catch (\Throwable $e) {
+                // Silently fall back to no pre-fill if variable repo is unavailable.
+            }
+        }
         wp_localize_script('ecf-atomic-section-editor', 'ecfAutoClasses', [
             'masterEnabled'    => !empty($settings['auto_classes_enabled']),
             'headingsEnabled'  => $auto_default_on('auto_classes_headings'),
@@ -575,6 +598,15 @@ trait ECF_Framework_Asset_Loading_Trait {
                 'h6' => $cls_id('ecf-heading-5'),
             ],
             'buttonClassId'    => $cls_id('ecf-button'),
+            'variableIds'      => $variable_ids,
+            'headingTypography' => [
+                'h1' => [ 'size' => 'ecf-text-4xl', 'leading' => 'ecf-leading-tight' ],
+                'h2' => [ 'size' => 'ecf-text-3xl', 'leading' => 'ecf-leading-tight' ],
+                'h3' => [ 'size' => 'ecf-text-2xl', 'leading' => 'ecf-leading-snug' ],
+                'h4' => [ 'size' => 'ecf-text-xl',  'leading' => 'ecf-leading-snug' ],
+                'h5' => [ 'size' => 'ecf-text-l',   'leading' => 'ecf-leading-normal' ],
+                'h6' => [ 'size' => 'ecf-text-l',   'leading' => 'ecf-leading-normal' ],
+            ],
         ]);
         wp_localize_script('ecf-editor', 'ecfEditor', [
             'variableTypeFilterEnabled' => !empty($settings['elementor_variable_type_filter']),
