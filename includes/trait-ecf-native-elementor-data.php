@@ -47,10 +47,12 @@ trait ECF_Framework_Native_Elementor_Data_Trait {
                 'label'    => __('Button (Basis)', 'ecf-framework'),
                 'category' => 'components',
                 'props'    => [
-                    'padding-block'  => [ 'label' => __('Padding (oben/unten)',   'ecf-framework'), 'type' => 'size', 'default' => 'ecf-space-s'  ],
-                    'padding-inline' => [ 'label' => __('Padding (links/rechts)', 'ecf-framework'), 'type' => 'size', 'default' => 'ecf-space-m'  ],
-                    'border-radius'  => [ 'label' => __('Eckenradius',            'ecf-framework'), 'type' => 'size', 'default' => 'ecf-radius-m' ],
-                    'font-size'      => [ 'label' => __('Schriftgröße',           'ecf-framework'), 'type' => 'size', 'default' => 'ecf-text-m'   ],
+                    'padding-block'    => [ 'label' => __('Padding (oben/unten)',   'ecf-framework'), 'type' => 'size',  'default' => 'ecf-space-s'   ],
+                    'padding-inline'   => [ 'label' => __('Padding (links/rechts)', 'ecf-framework'), 'type' => 'size',  'default' => 'ecf-space-m'   ],
+                    'border-radius'    => [ 'label' => __('Eckenradius',            'ecf-framework'), 'type' => 'size',  'default' => 'ecf-radius-m'  ],
+                    'font-size'        => [ 'label' => __('Schriftgröße',           'ecf-framework'), 'type' => 'size',  'default' => 'ecf-text-m'    ],
+                    'background-color' => [ 'label' => __('Hintergrund',            'ecf-framework'), 'type' => 'color', 'default' => 'transparent'   ],
+                    'color'            => [ 'label' => __('Textfarbe',              'ecf-framework'), 'type' => 'color', 'default' => 'currentColor'  ],
                 ],
             ],
         ];
@@ -188,6 +190,29 @@ trait ECF_Framework_Native_Elementor_Data_Trait {
                     }
                 }
             }
+            // Color props (background-color, color, border-color) — accept either
+            // a color-token label like "ecf-color-primary" (resolved through the
+            // synced Elementor variables) or a literal CSS value like
+            // "transparent" / "#fff" / "rgba(...)" emitted directly. This lets
+            // Layrix neutralize the Elementor v4 atomic-widget defaults (e.g.
+            // the .e-button-base #375EFB background) by pushing transparent.
+            foreach (['background-color', 'color', 'border-color'] as $color_prop) {
+                if (!isset($props_schema[$color_prop])) {
+                    continue;
+                }
+                $val = $resolve($color_prop);
+                if ($val === '' || $val === null) {
+                    continue;
+                }
+                if (strpos($val, 'ecf-color-') === 0) {
+                    $var_id = $this->lookup_synced_variable_id($val);
+                    if ($var_id) {
+                        $out[$color_prop] = ['$$type' => 'global-color-variable', 'value' => $var_id];
+                    }
+                } else {
+                    $out[$color_prop] = ['$$type' => 'color', 'value' => $val];
+                }
+            }
             return $out;
         };
 
@@ -301,6 +326,14 @@ trait ECF_Framework_Native_Elementor_Data_Trait {
         }
 
         foreach ($spacing as $name => $value) {
+            $value = trim((string) $value);
+            // Skip empty/unit-only values ('', 'px', 'rem') — pushing those into
+            // Elementor's registry corrupts the editor's :root output. Frontend
+            // CSS still handles fallbacks; missing a key here just leaves the
+            // previous (good) registry entry intact.
+            if ($value === '' || preg_match('/^(px|rem|em|%)$/i', $value)) {
+                continue;
+            }
             $payloads['ecf-space-' . sanitize_key($name)] = [
                 'type' => 'global-size-variable',
                 'value' => $value,
@@ -308,9 +341,13 @@ trait ECF_Framework_Native_Elementor_Data_Trait {
         }
 
         foreach ($settings['radius'] as $row) {
+            $rvalue = trim((string) $this->radius_css_value($row, 375, 1280, $root_base_px));
+            if ($rvalue === '' || preg_match('/^(px|rem|em|%)$/i', $rvalue)) {
+                continue;
+            }
             $payloads['ecf-radius-' . sanitize_key($row['name'])] = [
                 'type' => 'global-size-variable',
-                'value' => $this->radius_css_value($row, 375, 1280, $root_base_px),
+                'value' => $rvalue,
             ];
         }
 

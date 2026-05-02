@@ -116,7 +116,14 @@ trait ECF_Framework_Output_CSS_Trait {
         if ($base_body_font_weight === '') {
             $base_body_font_weight = $this->typography_row_value('weights', 'normal', '400');
         }
-        $css = ":root{font-size:" . esc_attr($root_font_css) . ";";
+        // Use :root:root (specificity 0,0,2) instead of plain :root (0,0,1).
+        // Elementor v4's atomic-widget variable renderer also emits :root{...}
+        // but rejects complex values (clamp/calc) for global-size-variable —
+        // it writes empty unit-only declarations like '--ecf-space-m:px;' that
+        // cascade-override Layrix's clamp(). The doubled selector outranks
+        // Elementor's :root regardless of DOM order, so token-driven spacing,
+        // radius and type sizes resolve to real values in the editor preview.
+        $css = ":root,:root:root{font-size:" . esc_attr($root_font_css) . ";";
         foreach ($settings['colors'] ?? [] as $row) {
             $n = sanitize_key($row['name']);
             $v = esc_attr($this->sanitize_css_color_value($row['value'], $row['format'] ?? ''));
@@ -227,6 +234,19 @@ trait ECF_Framework_Output_CSS_Trait {
         if ($settings['enabled_components']['buttons'] === '1') {
             $css .= ".ecf-btn,.cf-btn{display:inline-flex;align-items:center;justify-content:center;padding:var(--ecf-space-s,8px) var(--ecf-space-m,16px);border-radius:var(--ecf-radius-m,12px);text-decoration:none;border:0;cursor:pointer;}.ecf-btn-primary,.cf-btn-primary{background:var(--ecf-color-primary,#3b82f6);color:#fff;}.ecf-btn-secondary,.cf-btn-secondary{background:var(--ecf-color-secondary,#64748b);color:#fff;}";
         }
+        // Neutralize Elementor v4 atomic-widget hard-coded button defaults
+        // (.elementor .e-button-base { background:#375EFB } and
+        //  .elementor .e-form-submit-button-base { background:#000;color:#fff })
+        // when the ecf-button auto-class is present. Specificity (0,3,0) beats
+        // Elementor's (0,2,0), so transparent + currentColor + token-driven
+        // padding/radius/font from the synced ecf-button Global Class win.
+        $css .= ".elementor .e-button-base.ecf-button,"
+              . ".elementor .e-form-submit-button-base.ecf-button{"
+              . "background-color:transparent;"
+              . "color:currentColor;"
+              . "padding:var(--ecf-space-s,8px) var(--ecf-space-m,16px);"
+              . "border-radius:var(--ecf-radius-m,12px);"
+              . "}";
         $css .= $this->build_selected_utility_class_css($settings);
         $css .= ".ecf-container-boxed,.cf-container-boxed,.elementor .ecf-container-boxed,.elementor .cf-container-boxed{max-width:min(calc(100% - 2rem), var(--ecf-container-boxed))!important;margin-inline:auto!important;margin-left:auto!important;margin-right:auto!important;width:100%!important;}";
 
@@ -257,7 +277,7 @@ trait ECF_Framework_Output_CSS_Trait {
     }
 
     private function css_transient_key(): string {
-        return 'ecf_generated_css_v1';
+        return 'ecf_generated_css_v3';
     }
 
     public function clear_css_cache(): void {
@@ -269,6 +289,21 @@ trait ECF_Framework_Output_CSS_Trait {
         if ($css === false) {
             $css = $this->build_generated_css();
             set_transient($this->css_transient_key(), $css, DAY_IN_SECONDS);
+        }
+        // In the Elementor editor canvas the same <body> hosts the editor UI
+        // chrome (Navigator panel, History panel, etc.). Applying our global
+        // body { color/font-size/font-weight/background } would corrupt those
+        // panels. Strip the global body + heading rules in editor context so
+        // only the :root { --ecf-* } variables (needed for ecf-* class CSS to
+        // resolve to real values) remain.
+        if ( current_action() === 'elementor/editor/wp_head' ) {
+            $css = preg_replace( '/\bbody\s*\{[^}]*\}/', '', $css );
+            $css = preg_replace( '/\bh1,h2,h3,h4,h5,h6(,p)?\s*\{[^}]*\}/', '', $css );
+            $css = preg_replace( '/\ba\s*\{[^}]*color\s*:\s*var\(--ecf-link-color[^}]*\}/', '', $css );
+            // Strip font-size:62.5% from :root — it changes the rem base for the
+            // whole editor (rem-based Elementor UI shrinks to 10px). The CSS
+            // custom properties stay intact; only the rem-recalibration is removed.
+            $css = preg_replace( '/(:root\s*\{[^}]*?)font-size\s*:\s*[^;]+;/', '$1', $css );
         }
         echo "<style id='ecf-framework-v010'>" . $css . "</style>";
     }

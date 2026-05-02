@@ -64,6 +64,15 @@ trait ECF_Framework_Hook_Registration_Trait {
         add_action('elementor/frontend/widget/before_render', [$this, 'apply_auto_classes_before_render']);
         add_action('elementor/elements/elements_registered', [$this, 'register_atomic_widgets'], 99);
         add_action('elementor/editor/after_enqueue_scripts', [$this, 'editor_assets']);
+        // The editor splits into TWO contexts:
+        //   1. Outer admin shell  → fires elementor/editor/wp_head
+        //   2. Inner preview iframe (where widgets render) → fires
+        //      wp_head AND elementor/preview/wp_head
+        // Hook all three so :root{--ecf-*} reaches every place a v4 atomic
+        // widget might pick it up. Without preview/wp_head, atomic-mode
+        // sandbox iframes can miss the wp_head emission entirely.
+        add_action('elementor/editor/wp_head', [$this, 'output_css'], 99);
+        add_action('elementor/preview/wp_head', [$this, 'output_css'], 99);
     }
 
     private function register_hooks() {

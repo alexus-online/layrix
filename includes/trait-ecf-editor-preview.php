@@ -3,7 +3,12 @@
 trait ECF_Framework_Editor_Preview_Trait {
     private function format_preview_number($number, $precision = 2) {
         $formatted = number_format((float) $number, $precision, '.', '');
-        return rtrim(rtrim($formatted, '0'), '.');
+        $trimmed   = rtrim(rtrim($formatted, '0'), '.');
+        // rtrim('0.000', '0') → '0.' → rtrim('.', '.') → '' for zero values.
+        // Returning '' produces invalid CSS like '--ecf-space-s:px;' (Elementor
+        // then registers the variable with an empty value). Always emit at least
+        // '0' so consumers get a parseable size like '0px'.
+        return $trimmed === '' ? '0' : $trimmed;
     }
 
     private function build_type_scale_preview($scale, $root_base_px = 16) {
@@ -261,7 +266,10 @@ trait ECF_Framework_Editor_Preview_Trait {
             }
             return;
         }
-        if ($name === 'button' || $name === 'e-button') {
+        if ($name === 'button' || $name === 'e-button' || $name === 'e-form-submit-button') {
+            // e-form-submit-button uses the same ecf-button class so Layrix's
+            // transparent-by-default + token-driven padding/radius/font apply
+            // uniformly across all button-like widgets.
             if ($is_enabled('auto_classes_buttons')) {
                 $element->add_render_attribute('_wrapper', 'class', 'ecf-button');
             }

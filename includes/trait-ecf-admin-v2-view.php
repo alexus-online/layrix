@@ -765,6 +765,70 @@ trait ECF_Framework_Admin_V2_View_Trait {
         </div>
       </div><!-- /Colors -->
 
+      <?php
+      /* Local helpers — same shape as the ones in the cookbook + settings
+         pages, scoped here so the Basisfarben block below can render
+         independently of where $tok / $token_label live elsewhere. */
+      $tok_label_local = function ( $var ) {
+          if ( strpos( $var, '--ecf-base-text-color' )       === 0 ) return __( 'Basis-Textfarbe',          'ecf-framework' );
+          if ( strpos( $var, '--ecf-base-background-color' ) === 0 ) return __( 'Basis-Hintergrundfarbe',   'ecf-framework' );
+          if ( strpos( $var, '--ecf-link-color' )            === 0 ) return __( 'Link-Farbe',               'ecf-framework' );
+          if ( strpos( $var, '--ecf-focus-color' )           === 0 ) return __( 'Fokus-Farbe',              'ecf-framework' );
+          if ( strpos( $var, '--ecf-focus-outline-width' )   === 0 ) return __( 'Fokus-Rahmen-Breite',      'ecf-framework' );
+          if ( strpos( $var, '--ecf-focus-outline-offset' )  === 0 ) return __( 'Fokus-Rahmen-Abstand',     'ecf-framework' );
+          return '';
+      };
+      $tok_local = function ( $vars = [] ) use ( $tok_label_local ) {
+          $vars = array_filter( (array) $vars );
+          if ( ! $vars ) {
+              return;
+          }
+          ?>
+          <div class="v2-tok">
+              <span class="v2-tok-l"><?php esc_html_e( 'VAR', 'ecf-framework' ); ?></span>
+              <?php foreach ( $vars as $v ) :
+                  $label = $tok_label_local( $v );
+              ?><code<?php if ( $label ) : ?> data-v2-tip="<?php echo esc_attr( $label ); ?>"<?php endif; ?>><?php echo esc_html( $v ); ?></code><?php endforeach; ?>
+          </div>
+          <?php
+      };
+      ?>
+
+      <!-- Base Colors (moved from Einstellungen → Basisfarben) -->
+      <div class="v2-sec">
+        <div class="v2-sh"><?php esc_html_e( 'Basisfarben', 'ecf-framework' ); ?></div>
+        <div class="v2-sg">
+          <div class="v2-sr">
+            <div>
+              <div class="v2-sl"><?php esc_html_e( 'Textfarbe', 'ecf-framework' ); ?></div>
+              <?php $tok_local( [ '--ecf-base-text-color' ] ); ?>
+            </div>
+            <input type="color" class="v2-si v2-si--color" name="<?php echo esc_attr( $opt ); ?>[base_text_color]" value="<?php echo esc_attr( $settings['base_text_color'] ?? '#0f172a' ); ?>">
+          </div>
+          <div class="v2-sr">
+            <div>
+              <div class="v2-sl"><?php esc_html_e( 'Hintergrundfarbe', 'ecf-framework' ); ?></div>
+              <?php $tok_local( [ '--ecf-base-background-color' ] ); ?>
+            </div>
+            <input type="color" class="v2-si v2-si--color" name="<?php echo esc_attr( $opt ); ?>[base_background_color]" value="<?php echo esc_attr( $settings['base_background_color'] ?? '#f8fafc' ); ?>">
+          </div>
+          <div class="v2-sr">
+            <div>
+              <div class="v2-sl"><?php esc_html_e( 'Link-Farbe', 'ecf-framework' ); ?></div>
+              <?php $tok_local( [ '--ecf-link-color' ] ); ?>
+            </div>
+            <input type="color" class="v2-si v2-si--color" name="<?php echo esc_attr( $opt ); ?>[link_color]" value="<?php echo esc_attr( $settings['link_color'] ?? '#4f46e5' ); ?>">
+          </div>
+          <div class="v2-sr">
+            <div>
+              <div class="v2-sl"><?php esc_html_e( 'Fokus-Farbe', 'ecf-framework' ); ?></div>
+              <?php $tok_local( [ '--ecf-focus-color', '--ecf-focus-outline-width', '--ecf-focus-outline-offset' ] ); ?>
+            </div>
+            <input type="color" class="v2-si v2-si--color" name="<?php echo esc_attr( $opt ); ?>[focus_color]" value="<?php echo esc_attr( $settings['focus_color'] ?? '#0ea5e9' ); ?>">
+          </div>
+        </div>
+      </div>
+
     </div><!-- /content -->
 
     <aside class="v2-aside" id="v2-color-aside">
@@ -2658,11 +2722,37 @@ trait ECF_Framework_Admin_V2_View_Trait {
               $info_data['accent']  = $preset['preview']['accent']  ?? '';
               $info_data['desc']    = $preset['description'] ?? '';
             ?>
+            <?php
+              $p_colors  = $preset['preset']['colors']  ?? [];
+              $p_general = $preset['preset']['general'] ?? [];
+              $color_keys = function ( $name ) use ( $p_colors ) {
+                  foreach ( $p_colors as $row ) {
+                      if ( ( $row['name'] ?? null ) === $name ) {
+                          return $row['value'] ?? '';
+                      }
+                  }
+                  return $p_colors[ $name ] ?? '';
+              };
+              $swatches = [
+                  [ __( 'Primary',          'ecf-framework' ), $color_keys( 'primary' )                         ],
+                  [ __( 'Secondary',        'ecf-framework' ), $color_keys( 'secondary' )                       ],
+                  [ __( 'Accent',           'ecf-framework' ), $color_keys( 'accent' )                          ],
+                  [ __( 'Surface',          'ecf-framework' ), $color_keys( 'surface' )                         ],
+                  [ __( 'Text',             'ecf-framework' ), $p_general['base_text_color']       ?? ''        ],
+                  [ __( 'Background',       'ecf-framework' ), $p_general['base_background_color'] ?? ''        ],
+                  [ __( 'Link',             'ecf-framework' ), $p_general['link_color']            ?? ''        ],
+              ];
+            ?>
             <div class="v2-preset-card" data-category="<?php echo esc_attr( $preset['category'] ); ?>">
               <div class="v2-preset-swatch" style="background:<?php echo esc_attr( $preset['preview']['background'] ); ?>">
-                <div style="display:flex;gap:4px;margin-bottom:8px">
-                  <span style="width:14px;height:14px;border-radius:3px;background:<?php echo esc_attr( $preset['preview']['primary'] ); ?>" title="Primary: <?php echo esc_attr( $preset['preview']['primary'] ); ?>"></span>
-                  <span style="width:14px;height:14px;border-radius:3px;background:<?php echo esc_attr( $preset['preview']['accent'] ); ?>" title="Accent: <?php echo esc_attr( $preset['preview']['accent'] ); ?>"></span>
+                <div style="display:flex;gap:4px;margin-bottom:8px;flex-wrap:wrap">
+                  <?php foreach ( $swatches as $sw ) :
+                      $label = $sw[0];
+                      $value = $sw[1];
+                      if ( $value === '' ) continue;
+                  ?>
+                  <span style="width:14px;height:14px;border-radius:3px;background:<?php echo esc_attr( $value ); ?>;border:1px solid rgba(0,0,0,.08)" title="<?php echo esc_attr( $label . ': ' . $value ); ?>"></span>
+                  <?php endforeach; ?>
                 </div>
                 <div style="font-family:<?php echo esc_attr( $preset['heading_font_stack'] ); ?>;font-size:13px;font-weight:700;line-height:1.3;color:#111"><?php echo esc_html( $preset['heading_sample'] ); ?></div>
                 <div style="font-family:<?php echo esc_attr( $preset['body_font_stack'] ); ?>;font-size:var(--v2-btn-fs, 12px);margin-top:3px;color:#555;line-height:1.4"><?php echo esc_html( $preset['body_sample'] ); ?></div>
@@ -3135,37 +3225,16 @@ trait ECF_Framework_Admin_V2_View_Trait {
         </div>
       </div>
 
-      <!-- Base Colors -->
+      <!-- Base Colors moved to Farben-Page (Sidebar → Farben) -->
       <div class="v2-sec">
         <div class="v2-sh"><?php esc_html_e( 'Basisfarben', 'ecf-framework' ); ?></div>
         <div class="v2-sg">
-          <div class="v2-sr">
+          <div class="v2-sr" style="align-items:center">
             <div>
-              <div class="v2-sl"><?php esc_html_e( 'Textfarbe', 'ecf-framework' ); ?></div>
-              <?php $tok( [ '--ecf-base-text-color' ] ); ?>
+              <div class="v2-sl"><?php esc_html_e( 'Body text, body background, link and focus colors', 'ecf-framework' ); ?></div>
+              <div class="v2-sh2"><?php esc_html_e( 'These settings have moved to the Colors page. Click on the right to jump there.', 'ecf-framework' ); ?></div>
             </div>
-            <input type="color" class="v2-si v2-si--color" name="<?php echo esc_attr( $opt ); ?>[base_text_color]" value="<?php echo esc_attr( $settings['base_text_color'] ?? '#0f172a' ); ?>">
-          </div>
-          <div class="v2-sr">
-            <div>
-              <div class="v2-sl"><?php esc_html_e( 'Hintergrundfarbe', 'ecf-framework' ); ?></div>
-              <?php $tok( [ '--ecf-base-background-color' ] ); ?>
-            </div>
-            <input type="color" class="v2-si v2-si--color" name="<?php echo esc_attr( $opt ); ?>[base_background_color]" value="<?php echo esc_attr( $settings['base_background_color'] ?? '#f8fafc' ); ?>">
-          </div>
-          <div class="v2-sr">
-            <div>
-              <div class="v2-sl"><?php esc_html_e( 'Link-Farbe', 'ecf-framework' ); ?></div>
-              <?php $tok( [ '--ecf-link-color' ] ); ?>
-            </div>
-            <input type="color" class="v2-si v2-si--color" name="<?php echo esc_attr( $opt ); ?>[link_color]" value="<?php echo esc_attr( $settings['link_color'] ?? '#4f46e5' ); ?>">
-          </div>
-          <div class="v2-sr">
-            <div>
-              <div class="v2-sl"><?php esc_html_e( 'Fokus-Farbe', 'ecf-framework' ); ?></div>
-              <?php $tok( [ '--ecf-focus-color', '--ecf-focus-outline-width', '--ecf-focus-outline-offset' ] ); ?>
-            </div>
-            <input type="color" class="v2-si v2-si--color" name="<?php echo esc_attr( $opt ); ?>[focus_color]" value="<?php echo esc_attr( $settings['focus_color'] ?? '#0ea5e9' ); ?>">
+            <button type="button" class="v2-btn v2-btn--ghost" onclick="document.querySelector('[data-v2-page=colors]').click()">→ <?php esc_html_e( 'Farben', 'ecf-framework' ); ?></button>
           </div>
         </div>
       </div>

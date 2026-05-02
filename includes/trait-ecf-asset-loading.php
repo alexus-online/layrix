@@ -585,10 +585,21 @@ trait ECF_Framework_Asset_Loading_Trait {
                 // Silently fall back to no pre-fill if variable repo is unavailable.
             }
         }
+        // Elementor v4 atomic preview iframe is sandboxed/client-rendered and
+        // does NOT fire wp_head or elementor/preview/wp_head. So pass the
+        // runtime CSS to JS and let it <style>-inject directly into the
+        // iframe's <head> on preview:loaded. This is the only reliable way
+        // to get :root{--ecf-*} into the atomic preview context.
+        $runtime_css = get_transient($this->css_transient_key());
+        if ($runtime_css === false) {
+            $runtime_css = $this->build_generated_css();
+            set_transient($this->css_transient_key(), $runtime_css, DAY_IN_SECONDS);
+        }
         wp_localize_script('ecf-atomic-section-editor', 'ecfAutoClasses', [
             'masterEnabled'      => !empty($settings['auto_classes_enabled']),
             'headingsEnabled'    => $auto_default_on('auto_classes_headings'),
             'buttonsEnabled'     => $auto_default_on('auto_classes_buttons'),
+            'runtimeCss'         => $runtime_css,
             'headingClassIds'    => [
                 'h1' => $cls_id('ecf-heading-1'),
                 'h2' => $cls_id('ecf-heading-2'),

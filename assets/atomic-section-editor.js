@@ -57,7 +57,14 @@
     return container.model.get('elType') || null;
   }
   function isHeading(c) { return getElementKey(c) === 'e-heading'; }
-  function isButton(c)  { return getElementKey(c) === 'e-button'; }
+  function isButton(c)  {
+    /* Treat e-button and e-form-submit-button as the same — both should get
+       the ecf-button auto-class so they pick up Layrix's button defaults
+       (transparent bg, token-driven padding/radius/font) and are not stuck
+       with Elementor's hard-coded #375EFB / #000 base styles. */
+    var key = getElementKey(c);
+    return key === 'e-button' || key === 'e-form-submit-button';
+  }
   function isLayrixSection(c) { return getElementKey(c) === 'e-layrix-section'; }
 
   function getCurrentClassValues(container) {
@@ -102,7 +109,10 @@
     if (!auto || !auto.headingsEnabled) return null;
     if (!container || !container.settings) return null;
     var rawTag = container.settings.get ? container.settings.get('tag') : null;
-    var tag = unwrapTag(rawTag) || 'h1';
+    /* Elementor's atomic e-heading widget defaults to h2 when no tag is
+       explicitly set on a fresh insert — match that so the initial auto-class
+       (ecf-heading-2) reflects the actually rendered tag. */
+    var tag = unwrapTag(rawTag) || 'h2';
     var ids = auto.headingClassIds || {};
     return ids[tag] || null;
   }
@@ -183,16 +193,53 @@
     return true;
   }
 
+  /* ────────────────────────────────────────────────────────────────────
+   * Inject runtime CSS into the preview iframe.
+   * v4 atomic preview is sandboxed — wp_head doesn't fire there, so the
+   * --ecf-* design tokens never reach the iframe naturally. We push them
+   * in via DOM injection on every preview load.
+   * ────────────────────────────────────────────────────────────────── */
+  var STYLE_ID = 'ecf-framework-v010';
+  function getPreviewDoc() {
+    if (window.elementor && window.elementor.$preview && window.elementor.$preview[0]) {
+      try { return window.elementor.$preview[0].contentDocument; } catch (e) { return null; }
+    }
+    return null;
+  }
+  function injectRuntimeCss() {
+    if (!auto || !auto.runtimeCss) return;
+    var doc = getPreviewDoc();
+    if (!doc || !doc.head) return;
+    var existing = doc.getElementById(STYLE_ID);
+    if (existing) {
+      if (existing.textContent !== auto.runtimeCss) existing.textContent = auto.runtimeCss;
+      return;
+    }
+    var style = doc.createElement('style');
+    style.id = STYLE_ID;
+    style.textContent = auto.runtimeCss;
+    doc.head.appendChild(style);
+  }
+
   function init() {
     if (!auto) return;
     setupCommandListener();
     setTimeout(scanCurrentDocument, 200);
+    setTimeout(injectRuntimeCss, 200);
   }
 
   if (window.elementor && typeof window.elementor.on === 'function') {
     window.elementor.on('panel:init', function() { setTimeout(init, 50); });
-    window.elementor.on('preview:loaded', function() { setTimeout(init, 100); });
-    window.elementor.on('document:loaded', function() { setTimeout(scanCurrentDocument, 100); });
+    window.elementor.on('preview:loaded', function() {
+      setTimeout(init, 100);
+      setTimeout(injectRuntimeCss, 150);
+      setTimeout(injectRuntimeCss, 600);
+    });
+    window.elementor.on('document:loaded', function() {
+      setTimeout(scanCurrentDocument, 100);
+      setTimeout(injectRuntimeCss, 100);
+    });
   }
   setTimeout(init, 600);
+  setTimeout(injectRuntimeCss, 1200);
 }());
