@@ -15,7 +15,8 @@ docs/
 dist/
 src/
 tests/
-scripts/
+scripts/*
+!scripts/build-release.sh
 build.js
 package.json
 package-lock.json
