@@ -4036,34 +4036,18 @@ trait ECF_Framework_Admin_V2_View_Trait {
 
 <!-- Konflikt-Modal -->
 <div id="v2-conflict-modal" class="v2-modal-overlay" hidden>
-  <div class="v2-modal-box" style="width:640px;max-width:calc(100vw - 32px)">
+  <div class="v2-modal-box" style="width:460px">
     <div class="v2-modal-head">
       <span>⚠ <?php esc_html_e( 'Konflikte erkannt', 'ecf-framework' ); ?></span>
       <button type="button" class="v2-modal-close" id="v2-conflict-cancel">✕</button>
     </div>
     <div class="v2-modal-body">
-      <p style="font-size:var(--v2-ui-base-fs, 13px);color:var(--v2-text2);margin:0 0 12px">
-        <?php esc_html_e( 'Folgende Werte wurden in Elementor angepasst und weichen vom Layrix-Backend ab. Wähle pro Konflikt was gewinnen soll.', 'ecf-framework' ); ?>
-      </p>
-
-      <!-- Color conflicts (existing) -->
-      <div id="v2-conflict-list" style="max-height:160px;overflow-y:auto;margin-bottom:12px"></div>
-
-      <!-- Class-prop conflicts (new) -->
-      <div id="v2-class-conflict-block" hidden>
-        <div style="display:flex;align-items:center;justify-content:space-between;margin:6px 0 8px">
-          <strong style="font-size:var(--v2-ui-base-fs, 13px)"><?php esc_html_e( 'Klassen-Werte', 'ecf-framework' ); ?></strong>
-          <div style="display:flex;gap:6px">
-            <button type="button" class="v2-btn v2-btn--ghost" data-conflict-bulk="elementor_wins" style="padding:2px 8px;font-size:var(--v2-btn-fs, 12px)"><?php esc_html_e( 'Alle: Elementor übernehmen', 'ecf-framework' ); ?></button>
-            <button type="button" class="v2-btn v2-btn--ghost" data-conflict-bulk="layrix_wins"    style="padding:2px 8px;font-size:var(--v2-btn-fs, 12px)"><?php esc_html_e( 'Alle: Layrix erzwingen', 'ecf-framework' ); ?></button>
-          </div>
-        </div>
-        <div id="v2-class-conflict-list" style="max-height:240px;overflow-y:auto;border:1px solid var(--v2-border);border-radius:6px"></div>
-      </div>
+      <p style="font-size:12px;color:var(--v2-text2);margin:0 0 12px"><?php esc_html_e( 'Folgende Tokens wurden in Elementor verändert und weichen von Layrix ab. Beim Sync überschreibt Layrix diese Werte.', 'ecf-framework' ); ?></p>
+      <div id="v2-conflict-list" style="max-height:200px;overflow-y:auto"></div>
     </div>
     <div class="v2-modal-foot">
       <button type="button" class="v2-btn v2-btn--ghost" id="v2-conflict-cancel2"><?php esc_html_e( 'Abbrechen', 'ecf-framework' ); ?></button>
-      <button type="button" class="v2-btn v2-btn--primary" id="v2-conflict-confirm"><?php esc_html_e( 'Sync mit Auswahl ausführen', 'ecf-framework' ); ?></button>
+      <button type="button" class="v2-btn v2-btn--primary" id="v2-conflict-confirm"><?php esc_html_e( 'Trotzdem sync', 'ecf-framework' ); ?></button>
     </div>
   </div>
 </div>

@@ -1,19 +1,5 @@
 # Changelog
 
-## 0.6.2 (2026-05-05)
-
-### Neu
-- **Konflikt-Detection beim manuellen Sync**: Wenn du in Elementor's Klassen-Editor an Layrix-Klassen (z.B. `ecf-button`, `ecf-heading-1`) einzelne Properties änderst (Padding, Schriftgröße, Border-Radius, Max-Width), erkennt Layrix das beim nächsten Klick auf „Sync mit Elementor" und zeigt ein Konflikt-Modal:
-  - Pro Konflikt-Zeile: Klasse, Property, Layrix-Backend-Wert, Elementor-Wert, Aktions-Dropdown
-  - **Default**: „Elementor übernehmen" — dein User-Wert in Elementor bleibt, Layrix-Backend wird automatisch auf den Elementor-Wert angepasst (Single-Source-of-Truth bleibt erhalten)
-  - Alternative: „Layrix erzwingen" — Backend-Wert gewinnt (heutiges Verhalten)
-  - Bulk-Buttons: „Alle: Elementor übernehmen" / „Alle: Layrix erzwingen" für schnelle Massenwahl
-- Neue REST-Endpoints: `GET /sync-conflicts` (Detection) und `POST /sync-conflicts/resolve` (Backend auf Elementor-Werte angleichen).
-- Detection läuft pro Klasse + Property isoliert — eine Änderung an `ecf-heading-1` löst keine Konflikt-Anzeige für `ecf-heading-2..5` aus.
-
-### Bekannte Limitierung
-- Auto-Sync (nach Backend-Save) läuft weiter wie bisher (Layrix-Backend gewinnt). Konflikt-Modal nur beim **manuellen** Sync-Button. Phase 2 (siehe Ideen-Liste) bringt Detection auch in den Auto-Sync-Pfad.
-
 ## 0.6.1.2 (2026-05-05)
 
 ### Fix (kritisch)

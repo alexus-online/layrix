@@ -170,8 +170,6 @@ trait ECF_Framework_Asset_Loading_Trait {
             'fontSearchRestUrl' => esc_url_raw(rest_url('ecf-framework/v1/fonts/search')),
             'layoutRestUrl' => esc_url_raw(rest_url('ecf-framework/v1/layout')),
             'elementorValuesRestUrl' => esc_url_raw(rest_url('ecf-framework/v1/elementor-values')),
-            'syncConflictsRestUrl'   => esc_url_raw(rest_url('ecf-framework/v1/sync-conflicts')),
-            'syncConflictsResolveRestUrl' => esc_url_raw(rest_url('ecf-framework/v1/sync-conflicts/resolve')),
             'customPresetsRestUrl' => esc_url_raw(rest_url('ecf-framework/v1/custom-presets')),
             'resetDefaultsUrl'    => esc_url_raw(rest_url('ecf-framework/v1/reset-defaults')),
 'restNonce' => wp_create_nonce('wp_rest'),

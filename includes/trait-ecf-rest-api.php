@@ -36,24 +36,6 @@ trait ECF_Framework_REST_API_Trait {
             'permission_callback' => [$this, 'rest_manage_options_permission'],
         ]);
 
-        // Detect divergences between Layrix backend and Elementor's class
-        // registry for Layrix-managed classes. Used by the manual-sync UI to
-        // prompt the user before overwriting their Elementor-side edits.
-        register_rest_route('ecf-framework/v1', '/sync-conflicts', [
-            'methods'             => \WP_REST_Server::READABLE,
-            'callback'            => [$this, 'rest_sync_conflicts'],
-            'permission_callback' => [$this, 'rest_manage_options_permission'],
-        ]);
-
-        // Apply user-chosen conflict resolutions: for each (class, prop) marked
-        // as "elementor_wins", copy the Elementor value back into the Layrix
-        // backend before the next sync runs.
-        register_rest_route('ecf-framework/v1', '/sync-conflicts/resolve', [
-            'methods'             => \WP_REST_Server::CREATABLE,
-            'callback'            => [$this, 'rest_sync_conflicts_resolve'],
-            'permission_callback' => [$this, 'rest_manage_options_permission'],
-        ]);
-
         // Owner-only "Ideen" notes — Application Password authenticated.
         // Permission self-checks via is_layrix_owner() (email match), so even
         // a valid app-password from another user won't pass.
@@ -153,64 +135,6 @@ trait ECF_Framework_REST_API_Trait {
 
     public function rest_manage_options_permission() {
         return $this->can_manage_framework();
-    }
-
-    public function rest_sync_conflicts(\WP_REST_Request $request) {
-        if (!method_exists($this, 'detect_class_sync_conflicts')) {
-            return rest_ensure_response([
-                'success' => true,
-                'conflicts' => [],
-            ]);
-        }
-        $conflicts = $this->detect_class_sync_conflicts();
-        return rest_ensure_response([
-            'success'   => true,
-            'conflicts' => $conflicts,
-            'count'     => count($conflicts),
-        ]);
-    }
-
-    public function rest_sync_conflicts_resolve(\WP_REST_Request $request) {
-        $payload = (array) $request->get_json_params();
-        $resolutions = isset($payload['resolutions']) && is_array($payload['resolutions'])
-            ? $payload['resolutions'] : [];
-        if (empty($resolutions)) {
-            return rest_ensure_response(['success' => true, 'updated' => 0]);
-        }
-        $settings = $this->get_settings();
-        if (!isset($settings['layrix_class_defaults']) || !is_array($settings['layrix_class_defaults'])) {
-            $settings['layrix_class_defaults'] = [];
-        }
-        $updated = 0;
-        $allowed_pattern = '/^[a-z][a-z0-9_-]*$/i';
-        foreach ($resolutions as $r) {
-            if (!is_array($r)) continue;
-            $action = (string) ($r['action'] ?? '');
-            if ($action !== 'elementor_wins') continue;
-            $class = (string) ($r['class'] ?? '');
-            $prop  = (string) ($r['prop'] ?? '');
-            $value = (string) ($r['elementor'] ?? '');
-            if ($class === '' || $prop === '' || $value === '') continue;
-            // Only accept token-label-style values (e.g. ecf-space-m). Literal
-            // CSS values like "16px" or hex colours are rejected here — the
-            // backend stores token labels only; literals stay in Elementor.
-            if (!preg_match($allowed_pattern, $value)) continue;
-            $settings['layrix_class_defaults'][$class][$prop] = $value;
-            $updated++;
-        }
-        if ($updated > 0) {
-            $sanitized = $this->sanitize_settings($settings);
-            update_option($this->option_name, $sanitized);
-            $this->settings_cache = $sanitized;
-            $this->clear_css_cache();
-            if (method_exists($this, 'clear_elementor_sync_caches')) {
-                $this->clear_elementor_sync_caches();
-            }
-        }
-        return rest_ensure_response([
-            'success' => true,
-            'updated' => $updated,
-        ]);
     }
 
     public function rest_get_settings(\WP_REST_Request $request) {

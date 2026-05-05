@@ -5115,7 +5115,6 @@
 
   /* ── Konflikterkennung beim Sync ────────────────────────────────────── */
   var _syncConflicts = [];
-  var _classConflicts = [];
   var _pendingSyncBtn = null;
   var _pendingSyncForm = null;
 
@@ -5123,14 +5122,20 @@
     if (form) { form.submit(); } else { ecfV2Sync(btn); }
   }
 
-  function _detectColorConflicts() {
-    if (!window.ecfAdmin || !ecfAdmin.elementorValuesRestUrl) return Promise.resolve([]);
-    return fetch(ecfAdmin.elementorValuesRestUrl, {
+  function _runSyncAfterCheck(btn, form) {
+    if (!window.ecfAdmin || !ecfAdmin.elementorValuesRestUrl) {
+      _doSync(btn, form);
+      return;
+    }
+    fetch(ecfAdmin.elementorValuesRestUrl, {
       headers: { 'X-WP-Nonce': ecfAdmin.restNonce },
     })
     .then(function(r) { return r.json(); })
     .then(function(data) {
-      if (!data || !data.available || !data.values) return [];
+      if (!data || !data.available || !data.values) {
+        _doSync(btn, form);
+        return;
+      }
       var elValues = data.values;
       var settings = ecfV2CollectData();
       var colors   = (settings && settings.colors) ? settings.colors : [];
@@ -5143,74 +5148,16 @@
           conflicts.push({ name: name, layrix: layrixVal, elementor: elValues[elKey] });
         }
       });
-      return conflicts;
-    })
-    .catch(function() { return []; });
-  }
-
-  function _detectClassConflicts() {
-    if (!window.ecfAdmin || !ecfAdmin.syncConflictsRestUrl) return Promise.resolve([]);
-    return fetch(ecfAdmin.syncConflictsRestUrl, {
-      headers: { 'X-WP-Nonce': ecfAdmin.restNonce },
-    })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      return (data && data.success && Array.isArray(data.conflicts)) ? data.conflicts : [];
-    })
-    .catch(function() { return []; });
-  }
-
-  function _renderClassConflicts(conflicts) {
-    var block = document.getElementById('v2-class-conflict-block');
-    var listEl = document.getElementById('v2-class-conflict-list');
-    if (!block || !listEl) return;
-    if (!conflicts.length) {
-      block.hidden = true;
-      listEl.innerHTML = '';
-      return;
-    }
-    block.hidden = false;
-    /* Default per row: elementor_wins (User-Wert in Elementor bleibt → Backend wird angepasst). */
-    listEl.innerHTML = conflicts.map(function(c, idx) {
-      var rowKey = c.class + '__' + c.prop;
-      return '<div class="v2-class-conflict-row" data-conflict-key="' + escapeHtml(rowKey) + '" data-conflict-class="' + escapeHtml(c.class) + '" data-conflict-prop="' + escapeHtml(c.prop) + '" data-conflict-elementor="' + escapeHtml(c.elementor) + '" style="display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;padding:8px 10px;border-bottom:1px solid var(--v2-border)">'
-        + '<div>'
-          + '<div style="font-size:var(--v2-ui-base-fs, 13px);font-weight:600">' + escapeHtml(c.class_label || c.class) + '</div>'
-          + '<div style="font-size:var(--v2-btn-fs, 12px);color:var(--v2-text3);font-family:var(--v2-mono)">' + escapeHtml(c.prop) + '</div>'
-        + '</div>'
-        + '<div style="text-align:right">'
-          + '<div style="font-size:var(--v2-btn-fs, 12px);color:var(--v2-text3)">Layrix</div>'
-          + '<code style="font-size:var(--v2-btn-fs, 12px);color:var(--v2-text2)">' + escapeHtml(c.backend) + '</code>'
-        + '</div>'
-        + '<div style="text-align:right">'
-          + '<div style="font-size:var(--v2-btn-fs, 12px);color:var(--v2-text3)">Elementor</div>'
-          + '<code style="font-size:var(--v2-btn-fs, 12px);color:var(--v2-accent2)">' + escapeHtml(c.elementor) + '</code>'
-        + '</div>'
-        + '<select class="v2-si v2-si--sm v2-conflict-action" style="max-width:180px">'
-          + '<option value="elementor_wins" selected>Elementor übernehmen</option>'
-          + '<option value="layrix_wins">Layrix erzwingen</option>'
-        + '</select>'
-        + '</div>';
-    }).join('');
-  }
-
-  function _runSyncAfterCheck(btn, form) {
-    Promise.all([_detectColorConflicts(), _detectClassConflicts()])
-    .then(function(results) {
-      var colorConflicts = results[0] || [];
-      var classConflicts = results[1] || [];
-      if (!colorConflicts.length && !classConflicts.length) {
+      if (!conflicts.length) {
         _doSync(btn, form);
         return;
       }
-      _syncConflicts = colorConflicts;
-      _classConflicts = classConflicts;
+      _syncConflicts = conflicts;
       _pendingSyncBtn = btn;
       _pendingSyncForm = form;
-
       var listEl = document.getElementById('v2-conflict-list');
       if (listEl) {
-        listEl.innerHTML = colorConflicts.map(function(c) {
+        listEl.innerHTML = conflicts.map(function(c) {
           return '<div class="v2-conflict-row">'
             + '<span class="v2-conflict-name">--ecf-color-' + escapeHtml(c.name) + '</span>'
             + '<span class="v2-conflict-vals">'
@@ -5222,11 +5169,7 @@
             + '</span>'
             + '</div>';
         }).join('');
-        listEl.style.display = colorConflicts.length ? '' : 'none';
       }
-
-      _renderClassConflicts(classConflicts);
-
       var modal = document.getElementById('v2-conflict-modal');
       if (modal) modal.hidden = false;
     })
@@ -5234,18 +5177,6 @@
       _doSync(btn, form);
     });
   }
-
-  /* Bulk-Action-Buttons im Modal */
-  document.addEventListener('click', function(e) {
-    var bulkBtn = e.target.closest('[data-conflict-bulk]');
-    if (!bulkBtn) return;
-    var action = bulkBtn.dataset.conflictBulk;
-    var rows = document.querySelectorAll('.v2-class-conflict-row');
-    rows.forEach(function(row) {
-      var sel = row.querySelector('.v2-conflict-action');
-      if (sel) sel.value = action;
-    });
-  });
 
   /* Wire up conflict modal buttons */
   document.addEventListener('click', function(e) {
@@ -5256,45 +5187,10 @@
     }
     if (e.target.id === 'v2-conflict-confirm') {
       var modal2 = document.getElementById('v2-conflict-modal');
-      /* Sammle Klassen-Konflikt-Resolutionen aus den Selects.
-         Nur "elementor_wins" geht an den Resolve-Endpoint (kopiert
-         Elementor-Wert ins Backend); "layrix_wins" braucht keine Aktion,
-         der Sync schreibt eh Backend → Elementor. */
-      var resolutions = [];
-      document.querySelectorAll('.v2-class-conflict-row').forEach(function(row) {
-        var sel = row.querySelector('.v2-conflict-action');
-        if (!sel) return;
-        if (sel.value !== 'elementor_wins') return;
-        resolutions.push({
-          class: row.dataset.conflictClass,
-          prop: row.dataset.conflictProp,
-          elementor: row.dataset.conflictElementor,
-          action: 'elementor_wins',
-        });
-      });
-      var btn = _pendingSyncBtn, form = _pendingSyncForm;
+      if (modal2) modal2.hidden = true;
+      _doSync(_pendingSyncBtn, _pendingSyncForm);
       _pendingSyncBtn = null;
       _pendingSyncForm = null;
-
-      var afterResolve = function() {
-        if (modal2) modal2.hidden = true;
-        _doSync(btn, form);
-      };
-      if (resolutions.length && window.ecfAdmin && ecfAdmin.syncConflictsResolveRestUrl) {
-        fetch(ecfAdmin.syncConflictsResolveRestUrl, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'X-WP-Nonce': ecfAdmin.restNonce,
-          },
-          body: JSON.stringify({ resolutions: resolutions }),
-        })
-        .then(function(r) { return r.json(); })
-        .then(afterResolve)
-        .catch(afterResolve);
-      } else {
-        afterResolve();
-      }
     }
   });
 
