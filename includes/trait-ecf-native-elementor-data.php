@@ -596,22 +596,46 @@ trait ECF_Framework_Native_Elementor_Data_Trait {
             $key = strtolower($label);
             if (isset($label_to_id[$key])) {
                 $id = $label_to_id[$key];
-                // Existing-wins merge for backward compat (preserves any user
-                // customization on the class). EXCEPTION: when Layrix has
-                // meaningful variant props in the payload, those override the
-                // existing variants — so Layrix-managed defaults (font-size,
-                // line-height, max-width references) flow through to Elementor.
+                // Existing-wins merge for top-level fields (preserves user
+                // customization on the class). For variants we deep-merge
+                // per (breakpoint+state): Layrix overrides ONLY the prop keys
+                // it manages on each matching variant; user-added props
+                // (background-color, custom hover/focus variants etc.) stay
+                // untouched. New variants from the payload that have no
+                // existing match are appended.
                 $merged = array_merge(['id' => $id], $payload, $items[$id]);
                 $payload_variants = $payload['variants'] ?? [];
-                $payload_has_props = false;
-                foreach ($payload_variants as $variant) {
-                    if (!empty($variant['props']) && is_array($variant['props'])) {
-                        $payload_has_props = true;
-                        break;
+                $existing_variants = is_array($items[$id]['variants'] ?? null) ? $items[$id]['variants'] : [];
+                $variant_meta_key = static function ($meta) {
+                    if (!is_array($meta)) return 'desktop|';
+                    $bp = (string) ($meta['breakpoint'] ?? 'desktop');
+                    $state = $meta['state'] ?? null;
+                    return $bp . '|' . ($state === null ? '' : (string) $state);
+                };
+                $merged_by_key = [];
+                foreach ($existing_variants as $ev) {
+                    if (!is_array($ev)) continue;
+                    $merged_by_key[$variant_meta_key($ev['meta'] ?? [])] = $ev;
+                }
+                foreach ($payload_variants as $pv) {
+                    if (!is_array($pv)) continue;
+                    $key = $variant_meta_key($pv['meta'] ?? []);
+                    $payload_props = is_array($pv['props'] ?? null) ? $pv['props'] : [];
+                    if (isset($merged_by_key[$key])) {
+                        $existing_props = is_array($merged_by_key[$key]['props'] ?? null)
+                            ? $merged_by_key[$key]['props'] : [];
+                        // Override only Layrix-managed prop keys, keep the rest.
+                        foreach ($payload_props as $pk => $pval) {
+                            $existing_props[$pk] = $pval;
+                        }
+                        $merged_by_key[$key]['props'] = $existing_props;
+                    } else if (!empty($payload_props)) {
+                        // New variant from Layrix (different meta) — add it.
+                        $merged_by_key[$key] = $pv;
                     }
                 }
-                if ($payload_has_props) {
-                    $merged['variants'] = $payload_variants;
+                if (!empty($merged_by_key)) {
+                    $merged['variants'] = array_values($merged_by_key);
                 }
                 $items[$id] = $merged;
                 if (!in_array($id, $order, true)) {

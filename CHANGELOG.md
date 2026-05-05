@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.1.2 (2026-05-05)
+
+### Fix (kritisch)
+- **Class-Sync löschte User-Customizations auf Layrix-Klassen**. Wenn ein User in Elementor's Klassen-Editor an einer Layrix-Klasse (z.B. `ecf-button`) eigene Props gesetzt hat (Hintergrund, Hover-State, zusätzliche Variants), wurden diese beim nächsten Sync (z.B. nach Token-Änderung im Layrix-Backend) komplett überschrieben — Layrix hat die kompletten Variants ersetzt statt nur die eigenen Props zu mergen. Jetzt werden Variants per (breakpoint+state) gemergt: Layrix überschreibt nur seine eigenen Prop-Keys (padding, font-size, border-radius, max-width, …) im jeweils passenden Variant; alle anderen Props und alle weiteren User-Variants (z.B. eigener `:hover`) bleiben unangetastet.
+
 ## 0.6.1.1 (2026-05-05)
 
 ### Verbesserungen
