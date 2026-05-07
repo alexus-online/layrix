@@ -374,6 +374,53 @@ trait ECF_Framework_Admin_V2_View_Trait {
 </div>
 <?php endif; ?>
 
+<?php
+  /* Auto-Klassen-Warning: wenn Master oder einer der Sub-Toggles aus ist,
+     bekommen neue Widgets ihre Layrix-Klasse nicht automatisch. Banner mit
+     Liste der inaktiven Toggles + One-Click-Aktivieren. */
+  $ac_toggles = [
+    'auto_classes_enabled'   => __( 'Master',     'ecf-framework' ),
+    'auto_classes_headings'  => __( 'Headings',   'ecf-framework' ),
+    'auto_classes_buttons'   => __( 'Buttons',    'ecf-framework' ),
+    'auto_classes_text_link' => __( 'Text-Links', 'ecf-framework' ),
+    'auto_classes_form'      => __( 'Forms',      'ecf-framework' ),
+  ];
+  $ac_inactive = [];
+  foreach ( $ac_toggles as $key => $label ) {
+    if ( empty( $settings[ $key ] ) ) {
+      $ac_inactive[ $key ] = $label;
+    }
+  }
+  $ac_master_off = empty( $settings['auto_classes_enabled'] );
+?>
+<?php if ( ! empty( $ac_inactive ) ) : ?>
+<div class="v2-autoclass-warning<?php echo $ac_master_off ? ' is-master-off' : ''; ?>" id="v2-autoclass-warning" role="alert">
+  <span class="v2-autoclass-warning__icon" aria-hidden="true">⚠</span>
+  <div class="v2-autoclass-warning__body">
+    <strong class="v2-autoclass-warning__title">
+      <?php
+      if ( $ac_master_off ) {
+        esc_html_e( 'Auto-Klassen sind deaktiviert', 'ecf-framework' );
+      } else {
+        esc_html_e( 'Auto-Klassen teilweise deaktiviert', 'ecf-framework' );
+      }
+      ?>
+    </strong>
+    <span class="v2-autoclass-warning__desc">
+      <?php if ( $ac_master_off ) : ?>
+        <?php esc_html_e( 'Neue Widgets im Elementor (Headings, Buttons, Text-Links, Forms) bekommen aktuell keine Layrix-Klasse automatisch. Du müsstest sie manuell setzen.', 'ecf-framework' ); ?>
+      <?php else : ?>
+        <?php esc_html_e( 'Folgende Auto-Klassen-Toggles sind aus:', 'ecf-framework' ); ?>
+        <strong><?php echo esc_html( implode( ', ', array_values( $ac_inactive ) ) ); ?></strong>
+      <?php endif; ?>
+    </span>
+  </div>
+  <button type="button" class="v2-btn v2-btn--primary v2-autoclass-warning__cta" id="v2-autoclass-warning-cta">
+    <?php esc_html_e( 'Alle aktivieren', 'ecf-framework' ); ?>
+  </button>
+</div>
+<?php endif; ?>
+
 <!-- ═══ v2 Sidebar ═══════════════════════════════════════════════════ -->
 <nav class="v2-sb">
   <div class="v2-sb-head">

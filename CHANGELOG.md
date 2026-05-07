@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.2.1 (2026-05-07)
+
+### Neu
+- **Auto-Klassen-Warnbanner** oben auf jeder Layrix-Seite, sobald Auto-Klassen versehentlich aus sind:
+  - **Rot** wenn der Master-Toggle aus ist (alle Auto-Klassen wirken nicht — neue Widgets bekommen keine Layrix-Klasse)
+  - **Gelb** wenn der Master an ist, aber einzelne Sub-Toggles aus (mit Liste der Betroffenen: Headings / Buttons / Text-Links / Forms)
+  - **„Alle aktivieren"-Button** schaltet auf einen Klick alle 5 Auto-Klassen-Toggles auf an, Auto-Sync triggert, Banner verschwindet sofort
+- FAQ-Eintrag „Wie merke ich wenn Auto-Klassen versehentlich aus sind?" (Kategorie Auto-Klassen) in DE und EN.
+
+### FAQ-Erweiterungen
+- 16 neue Fragen ergänzt (Klassen-Defaults: 5, Hero-Grid: 4, Theme-Style-Importer + Presets + Sub-Tabs: 4, Schatten-Utilities + CSS-Drawer + Leading/Tracking + Dark-Mode-Color: 3) — von 43 auf **60 Fragen total**.
+- Faktencheck mit 5 Korrekturen (Elementor-Versionsverhalten, Type-Skala-Größe, Root-Modi, Limit-Quelle, Update-Trigger).
+
 ## 0.6.2 (2026-05-05)
 
 ### Neu — Status-Seite

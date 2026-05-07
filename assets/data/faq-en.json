@@ -48,6 +48,35 @@
       "link": { "page": "sync", "label": "Go to Sync" }
     },
     {
+      "id": "gs-theme-style-importer",
+      "category": "getting-started",
+      "q": "What does the Theme Style Importer pull from Elementor?",
+      "a": "<p>When you set up Layrix on an existing Elementor site, you can pull existing values from the active Elementor kit — saves manual typing.</p><p>What gets imported (when set in the kit):</p><ul><li>System colors: primary, secondary, accent, text → Layrix colors</li><li>Custom colors → additional Layrix color slots</li><li>Body text color + background → base colors</li><li>Link color</li><li>Body font, size, weight, line-height</li><li>Heading font</li><li>Container width, content width</li></ul><p>UI: button „Import from Elementor\" on the Colors page → modal with preview per field + checkbox per row. You pick what to adopt, everything else stays untouched.</p>",
+      "keywords": "theme style importer elementor kit import existing migration"
+    },
+    {
+      "id": "gs-presets-builtin-vs-custom",
+      "category": "getting-started",
+      "q": "What is the difference between built-in and custom presets?",
+      "a": "<p><strong>Built-in presets</strong> are bundled style templates (e.g. „Editorial Bold\", „Lush Botanical\"). Clicking one overwrites colors + radii + spacings + fonts with the template. Useful for quick starts or inspiration.</p><p><strong>Custom presets</strong> are your own snapshots: current style → save → reuse later or import on another site. Stored in the DB, exportable/importable as JSON.</p>",
+      "keywords": "preset built-in template custom own difference style presets"
+    },
+    {
+      "id": "gs-presets-save-custom",
+      "category": "getting-started",
+      "q": "How do I save my own preset?",
+      "a": "<p>Set up the current style as desired → in the preset selector there is a button „Save current style as preset\". Pick a name → done.</p><p>Included in the export: all colors (incl. shades and dark-mode), radii, spacing, shadows, fonts, type scale, line-heights, letter-spacing, class defaults and auto-class toggles.</p><p><strong>Not</strong> included: plugin UI settings (admin font size etc.), update toggle, custom notes.</p>",
+      "keywords": "preset save own custom snapshot template style"
+    },
+    {
+      "id": "gs-website-vs-plugin-tab",
+      "category": "getting-started",
+      "q": "What is the difference between Website and Plugin tab in Settings?",
+      "a": "<p>Inside <strong>Settings</strong> there are two icon tabs:</p><ul><li><strong>⌂ Website</strong> — what affects your live site: root font size, container width, content width, base colors, body font, font sizes, browser margin reset, focus outline.</li><li><strong>⚙ Plugin</strong> — what affects Layrix itself: auto-sync toggles, auto-class toggles, class defaults, GitHub updates, Layrix admin UI (font and font sizes of the interface).</li></ul><p>Rule of thumb: <em>„Does it affect the frontend output?\" → Website. „Only the Layrix admin?\" → Plugin.</em></p>",
+      "keywords": "settings website plugin tab difference frontend admin sub-tab",
+      "link": { "page": "settings", "label": "Go to Settings" }
+    },
+    {
       "id": "gs-do-i-need-sync",
       "category": "getting-started",
       "q": "Do I need to sync manually?",
@@ -129,6 +158,50 @@
       "link": { "page": "shadows", "label": "Go to Shadows" }
     },
     {
+      "id": "tk-hero-grid-what",
+      "category": "tokens",
+      "q": "What is the Hero Grid on the Colors page?",
+      "a": "<p>The Hero Grid is Layrix' <strong>harmony generator</strong>: a sandbox at the top of the Colors page with 5 color slots (primary, secondary, accent, surface, text), where you can experiment with palettes without committing the values immediately.</p><p>Workflow: play around → lock the slots you want to keep → „Shuffle\" regenerates the unlocked ones → when you are happy, click „Apply to palette\". Only then are the values written to your Layrix settings and synced.</p>",
+      "keywords": "hero grid harmony generator colors palette",
+      "link": { "page": "colors", "label": "Go to Colors" }
+    },
+    {
+      "id": "tk-hero-grid-modes",
+      "category": "tokens",
+      "q": "What do Complementary, Analogous, Triadic mean in the harmony generator?",
+      "a": "<p>These are classic color harmony schemes from color theory. Layrix offers six modes:</p><ul><li><strong>Complementary</strong> — opposite colors on the wheel (max contrast)</li><li><strong>Analogous</strong> — neighboring colors (calm, harmonious)</li><li><strong>Triadic</strong> — 3 colors evenly spaced (balanced, vibrant)</li><li><strong>Split</strong> — base + the two neighbors of the complementary (softer contrast)</li><li><strong>Tetradic</strong> — 4 colors in two complementary pairs (versatile, tricky)</li><li><strong>Monochromatic</strong> — one color in different lightness/saturation</li></ul><p>With no slot locked, the entire scale regenerates; with locked slots, only free ones are re-rolled — fitting the scheme.</p>",
+      "keywords": "harmony modes complementary analogous triadic split tetradic monochromatic color theory wheel"
+    },
+    {
+      "id": "tk-hero-grid-locks",
+      "category": "tokens",
+      "q": "What are the lock icons in the Hero Grid for?",
+      "a": "<p>The lock icon on a slot <strong>locks</strong> that color — the next „Shuffle\" or scheme change leaves it untouched. Unlocked slots are recomputed based on the locked ones and the current harmony mode.</p><p>Typical workflow: lock your brand color (e.g. primary) → cycle through the others until they fit → apply.</p>",
+      "keywords": "lock icon slot color keep hero grid"
+    },
+    {
+      "id": "tk-hero-grid-from-image",
+      "category": "tokens",
+      "q": "„Generate from image\" — how does it work?",
+      "a": "<p>Click the image icon in the Hero Grid → choose an image → Layrix extracts the <strong>5 dominant colors</strong> client-side (browser, no server upload) and places them in the slots.</p><p>Useful when you have a logo, mood board, or photo as inspiration and want to derive a consistent palette from it.</p>",
+      "keywords": "image generate extract upload palette photo logo"
+    },
+    {
+      "id": "tk-leading-tracking",
+      "category": "tokens",
+      "q": "What are leading and tracking?",
+      "a": "<p>Two typography terms:</p><ul><li><strong>Leading</strong> = line-height. Layrix manages it as <code>--ecf-leading-*</code> tokens (e.g. tight, snug, normal, relaxed, loose). Tab: Typography → Line Heights.</li><li><strong>Tracking</strong> = letter-spacing. Managed as <code>--ecf-tracking-*</code> tokens. Tab: Typography → Letter Spacing. em units recommended (relative to font size).</li></ul>",
+      "keywords": "leading tracking line-height letter-spacing typography",
+      "link": { "page": "typography", "label": "Go to Typography" }
+    },
+    {
+      "id": "tk-dark-mode-color",
+      "category": "tokens",
+      "q": "Can I store a dark-mode value for a color?",
+      "a": "<p>Yes. The edit panel of every color has a collapsible section <strong>„🌙 Dark Mode variant\"</strong>. Activate the „Dark mode value active\" checkbox and set the hex for dark mode.</p><p>Layrix then generates CSS that swaps the value via <code>@media (prefers-color-scheme: dark)</code>. The site reacts automatically to the user's OS theme.</p>",
+      "keywords": "dark mode color variant prefers-color-scheme"
+    },
+    {
       "id": "tk-units-converter",
       "category": "tokens",
       "q": "What do rem, em, vw mean for body text size?",
@@ -145,12 +218,42 @@
       "link": { "page": "cookbook", "label": "Go to Application" }
     },
     {
+      "id": "cl-what-are-class-defaults",
+      "category": "classes",
+      "q": "What are class defaults?",
+      "a": "<p>Class defaults are the <strong>standard values</strong> a Layrix class carries — e.g. how much padding a button has, what font size a heading uses, what max-width a container uses.</p><p>Layrix manages them centrally so you do not have to touch every single element in Elementor. One change in the backend → every element using that class picks up the new value.</p><p>Defaults reference no fixed pixel values but <strong>design-value variables</strong> (e.g. <code>ecf-space-m</code>) — keeping the system consistent: change the spacing value and every class follows.</p>",
+      "keywords": "class-defaults what are defaults design-values settings explanation",
+      "link": { "page": "settings", "label": "Go to Settings" }
+    },
+    {
       "id": "cl-where-padding",
       "category": "classes",
-      "q": "Where do I configure class defaults (padding, radius)?",
-      "a": "<p>Settings → <strong>Plugin → Class Defaults</strong>. All Layrix classes are grouped by category (Headings, Components, Sections, Layout) as collapsible accordions.</p><p>Per property you pick a token via dropdown (e.g. padding-inline → ecf-space-m). The value is written to the Elementor class on the next sync.</p>",
-      "keywords": "class-defaults defaults padding radius token settings",
+      "q": "Where do I configure class defaults (padding, radius, font size)?",
+      "a": "<p><strong>Settings → Plugin → Class Defaults</strong>. All Layrix classes are grouped by category as collapsible accordions.</p><p>Per property you pick a design value via dropdown. On the next sync Layrix writes the value into the Elementor global class — every element using that class gets the new value automatically.</p>",
+      "keywords": "class-defaults defaults padding radius font-size token settings where",
       "link": { "page": "settings", "label": "Go to Settings" }
+    },
+    {
+      "id": "cl-which-class-defaults",
+      "category": "classes",
+      "q": "Which classes can I configure and which properties?",
+      "a": "<p>Currently these classes have configurable defaults:</p><ul><li><strong>Headings</strong> <code>ecf-heading-1</code> … <code>ecf-heading-5</code> → font-size (from type scale)</li><li><strong>Components</strong> <code>ecf-button</code> → padding-block, padding-inline, border-radius, font-size</li><li><strong>Sections</strong> <code>ecf-layrix-section</code> → padding-block, padding-inline</li><li><strong>Layout</strong> <code>ecf-container-boxed</code> → max-width</li></ul><p>Other Layrix classes (e.g. <code>ecf-card</code>, <code>ecf-section</code>) currently have no defaults — they are pure identity classes you style as needed in Elementor's class editor.</p>",
+      "keywords": "which classes defaults configure properties heading button section container list overview",
+      "link": { "page": "settings", "label": "Go to Settings" }
+    },
+    {
+      "id": "cl-defaults-what-happens",
+      "category": "classes",
+      "q": "What happens when I change a class default?",
+      "a": "<p>On save in Layrix:</p><ol><li>The value is written to Layrix settings</li><li>With Auto-Sync on (default), the Elementor global class is updated immediately</li><li>Every element using that class — across 1 or 100 pages — shows the new value</li></ol><p><strong>Important:</strong> Per-element customizations (values you set on a specific button in the editor) remain untouched. They have higher specificity and beat the class default. Only elements that did <em>not</em> set anything custom adopt the new default.</p>",
+      "keywords": "default change what happens effect sync elementor specificity custom-values"
+    },
+    {
+      "id": "cl-button-color-not-here",
+      "category": "classes",
+      "q": "Why can I not set button color in class defaults?",
+      "a": "<p>Deliberate decision since 0.6.1.1: <code>ecf-button</code> manages only <strong>geometry and typography</strong> (padding, radius, font size) — no colors (background-color, color, hover).</p><p>Reasons:</p><ul><li>Atomic widgets in Elementor v4 do not store style props in <code>container.settings</code> but in a separate styles model. Layrix could not reliably write colors there — the picker in the inspector often lied.</li><li>If Layrix writes default colors to the global class, those would block your user-custom colors on the element (specificity issue).</li></ul><p>Solution: set colors per element directly in the Elementor editor. Layrix handles geometry consistency, you handle the color language.</p>",
+      "keywords": "button color background hover not configurable why ecf-button class-defaults"
     },
     {
       "id": "cl-bem-naming",
@@ -182,6 +285,14 @@
       "a": "<p>Sidebar → <strong>Classes → Application</strong>. Card overview of all Layrix classes per category (Headings, Sections, Components, Layout). Clicking a card copies the class name to clipboard.</p><p>Workflow: click card → in Elementor select element → CSS classes field → paste.</p>",
       "keywords": "application cookbook tab cards copy clipboard overview classes",
       "link": { "page": "cookbook", "label": "Go to Application" }
+    },
+    {
+      "id": "cl-shadow-utility-classes",
+      "category": "classes",
+      "q": "What are the shadow utility classes (ecf-shadow-xs, ecf-shadow-l, …)?",
+      "a": "<p>For every shadow token tier, Layrix generates a matching utility class:</p><ul><li><code>ecf-shadow-xs</code> through <code>ecf-shadow-xl</code> (outer shadows)</li><li><code>ecf-shadow-inner</code> (inner shadow)</li></ul><p>Classes are atomic — one class = one shadow. Activate them under <strong>Class Selection → Utility</strong> and they get synced as global Elementor classes.</p><p>Benefit over inline-style: central control. Change the shadow token value and every element with <code>ecf-shadow-l</code> updates automatically.</p>",
+      "keywords": "shadow utility classes ecf-shadow xs s m l xl inner",
+      "link": { "page": "classes", "label": "Go to Class Selection" }
     },
     {
       "id": "cl-how-use-in-editor",
@@ -230,6 +341,14 @@
       "keywords": "sync error fail limit cache rest 500"
     },
     {
+      "id": "sy-css-export",
+      "category": "sync",
+      "q": "What is the CSS drawer on the Sync page?",
+      "a": "<p>On the Sync page there is a collapsible <strong>CSS drawer</strong> with the complete frontend CSS that Layrix generates (all <code>--ecf-*</code> variables, class definitions, reset rules).</p><p>You can:</p><ul><li><strong>Inspect</strong> — see what Layrix actually serves to your site</li><li><strong>Copy</strong> to clipboard</li><li><strong>Download</strong> as <code>layrix-generated.css</code></li></ul><p>Useful when you want to disable Layrix later (embed CSS into the theme) or want to use the CSS in a build step.</p>",
+      "keywords": "css drawer export download generate standalone offline copy",
+      "link": { "page": "sync", "label": "Go to Sync" }
+    },
+    {
       "id": "sy-classes-disappeared",
       "category": "sync",
       "q": "My custom values on a Layrix class disappeared!",
@@ -243,6 +362,14 @@
       "q": "Which auto-classes are active after installation?",
       "a": "<p>By default (fresh install) ALL auto-classes are active:</p><ul><li>Master toggle: on</li><li>Headings (h1–h5 → ecf-heading-N)</li><li>Buttons (→ ecf-button)</li><li>Text-Links (→ ecf-text-link)</li><li>Forms (→ ecf-form)</li></ul><p>Existing installations keep their toggle states — Layrix does not override unprompted.</p>",
       "keywords": "default standard auto-classes active installation new",
+      "link": { "page": "status", "label": "Go to Status" }
+    },
+    {
+      "id": "ac-warning-banner",
+      "category": "auto-classes",
+      "q": "How do I notice when auto-classes are accidentally off?",
+      "a": "<p>Layrix automatically shows a <strong>warning banner</strong> at the top of every Layrix page when the master toggle or any sub-toggle (Headings/Buttons/Text-Links/Forms) is disabled:</p><ul><li><strong>Yellow</strong> — master is on but individual sub-toggles are off (with list of which)</li><li><strong>Red</strong> — master is off, no auto-classes work</li></ul><p>The „Activate all\" button in the banner re-enables every auto-class toggle in one click. The banner disappears immediately and auto-sync runs in the background.</p>",
+      "keywords": "warning banner auto-classes off disabled notice display error",
       "link": { "page": "status", "label": "Go to Status" }
     },
     {

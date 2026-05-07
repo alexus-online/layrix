@@ -48,6 +48,35 @@
       "link": { "page": "sync", "label": "Zur Sync-Seite" }
     },
     {
+      "id": "gs-theme-style-importer",
+      "category": "getting-started",
+      "q": "Was importiert der Theme-Style-Importer aus Elementor?",
+      "a": "<p>Wenn du Layrix neu auf einer existierenden Elementor-Site einrichtest, kannst du die bestehenden Werte aus dem aktiven Elementor-Kit übernehmen — spart manuelles Eintippen.</p><p>Importiert wird (wenn im Kit gesetzt):</p><ul><li>System-Farben: primary, secondary, accent, text → Layrix-Farben</li><li>Custom-Farben → zusätzliche Layrix-Farb-Slots</li><li>Body-Text-Farbe + -Hintergrund → Basisfarben</li><li>Link-Farbe</li><li>Body-Schrift, -Größe, -Gewicht, -Zeilenhöhe</li><li>Heading-Schrift</li><li>Container-Breite, Content-Breite</li></ul><p>UI: Button „Aus Elementor importieren\" auf der Farben-Page → Modal mit Vorschau jedes Felds + Häkchen-Auswahl pro Zeile. Du wählst was übernommen wird, alles andere bleibt unangetastet.</p>",
+      "keywords": "theme style importer elementor kit import übernehmen alte site existing migration"
+    },
+    {
+      "id": "gs-presets-builtin-vs-custom",
+      "category": "getting-started",
+      "q": "Was ist der Unterschied zwischen Built-in-Presets und Custom-Presets?",
+      "a": "<p><strong>Built-in-Presets</strong> sind mitgelieferte Stil-Vorlagen (z.B. „Editorial Bold\", „Lush Botanical\"). Klick darauf überschreibt Farben + Radien + Spacings + Schriften mit der Vorlage. Praktisch für schnellen Start oder Inspiration.</p><p><strong>Custom-Presets</strong> sind deine eigenen Snapshots: aktueller Stil → speichern → später wiederverwenden oder auf anderer Site importieren. Werden in der DB gespeichert und können exportiert/importiert werden (JSON).</p>",
+      "keywords": "preset built-in vorlage custom eigene unterschied stil-presets"
+    },
+    {
+      "id": "gs-presets-save-custom",
+      "category": "getting-started",
+      "q": "Wie speichere ich einen eigenen Preset?",
+      "a": "<p>Aktuellen Stil so einstellen wie er passt → in der Preset-Auswahl gibt es einen Button „Aktuellen Stil als Preset speichern\". Name vergeben → fertig.</p><p>Mit-exportiert werden: alle Farben (inkl. Shades und Dark-Mode), Radien, Spacing, Schatten, Schriften, Typo-Skala, Zeilenhöhen, Buchstabenabstände, Klassen-Defaults und Auto-Klassen-Toggles.</p><p><strong>Nicht</strong> mit-exportiert: Plugin-UI-Einstellungen (Admin-Schriftgröße etc.), Update-Toggle, Eigene Notizen.</p>",
+      "keywords": "preset speichern eigene custom save snapshot vorlage stil"
+    },
+    {
+      "id": "gs-website-vs-plugin-tab",
+      "category": "getting-started",
+      "q": "Was ist der Unterschied zwischen Webseite-Tab und Plugin-Tab in den Einstellungen?",
+      "a": "<p>In <strong>Einstellungen</strong> gibt es zwei Icon-Tabs:</p><ul><li><strong>⌂ Webseite</strong> — was deine Live-Site betrifft: Root-Font-Size, Container-Breite, Content-Breite, Basisfarben, Body-Schrift, Schriftgrößen, Browser-Margin-Reset, Fokus-Outline.</li><li><strong>⚙ Plugin</strong> — was Layrix selbst betrifft: Auto-Sync-Toggles, Auto-Klassen-Toggles, Klassen-Defaults, GitHub-Updates, Layrix-Admin-UI (Schriftart, Schriftgrößen der Oberfläche).</li></ul><p>Faustregel: <em>„Wirkt es auf den Frontend-Output?\" → Webseite. „Wirkt es nur auf den Layrix-Admin?\" → Plugin.</em></p>",
+      "keywords": "einstellungen webseite plugin tab unterschied frontend admin sub-tab",
+      "link": { "page": "settings", "label": "Zu Einstellungen" }
+    },
+    {
       "id": "gs-do-i-need-sync",
       "category": "getting-started",
       "q": "Muss ich manuell synchronisieren?",
@@ -129,6 +158,50 @@
       "link": { "page": "shadows", "label": "Zu Schatten" }
     },
     {
+      "id": "tk-hero-grid-what",
+      "category": "tokens",
+      "q": "Was ist der Hero-Grid auf der Farben-Page?",
+      "a": "<p>Der Hero-Grid ist Layrix' <strong>Harmonie-Generator</strong>: ein Spielplatz oben auf der Farben-Page mit 5 Farb-Slots (Primary, Secondary, Accent, Surface, Text), wo du Paletten ausprobieren und generieren kannst, ohne dass die Werte sofort live gehen.</p><p>Workflow: spielen → Slots sperren die du behalten willst → „Zufall\" generiert die ungesperrten neu → wenn zufrieden, „In Palette übernehmen\". Erst dann landen die Werte in deinen Layrix-Settings und werden gesynct.</p>",
+      "keywords": "hero-grid harmonie generator farben palette farbpalette",
+      "link": { "page": "colors", "label": "Zu Farben" }
+    },
+    {
+      "id": "tk-hero-grid-modes",
+      "category": "tokens",
+      "q": "Was bedeuten Komplementär, Analog, Triadisch im Harmonie-Generator?",
+      "a": "<p>Das sind klassische Farbharmonie-Schemata aus der Farbenlehre. Layrix bietet sechs Modi:</p><ul><li><strong>Komplementär</strong> — gegenüberliegende Farben im Farbkreis (max. Kontrast)</li><li><strong>Analog</strong> — benachbarte Farben (harmonisch, ruhig)</li><li><strong>Triadisch</strong> — 3 Farben gleichmäßig über den Kreis verteilt (lebendig, ausgewogen)</li><li><strong>Split</strong> — Basis + die zwei Nachbarn der Komplementär (sanfter Kontrast)</li><li><strong>Tetradic</strong> — 4 Farben in zwei Komplementär-Paaren (vielseitig, tricky)</li><li><strong>Monochromatic</strong> — eine Farbe in verschiedenen Helligkeiten/Sättigungen</li></ul><p>Wenn du keinen Slot gesperrt hast, wird die ganze Skala neu generiert; mit gesperrten Slots werden nur die freien neu gerollt — passend zum Schema.</p>",
+      "keywords": "harmonie modi komplementär analog triadisch split tetradic monochromatic farbharmonie schema farbkreis"
+    },
+    {
+      "id": "tk-hero-grid-locks",
+      "category": "tokens",
+      "q": "Wozu sind die Schloss-Symbole im Hero-Grid?",
+      "a": "<p>Mit dem Schloss-Symbol auf einem Slot <strong>sperrst</strong> du diese Farbe — sie wird beim nächsten „Zufall\" oder Schema-Wechsel <em>nicht</em> verändert. Ungesperrte Slots werden basierend auf den gesperrten und dem aktuellen Harmonie-Modus neu berechnet.</p><p>Typischer Workflow: Brand-Farbe (z.B. Primary) sperren → andere durchprobieren bis es passt → übernehmen.</p>",
+      "keywords": "schloss lock sperren slot farbe behalten hero-grid"
+    },
+    {
+      "id": "tk-hero-grid-from-image",
+      "category": "tokens",
+      "q": "„Aus Bild generieren“ — wie funktioniert das?",
+      "a": "<p>Klick auf das Bild-Icon im Hero-Grid → Bild auswählen → Layrix extrahiert die <strong>5 dominanten Farben</strong> client-seitig (Browser, kein Upload an Server) und legt sie in die Slots.</p><p>Praktisch wenn du ein Logo, ein Mood-Board oder ein Foto als Inspiration hast und daraus eine konsistente Palette ableiten willst.</p>",
+      "keywords": "bild image generieren extrahieren upload palette aus foto"
+    },
+    {
+      "id": "tk-leading-tracking",
+      "category": "tokens",
+      "q": "Was sind Leading und Tracking?",
+      "a": "<p>Beides typografische Begriffe:</p><ul><li><strong>Leading</strong> = Zeilenhöhe (line-height). Layrix verwaltet das als <code>--ecf-leading-*</code>-Tokens (z.B. tight, snug, normal, relaxed, loose). Tab: Typografie → Zeilenhöhen.</li><li><strong>Tracking</strong> = Buchstabenabstand (letter-spacing). Verwaltet als <code>--ecf-tracking-*</code>-Tokens. Tab: Typografie → Buchstabenabstand. em-Einheiten empfohlen (relativ zur Schriftgröße).</li></ul>",
+      "keywords": "leading tracking zeilenhöhe line-height buchstabenabstand letter-spacing typografie",
+      "link": { "page": "typography", "label": "Zu Typografie" }
+    },
+    {
+      "id": "tk-dark-mode-color",
+      "category": "tokens",
+      "q": "Kann ich für eine Farbe einen Dark-Mode-Wert hinterlegen?",
+      "a": "<p>Ja. Im Edit-Panel einer Farbe gibt es eine ausklappbare Sektion <strong>„🌙 Dark Mode Variante\"</strong>. Aktiviere die Checkbox „Dark Mode Wert aktiv\" und setze den Hex-Wert für Dark Mode.</p><p>Layrix generiert dann CSS, das via <code>@media (prefers-color-scheme: dark)</code> den Wert wechselt. Die Site reagiert automatisch auf das Betriebssystem-Theme des Users.</p>",
+      "keywords": "dark mode dunkel modus farbe variante prefers-color-scheme"
+    },
+    {
       "id": "tk-units-converter",
       "category": "tokens",
       "q": "Was bedeutet rem, em, vw bei der Body-Textgröße?",
@@ -145,12 +218,42 @@
       "link": { "page": "cookbook", "label": "Zur Anwendung" }
     },
     {
+      "id": "cl-what-are-class-defaults",
+      "category": "classes",
+      "q": "Was sind Klassen-Defaults?",
+      "a": "<p>Klassen-Defaults sind die <strong>Standardwerte</strong> die eine Layrix-Klasse trägt — z.B. welches Padding ein Button hat, welche Schriftgröße eine Überschrift hat, welche Max-Breite ein Container hat.</p><p>Layrix verwaltet sie zentral, sodass du nicht jedes einzelne Element in Elementor anfassen musst. Ein Klick im Backend → alle Elemente die diese Klasse nutzen bekommen den neuen Wert.</p><p>Die Defaults referenzieren keine festen Pixel-Werte sondern <strong>Grundwert-Variablen</strong> (z.B. <code>ecf-space-m</code>) — so bleibt das System konsistent: ändert sich der Spacing-Grundwert, ziehen alle Klassen mit.</p>",
+      "keywords": "klassen-defaults was sind defaults grundwerte einstellungen erklärung",
+      "link": { "page": "settings", "label": "Zu Einstellungen" }
+    },
+    {
       "id": "cl-where-padding",
       "category": "classes",
-      "q": "Wo stelle ich Klassen-Defaults ein (Padding, Radius)?",
-      "a": "<p>Einstellungen → <strong>Plugin → Klassen-Defaults</strong>. Dort sind alle Layrix-Klassen nach Kategorien gruppiert (Überschriften, Komponenten, Sektionen, Layout) als ausklappbare Akkordeons.</p><p>Pro Property kannst du via Dropdown ein Token wählen (z.B. padding-inline → ecf-space-m). Der Wert wird beim nächsten Sync in die Elementor-Klasse geschrieben.</p>",
-      "keywords": "klassen-defaults defaults padding radius token einstellungen",
+      "q": "Wo stelle ich Klassen-Defaults ein (Padding, Radius, Schriftgröße)?",
+      "a": "<p><strong>Einstellungen → Plugin → Klassen-Defaults</strong>. Alle Layrix-Klassen sind nach Kategorien gruppiert als ausklappbare Akkordeons.</p><p>Pro Property wählst du via Dropdown einen Grundwert. Beim nächsten Sync schreibt Layrix den Wert in die Elementor-Global-Class — alle Elemente mit dieser Klasse bekommen den neuen Wert automatisch.</p>",
+      "keywords": "klassen-defaults defaults padding radius schriftgröße font-size token einstellungen wo finde ich",
       "link": { "page": "settings", "label": "Zu Einstellungen" }
+    },
+    {
+      "id": "cl-which-class-defaults",
+      "category": "classes",
+      "q": "Welche Klassen kann ich konfigurieren und welche Properties?",
+      "a": "<p>Aktuell sind diese Klassen mit Defaults konfigurierbar:</p><ul><li><strong>Überschriften</strong> <code>ecf-heading-1</code> … <code>ecf-heading-5</code> → font-size (aus der Type-Skala)</li><li><strong>Komponenten</strong> <code>ecf-button</code> → padding-block, padding-inline, border-radius, font-size</li><li><strong>Sektionen</strong> <code>ecf-layrix-section</code> → padding-block, padding-inline</li><li><strong>Layout</strong> <code>ecf-container-boxed</code> → max-width</li></ul><p>Andere Layrix-Klassen (z.B. <code>ecf-card</code>, <code>ecf-section</code>) haben aktuell keine Defaults — sie sind als reine Identitäts-Klassen gedacht und du stylst sie nach Bedarf in Elementor's Klassen-Editor.</p>",
+      "keywords": "welche klassen defaults konfigurieren properties heading button section container liste übersicht",
+      "link": { "page": "settings", "label": "Zu Einstellungen" }
+    },
+    {
+      "id": "cl-defaults-what-happens",
+      "category": "classes",
+      "q": "Was passiert wenn ich einen Klassen-Default ändere?",
+      "a": "<p>Beim Speichern in Layrix:</p><ol><li>Der Wert wird in die Layrix-Settings geschrieben</li><li>Bei aktivem Auto-Sync (Default an) wird die Elementor-Global-Class sofort aktualisiert</li><li>Alle Elemente die diese Klasse nutzen — egal ob auf 1 oder 100 Seiten — zeigen den neuen Wert</li></ol><p><strong>Wichtig:</strong> Per-Element-Customizations (am einzelnen Button im Editor gesetzte Werte) bleiben unangetastet. Sie haben höhere Specificity und schlagen den Klassen-Default. Nur Elemente die <em>nichts</em> Eigenes gesetzt haben übernehmen den neuen Default.</p>",
+      "keywords": "default ändern was passiert wirkung sync elementor specificity custom-werte"
+    },
+    {
+      "id": "cl-button-color-not-here",
+      "category": "classes",
+      "q": "Warum kann ich Button-Farbe nicht in den Klassen-Defaults einstellen?",
+      "a": "<p>Bewusste Entscheidung seit 0.6.1.1: <code>ecf-button</code> verwaltet nur <strong>Geometrie und Typografie</strong> (Padding, Radius, Schriftgröße) — keine Farben (background-color, color, hover).</p><p>Gründe:</p><ul><li>Atomic-Widgets in Elementor v4 schreiben Style-Props nicht in <code>container.settings</code> sondern in ein separates Styles-Model. Layrix konnte Farben technisch nicht zuverlässig setzen — der Picker im Inspector hat oft gelogen.</li><li>Wenn Layrix Default-Farben in die Global-Class schreibt, blockieren die deine User-Custom-Farben am Element (Specificity-Problem).</li></ul><p>Lösung: Farben pro Element direkt im Elementor-Editor setzen. Layrix kümmert sich um Konsistenz der Geometrie, du um die Farb-Sprache.</p>",
+      "keywords": "button farbe color background hover nicht einstellbar warum ecf-button classes-defaults"
     },
     {
       "id": "cl-bem-naming",
@@ -182,6 +285,14 @@
       "a": "<p>Sidebar → <strong>Klassen → Anwendung</strong>. Karten-Übersicht aller Layrix-Klassen pro Kategorie (Überschriften, Sections, Komponenten, Layout). Klick auf eine Karte kopiert den Klassennamen in die Zwischenablage.</p><p>Workflow: Karte klicken → in Elementor Element auswählen → CSS-Klassen-Feld → einfügen.</p>",
       "keywords": "anwendung cookbook tab karten kopieren clipboard übersicht klassen",
       "link": { "page": "cookbook", "label": "Zur Anwendung" }
+    },
+    {
+      "id": "cl-shadow-utility-classes",
+      "category": "classes",
+      "q": "Was sind die Schatten-Utility-Klassen (ecf-shadow-xs, ecf-shadow-l, …)?",
+      "a": "<p>Für jede deiner Schatten-Token-Stufen generiert Layrix eine entsprechende Utility-Klasse:</p><ul><li><code>ecf-shadow-xs</code> bis <code>ecf-shadow-xl</code> (Outer-Schatten)</li><li><code>ecf-shadow-inner</code> (Inner-Schatten)</li></ul><p>Klassen sind atomar — eine Klasse = ein Schatten. Aktivierst du sie unter <strong>Klassen-Auswahl → Utility</strong>, werden sie mitgesynct und in Elementor als globale Klassen verfügbar.</p><p>Vorteil ggü. inline-style: zentrale Kontrolle. Änderst du den Wert im Schatten-Token, wirken alle Elemente die <code>ecf-shadow-l</code> haben automatisch mit.</p>",
+      "keywords": "schatten utility klassen ecf-shadow xs s m l xl inner",
+      "link": { "page": "classes", "label": "Zur Klassen-Auswahl" }
     },
     {
       "id": "cl-how-use-in-editor",
@@ -230,6 +341,14 @@
       "keywords": "sync fehler error fehlgeschlagen limit cache rest 500"
     },
     {
+      "id": "sy-css-export",
+      "category": "sync",
+      "q": "Was ist der CSS-Drawer auf der Sync-Page?",
+      "a": "<p>Auf der Sync-Page gibt es einen ausklappbaren <strong>CSS-Drawer</strong> mit dem komplett von Layrix generierten Frontend-CSS (alle <code>--ecf-*</code>-Variablen, Klassen-Definitionen, Reset-Regeln).</p><p>Du kannst es:</p><ul><li><strong>Anschauen</strong> — sehen was Layrix tatsächlich an deine Site ausliefert</li><li><strong>Kopieren</strong> in die Zwischenablage</li><li><strong>Herunterladen</strong> als <code>layrix-generated.css</code></li></ul><p>Praktisch wenn du Layrix später deaktivieren willst (CSS ins Theme einbinden) oder das CSS in einem Build-Step verwenden möchtest.</p>",
+      "keywords": "css drawer export download generieren standalone offline kopieren",
+      "link": { "page": "sync", "label": "Zur Sync-Seite" }
+    },
+    {
       "id": "sy-classes-disappeared",
       "category": "sync",
       "q": "Meine Custom-Werte an einer Layrix-Klasse sind verschwunden!",
@@ -243,6 +362,14 @@
       "q": "Welche Auto-Klassen sind nach der Installation aktiv?",
       "a": "<p>Standardmäßig (frische Installation) sind ALLE Auto-Klassen aktiv:</p><ul><li>Master-Toggle: an</li><li>Headings (h1–h5 → ecf-heading-N)</li><li>Buttons (→ ecf-button)</li><li>Text-Links (→ ecf-text-link)</li><li>Forms (→ ecf-form)</li></ul><p>Bestehende Installationen behalten ihre eigenen Toggle-Stände — Layrix überschreibt nicht ungefragt.</p>",
       "keywords": "default standard auto-klassen aktiv installation neu",
+      "link": { "page": "status", "label": "Zur Status-Seite" }
+    },
+    {
+      "id": "ac-warning-banner",
+      "category": "auto-classes",
+      "q": "Wie merke ich wenn Auto-Klassen versehentlich aus sind?",
+      "a": "<p>Layrix zeigt automatisch ein <strong>Warnbanner</strong> oben auf jeder Layrix-Seite, sobald der Master-Toggle oder einer der Sub-Toggles (Headings/Buttons/Text-Links/Forms) deaktiviert ist:</p><ul><li><strong>Gelb</strong> — Master ist an, aber einzelne Sub-Toggles sind aus (mit Liste welche)</li><li><strong>Rot</strong> — Master ist aus, alle Auto-Klassen wirken nicht</li></ul><p>Mit dem „Alle aktivieren\"-Button im Banner schaltest du alle Auto-Klassen-Toggles auf einen Klick wieder an. Der Banner verschwindet sofort und Auto-Sync läuft im Hintergrund.</p>",
+      "keywords": "warning warnung banner auto-klassen aus deaktiviert merken anzeige fehler",
       "link": { "page": "status", "label": "Zur Status-Seite" }
     },
     {

@@ -5291,6 +5291,40 @@
     bindLive('[name$="[ui_btn_font_size]"]',  '--v2-btn-fs',      function(v) { return parseInt(v, 10) + 'px'; });
   }());
 
+  /* ── Auto-Klassen-Warning: alle Toggles auf einen Klick aktivieren ─── */
+  (function() {
+    var cta = document.getElementById('v2-autoclass-warning-cta');
+    if (!cta) return;
+    cta.addEventListener('click', function() {
+      var keys = [
+        'auto_classes_enabled',
+        'auto_classes_headings',
+        'auto_classes_buttons',
+        'auto_classes_text_link',
+        'auto_classes_form',
+      ];
+      keys.forEach(function(key) {
+        document.querySelectorAll('input[type="checkbox"][name*="[' + key + ']"]').forEach(function(cb) {
+          if (!cb.checked) {
+            cb.checked = true;
+            var tog = cb.nextElementSibling;
+            if (tog && tog.classList && tog.classList.contains('v2-tog')) {
+              tog.classList.add('v2-tog--on');
+              tog.classList.remove('v2-tog--off');
+            }
+            cb.dispatchEvent(new Event('change', { bubbles: true }));
+          }
+        });
+      });
+      if (typeof ecfV2ScheduleAutosave === 'function') ecfV2ScheduleAutosave();
+      var banner = document.getElementById('v2-autoclass-warning');
+      if (banner) banner.remove();
+      if (typeof ecfV2Toast === 'function') {
+        ecfV2Toast('Auto-Klassen aktiviert — Sync läuft.', 'success');
+      }
+    });
+  }());
+
   /* ── FAQ-Page: Live-Suche, Kategorie-Filter, Direct-Jump ─────────── */
   (function() {
     var search = document.getElementById('v2-faq-search');
